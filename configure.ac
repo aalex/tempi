@@ -50,9 +50,9 @@ m4_define([tempi_binary_age], [m4_eval(100 * tempi_minor_version + tempi_micro_v
 AC_PREREQ([2.63])
 AC_INIT([tempi],
         [tempi_version],
-        [http://github.com/aalex/tempi/issues],
+        [http://github.com/sat-metalab/tempi/issues],
         [tempi],
-        [http://github.com/aalex/tempi])
+        [http://github.com/sat-metalab/tempi])
 AC_CONFIG_MACRO_DIR([m4])
 AC_MSG_NOTICE([Configuring tempi])
 AM_INIT_AUTOMAKE([subdir-objects -Wno-portability])

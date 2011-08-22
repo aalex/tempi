@@ -23,7 +23,7 @@ Alexandre Quessy <alexandre@quessy.net>
 Installation
 ------------
 Here is how to build and install it::
-  $ sudo apt-get install help2man gettext libxml2-dev automake bison build-essential flex libtool libclutter-1.0-dev
+  $ sudo apt-get install help2man gettext libxml2-dev automake bison build-essential flex libtool libclutter-1.0-dev libglib-2.0-dev
   $ ./autogen.sh
   $ ./configure
   $ make
