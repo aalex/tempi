@@ -1,7 +1,18 @@
-#include <glib.h>
+#include <iostream>
+#include "tempi/tempi-version.h"
 
-void tempi_hello()
+namespace tempi
 {
-    g_print("Hello from Tempi.\n");
+
+void hello()
+{
+    std::cout << "Hello from Tempi." << std::endl;
 }
+
+std::string get_version()
+{
+    return std::string(TEMPI_VERSION_S);
+}
+
+}; // end of namespace
 

@@ -1,4 +1,4 @@
-AM_CXXFLAGS = -I$(top_srcdir)/tempi
+AM_CXXFLAGS = -I$(top_srcdir)
 LDADD = $(top_builddir)/tempi/libtempi-@TEMPI_API_VERSION@.la
 
 check_PROGRAMS = \

@@ -1,7 +1,13 @@
 #ifndef __TEMPI_H__
 #define __TEMPI_H__
 
-void tempi_hello();
+namespace tempi
+{
+
+void hello();
+void get_version();
+
+}; // end of namespace
 
 #include "tempi-version.h"
 

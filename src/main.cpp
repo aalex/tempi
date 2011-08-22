@@ -1,9 +1,9 @@
 #include <clutter/clutter.h>
-#include "tempi.h"
+#include "tempi/tempi.h"
 
 int main(int argc, char *argv[])
 {
-    tempi_hello();
+    tempi::hello();
     return 0;
 }
 

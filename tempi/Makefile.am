@@ -1,4 +1,5 @@
-AM_CXXFLAGS = $(GLIB_CFLAGS)
+AM_CXXFLAGS = $(GLIB_CFLAGS) -I$(top_srcdir)
+
 AM_LIBS = $(GLIB_LIBS)
 
 # use lib_LTLIBRARIES to build a shared lib:

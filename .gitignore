@@ -28,3 +28,4 @@ tempi/config.h.in
 *.lo
 tempi/stamp-h1
 tempi/tempi-version.h
+tests/check_version

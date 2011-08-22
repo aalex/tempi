@@ -4,7 +4,7 @@ AM_CXXFLAGS = \
 	$(CLUTTER_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	$(LIBXML_CFLAGS) \
-	-I$(top_srcdir)/tempi
+	-I$(top_srcdir)
 
 LDADD = \
 	$(CLUTTER_LIBS) \
