@@ -1,4 +1,4 @@
-#include <clutter/clutter.h> // for glib/glib.h
+#include <glib.h>
 
 void tempi_hello()
 {

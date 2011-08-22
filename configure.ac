@@ -101,6 +101,14 @@ AC_CHECK_FUNCS([gettimeofday memmove mkdir setenv sqrt strchr strpbrk uname])
 
 AX_PTHREAD
 
+# Glib
+PKG_CHECK_MODULES([GLIB], [glib-2.0 >= 2.10.2], have_glib=true, have_glib=false)
+if test "x${have_glib}" = "xfalse" ; then
+    AC_MSG_ERROR([missing package: libglib-2.0-dev])
+fi
+AC_SUBST([GLIB_LIBS])
+AC_SUBST([GLIB_CFLAGS])
+
 # Clutter
 PKG_CHECK_MODULES([CLUTTER], [clutter-1.0 >= 1.0], have_clutter=true, have_clutter=false)
 if test "x${have_clutter}" = "xfalse" ; then
