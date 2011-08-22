@@ -27,3 +27,4 @@ tempi/config.h.in
 *.la
 *.lo
 tempi/stamp-h1
+tempi/tempi-version.h
