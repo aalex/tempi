@@ -1,0 +1,31 @@
+
+ _                       _ 
+| |_ ___ _ __ ___  _ __ (_)
+| __/ _ \ '_ ` _ \| '_ \| |
+| ||  __/ | | | | | |_) | |
+ \__\___|_| |_| |_| .__/|_|
+                  |_|      
+
+About
+-----
+It is not yet in a working state for now.
+
+License
+-------
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License and GNU General Public License as published by the Free Software Foundation; either version 3 of the Licenses, or (at your option) any later version. The library itself is licensed under LGPL while the commandline application is licensed under GPL.
+
+
+Authors
+-------
+Alexandre Quessy <alexandre@quessy.net>
+
+
+Installation
+------------
+Here is how to build and install it::
+  $ sudo apt-get install help2man gettext libxml2-dev automake bison build-essential flex libtool libclutter-1.0-dev
+  $ ./autogen.sh
+  $ ./configure
+  $ make
+  $ sudo make install
+
