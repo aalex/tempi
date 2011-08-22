@@ -1,9 +1,9 @@
-#ifndef __MIKADO_H__
-#define __MIKADO_H__
+#ifndef __TEMPI_H__
+#define __TEMPI_H__
 
-void mikado_hello();
+void tempi_hello();
 
-#include "mikado-version.h"
+#include "tempi-version.h"
 
-#endif // __MIKADO_H__
+#endif // __TEMPI_H__
 

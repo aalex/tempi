@@ -1,4 +1,4 @@
-AM_CFLAGS = $(CLUTTER_CFLAGS)
+AM_CXXFLAGS = $(CLUTTER_CFLAGS)
 AM_LIBS = $(CLUTTER_LIBS)
 
 # use lib_LTLIBRARIES to build a shared lib:
@@ -22,6 +22,9 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
 ## library file (.so).  The library ABI version is defined in configure.ac, so
 ## that all version information is kept in one place.
 libtempi_@TEMPI_API_VERSION@_la_LDFLAGS = -export-dynamic -version-info $(TEMPI_LT_VERSION)
+
+libtempi_@TEMPI_API_VERSION@_la_LIBS = $(AM_LIBS)
+libtempi_@TEMPI_API_VERSION@_la_CXXFLAGS = $(AM_CXXFLAGS)
 
 libtempi_@TEMPI_API_VERSION@_la_includedir = $(includedir)/tempi-$(TEMPI_API_VERSION)/tempi
 

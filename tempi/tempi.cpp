@@ -1,7 +1,7 @@
-#include <glib.h>
+#include <clutter/clutter.h> // for glib/glib.h
 
-void mikado_hello()
+void tempi_hello()
 {
-    g_print("Hello from Mikado.\n");
+    g_print("Hello from Tempi.\n");
 }
 
