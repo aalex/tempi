@@ -38,7 +38,8 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     state.h \
     statemachine.h \
     tempi-version.h \
-    tempi.h
+    tempi.h \
+    types.h
 
 EXTRA_DIST = config.h
 
