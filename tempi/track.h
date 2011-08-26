@@ -51,9 +51,28 @@ class Track
         {
             return name_;
         }
-        void addKeyFrame(TimePosition position, KeyFramePtr frame)
+        Identifier getIdentifier() const
+        {
+            return id_;
+        }
+        bool addKeyFrame(TimePosition position, KeyFramePtr frame)
         {
             keyFrames_[position] = frame;
+            return true;
+        }
+        bool removeKeyFrame(KeyFrame<T> *frame)
+        {
+            typename std::map<TimePosition, KeyFramePtr>::iterator iter;
+            for (iter = keyFrames_.begin(); iter != keyFrames_.end(); ++iter)
+            {
+                KeyFrame<T> *current = iter->second.get();
+                if (current == frame)
+                {
+                    keyFrames_.erase(iter);
+                    return true;
+                }
+            }
+            return false;
         }
         void setMute(bool mute)
         {
@@ -76,6 +95,14 @@ class Track
                 }
             }
             return ret;
+        }
+        KeyFrame<T> *getKeyFrame(TimePosition pos)
+        {
+            if (keyFrames_.find(pos) != keyFrames_.end())
+            {
+                return keyFrames_.find(pos)->second.get();
+            }
+            return 0;
         }
         const std::string &getTypeName() const
         {

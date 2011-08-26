@@ -1,5 +1,6 @@
 #include <iostream>
 #include "tempi/track.h"
+#include "tempi/keyframe.h"
 
 using namespace tempi;
 
@@ -17,8 +18,18 @@ bool check_simple()
 
     if (keyFrames.size() != 2)
     {
-        std::cout << "Vector of keyFrames should have two elements but has " << keyFrames.size() << std::endl;
+        std::cout << "Vector of keyFrames should have 2 elements but has " << keyFrames.size() << std::endl;
         return false;
+    }
+
+    KeyFrame<float> *frame = track.getKeyFrame(1L);
+    if (frame != 0)
+    {
+        if (not track.removeKeyFrame(frame))
+        {
+            std::cout << "Could not delete KeyFrame at TimePosition 1L." << std::endl;
+            return false;
+        }
     }
 
     return true;
