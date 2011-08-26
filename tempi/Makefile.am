@@ -1,4 +1,4 @@
-AM_CXXFLAGS = $(GLIB_CFLAGS) -I$(top_srcdir)
+AM_CXXFLAGS = $(GLIB_CFLAGS) -I$(top_srcdir)  -I$(top_srcdir)/tempi
 
 AM_LIBS = $(GLIB_LIBS)
 
@@ -16,6 +16,9 @@ lib_LTLIBRARIES = libtempi-@TEMPI_API_VERSION@.la
 
 ## PLEASE KEEP THEM IN ALPHABETICAL ORDER
 libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
+    rule.cpp \
+    state.cpp \
+    statemachine.cpp \
     tempi-version.cpp \
     tempi.cpp
 
@@ -31,8 +34,11 @@ libtempi_@TEMPI_API_VERSION@_la_includedir = $(includedir)/tempi-$(TEMPI_API_VER
 
 ## PLEASE KEEP THEM IN ALPHABETICAL ORDER
 libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
-    tempi.h \
-    tempi-version.h
+    rule.h \
+    state.h \
+    statemachine.h \
+    tempi-version.h \
+    tempi.h
 
 EXTRA_DIST = config.h
 
