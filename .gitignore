@@ -31,4 +31,5 @@ tempi/tempi-version.h
 tests/check_version
 tests/check_fsm
 tests/check_timer
+tests/check_track
 *.dia~

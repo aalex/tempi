@@ -22,13 +22,14 @@
 
 #include <boost/signals2.hpp>
 #include <tr1/memory>
+#include <map>
+#include <vector>
 #include "tempi/keyframe.h"
 #include "tempi/timeposition.h"
 #include "tempi/identifier.h"
 
 namespace tempi
 {
-
 
 /**
  * A Track contains the subsequent changes of a value over time.
@@ -65,11 +66,11 @@ class Track
         std::vector<KeyFramePtr> getKeyFrames(TimePosition from, TimePosition to)
         {
             std::vector<KeyFramePtr> ret;
-            std::map<TimePosition, KeyFramePtr>::iterator iter;
+            typename std::map<TimePosition, KeyFramePtr>::iterator iter;
             for (iter = keyFrames_.begin(); iter != keyFrames_.end(); ++iter)
             {
-                TimePosition pos = (*iter->first);
-                if (from >= pos && pos >= to)
+                TimePosition pos = iter->first;
+                if (from <= pos && pos <= to)
                 {
                     ret.push_back(iter->second);
                 }

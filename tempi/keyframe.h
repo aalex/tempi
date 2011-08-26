@@ -45,7 +45,7 @@ class KeyFrame
         /**
          * Signals triggered when the value is changed.
          */
-        OnChanged on_value_changed_;
+        OnValueChanged on_value_changed_;
 
         /**
          * Signals triggered when this frame is triggered.

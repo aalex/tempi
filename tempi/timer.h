@@ -27,6 +27,7 @@ namespace tempi
 
 /**
  * Nanoseconds timer.
+ * Inspired from osg::Timer from OpenSceneGraph.
  */
 class Timer
 {
@@ -42,6 +43,4 @@ class Timer
 } // end of namespace
 
 #endif // ifndef
-
-
 
