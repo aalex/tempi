@@ -28,7 +28,19 @@ void get_version();
 
 }; // end of namespace
 
+
+#include "tempi/identifier.h"
+#include "tempi/keyframe.h"
+#include "tempi/marker.h"
+#include "tempi/rule.h"
+#include "tempi/state.h"
+#include "tempi/statemachine.h"
+#include "tempi/tempi.h"
 #include "tempi/tempi-version.h"
+#include "tempi/timeposition.h"
+#include "tempi/timer.h"
+#include "tempi/track.h"
+#include "tempi/types.h"
 
 #endif // __TEMPI_H__
 
