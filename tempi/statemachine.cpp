@@ -18,6 +18,7 @@
  */
 
 #include "statemachine.h"
+#include <iostream>
 
 namespace tempi
 {
@@ -39,11 +40,16 @@ bool StateMachine::addRule(Rule *rule)
 bool StateMachine::addState(State *state)
 {
     if (hasStateName(state->getName()))
+    {
+        std::cout << "StateMachine::" << __FUNCTION__ << ": Already has a state named " << state->getName() << std::endl;
         return false;
+    }
     else
         states_[state->getName()] = StatePtr(state);
     if (states_.size() == 1)
         setCurrentStateName(state->getName());
+    else
+        std::cout << "Have " << states_.size() << " states." << std::endl;
     return true;
 }
 
@@ -54,8 +60,11 @@ const std::string &StateMachine::getCurrentStateName()
 
 bool StateMachine::setCurrentStateName(const std::string &name)
 {
-    if (hasStateName(name))
+    if (! hasStateName(name))
+    {
+        std::cout << "StateMachine::" << __FUNCTION__ << ": No such state " << name << std::endl;
         return false;
+    }
     if (current_state_ != "")
     {
         getState(getCurrentStateName())->on_leaved_signal_();

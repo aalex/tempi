@@ -29,4 +29,5 @@ tempi/config.h.in
 tempi/stamp-h1
 tempi/tempi-version.h
 tests/check_version
+tests/check_fsm
 *.dia~
