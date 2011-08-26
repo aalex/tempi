@@ -20,7 +20,6 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     rule.cpp \
     state.cpp \
     statemachine.cpp \
-    tempi-version.cpp \
     tempi.cpp \
     timer.cpp
 
