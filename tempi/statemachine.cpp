@@ -17,7 +17,7 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "statemachine.h"
+#include "tempi/statemachine.h"
 #include <iostream>
 
 namespace tempi

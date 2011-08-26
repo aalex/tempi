@@ -17,7 +17,7 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "state.h"
+#include "tempi/state.h"
 
 namespace tempi
 {

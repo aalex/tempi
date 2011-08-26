@@ -17,18 +17,32 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __TEMPI_H__
-#define __TEMPI_H__
+#include "tempi/marker.h"
 
 namespace tempi
 {
 
-void hello();
-void get_version();
+Marker::Marker(Identifier id) :
+    id_(id)
+{
+    // pass
+}
 
-}; // end of namespace
+Identifier Marker::getIdentifier() const
+{
+    return id_;
+}
 
-#include "tempi/tempi-version.h"
+const std::string &Marker::getName() const
+{
+    return name_;
+}
 
-#endif // __TEMPI_H__
+
+void Marker::setName(const std::string &name)
+{
+    name_ = name;
+}
+
+} // end of namespace
 
