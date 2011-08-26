@@ -17,25 +17,34 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __TEMPI_TYPES_H__
-#define __TEMPI_TYPES_H__
-
-#include <string>
+#include <sys/time.h>
+#include "tempi/timer.h"
 
 namespace tempi
 {
 
-typedef float f;
-typedef float[2] ff;
-typedef float[3] fff;
-typedef float[4] ffff;
-typedef int i;
-typedef int[2] ii;
-typedef int[3] iii;
-typedef int[4] iiiii
-typedef std::string s;
+Timer::Timer() :
+    start_tick_(0L)
+{
+    reset();
+}
 
-} // end of namespace
+TimePosition Timer::elapsed()
+{
+    return now() - start_tick_;
+}
 
-#endif // ifndef
+void Timer::reset()
+{
+    start_tick_ = now();
+}
+
+TimePosition Timer::now()
+{
+    struct timeval tv;
+    gettimeofday(&tv, 0);
+    return ((TimePosition) tv.tv_sec) * 1000000000 + (TimePosition) tv.tv_usec * 1000;
+}
+
+};
 

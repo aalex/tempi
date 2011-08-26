@@ -20,7 +20,8 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     state.cpp \
     statemachine.cpp \
     tempi-version.cpp \
-    tempi.cpp
+    tempi.cpp \
+    timer.cpp
 
 ## Instruct libtool to include ABI version information in the generated shared
 ## library file (.so).  The library ABI version is defined in configure.ac, so
@@ -34,11 +35,16 @@ libtempi_@TEMPI_API_VERSION@_la_includedir = $(includedir)/tempi-$(TEMPI_API_VER
 
 ## PLEASE KEEP THEM IN ALPHABETICAL ORDER
 libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
+    identifier.h \
+    keyframe.h \
     rule.h \
     state.h \
     statemachine.h \
     tempi-version.h \
     tempi.h \
+    timer.h \
+    timeposition.h \
+    track.h \
     types.h
 
 EXTRA_DIST = config.h

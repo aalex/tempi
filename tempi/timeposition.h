@@ -17,25 +17,16 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __TEMPI_TYPES_H__
-#define __TEMPI_TYPES_H__
-
-#include <string>
+#ifndef __TEMPI_TIMEPOSITION_H__
+#define __TEMPI_TIMEPOSITION_H__
 
 namespace tempi
 {
 
-typedef float f;
-typedef float[2] ff;
-typedef float[3] fff;
-typedef float[4] ffff;
-typedef int i;
-typedef int[2] ii;
-typedef int[3] iii;
-typedef int[4] iiiii
-typedef std::string s;
+typedef unsigned long long TimePosition;
 
 } // end of namespace
 
 #endif // ifndef
+
 
