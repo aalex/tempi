@@ -21,19 +21,30 @@
 #define __TEMPI_TYPES_H__
 
 #include <string>
+#include <boost/tuple/tuple.hpp>
 
 namespace tempi
 {
 
-typedef float f;
-typedef float[2] ff;
-typedef float[3] fff;
-typedef float[4] ffff;
+namespace types
+{
+
+typedef double f;
+typedef boost::tuple<double, double> ff;
+typedef boost::tuple<double, double, double> fff;
+typedef boost::tuple<double, double, double, double> ffff;
+
 typedef int i;
-typedef int[2] ii;
-typedef int[3] iii;
-typedef int[4] iiiii
+typedef boost::tuple<int, int> ii;
+typedef boost::tuple<int, int, int> iii;
+typedef boost::tuple<int, int, int, int> iiii;
+
 typedef std::string s;
+typedef boost::tuple<std::string, std::string> ss;
+typedef boost::tuple<std::string, std::string, std::string> sss;
+typedef boost::tuple<std::string, std::string, std::string, std::string> ssss;
+
+} // end of namespace
 
 } // end of namespace
 
