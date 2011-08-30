@@ -18,6 +18,7 @@
  */
 
 #include <sys/time.h>
+//#include <ctime>
 #include "tempi/timer.h"
 
 namespace tempi
@@ -44,6 +45,7 @@ TimePosition Timer::now()
     struct timeval tv;
     gettimeofday(&tv, 0);
     return ((TimePosition) tv.tv_sec) * 1000000000 + (TimePosition) tv.tv_usec * 1000;
+    //return std::clock() * (1000000000L / CLOCKS_PER_SEC);
 }
 
 };
