@@ -33,3 +33,7 @@ tests/check_fsm
 tests/check_timer
 tests/check_track
 *.dia~
+prototypes/any
+prototypes/variant
+*.swp
+*.cxx
