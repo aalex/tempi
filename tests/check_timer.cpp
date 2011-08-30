@@ -11,9 +11,11 @@ bool check_simple()
     std::cout << "Please wait 1 second..." << std::endl;
     sleep(1); // 1 second
 
-    if (timer.elapsed() < 1000000000L)
+    TimePosition elapsed = timer.elapsed();
+
+    if (elapsed < 1000000000L)
     {
-        std::cout << "At least one second should have gone away." << std::endl;
+        std::cout << "At least one second should have gone away. But it's " << elapsed << std::endl;
         return false;
     }
 
