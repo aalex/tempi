@@ -18,11 +18,18 @@
  */
 
 #include <sys/time.h>
+// TODO: use boost::chrono
 //#include <ctime>
+//#include <boost/chrono/chrono.hpp>
+//#include <boost/chrono/high_resolution_clock.hpp>
 #include "tempi/timer.h"
+
+//#define BOOST_CHRONO_INLINED
 
 namespace tempi
 {
+
+//typedef boost::chrono::nanoseconds TimePoint;
 
 Timer::Timer() :
     start_tick_(0L)
