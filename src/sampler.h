@@ -17,39 +17,40 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <clutter/clutter.h>
-#include <iostream>
-#include "tempi/tempi.h"
+#ifndef __TEMPI_SAMPLER_H__
+#define __TEMPI_SAMPLER_H__
+
+#include <boost/tuple/tuple.hpp>
+#include <vector>
 #include "tempi/timer.h"
-#include "sampler.h"
-#include <unistd.h>
+// TODO: use boost::any
+//#include <boost/any.hpp>
 
-void sleep_one_second()
+namespace tempi
 {
-    sleep(1); // 1 second
-}
 
-int main(int argc, char *argv[])
+typedef boost::tuple<double, double> ff;
+typedef tempi::TimePosition TimePoint;
+typedef boost::tuple<TimePoint, ff> Point;
+typedef std::vector<Point> PointVec;
+typedef PointVec::iterator PointVecIter;
+
+class Sampler
 {
-    tempi::hello();
-    tempi::Sampler sampler;
-    sampler.add(0.0, 0.0);
-    std::cout << "add 0,0" << std::endl;
-    sleep_one_second();
-    sampler.add(1.0, 1.0);
-    std::cout << "add 1,1" << std::endl;
-    sleep_one_second();
-    sampler.add(2.0, 2.0);
-    std::cout << "add 2,2" << std::endl;
+    public:
+        Sampler();
+        void reset();
+        TimePoint getDuration();
+        void add(double x, double y);
+        ff readLoop();
+        void print();
+    private:
+        tempi::Timer timer_;
+        PointVec points_;
+        PointVecIter getClosest(TimePoint point);
+};
 
-    sampler.print();
+} // end of namespace
 
-    while (true)
-    {
-        tempi::ff value = sampler.readLoop();
-        std::cout << "Read " << value.get<0>() << ", " << value.get<1>() << std::endl;
-        sleep_one_second();
-    }
-    return 0;
-}
+#endif // ifndef
 

@@ -16,10 +16,12 @@ tempi_CXXFLAGS = $(AM_CXXFLAGS)
 tempi_LDADD = $(LDADD)
 
 headers = \
+    sampler.h \
 	gui.h
 
 tempi_SOURCES = \
 	gui.cpp \
+    sampler.cpp \
 	main.cpp \
 	$(headers)
 
