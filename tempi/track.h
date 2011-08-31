@@ -78,7 +78,7 @@ class Track
         {
             isMute_ = mute;
         }
-        void getMute() const
+        bool getMute() const
         {
             return isMute_;
         }

@@ -74,7 +74,6 @@ class KeyFrame
         }
     private:
         T value_;
-
 };
 
 } // end of namespace
