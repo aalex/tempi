@@ -36,6 +36,7 @@ static void on_frame_cb(ClutterTimeline * /*timeline*/, guint * /*ms*/, gpointer
 {
     App *app = (App *) user_data;
     tempi::ff value = app->sampler_.readLoop();
+    //std::cout << __FUNCTION__ << std::endl;
     //std::cout << "Read " << value.get<0>() << ", " << value.get<1>() << std::endl;
     clutter_actor_set_position(app->rectangle_, value.get<0>(), value.get<1>());
 }
@@ -61,7 +62,6 @@ static gboolean button_released_cb(ClutterActor *stage, ClutterEvent *event, gpo
     app->recording_ = false;
     return TRUE;
 }
-
 
 static gboolean button_press_cb(ClutterActor *actor, ClutterEvent *event, gpointer user_data)
 {
@@ -96,7 +96,7 @@ int main(int argc, char *argv[])
         return 1;
 
     stage = clutter_stage_get_default();
-    clutter_actor_set_size(stage, 400, 400);
+    clutter_actor_set_size(stage, 1024, 768);
     clutter_stage_set_color(CLUTTER_STAGE(stage), &black);
     g_signal_connect(stage, "destroy", G_CALLBACK(clutter_main_quit), NULL);
     clutter_actor_set_reactive(stage, TRUE);
