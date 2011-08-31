@@ -1,5 +1,6 @@
 #include "sampler.h"
 #include <iostream>
+#include <cmath> // for std::abs
 
 namespace tempi
 {
@@ -43,7 +44,7 @@ ff Sampler::readLoop()
     }
 }
 
-PointVecIter Sampler::getClosest(TimePoint point)
+PointVecIter Sampler::getClosest(TimePoint target)
 {
     PointVecIter iter;
     PointVecIter ret;
@@ -52,11 +53,13 @@ PointVecIter Sampler::getClosest(TimePoint point)
     
     for (iter = points_.begin(); iter < points_.end(); ++iter)
     {
-        TimePoint current = (*iter).get<0>();
-        if (point - current < smallest)
+        TimePoint pos = (*iter).get<0>();
+        TimePoint distance = std::abs(target - pos);
+        if (distance < smallest)
         {
+            std::cout << "smallest:" << smallest << " target=" << target << " pos=" << pos << " abs:" << distance << std::endl;
             ret = iter;
-            smallest = current;
+            smallest = distance;
         }
     }
     return ret;
