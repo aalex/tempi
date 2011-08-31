@@ -24,30 +24,31 @@ TimePoint Sampler::getDuration()
     return ((points_[points_.size() - 1])).get<0>();
 }
 
-void Sampler::add(double x, double y)
+void Sampler::add(ff value)
 {
-    std::cout << "add " << x << " " << y << std::endl;
-    points_.push_back(Point(writer_timer_.elapsed(), ff(x, y)));
+    //std::cout << "add " << value.get<0>() << " " << value.get<1>() << std::endl;
+    std::cout << "add " << value << std::endl;
+    points_.push_back(Point(writer_timer_.elapsed(), value));
 }
 
 ff Sampler::readLoop()
 {
     TimePoint duration = getDuration();
     TimePoint elapsed = reader_timer_.elapsed();
-    std::cout << __FUNCTION__ << std::endl;
+    //std::cout << __FUNCTION__ << std::endl;
     if (points_.size() == 0)
     {
-        std::cout << "No point to read." << std::endl;
+        //std::cout << "No point to read." << std::endl;
         return ff(0.0, 0.0);
     }
     else if (duration == 0L)
     {
-        std::cout << "Read first point." << std::endl;
+        //std::cout << "Read first point." << std::endl;
         return (*points_.begin()).get<1>();
     }
     else if (duration == elapsed)
     {
-        std::cout << "Read last point." << std::endl;
+        //std::cout << "Read last point." << std::endl;
         return points_[points_.size() - 1].get<1>();
     }
     else
@@ -86,10 +87,9 @@ void Sampler::print()
     PointVecIter iter;
     for (iter = points_.begin(); iter < points_.end(); ++iter)
     {
-        std::cout << " * " << (*iter).get<0>() << " " << 
-            (*iter).get<1>().get<0>() << " " << 
-            (*iter).get<1>().get<1>() << 
-            std::endl;
+        TimePoint point = (*iter).get<0>();
+        ff value = (*iter).get<1>();
+        //std::cout << " * " << point << ": " << value << std::endl;
     }
 }
 

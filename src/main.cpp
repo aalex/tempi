@@ -48,7 +48,7 @@ static gboolean motion_event_cb(ClutterActor *stage, ClutterEvent *event, gpoint
     clutter_event_get_coords(event, &x, &y);
 
     if (app->recording_)
-        app->sampler_.add(x, y);
+        app->sampler_.add(tempi::ff(x, y));
     return TRUE;
 }
 
@@ -58,7 +58,7 @@ static gboolean button_released_cb(ClutterActor *stage, ClutterEvent *event, gpo
     gfloat x, y;
     clutter_event_get_coords(event, &x, &y);
 
-    app->sampler_.add(x, y);
+    app->sampler_.add(tempi::ff(x, y));
     app->recording_ = false;
     return TRUE;
 }
@@ -70,7 +70,7 @@ static gboolean button_press_cb(ClutterActor *actor, ClutterEvent *event, gpoint
     clutter_event_get_coords(event, &x, &y);
 
     app->sampler_.reset();
-    app->sampler_.add(x, y);
+    app->sampler_.add(tempi::ff(x, y));
     app->recording_ = true;
     return TRUE;
 }
