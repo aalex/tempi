@@ -12,7 +12,8 @@ Sampler::Sampler()
 
 void Sampler::reset()
 {
-    timer_.reset();
+    writer_timer_.reset();
+    reader_timer_.reset();
     points_.clear();
 }
 
@@ -25,7 +26,7 @@ TimePoint Sampler::getDuration()
 
 void Sampler::add(double x, double y)
 {
-    points_.push_back(Point(timer_.elapsed(), ff(x, y)));
+    points_.push_back(Point(writer_timer_.elapsed(), ff(x, y)));
 }
 
 ff Sampler::readLoop()
@@ -37,9 +38,9 @@ ff Sampler::readLoop()
     }
     else
     {
-        std::cout << "duration: " << getDuration() << std::endl;
-        TimePoint cursor = timer_.elapsed() % getDuration();
-        std::cout << "elapsed modulo duration: " << cursor << std::endl;
+        //std::cout << "duration: " << getDuration() << std::endl;
+        TimePoint cursor = reader_timer_.elapsed() % getDuration();
+        //std::cout << "elapsed modulo duration: " << cursor << std::endl;
         return (*getClosest(cursor)).get<1>();
     }
 }
@@ -57,7 +58,7 @@ PointVecIter Sampler::getClosest(TimePoint target)
         TimePoint distance = std::abs(target - pos);
         if (distance < smallest)
         {
-            std::cout << "smallest:" << smallest << " target=" << target << " pos=" << pos << " abs:" << distance << std::endl;
+            //std::cout << "smallest:" << smallest << " target=" << target << " pos=" << pos << " abs:" << distance << std::endl;
             ret = iter;
             smallest = distance;
         }
@@ -78,3 +79,4 @@ void Sampler::print()
 }
 
 } // end of namespace
+

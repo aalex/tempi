@@ -45,7 +45,8 @@ class Sampler
         ff readLoop();
         void print();
     private:
-        tempi::Timer timer_;
+        tempi::Timer writer_timer_;
+        tempi::Timer reader_timer_;
         PointVec points_;
         PointVecIter getClosest(TimePoint point);
 };
