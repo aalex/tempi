@@ -31,7 +31,8 @@ void Sampler::add(double x, double y)
 
 ff Sampler::readLoop()
 {
-    if (points_.size() == 0)
+    TimePoint duration = getDuration();
+    if (points_.size() == 0 || duration == 0L)
     {
         std::cout << "No point to read." << std::endl;
         return ff(0.0, 0.0);
@@ -39,7 +40,7 @@ ff Sampler::readLoop()
     else
     {
         //std::cout << "duration: " << getDuration() << std::endl;
-        TimePoint cursor = reader_timer_.elapsed() % getDuration();
+        TimePoint cursor = reader_timer_.elapsed() % duration;
         //std::cout << "elapsed modulo duration: " << cursor << std::endl;
         return (*getClosest(cursor)).get<1>();
     }
