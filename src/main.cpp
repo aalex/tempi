@@ -71,6 +71,7 @@ static gboolean button_press_cb(ClutterActor *actor, ClutterEvent *event, gpoint
 
     app->sampler_.reset();
     app->sampler_.add(x, y);
+    app->recording_ = true;
     return TRUE;
 }
 

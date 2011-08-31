@@ -26,6 +26,7 @@ TimePoint Sampler::getDuration()
 
 void Sampler::add(double x, double y)
 {
+    std::cout << "add " << x << " " << y << std::endl;
     points_.push_back(Point(writer_timer_.elapsed(), ff(x, y)));
 }
 
