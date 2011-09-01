@@ -42,7 +42,7 @@ static void on_frame_cb(ClutterTimeline * /*timeline*/, guint * /*ms*/, gpointer
     App *app = (App *) user_data;
     try
     {
-        std::cout << __FUNCTION__ << std::endl;
+        //std::cout << __FUNCTION__ << std::endl;
         boost::any *any = app->sampler_.readLoop();
         if (any)
         {
