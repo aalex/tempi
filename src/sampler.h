@@ -65,7 +65,6 @@ class Sampler
         void print();
         // TODO eraseBetween(TimeStamp from, TimeStamp to);
     private:
-        Timer writer_timer_;
         Timer reader_timer_;
         EventVec events_;
         EventVecIter getClosest(TimeStamp target);
