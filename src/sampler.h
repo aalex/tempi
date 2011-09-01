@@ -20,19 +20,16 @@
 #ifndef __TEMPI_SAMPLER_H__
 #define __TEMPI_SAMPLER_H__
 
+#include <boost/any.hpp>
 #include <boost/tuple/tuple.hpp>
-#include <boost/tuple/tuple_io.hpp>
 #include <vector>
 #include "tempi/timer.h"
-// TODO: use boost::any
-//#include <boost/any.hpp>
 
 namespace tempi
 {
 
-typedef boost::tuple<double, double> ff;
 typedef TimePosition TimePoint;
-typedef boost::tuple<TimePoint, ff> Point;
+typedef boost::tuple<TimePoint, boost::any> Point;
 typedef std::vector<Point> PointVec;
 typedef PointVec::iterator PointVecIter;
 
@@ -42,8 +39,8 @@ class Sampler
         Sampler();
         void reset();
         TimePoint getDuration();
-        void add(ff value);
-        ff readLoop();
+        void add(boost::any value);
+        boost::any *readLoop();
         void print();
     private:
         Timer writer_timer_;

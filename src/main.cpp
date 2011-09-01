@@ -17,12 +17,17 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <boost/any.hpp>
+//#include <boost/any_cast.hpp>
 #include <clutter/clutter.h>
 #include <iostream>
 #include "tempi/tempi.h"
+#include "tempi/types.h"
 #include "tempi/timer.h"
 #include "sampler.h"
 #include <unistd.h>
+
+using namespace tempi::types;
 
 struct App
 {
@@ -35,10 +40,22 @@ struct App
 static void on_frame_cb(ClutterTimeline * /*timeline*/, guint * /*ms*/, gpointer user_data)
 {
     App *app = (App *) user_data;
-    tempi::ff value = app->sampler_.readLoop();
-    //std::cout << __FUNCTION__ << std::endl;
-    //std::cout << "Read " << value.get<0>() << ", " << value.get<1>() << std::endl;
-    clutter_actor_set_position(app->rectangle_, value.get<0>(), value.get<1>());
+    try
+    {
+        std::cout << __FUNCTION__ << std::endl;
+        boost::any *any = app->sampler_.readLoop();
+        if (any)
+        {
+            ff *value = boost::any_cast<ff>(any);
+            //std::cout << "Read " << value.get<0>() << ", " << value.get<1>() << std::endl;
+            clutter_actor_set_position(app->rectangle_, value->get<0>(), value->get<1>());
+        }
+    }
+    catch (const boost::bad_any_cast &e)
+    {
+        std::cout << "bad any cast exception" << std::endl;
+        return;
+    }
 }
 
 static gboolean motion_event_cb(ClutterActor *stage, ClutterEvent *event, gpointer user_data)
@@ -48,7 +65,7 @@ static gboolean motion_event_cb(ClutterActor *stage, ClutterEvent *event, gpoint
     clutter_event_get_coords(event, &x, &y);
 
     if (app->recording_)
-        app->sampler_.add(tempi::ff(x, y));
+        app->sampler_.add(boost::any(ff(x, y)));
     return TRUE;
 }
 
@@ -58,7 +75,7 @@ static gboolean button_released_cb(ClutterActor *stage, ClutterEvent *event, gpo
     gfloat x, y;
     clutter_event_get_coords(event, &x, &y);
 
-    app->sampler_.add(tempi::ff(x, y));
+    app->sampler_.add(boost::any(ff(x, y)));
     app->recording_ = false;
     return TRUE;
 }
@@ -70,7 +87,7 @@ static gboolean button_press_cb(ClutterActor *actor, ClutterEvent *event, gpoint
     clutter_event_get_coords(event, &x, &y);
 
     app->sampler_.reset();
-    app->sampler_.add(tempi::ff(x, y));
+    app->sampler_.add(boost::any(ff(x, y)));
     app->recording_ = true;
     return TRUE;
 }
