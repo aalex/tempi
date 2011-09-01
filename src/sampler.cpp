@@ -35,9 +35,9 @@ void Sampler::add(boost::any value)
 void Sampler::add(TimeStamp position, boost::any value)
 {
     events_.insert(getIteratorAfter(position), Event(position, value));
-    std::cout << "add " << position << ": ?";
-    std::cout << " ... We have " << events_.size() << " events.";
-    std::cout << std::endl;
+    //std::cout << "add " << position << ": ?";
+    //std::cout << " ... We have " << events_.size() << " events.";
+    //std::cout << std::endl;
 }
 
 EventVecIter Sampler::getIteratorAfter(TimeStamp target)
@@ -122,8 +122,7 @@ void Sampler::print()
     {
         TimeStamp point = (*iter).get<0>();
         boost::any value = (*iter).get<1>();
-        //std::cout << " * " << point << ": " << value << std::endl;
-        std::cout << " * " << point << ": " << boost::any_cast<boost::tuple<double, double> >(value) << std::endl;
+        //std::cout << " * " << point << ": " << boost::any_cast<boost::tuple<double, double> >(value) << std::endl;
     }
 }
 
