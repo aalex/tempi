@@ -15,21 +15,21 @@ void Sampler::reset()
 {
     writer_timer_.reset();
     reader_timer_.reset();
-    points_.clear();
+    events_.clear();
 }
 
 TimeStamp Sampler::getDuration()
 {
-    if (points_.size() == 0)
+    if (events_.size() == 0)
         return 0L;
-    return ((points_[points_.size() - 1])).get<0>();
+    return ((events_[events_.size() - 1])).get<0>();
 }
 
 void Sampler::add(boost::any value)
 {
     //std::cout << "add " << value.get<0>() << " " << value.get<1>() << std::endl;
     //std::cout << "add " << value << std::endl;
-    points_.push_back(Point(writer_timer_.elapsed(), value));
+    events_.push_back(Event(writer_timer_.elapsed(), value));
 }
 
 boost::any *Sampler::readLoop()
@@ -37,7 +37,7 @@ boost::any *Sampler::readLoop()
     TimeStamp duration = getDuration();
     TimeStamp elapsed = reader_timer_.elapsed();
     //std::cout << __FUNCTION__ << std::endl;
-    if (points_.size() == 0)
+    if (events_.size() == 0)
     {
         //std::cout << "No point to read." << std::endl;
         return 0;
@@ -45,12 +45,12 @@ boost::any *Sampler::readLoop()
     else if (duration == 0L)
     {
         //std::cout << "Read first point." << std::endl;
-        return &(*points_.begin()).get<1>();
+        return &(*events_.begin()).get<1>();
     }
     else if (duration == elapsed)
     {
         //std::cout << "Read last point." << std::endl;
-        return &points_[points_.size() - 1].get<1>();
+        return &events_[events_.size() - 1].get<1>();
     }
     else
     {
@@ -62,14 +62,14 @@ boost::any *Sampler::readLoop()
     }
 }
 
-PointVecIter Sampler::getClosest(TimeStamp target)
+EventVecIter Sampler::getClosest(TimeStamp target)
 {
-    PointVecIter iter;
-    PointVecIter ret;
-    ret = points_.begin();
+    EventVecIter iter;
+    EventVecIter ret;
+    ret = events_.begin();
     TimeStamp smallest = getDuration();
     
-    for (iter = points_.begin(); iter < points_.end(); ++iter)
+    for (iter = events_.begin(); iter < events_.end(); ++iter)
     {
         TimeStamp pos = (*iter).get<0>();
         TimeStamp distance = std::abs(target - pos);
@@ -85,8 +85,8 @@ PointVecIter Sampler::getClosest(TimeStamp target)
 
 void Sampler::print()
 {
-    PointVecIter iter;
-    for (iter = points_.begin(); iter < points_.end(); ++iter)
+    EventVecIter iter;
+    for (iter = events_.begin(); iter < events_.end(); ++iter)
     {
         TimeStamp point = (*iter).get<0>();
         boost::any value = (*iter).get<1>();

@@ -29,24 +29,43 @@ namespace tempi
 {
 
 typedef TimePosition TimeStamp;
-typedef boost::tuple<TimeStamp, boost::any> Point;
-typedef std::vector<Point> PointVec;
-typedef PointVec::iterator PointVecIter;
+typedef boost::tuple<TimeStamp, boost::any> Event;
+typedef std::vector<Event> EventVec;
+typedef EventVec::iterator EventVecIter;
 
 class Sampler
 {
     public:
         Sampler();
+        /**
+         * Clears this Track.
+         */
         void reset();
+        /**
+         * Returns the TimeStamp of the last event in this Track.
+         */
         TimeStamp getDuration();
+        /**
+         * Adds an event to this track.
+         * FIXME: to be deprecated.
+         */
         void add(boost::any value);
+        /**
+         * Adds an event to this track.
+         */
+        void add(TimeStamp time, boost::any value);
+        /**
+         * Reads an event.
+         * Returns 0 if none is found.
+         * Never free this pointer.
+         */
         boost::any *readLoop();
         void print();
     private:
         Timer writer_timer_;
         Timer reader_timer_;
-        PointVec points_;
-        PointVecIter getClosest(TimeStamp target);
+        EventVec events_;
+        EventVecIter getClosest(TimeStamp target);
 };
 
 } // end of namespace
