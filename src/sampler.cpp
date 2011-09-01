@@ -13,7 +13,6 @@ Sampler::Sampler()
 
 void Sampler::reset()
 {
-    writer_timer_.reset();
     reader_timer_.reset();
     events_.clear();
 }
