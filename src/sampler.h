@@ -33,6 +33,10 @@ typedef boost::tuple<TimeStamp, boost::any> Event;
 typedef std::vector<Event> EventVec;
 typedef EventVec::iterator EventVecIter;
 
+/**
+ * A Track contains timed Events. 
+ * Events are any data, typically a boost::tuple.
+ */
 class Sampler
 {
     public:
@@ -47,7 +51,7 @@ class Sampler
         TimeStamp getDuration();
         /**
          * Adds an event to this track.
-         * FIXME: to be deprecated.
+         * FIXME: to be moved to Recorder.
          */
         void add(boost::any value);
         /**
@@ -61,11 +65,16 @@ class Sampler
          */
         boost::any *readLoop();
         void print();
+        // TODO eraseBetween(TimeStamp from, TimeStamp to);
     private:
         Timer writer_timer_;
         Timer reader_timer_;
         EventVec events_;
         EventVecIter getClosest(TimeStamp target);
+        /**
+         * Useful to insert an event before what it returns.
+         */
+        EventVecIter getIteratorAfter(TimeStamp target);
 };
 
 } // end of namespace

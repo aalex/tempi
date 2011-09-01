@@ -29,7 +29,39 @@ void Sampler::add(boost::any value)
 {
     //std::cout << "add " << value.get<0>() << " " << value.get<1>() << std::endl;
     //std::cout << "add " << value << std::endl;
-    events_.push_back(Event(writer_timer_.elapsed(), value));
+    add(writer_timer_.elapsed(), value);
+}
+
+void Sampler::add(TimeStamp position, boost::any value)
+{
+    events_.insert(getIteratorAfter(position), Event(position, value));
+    std::cout << "add " << position << ": ?";
+    std::cout << " ... We have " << events_.size() << " events.";
+    std::cout << std::endl;
+}
+
+EventVecIter Sampler::getIteratorAfter(TimeStamp target)
+{
+    EventVecIter iter;
+    EventVecIter ret;
+    ret = events_.begin();
+    TimeStamp smallest = getDuration();
+    bool found_it = false;
+    
+    for (iter = events_.begin(); iter < events_.end(); ++iter)
+    {
+        TimeStamp pos = (*iter).get<0>();
+        //if (target >= pos)
+        if (pos >= target)
+        {
+            ret = iter;
+            found_it = true;
+            break;
+        }
+    }
+    if (! found_it)
+        ret = events_.end();
+    return ret;
 }
 
 boost::any *Sampler::readLoop()
@@ -91,6 +123,7 @@ void Sampler::print()
         TimeStamp point = (*iter).get<0>();
         boost::any value = (*iter).get<1>();
         //std::cout << " * " << point << ": " << value << std::endl;
+        std::cout << " * " << point << ": " << boost::any_cast<boost::tuple<double, double> >(value) << std::endl;
     }
 }
 

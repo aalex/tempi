@@ -92,12 +92,16 @@ static gboolean button_press_cb(ClutterActor *actor, ClutterEvent *event, gpoint
     return TRUE;
 }
 
-static void key_event_cb(ClutterActor *actor, ClutterKeyEvent *event, gpointer data)
+static void key_event_cb(ClutterActor *actor, ClutterKeyEvent *event, gpointer user_data)
 {
+    App *app = (App *) user_data;
     switch (event->keyval)
     {
         case CLUTTER_Escape:
             clutter_main_quit();
+            break;
+        case CLUTTER_KEY_space:
+            app->sampler_.print();
             break;
     }
 }
