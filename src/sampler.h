@@ -28,8 +28,8 @@
 namespace tempi
 {
 
-typedef TimePosition TimePoint;
-typedef boost::tuple<TimePoint, boost::any> Point;
+typedef TimePosition TimeStamp;
+typedef boost::tuple<TimeStamp, boost::any> Point;
 typedef std::vector<Point> PointVec;
 typedef PointVec::iterator PointVecIter;
 
@@ -38,7 +38,7 @@ class Sampler
     public:
         Sampler();
         void reset();
-        TimePoint getDuration();
+        TimeStamp getDuration();
         void add(boost::any value);
         boost::any *readLoop();
         void print();
@@ -46,7 +46,7 @@ class Sampler
         Timer writer_timer_;
         Timer reader_timer_;
         PointVec points_;
-        PointVecIter getClosest(TimePoint point);
+        PointVecIter getClosest(TimeStamp target);
 };
 
 } // end of namespace

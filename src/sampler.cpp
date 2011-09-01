@@ -18,7 +18,7 @@ void Sampler::reset()
     points_.clear();
 }
 
-TimePoint Sampler::getDuration()
+TimeStamp Sampler::getDuration()
 {
     if (points_.size() == 0)
         return 0L;
@@ -34,8 +34,8 @@ void Sampler::add(boost::any value)
 
 boost::any *Sampler::readLoop()
 {
-    TimePoint duration = getDuration();
-    TimePoint elapsed = reader_timer_.elapsed();
+    TimeStamp duration = getDuration();
+    TimeStamp elapsed = reader_timer_.elapsed();
     //std::cout << __FUNCTION__ << std::endl;
     if (points_.size() == 0)
     {
@@ -56,23 +56,23 @@ boost::any *Sampler::readLoop()
     {
         //std::cout << "duration: " << getDuration() << std::endl;
         // FIXME: using the modulo here should not be mandatory
-        TimePoint cursor = elapsed % duration;
+        TimeStamp cursor = elapsed % duration;
         //std::cout << "elapsed modulo duration: " << cursor << std::endl;
         return &(*getClosest(cursor)).get<1>();
     }
 }
 
-PointVecIter Sampler::getClosest(TimePoint target)
+PointVecIter Sampler::getClosest(TimeStamp target)
 {
     PointVecIter iter;
     PointVecIter ret;
     ret = points_.begin();
-    TimePoint smallest = getDuration();
+    TimeStamp smallest = getDuration();
     
     for (iter = points_.begin(); iter < points_.end(); ++iter)
     {
-        TimePoint pos = (*iter).get<0>();
-        TimePoint distance = std::abs(target - pos);
+        TimeStamp pos = (*iter).get<0>();
+        TimeStamp distance = std::abs(target - pos);
         if (distance < smallest)
         {
             //std::cout << "smallest:" << smallest << " target=" << target << " pos=" << pos << " abs:" << distance << std::endl;
@@ -88,7 +88,7 @@ void Sampler::print()
     PointVecIter iter;
     for (iter = points_.begin(); iter < points_.end(); ++iter)
     {
-        TimePoint point = (*iter).get<0>();
+        TimeStamp point = (*iter).get<0>();
         boost::any value = (*iter).get<1>();
         //std::cout << " * " << point << ": " << value << std::endl;
     }
