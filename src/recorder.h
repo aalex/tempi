@@ -17,30 +17,40 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __TEMPI_H__
-#define __TEMPI_H__
+#ifndef __TEMPI_RECORDER_H__
+#define __TEMPI_RECORDER_H__
+
+#include <boost/any.hpp>
+#include "sampler.h" // TODO: change for tempi/track.h
 
 namespace tempi
 {
 
-void hello();
-void get_version();
+typedef Sampler Track; // FIXME: get rid of this
 
-}; // end of namespace
+/**
+ * A Recorder records events to a Track.
+ */
+class Recorder
+{
+    public:
+        Recorder(Track *track);
+        void setTrack(Track *track);
+        Track *getTrack();
+        /**
+         * Resets the internal timer of this Recorder.
+         */
+        void reset();
+        /**
+         * Adds an event to the track now.
+         */
+        void add(boost::any value);
+    private:
+        Timer timer_;
+        Track *track_;
+};
 
+} // end of namespace
 
-#include "tempi/identifier.h"
-#include "tempi/keyframe.h"
-#include "tempi/marker.h"
-#include "tempi/rule.h"
-#include "tempi/state.h"
-#include "tempi/statemachine.h"
-#include "tempi/tempi.h"
-#include "tempi/tempi-version.h"
-#include "tempi/timeposition.h"
-#include "tempi/timer.h"
-//#include "tempi/track.h"
-#include "tempi/types.h"
-
-#endif // __TEMPI_H__
+#endif // ifndef
 

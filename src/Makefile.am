@@ -17,11 +17,13 @@ tempi_LDADD = $(LDADD)
 
 headers = \
     sampler.h \
+    recorder.h \
 	gui.h
 
 tempi_SOURCES = \
 	gui.cpp \
     sampler.cpp \
+    recorder.cpp \
 	main.cpp \
 	$(headers)
 

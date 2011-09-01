@@ -25,13 +25,6 @@ TimeStamp Sampler::getDuration()
     return ((events_[events_.size() - 1])).get<0>();
 }
 
-void Sampler::add(boost::any value)
-{
-    //std::cout << "add " << value.get<0>() << " " << value.get<1>() << std::endl;
-    //std::cout << "add " << value << std::endl;
-    add(writer_timer_.elapsed(), value);
-}
-
 void Sampler::add(TimeStamp position, boost::any value)
 {
     events_.insert(getIteratorAfter(position), Event(position, value));

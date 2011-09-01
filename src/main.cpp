@@ -25,7 +25,9 @@
 #include "tempi/types.h"
 #include "tempi/timer.h"
 #include "sampler.h"
+#include "recorder.h"
 #include <unistd.h>
+#include <tr1/memory>
 
 using namespace tempi::types;
 
@@ -33,6 +35,7 @@ struct App
 {
     public:
         tempi::Sampler sampler_;
+        std::tr1::shared_ptr<tempi::Recorder> recorder_;
         bool recording_;
         ClutterActor *rectangle_;
 };
@@ -65,7 +68,7 @@ static gboolean motion_event_cb(ClutterActor *stage, ClutterEvent *event, gpoint
     clutter_event_get_coords(event, &x, &y);
 
     if (app->recording_)
-        app->sampler_.add(boost::any(ff(x, y)));
+        app->recorder_.get()->add(boost::any(ff(x, y)));
     return TRUE;
 }
 
@@ -75,7 +78,7 @@ static gboolean button_released_cb(ClutterActor *stage, ClutterEvent *event, gpo
     gfloat x, y;
     clutter_event_get_coords(event, &x, &y);
 
-    app->sampler_.add(boost::any(ff(x, y)));
+    app->recorder_.get()->add(boost::any(ff(x, y)));
     app->recording_ = false;
     return TRUE;
 }
@@ -87,7 +90,8 @@ static gboolean button_press_cb(ClutterActor *actor, ClutterEvent *event, gpoint
     clutter_event_get_coords(event, &x, &y);
 
     app->sampler_.reset();
-    app->sampler_.add(boost::any(ff(x, y)));
+    app->recorder_.get()->reset();
+    app->recorder_.get()->add(boost::any(ff(x, y)));
     app->recording_ = true;
     return TRUE;
 }
@@ -127,6 +131,7 @@ int main(int argc, char *argv[])
     clutter_actor_set_position(rectangle, 0, 0);
 
     App app;
+    app.recorder_.reset(new tempi::Recorder(&app.sampler_));
     app.recording_ = false;
     app.rectangle_ = rectangle;
 

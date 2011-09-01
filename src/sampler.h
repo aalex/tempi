@@ -20,6 +20,8 @@
 #ifndef __TEMPI_SAMPLER_H__
 #define __TEMPI_SAMPLER_H__
 
+// TODO: rename to tempi/track.h
+
 #include <boost/any.hpp>
 #include <boost/tuple/tuple.hpp>
 #include <vector>
@@ -36,6 +38,7 @@ typedef EventVec::iterator EventVecIter;
 /**
  * A Track contains timed Events. 
  * Events are any data, typically a boost::tuple.
+ * TODO: rename to Track
  */
 class Sampler
 {
@@ -49,11 +52,6 @@ class Sampler
          * Returns the TimeStamp of the last event in this Track.
          */
         TimeStamp getDuration();
-        /**
-         * Adds an event to this track.
-         * FIXME: to be moved to Recorder.
-         */
-        void add(boost::any value);
         /**
          * Adds an event to this track.
          */
