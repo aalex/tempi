@@ -17,10 +17,13 @@ lib_LTLIBRARIES = libtempi-@TEMPI_API_VERSION@.la
 ## PLEASE KEEP THEM IN ALPHABETICAL ORDER
 libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     marker.cpp \
+    player.cpp \
+    recorder.cpp \
     rule.cpp \
     state.cpp \
     statemachine.cpp \
     tempi.cpp \
+    track.cpp \
     timer.cpp
 
 ## Instruct libtool to include ABI version information in the generated shared
@@ -35,16 +38,17 @@ libtempi_@TEMPI_API_VERSION@_la_includedir = $(includedir)/tempi-$(TEMPI_API_VER
 
 ## PLEASE KEEP THEM IN ALPHABETICAL ORDER
 libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
-    marker.h \
     identifier.h \
-    keyframe.h \
+    marker.h \
+    player.h \
+    recorder.h \
     rule.h \
     state.h \
     statemachine.h \
     tempi-version.h \
     tempi.h \
-    timer.h \
     timeposition.h \
+    timer.h \
     track.h \
     types.h
 

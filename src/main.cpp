@@ -22,11 +22,6 @@
 #include <clutter/clutter.h>
 #include <iostream>
 #include "tempi/tempi.h"
-#include "tempi/types.h"
-#include "tempi/timer.h"
-#include "sampler.h"
-#include "recorder.h"
-#include "player.h"
 #include <unistd.h>
 #include <tr1/memory>
 
@@ -35,7 +30,7 @@ using namespace tempi::types;
 struct App
 {
     public:
-        tempi::Sampler sampler_;
+        tempi::Track sampler_;
         std::tr1::shared_ptr<tempi::Recorder> recorder_;
         std::tr1::shared_ptr<tempi::Player> player_;
         bool recording_;

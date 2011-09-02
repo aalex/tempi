@@ -1,4 +1,4 @@
-#include "sampler.h"
+#include "tempi/track.h"
 #include <boost/tuple/tuple_io.hpp>
 #include <iostream>
 #include <cmath> // for std::abs
@@ -6,24 +6,24 @@
 namespace tempi
 {
 
-Sampler::Sampler()
+Track::Track()
 {
     // pass
 }
 
-void Sampler::reset()
+void Track::reset()
 {
     events_.clear();
 }
 
-TimeStamp Sampler::getDuration()
+TimeStamp Track::getDuration()
 {
     if (events_.size() == 0)
         return 0L;
     return ((events_[events_.size() - 1])).get<0>();
 }
 
-void Sampler::add(TimeStamp position, boost::any value)
+void Track::add(TimeStamp position, boost::any value)
 {
     events_.insert(getIteratorAfter(position), Event(position, value));
     //std::cout << "add " << position << ": ?";
@@ -31,7 +31,7 @@ void Sampler::add(TimeStamp position, boost::any value)
     //std::cout << std::endl;
 }
 
-EventVecIter Sampler::getIteratorAfter(TimeStamp target)
+EventVecIter Track::getIteratorAfter(TimeStamp target)
 {
     EventVecIter iter;
     EventVecIter ret;
@@ -55,7 +55,7 @@ EventVecIter Sampler::getIteratorAfter(TimeStamp target)
     return ret;
 }
 
-boost::any *Sampler::getClosest(TimeStamp target)
+boost::any *Track::getClosest(TimeStamp target)
 {
     TimeStamp duration = getDuration();
     if (numberOfEvents() == 0)
@@ -85,7 +85,7 @@ boost::any *Sampler::getClosest(TimeStamp target)
     return &(*ret).get<1>();
 }
 
-void Sampler::print()
+void Track::print()
 {
     EventVecIter iter;
     for (iter = events_.begin(); iter < events_.end(); ++iter)
@@ -96,17 +96,17 @@ void Sampler::print()
     }
 }
 
-unsigned int Sampler::numberOfEvents()
+unsigned int Track::numberOfEvents()
 {
     return events_.size();
 }
 
-boost::any *Sampler::getFirst()
+boost::any *Track::getFirst()
 {
     return &(*events_.begin()).get<1>();
 }
 
-boost::any *Sampler::getLast()
+boost::any *Track::getLast()
 {
     &events_[events_.size() - 1].get<1>();
 }

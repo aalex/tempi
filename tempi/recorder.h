@@ -17,23 +17,22 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __TEMPI_PLAYER_H__
-#define __TEMPI_PLAYER_H__
+#ifndef __TEMPI_RECORDER_H__
+#define __TEMPI_RECORDER_H__
 
 #include <boost/any.hpp>
-#include "sampler.h" // TODO: change for tempi/track.h
-#include "recorder.h" // TODO: get rid of this
+#include "tempi/track.h"
 
 namespace tempi
 {
 
 /**
- * A Player plays events from a Track.
+ * A Recorder records events to a Track.
  */
-class Player
+class Recorder
 {
     public:
-        Player(Track *track);
+        Recorder(Track *track);
         void setTrack(Track *track);
         Track *getTrack();
         /**
@@ -41,16 +40,12 @@ class Player
          */
         void reset();
         /**
-         * Reads an event from the track now.
-         * Reads an event.
-         * Returns 0 if none is found.
-         * Never free this pointer.
+         * Adds an event to the track now.
          */
-        boost::any *readLoop();
+        void add(boost::any value);
     private:
         Timer timer_;
         Track *track_;
-        boost::any empty_;
 };
 
 } // end of namespace

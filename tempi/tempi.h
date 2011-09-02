@@ -30,7 +30,6 @@ void get_version();
 
 
 #include "tempi/identifier.h"
-#include "tempi/keyframe.h"
 #include "tempi/marker.h"
 #include "tempi/rule.h"
 #include "tempi/state.h"
@@ -39,7 +38,9 @@ void get_version();
 #include "tempi/tempi-version.h"
 #include "tempi/timeposition.h"
 #include "tempi/timer.h"
-//#include "tempi/track.h"
+#include "tempi/track.h"
+#include "tempi/player.h"
+#include "tempi/recorder.h"
 #include "tempi/types.h"
 
 #endif // __TEMPI_H__
