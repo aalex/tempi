@@ -56,18 +56,15 @@ class Sampler
          * Adds an event to this track.
          */
         void add(TimeStamp time, boost::any value);
-        /**
-         * Reads an event.
-         * Returns 0 if none is found.
-         * Never free this pointer.
-         */
-        boost::any *readLoop();
         void print();
         // TODO eraseBetween(TimeStamp from, TimeStamp to);
+        unsigned int numberOfEvents();
+        boost::any *getFirst();
+        boost::any *getLast();
+        boost::any *getClosest(TimeStamp target);
     private:
-        Timer reader_timer_;
+        //Timer reader_timer_;
         EventVec events_;
-        EventVecIter getClosest(TimeStamp target);
         /**
          * Useful to insert an event before what it returns.
          */

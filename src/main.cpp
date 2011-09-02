@@ -26,6 +26,7 @@
 #include "tempi/timer.h"
 #include "sampler.h"
 #include "recorder.h"
+#include "player.h"
 #include <unistd.h>
 #include <tr1/memory>
 
@@ -36,6 +37,7 @@ struct App
     public:
         tempi::Sampler sampler_;
         std::tr1::shared_ptr<tempi::Recorder> recorder_;
+        std::tr1::shared_ptr<tempi::Player> player_;
         bool recording_;
         ClutterActor *rectangle_;
 };
@@ -46,7 +48,7 @@ static void on_frame_cb(ClutterTimeline * /*timeline*/, guint * /*ms*/, gpointer
     try
     {
         //std::cout << __FUNCTION__ << std::endl;
-        boost::any *any = app->sampler_.readLoop();
+        boost::any *any = app->player_.get()->readLoop();
         if (any)
         {
             ff *value = boost::any_cast<ff>(any);
@@ -132,6 +134,7 @@ int main(int argc, char *argv[])
 
     App app;
     app.recorder_.reset(new tempi::Recorder(&app.sampler_));
+    app.player_.reset(new tempi::Player(&app.sampler_));
     app.recording_ = false;
     app.rectangle_ = rectangle;
 

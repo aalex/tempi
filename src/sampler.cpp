@@ -13,7 +13,6 @@ Sampler::Sampler()
 
 void Sampler::reset()
 {
-    reader_timer_.reset();
     events_.clear();
 }
 
@@ -56,38 +55,17 @@ EventVecIter Sampler::getIteratorAfter(TimeStamp target)
     return ret;
 }
 
-boost::any *Sampler::readLoop()
+boost::any *Sampler::getClosest(TimeStamp target)
 {
     TimeStamp duration = getDuration();
-    TimeStamp elapsed = reader_timer_.elapsed();
-    //std::cout << __FUNCTION__ << std::endl;
-    if (events_.size() == 0)
+    if (numberOfEvents() == 0)
     {
-        //std::cout << "No point to read." << std::endl;
         return 0;
     }
     else if (duration == 0L)
     {
-        //std::cout << "Read first point." << std::endl;
-        return &(*events_.begin()).get<1>();
+        return getFirst();
     }
-    else if (duration == elapsed)
-    {
-        //std::cout << "Read last point." << std::endl;
-        return &events_[events_.size() - 1].get<1>();
-    }
-    else
-    {
-        //std::cout << "duration: " << getDuration() << std::endl;
-        // FIXME: using the modulo here should not be mandatory
-        TimeStamp cursor = elapsed % duration;
-        //std::cout << "elapsed modulo duration: " << cursor << std::endl;
-        return &(*getClosest(cursor)).get<1>();
-    }
-}
-
-EventVecIter Sampler::getClosest(TimeStamp target)
-{
     EventVecIter iter;
     EventVecIter ret;
     ret = events_.begin();
@@ -104,7 +82,7 @@ EventVecIter Sampler::getClosest(TimeStamp target)
             smallest = distance;
         }
     }
-    return ret;
+    return &(*ret).get<1>();
 }
 
 void Sampler::print()
@@ -116,6 +94,21 @@ void Sampler::print()
         boost::any value = (*iter).get<1>();
         //std::cout << " * " << point << ": " << boost::any_cast<boost::tuple<double, double> >(value) << std::endl;
     }
+}
+
+unsigned int Sampler::numberOfEvents()
+{
+    return events_.size();
+}
+
+boost::any *Sampler::getFirst()
+{
+    return &(*events_.begin()).get<1>();
+}
+
+boost::any *Sampler::getLast()
+{
+    &events_[events_.size() - 1].get<1>();
 }
 
 } // end of namespace
