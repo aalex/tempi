@@ -8,7 +8,9 @@
 
 About
 -----
-It is not yet in a working state for now.
+Tempi is a multi-modal sampler-sequencer.
+
+It should supports OSC messaging soon, as well as finite state machines, timelines and flexible message routing.
 
 License
 -------
@@ -18,6 +20,12 @@ This program is free software; you can redistribute it and/or modify it under th
 Authors
 -------
 Alexandre Quessy <alexandre@quessy.net>
+
+
+Sponsors
+--------
+This project is made possible thanks to the Society for Arts and Technologies. (SAT) http://www.sat.qc.ca/
+Thanks to the Ministère du Développement économique, de l'Innovation et de l'Exportation du Québec (MDEIE).
 
 
 Installation
