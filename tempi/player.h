@@ -39,6 +39,8 @@ class Player
          * Resets the internal timer of this Recorder.
          */
         void reset();
+        void setSpeed(double factor);
+        double getSpeed() const;
         /**
          * Reads an event from the track now.
          * Reads an event.
@@ -50,6 +52,7 @@ class Player
         Timer timer_;
         Track *track_;
         boost::any empty_;
+        double speed_;
 };
 
 } // end of namespace

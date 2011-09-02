@@ -104,6 +104,12 @@ static void key_event_cb(ClutterActor *actor, ClutterKeyEvent *event, gpointer u
         case CLUTTER_KEY_space:
             app->sampler_.print();
             break;
+        case CLUTTER_KEY_Up:
+            app->player_.get()->setSpeed(app->player_.get()->getSpeed() * 1.1);
+            break;
+        case CLUTTER_KEY_Down:
+            app->player_.get()->setSpeed(app->player_.get()->getSpeed() / 1.1);
+            break;
     }
 }
 

@@ -4,9 +4,13 @@
 namespace tempi
 {
 
-Player::Player(Track *track)
+Player::Player(Track *track) :
+    timer_(),
+    track_(track),
+    empty_(),
+    speed_(1.0)
 {
-    track_ = track;
+    // pass
 }
 
 void Player::setTrack(Track *track)
@@ -34,6 +38,7 @@ boost::any *Player::readLoop()
 
     TimeStamp duration = track_->getDuration();
     TimeStamp elapsed = timer_.elapsed();
+    elapsed *= speed_; // FIXME: speed factor is broken here.
     //std::cout << __FUNCTION__ << std::endl;
     if (track_->numberOfEvents() == 0)
     {
@@ -58,6 +63,16 @@ boost::any *Player::readLoop()
         //std::cout << "elapsed modulo duration: " << cursor << std::endl;
         return track_->getClosest(cursor);
     }
+}
+
+void Player::setSpeed(double factor)
+{
+    speed_ = factor;
+}
+
+double Player::getSpeed() const
+{
+    return speed_;
 }
 
 } // end of namespace
