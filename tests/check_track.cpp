@@ -12,14 +12,14 @@ bool check_simple()
         return false;
     }
 
-    track.add(1L, types::f(0.0f));
+    track.add(1L, types::_f(0.0f));
     if (track.getDuration() != 1L)
     {
         std::cout << "Duration should be 1 ns." << std::endl;
         return false;
     }
 
-    track.add(2L, types::f(0.0f));
+    track.add(2L, types::_f(0.0f));
     if (track.getDuration() != 2L)
     {
         std::cout << "Duration should be 2 ns." << std::endl;
