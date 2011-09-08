@@ -23,7 +23,7 @@ Generates the tempi/types.h file.
 Usage: $ python utils/gentypes.py > tempi/types.h
 """
 
-import itertools
+import itertools # requires python >= 2.6
 
 MAX_LENGTH = 5
 TYPE_PREFIX = "_"
@@ -106,17 +106,12 @@ HEADER = """ /*
 namespace tempi
 {
 
-namespace types
-{
-
 using std::string;
 using boost::any;
 using boost::tuple;
 """
 
 FOOTER = """
-
-} // end of namespace
 
 } // end of namespace
 

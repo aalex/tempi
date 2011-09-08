@@ -25,7 +25,6 @@
 #include <unistd.h>
 #include <tr1/memory>
 
-using namespace tempi::types;
 
 struct App
 {
@@ -46,7 +45,7 @@ static void on_frame_cb(ClutterTimeline * /*timeline*/, guint * /*ms*/, gpointer
         boost::any *any = app->player_.get()->readLoop();
         if (any)
         {
-            _ff *value = boost::any_cast<_ff>(any);
+            tempi::_ff *value = boost::any_cast<tempi::_ff>(any);
             //std::cout << "Read " << value.get<0>() << ", " << value.get<1>() << std::endl;
             clutter_actor_set_position(app->rectangle_, value->get<0>(), value->get<1>());
         }
@@ -65,7 +64,7 @@ static gboolean motion_event_cb(ClutterActor *stage, ClutterEvent *event, gpoint
     clutter_event_get_coords(event, &x, &y);
 
     if (app->recording_)
-        app->recorder_.get()->add(boost::any(_ff(x, y)));
+        app->recorder_.get()->add(boost::any(tempi::_ff(x, y)));
     return TRUE;
 }
 
@@ -75,7 +74,7 @@ static gboolean button_released_cb(ClutterActor *stage, ClutterEvent *event, gpo
     gfloat x, y;
     clutter_event_get_coords(event, &x, &y);
 
-    app->recorder_.get()->add(boost::any(_ff(x, y)));
+    app->recorder_.get()->add(boost::any(tempi::_ff(x, y)));
     app->recording_ = false;
     return TRUE;
 }
@@ -88,7 +87,7 @@ static gboolean button_press_cb(ClutterActor *actor, ClutterEvent *event, gpoint
 
     app->sampler_.reset();
     app->recorder_.get()->reset();
-    app->recorder_.get()->add(boost::any(_ff(x, y)));
+    app->recorder_.get()->add(boost::any(tempi::_ff(x, y)));
     app->recording_ = true;
     return TRUE;
 }

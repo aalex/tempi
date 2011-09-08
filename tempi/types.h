@@ -35,9 +35,6 @@
 namespace tempi
 {
 
-namespace types
-{
-
 using std::string;
 using boost::any;
 using boost::tuple;
@@ -9373,8 +9370,6 @@ typedef tuple<string, string, string, string, float> _ssssf;
 typedef tuple<string, string, string, string, int> _ssssi;
 typedef tuple<string, string, string, string, string> _sssss;
 
-
-} // end of namespace
 
 } // end of namespace
 
