@@ -18,8 +18,7 @@
 # You should have received a copy of the GNU General Public License
 # along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
 
-HEADER = """
-/*
+HEADER = """ /*
  * Copyright (C) 2011 Alexandre Quessy
  * 
  * This file is part of Tempi.
@@ -50,6 +49,11 @@ namespace tempi
 
 namespace types
 {
+
+using std::string;
+using boost::any;
+using boost::tuple;
+
 """
 
 FOOTER = """
@@ -62,33 +66,39 @@ FOOTER = """
 """
 
 TYPES = {
-    "i": "int",
-    "u": "unsigned int",
-    "f": "double", # or float?
-    "d": "double",
-    "c": "char",
+    "a": "any",
     "b": "bool",
-    "s": "std::string",
-    "a": "boost::any",
+    # "c": "char",
+    # "d": "double",
+    "f": "float", # or double?
+    "i": "int",
+    "s": "string",
+    # "u": "unsigned int",
 }
+
+MAX_LENGTH = 3
 
 def print_types():
     lines = []
-    for length_minus_one in range(5):
+    positions = []
+    # for pos in range(MAX_LENGTH):
+    #    positions.append(0)
+    for length_minus_one in range(MAX_LENGTH):
         word_length = length_minus_one + 1
         number_of_words_of_this_length = len(TYPES) ** word_length
         for permutation_number in range(number_of_words_of_this_length):
-            prefix = "typedef boost::tuple<"
+            prefix = "typedef tuple<"
             name = ""
             for char_pos in range(word_length):
-                index = (permutation_number * char_pos) % len(TYPES)
+                index = (permutation_number + char_pos) % len(TYPES)
                 # print "XXXXXXXXXXXXXXXXXXXXXXXXX", index
                 name += TYPES.keys()[index]
                 prefix += TYPES.values()[index]
                 if char_pos < (word_length - 1):
                     prefix += ", "
             prefix += ">"
-            lines.append("%100s %s;" % (prefix, name))
+            line = "{:<50}".format(prefix) + " " + name + ";"
+            lines.append(line)
     for line in lines:
         print(line)
 
