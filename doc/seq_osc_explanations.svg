@@ -14,8 +14,8 @@
    height="765"
    id="svg5067"
    version="1.1"
-   inkscape:version="0.47 r22583"
-   sodipodi:docname="explications_seq_osc.svg">
+   inkscape:version="0.48.1 r9760"
+   sodipodi:docname="seq_osc_explanations.svg">
   <defs
      id="defs5069">
     <marker
@@ -47,15 +47,15 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.98994949"
-     inkscape:cx="213.7219"
+     inkscape:cx="215.74221"
      inkscape:cy="392.03635"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
-     inkscape:window-width="1280"
-     inkscape:window-height="965"
+     inkscape:window-width="1920"
+     inkscape:window-height="1125"
      inkscape:window-x="0"
-     inkscape:window-y="33"
+     inkscape:window-y="25"
      inkscape:window-maximized="1">
     <inkscape:grid
        type="xygrid"
@@ -85,34 +85,52 @@
     <path
        id="path5730"
        d="m 155,527.36218 0,30 305,0 0,-30 -305,0 z"
-       style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
+       style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <path
        style="fill:#b3b3b3;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
        d="m 155,270 5,-15 c 0,0 0,0 0,0 60,0 60,10 60,10 0,0 0,0 0,0 40,0 70,-15 95,-15 25,0 20,15 20,15 l 60,-15 c 0,0 27.11146,1.05573 45,10 0,0 20,10 20,10 l -305,0 z"
        id="path5744"
        transform="translate(0,287.36218)"
-       sodipodi:nodetypes="ccscssccscc" />
+       sodipodi:nodetypes="ccscssccscc"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <path
        style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
        d="m 155,180 0,30 305,0 0,-30 -305,0 z"
        id="path5115"
-       transform="translate(0,287.36218)" />
+       transform="translate(0,287.36218)"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <path
        style="fill:#b3b3b3;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
        d="m 155,210 5,-20 10,10 5,-5 35,-5 15,5 30,5 15,-15 25,20 65,-15 85,10 15,10 -305,0 z"
        id="path5153"
-       transform="translate(0,287.36218)" />
+       transform="translate(0,287.36218)"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <path
        style="fill:#e6e6e6;fill-opacity:1;stroke:#000000;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
        d="m 155,165 0,15 305,0 0,-15 -305,0 z"
        id="path5113"
-       transform="translate(0,287.36218)" />
+       transform="translate(0,287.36218)"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <text
        xml:space="preserve"
        style="font-size:9px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
        x="160"
        y="462.36218"
-       id="text5079"><tspan
+       id="text5079"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997"><tspan
          sodipodi:role="line"
          id="tspan5081"
          x="160"
@@ -122,7 +140,10 @@
        y="462.36218"
        x="200"
        style="font-size:9px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
-       xml:space="preserve"><tspan
+       xml:space="preserve"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997"><tspan
          y="462.36218"
          x="200"
          id="tspan5085"
@@ -132,7 +153,10 @@
        style="font-size:9px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
        x="240"
        y="462.36218"
-       id="text5087"><tspan
+       id="text5087"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997"><tspan
          sodipodi:role="line"
          id="tspan5089"
          x="240"
@@ -142,7 +166,10 @@
        y="462.36218"
        x="280"
        style="font-size:9px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
-       xml:space="preserve"><tspan
+       xml:space="preserve"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997"><tspan
          y="462.36218"
          x="280"
          id="tspan5093"
@@ -152,7 +179,10 @@
        style="font-size:9px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
        x="320"
        y="462.36218"
-       id="text5095"><tspan
+       id="text5095"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997"><tspan
          sodipodi:role="line"
          id="tspan5097"
          x="320"
@@ -162,7 +192,10 @@
        y="462.36218"
        x="360"
        style="font-size:9px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
-       xml:space="preserve"><tspan
+       xml:space="preserve"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997"><tspan
          y="462.36218"
          x="360"
          id="tspan5101"
@@ -172,7 +205,10 @@
        style="font-size:9px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
        x="400"
        y="462.36218"
-       id="text5103"><tspan
+       id="text5103"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997"><tspan
          sodipodi:role="line"
          id="tspan5105"
          x="400"
@@ -182,7 +218,10 @@
        y="462.36218"
        x="440"
        style="font-size:9px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
-       xml:space="preserve"><tspan
+       xml:space="preserve"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997"><tspan
          y="462.36218"
          x="440"
          id="tspan5109"
@@ -195,8 +234,11 @@
        sodipodi:cy="190"
        sodipodi:rx="1"
        sodipodi:ry="1"
-       d="m 161,190 a 1,1 0 1 1 -2,0 1,1 0 1 1 2,0 z"
-       transform="translate(0,287.36218)" />
+       d="m 161,190 c 0,0.55228 -0.44772,1 -1,1 -0.55228,0 -1,-0.44772 -1,-1 0,-0.55228 0.44772,-1 1,-1 0.55228,0 1,0.44772 1,1 z"
+       transform="translate(0,287.36218)"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <use
        x="0"
        y="0"
@@ -204,7 +246,10 @@
        id="use5133"
        transform="translate(110,-5)"
        width="990"
-       height="765" />
+       height="765"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <use
        height="765"
        width="990"
@@ -212,7 +257,10 @@
        id="use5135"
        xlink:href="#path5131"
        y="0"
-       x="0" />
+       x="0"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <use
        x="0"
        y="0"
@@ -220,7 +268,10 @@
        id="use5137"
        transform="translate(15,5)"
        width="990"
-       height="765" />
+       height="765"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <use
        height="765"
        width="990"
@@ -228,7 +279,10 @@
        id="use5139"
        xlink:href="#path5131"
        y="0"
-       x="0" />
+       x="0"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <use
        x="0"
        y="0"
@@ -236,7 +290,10 @@
        id="use5141"
        transform="translate(50,0)"
        width="990"
-       height="765" />
+       height="765"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <use
        height="765"
        width="990"
@@ -244,7 +301,10 @@
        id="use5143"
        xlink:href="#path5131"
        y="0"
-       x="0" />
+       x="0"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <use
        x="0"
        y="0"
@@ -252,7 +312,10 @@
        id="use5145"
        transform="translate(135,15)"
        width="990"
-       height="765" />
+       height="765"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <use
        height="765"
        width="990"
@@ -260,7 +323,10 @@
        id="use5147"
        xlink:href="#path5131"
        y="0"
-       x="0" />
+       x="0"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <use
        x="0"
        y="0"
@@ -268,16 +334,25 @@
        id="use5149"
        transform="translate(285,10)"
        width="990"
-       height="765" />
+       height="765"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <path
        style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
        d="m 155,210 0,30 305,0 0,-30 -305,0 z"
        id="path5686"
-       transform="translate(0,287.36218)" />
+       transform="translate(0,287.36218)"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <path
        style="fill:#808080;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
        d="m 160,502.36218 5,0 0,20 -5,0 0,-20 z"
-       id="path5688" />
+       id="path5688"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <use
        x="0"
        y="0"
@@ -286,7 +361,10 @@
        transform="translate(7,0)"
        width="990"
        height="765"
-       style="fill:#999999" />
+       style="fill:#999999"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <use
        height="765"
        width="990"
@@ -294,7 +372,10 @@
        id="use5692"
        xlink:href="#path5688"
        y="0"
-       x="0" />
+       x="0"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <use
        x="0"
        y="0"
@@ -302,7 +383,10 @@
        id="use5694"
        transform="translate(40,0)"
        width="990"
-       height="765" />
+       height="765"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <use
        height="765"
        width="990"
@@ -310,7 +394,10 @@
        id="use5696"
        xlink:href="#path5688"
        y="0"
-       x="0" />
+       x="0"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <use
        x="0"
        y="0"
@@ -318,7 +405,10 @@
        id="use5698"
        transform="translate(57,0)"
        width="990"
-       height="765" />
+       height="765"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <use
        height="765"
        width="990"
@@ -326,7 +416,10 @@
        id="use5700"
        xlink:href="#path5688"
        y="0"
-       x="0" />
+       x="0"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <use
        x="0"
        y="0"
@@ -334,7 +427,10 @@
        id="use5702"
        transform="translate(88,0)"
        width="990"
-       height="765" />
+       height="765"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <use
        height="765"
        width="990"
@@ -342,7 +438,10 @@
        id="use5704"
        xlink:href="#path5688"
        y="0"
-       x="0" />
+       x="0"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <use
        x="0"
        y="0"
@@ -350,7 +449,10 @@
        id="use5706"
        transform="translate(115,0)"
        width="990"
-       height="765" />
+       height="765"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <use
        height="765"
        width="990"
@@ -358,7 +460,10 @@
        id="use5708"
        xlink:href="#path5688"
        y="0"
-       x="0" />
+       x="0"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <use
        x="0"
        y="0"
@@ -366,7 +471,10 @@
        id="use5710"
        transform="translate(129,0)"
        width="990"
-       height="765" />
+       height="765"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <use
        height="765"
        width="990"
@@ -374,7 +482,10 @@
        id="use5712"
        xlink:href="#path5688"
        y="0"
-       x="0" />
+       x="0"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <use
        x="0"
        y="0"
@@ -382,7 +493,10 @@
        id="use5714"
        transform="translate(152,0)"
        width="990"
-       height="765" />
+       height="765"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <use
        height="765"
        width="990"
@@ -390,7 +504,10 @@
        id="use5716"
        xlink:href="#path5688"
        y="0"
-       x="0" />
+       x="0"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <use
        x="0"
        y="0"
@@ -398,7 +515,10 @@
        id="use5718"
        transform="translate(174,0)"
        width="990"
-       height="765" />
+       height="765"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <use
        height="765"
        width="990"
@@ -406,7 +526,10 @@
        id="use5720"
        xlink:href="#path5688"
        y="0"
-       x="0" />
+       x="0"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <use
        x="0"
        y="0"
@@ -414,7 +537,10 @@
        id="use5722"
        transform="translate(242,0)"
        width="990"
-       height="765" />
+       height="765"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <use
        height="765"
        width="990"
@@ -422,7 +548,10 @@
        id="use5724"
        xlink:href="#path5688"
        y="0"
-       x="0" />
+       x="0"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <use
        x="0"
        y="0"
@@ -430,7 +559,10 @@
        id="use5726"
        transform="translate(256,0)"
        width="990"
-       height="765" />
+       height="765"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <use
        height="765"
        width="990"
@@ -438,7 +570,10 @@
        id="use5728"
        xlink:href="#path5688"
        y="0"
-       x="0" />
+       x="0"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <use
        x="0"
        y="0"
@@ -446,7 +581,10 @@
        id="use5732"
        transform="translate(0,65)"
        width="990"
-       height="765" />
+       height="765"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <use
        height="765"
        width="990"
@@ -454,7 +592,10 @@
        id="use5734"
        xlink:href="#path5131"
        y="0"
-       x="0" />
+       x="0"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <use
        x="0"
        y="0"
@@ -462,7 +603,10 @@
        id="use5736"
        transform="translate(155,60)"
        width="990"
-       height="765" />
+       height="765"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <use
        height="765"
        width="990"
@@ -470,7 +614,10 @@
        id="use5738"
        xlink:href="#path5131"
        y="0"
-       x="0" />
+       x="0"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <use
        x="0"
        y="0"
@@ -478,7 +625,10 @@
        id="use5740"
        transform="translate(235,60)"
        width="990"
-       height="765" />
+       height="765"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <use
        height="765"
        width="990"
@@ -486,23 +636,32 @@
        id="use5742"
        xlink:href="#path5131"
        y="0"
-       x="0" />
+       x="0"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <path
        style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
        d="m 155,557.36218 0,30 305,0 0,-30 -305,0 z"
-       id="path5746" />
+       id="path5746"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <path
        style="fill:#cccccc;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
        d="m 155,280 5,5 5,-10 5,20 5,-10 5,5 0,-10 5,0 5,15 5,-5 5,0 5,-10 5,0 5,-10 5,10 5,-5 5,15 5,0 5,5 5,-5 5,0 5,-10 5,15 5,-5 0,-5 c 0,0 5,0 5,0 l 5,5 5,-5 5,5 5,0 5,10 5,-15 5,5 5,10 5,-20 5,5 5,10 5,-5 5,10 5,-15 5,-5 5,15 5,0 5,-5 5,5 5,-10 5,5 5,-10 5,10 5,-15 5,0 5,-5 5,5 5,0 5,10 5,-5 5,0 5,10 5,0 5,-5 5,10 5,-5 5,-15 5,25 -305,0 0,-20 z"
        id="path5748"
-       transform="translate(0,287.36218)" />
+       transform="translate(0,287.36218)"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <rect
        style="fill:#cccccc;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
        id="rect5762"
        width="75"
        height="19.999998"
-       x="53.62941"
-       y="655.66174" />
+       x="23.62941"
+       y="625.66174" />
     <use
        x="0"
        y="0"
@@ -510,17 +669,23 @@
        id="use5764"
        transform="translate(251.37059,21.70041)"
        width="990"
-       height="765" />
+       height="765"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <text
        id="text5758"
-       y="689.76599"
-       x="320"
+       y="659.76599"
+       x="290"
        style="font-size:9px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
-       xml:space="preserve"><tspan
-         y="689.76599"
-         x="320"
+       xml:space="preserve"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997"><tspan
+         y="659.76599"
+         x="290"
          id="tspan5760"
-         sodipodi:role="line">Sequencer</tspan></text>
+         sodipodi:role="line">Sampler</tspan></text>
     <use
        height="765"
        width="990"
@@ -528,17 +693,23 @@
        id="use5766"
        xlink:href="#rect5762"
        y="0"
-       x="0" />
+       x="0"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <text
        xml:space="preserve"
        style="font-size:9px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
-       x="188.06885"
-       y="655.71741"
-       id="text5752"><tspan
+       x="158.06885"
+       y="625.71741"
+       id="text5752"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997"><tspan
          sodipodi:role="line"
          id="tspan5754"
-         x="188.06885"
-         y="655.71741">Remote control</tspan></text>
+         x="158.06885"
+         y="625.71741">Remote control</tspan></text>
     <use
        x="0"
        y="0"
@@ -546,15 +717,21 @@
        id="use5768"
        transform="translate(131.37059,21.70041)"
        width="990"
-       height="765" />
+       height="765"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <text
        id="text5770"
-       y="689.84509"
-       x="190.14966"
+       y="659.84509"
+       x="160.14966"
        style="font-size:9px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
-       xml:space="preserve"><tspan
-         y="689.84509"
-         x="190.14966"
+       xml:space="preserve"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997"><tspan
+         y="659.84509"
+         x="160.14966"
          id="tspan5772"
          sodipodi:role="line">MIDI keyboard</tspan></text>
     <use
@@ -564,17 +741,23 @@
        id="use5774"
        xlink:href="#rect5762"
        y="0"
-       x="0" />
+       x="0"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <text
        xml:space="preserve"
        style="font-size:9px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
-       x="449.0835"
-       y="655.63831"
-       id="text5776"><tspan
+       x="419.0835"
+       y="625.63831"
+       id="text5776"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997"><tspan
          sodipodi:role="line"
          id="tspan5778"
-         x="449.0835"
-         y="655.63831">Game</tspan></text>
+         x="419.0835"
+         y="625.63831">Game</tspan></text>
     <use
        x="0"
        y="0"
@@ -582,15 +765,21 @@
        id="use5780"
        transform="translate(371.37059,21.700407)"
        width="990"
-       height="765" />
+       height="765"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <text
        id="text5782"
-       y="690.71741"
-       x="437.5105"
+       y="660.71741"
+       x="407.5105"
        style="font-size:9px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
-       xml:space="preserve"><tspan
-         y="690.71741"
-         x="437.5105"
+       xml:space="preserve"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997"><tspan
+         y="660.71741"
+         x="407.5105"
          id="tspan5784"
          sodipodi:role="line">Installation</tspan></text>
     <use
@@ -600,34 +789,40 @@
        id="use5786"
        xlink:href="#rect5762"
        y="0"
-       x="0" />
+       x="0"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <text
        xml:space="preserve"
        style="font-size:9px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
-       x="437.5105"
-       y="725.71741"
-       id="text5788"><tspan
+       x="407.5105"
+       y="695.71741"
+       id="text5788"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997"><tspan
          sodipodi:role="line"
          id="tspan5790"
-         x="437.5105"
-         y="725.71741">Performance</tspan></text>
+         x="407.5105"
+         y="695.71741">Performance</tspan></text>
     <rect
        style="fill:none;stroke:#000000;stroke-width:0.89442718;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
        id="rect5794"
        width="120"
        height="55"
-       x="38.62941"
-       y="630.66174" />
+       x="8.6294098"
+       y="600.66174" />
     <text
        xml:space="preserve"
        style="font-size:9px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
-       x="70"
-       y="642.36218"
+       x="40"
+       y="612.36218"
        id="text5796"><tspan
          sodipodi:role="line"
          id="tspan5798"
-         x="70"
-         y="642.36218">Clones models:</tspan></text>
+         x="40"
+         y="612.36218">Clones models:</tspan></text>
     <use
        height="765"
        width="990"
@@ -635,29 +830,39 @@
        id="use5800"
        xlink:href="#rect5762"
        y="0"
-       x="0" />
+       x="0"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <text
        xml:space="preserve"
        style="font-size:9px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
-       x="190.14966"
-       y="719.84509"
-       id="text5802"><tspan
+       x="160.14966"
+       y="689.84509"
+       id="text5802"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997"><tspan
          sodipodi:role="line"
          id="tspan5804"
-         x="190.14966"
-         y="719.84509">Sensor</tspan></text>
+         x="160.14966"
+         y="689.84509">Sensor</tspan></text>
     <path
        id="path5810"
-       d="m 140,652.36218 0,10 10,-5 -10,-5 z"
-       style="fill:#666666;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
+       d="m 110,622.36221 0,10 10,-5 -10,-5 z"
+       style="fill:#666666;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       inkscape:connector-curvature="0" />
     <use
        x="0"
        y="0"
        xlink:href="#path5810"
        id="use5812"
-       transform="translate(120,-5)"
+       transform="translate(120,-4.9999998)"
        width="990"
-       height="765" />
+       height="765"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <use
        height="765"
        width="990"
@@ -665,7 +870,10 @@
        id="use5814"
        xlink:href="#path5810"
        y="0"
-       x="0" />
+       x="0"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <use
        x="0"
        y="0"
@@ -673,15 +881,21 @@
        id="use5816"
        transform="translate(120,60)"
        width="990"
-       height="765" />
+       height="765"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <use
        height="765"
        width="990"
-       transform="matrix(-1,0,0,1,445,30)"
+       transform="matrix(-1,0,0,1,385,30)"
        id="use5818"
        xlink:href="#path5810"
        y="0"
-       x="0" />
+       x="0"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <use
        x="0"
        y="0"
@@ -689,60 +903,90 @@
        id="use5820"
        transform="translate(240,30)"
        width="990"
-       height="765" />
+       height="765"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <use
        x="0"
        y="0"
        xlink:href="#path5810"
        id="use5822"
-       transform="matrix(-1,0,0,1,565,-4.9999998)"
+       transform="matrix(-1,0,0,1,505,-4.9999998)"
        width="990"
-       height="765" />
+       height="765"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <use
        x="0"
        y="0"
        xlink:href="#path5810"
        id="use5824"
-       transform="matrix(-1,0,0,1,565,30)"
+       transform="matrix(-1,0,0,1,505,30)"
        width="990"
-       height="765" />
+       height="765"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <use
        x="0"
        y="0"
        xlink:href="#path5810"
        id="use5826"
-       transform="matrix(-1,0,0,1,565,65)"
+       transform="matrix(-1,0,0,1,505,65)"
        width="990"
-       height="765" />
+       height="765"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <path
        style="fill:#666666;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker-end:none"
-       d="m 270,365 25,35"
+       d="m 240,622.36221 25,35"
        id="path5828"
-       transform="translate(0,287.36218)" />
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <path
        style="fill:#666666;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
-       d="M 269.64286,400.35714 295,400"
+       d="M 239.64286,657.71935 265,657.36221"
        id="path6466"
-       transform="translate(0,287.36218)" />
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <path
        style="fill:#666666;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
-       d="M 270,430.17857 295,400"
+       d="m 240,687.54078 25,-30.17857"
        id="path6468"
-       transform="translate(0,287.36218)" />
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <path
        style="fill:#666666;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
-       d="m 390,400 25,35"
+       d="m 360,657.36221 25,35"
        id="path6472"
-       transform="translate(0,287.36218)" />
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <path
        style="fill:#666666;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
-       d="m 390,400 25,-35"
+       d="m 360,657.36221 25,-35"
        id="path6474"
-       transform="translate(0,287.36218)" />
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
     <path
        style="fill:#666666;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
-       d="M 390,400.17857 415,400"
+       d="m 360,657.54078 25,-0.17857"
        id="path6476"
-       transform="translate(0,287.36218)" />
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/aalex/src/tempi/doc/seq_osc_explanations.png"
+       inkscape:export-xdpi="596.21997"
+       inkscape:export-ydpi="596.21997" />
   </g>
 </svg>
