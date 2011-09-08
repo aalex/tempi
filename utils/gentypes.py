@@ -25,6 +25,50 @@ Usage: $ python utils/gentypes.py > tempi/types.h
 
 import itertools
 
+MAX_LENGTH = 5
+TYPE_PREFIX = "_"
+TYPE_SUFFIX = ""
+
+TYPES = {
+    "a": "any",
+    "b": "bool",
+    # "c": "char",
+    "d": "double",
+    "f": "float", # or double?
+    "i": "int",
+    "s": "string",
+    # "u": "unsigned int",
+}
+
+def generate_permutations():
+    ret = []
+    for length in range(MAX_LENGTH):
+        for x in itertools.product(TYPES.keys(), repeat=length + 1):
+            ret.append(x)
+    return ret
+
+def get_one_typedef(keys):
+    prefix = "typedef tuple<"
+    name = ""
+    char_pos = 0
+    word_length = len(keys)
+
+    for key in keys:
+        prefix += TYPES[key]
+        name += key
+        # Append a comma if needed:
+        char_pos += 1
+        if char_pos < (word_length):
+            prefix += ", "
+
+    prefix += ">"
+    return "{:<50}".format(prefix) + " " + TYPE_PREFIX + name + TYPE_SUFFIX + ";"
+
+def print_all_permutations():
+    permutations = generate_permutations()
+    for permutation in permutations:
+        print(get_one_typedef(permutation))
+
 HEADER = """ /*
  * Copyright (C) 2011 Alexandre Quessy
  * 
@@ -78,50 +122,6 @@ FOOTER = """
 
 #endif // ifndef
 """
-
-TYPES = {
-    "a": "any",
-    "b": "bool",
-    # "c": "char",
-    "d": "double",
-    "f": "float", # or double?
-    "i": "int",
-    "s": "string",
-    # "u": "unsigned int",
-}
-
-MAX_LENGTH = 5
-TYPE_PREFIX = "_"
-TYPE_SUFFIX = ""
-
-def generate_permutations():
-    ret = []
-    for length in range(MAX_LENGTH):
-        for x in itertools.product(TYPES.keys(), repeat=length + 1):
-            ret.append(x)
-    return ret
-
-def get_one_typedef(keys):
-    prefix = "typedef tuple<"
-    name = ""
-    char_pos = 0
-    word_length = len(keys)
-
-    for key in keys:
-        prefix += TYPES[key]
-        name += key
-        # Append a comma if needed:
-        char_pos += 1
-        if char_pos < (word_length):
-            prefix += ", "
-
-    prefix += ">"
-    return "{:<50}".format(prefix) + " " + TYPE_PREFIX + name + TYPE_SUFFIX + ";"
-
-def print_all_permutations():
-    permutations = generate_permutations()
-    for permutation in permutations:
-        print(get_one_typedef(permutation))
 
 if __name__ == "__main__":
     print(HEADER)
