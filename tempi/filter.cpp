@@ -47,7 +47,7 @@ void Filter::processTrigger(Source *source, boost::any data)
 {
     // TODO
     // ?????
-    //getSink()->trigger(source, filter(source, data));
+    getSource()->trigger(filter(source, data));
 }
 
 } // end of namespace
