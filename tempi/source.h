@@ -22,7 +22,7 @@
 
 #include <boost/any.hpp>
 #include <boost/signals2.hpp>
-#include <tr1/memory>
+#include "tempi/sharedptr.h"
 
 namespace tempi
 {
@@ -38,8 +38,6 @@ class Source
         void trigger(boost::any data);
     private:
 };
-
-typedef std::tr1::shared_ptr<Source> SourcePtr;
 
 } // end of namespace
 

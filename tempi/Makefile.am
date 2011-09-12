@@ -1,6 +1,6 @@
-AM_CXXFLAGS = $(GLIB_CFLAGS) -I$(top_srcdir)  -I$(top_srcdir)/tempi
+AM_CXXFLAGS = $(LIBXML_CFLAGS) -I$(top_srcdir)  -I$(top_srcdir)/tempi
 
-AM_LIBS = $(GLIB_LIBS)
+AM_LIBS = $(LIBXML_LIBS)
 
 # use lib_LTLIBRARIES to build a shared lib:
 lib_LTLIBRARIES = libtempi-@TEMPI_API_VERSION@.la
@@ -16,6 +16,7 @@ lib_LTLIBRARIES = libtempi-@TEMPI_API_VERSION@.la
 
 ## PLEASE KEEP THEM IN ALPHABETICAL ORDER
 libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
+    filter.cpp \
     marker.cpp \
     node.cpp \
     player.cpp \
@@ -41,12 +42,14 @@ libtempi_@TEMPI_API_VERSION@_la_includedir = $(includedir)/tempi-$(TEMPI_API_VER
 
 ## PLEASE KEEP THEM IN ALPHABETICAL ORDER
 libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
+    filter.h \
     identifier.h \
     marker.h \
     node.h \
     player.h \
     recorder.h \
     rule.h \
+    sharedptr.h \
     sink.h \
     source.h \
     state.h \

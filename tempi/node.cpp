@@ -29,7 +29,7 @@ Node::Node()
     // pass
 }
 
-std::vector<SourcePtr> Node::getSources()
+std::vector<std::tr1::shared_ptr<Source> > Node::getSources()
 {
     return sources_;
 }
@@ -38,14 +38,15 @@ void Node::onSinkTriggered(Source *source, boost::any data)
 {
     // TODO
     std::cout << __FUNCTION__ << std::endl;
+    processTrigger(source, data);
 }
 
-std::vector<SinkPtr> Node::getSinks()
+std::vector<std::tr1::shared_ptr<Sink> > Node::getSinks()
 {
     return sinks_;
 }
 
-bool Node::addSource(SourcePtr source)
+bool Node::addSource(std::tr1::shared_ptr<Source> source)
 {
     if (! hasSource(source.get()))
     {
@@ -55,7 +56,7 @@ bool Node::addSource(SourcePtr source)
     return false;
 }
 
-bool Node::addSink(SinkPtr sink)
+bool Node::addSink(std::tr1::shared_ptr<Sink> sink)
 {
     if (! hasSink(sink.get()))
     {
@@ -68,7 +69,7 @@ bool Node::addSink(SinkPtr sink)
 
 bool Node::hasSink(Sink *sink)
 {
-    typename std::vector<SinkPtr>::iterator iter;
+    typename std::vector<std::tr1::shared_ptr<Sink> >::iterator iter;
     for (iter = sinks_.begin(); iter != sinks_.end(); ++iter)
     {
         if ((*iter).get() == sink)
@@ -81,7 +82,7 @@ bool Node::hasSink(Sink *sink)
 
 bool Node::hasSource(Source *source)
 {
-    typename std::vector<SourcePtr>::iterator iter;
+    typename std::vector<std::tr1::shared_ptr<Source> >::iterator iter;
     for (iter = sources_.begin(); iter != sources_.end(); ++iter)
     {
         if ((*iter).get() == source)

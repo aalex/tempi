@@ -24,6 +24,7 @@
 #include <vector>
 #include "tempi/source.h"
 #include "tempi/sink.h"
+#include "tempi/sharedptr.h"
 
 namespace tempi
 {
@@ -35,16 +36,17 @@ class Node
 {
     public:
         Node();
-        std::vector<SourcePtr> getSources();
-        std::vector<SinkPtr> getSinks();
+        std::vector<std::tr1::shared_ptr<Source> > getSources();
+        std::vector<std::tr1::shared_ptr<Sink> > getSinks();
+        bool addSource(std::tr1::shared_ptr<Source> source);
+        bool addSink(std::tr1::shared_ptr<Sink> sink);
+    private:
+        std::vector<std::tr1::shared_ptr<Source> > sources_;
+        std::vector<std::tr1::shared_ptr<Sink> > sinks_;
+        void onSinkTriggered(Source *source, boost::any data);
+        virtual void processTrigger(Source *source, boost::any data) = 0;
         bool hasSink(Sink *sink);
         bool hasSource(Source *source);
-        bool addSource(SourcePtr source);
-        bool addSink(SinkPtr sink);
-    private:
-        std::vector<SourcePtr> sources_;
-        std::vector<SinkPtr> sinks_;
-        void onSinkTriggered(Source *source, boost::any data);
 };
 
 } // end of namespace

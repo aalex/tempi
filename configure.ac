@@ -138,6 +138,8 @@ else
     HELP2MAN=:
 fi
 
+dnl TODO: check for Boost
+
 # Override the template file name of the generated .pc file, so that there
 # is no need to rename the template file when the API version changes.
 AC_CONFIG_FILES([

@@ -17,32 +17,29 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __TEMPI_SINK_H__
-#define __TEMPI_SINK_H__
+#ifndef __TEMPI_FILTER_H__
+#define __TEMPI_FILTER_H__
 
 #include <boost/any.hpp>
-#include <boost/signals2.hpp>
-#include <vector>
-#include "tempi/sharedptr.h"
+#include "tempi/node.h"
+#include "tempi/source.h"
+#include "tempi/sink.h"
 
 namespace tempi
 {
 
-class Source; // forward declaration
-
 /**
- * A Sink is a pad to which we can connect Source pads.
+ * A Filter is Node who has a sink and source and usually filters data.
  */
-class Sink
+class Filter : public Node
 {
     public:
-        Sink();
-        bool connect(std::tr1::shared_ptr<Source> source);
-        void onTriggered(Source *source, boost::any data);
-        boost::signals2::signal<void (Source *, boost::any)> on_triggered_signal_;
+        Filter();
+        Source *getSource();
+        Sink *getSink();
     private:
-        std::vector<std::tr1::shared_ptr<Source> > sources_;
-        bool hasSource(Source *source);
+        virtual void processTrigger(Source *source, boost::any data);
+        virtual boost::any filter(Source *source, boost::any data) = 0;
 };
 
 } // end of namespace

@@ -6,10 +6,21 @@
 
 using namespace tempi;
 
+class DummyNode: public Node
+{
+    private:
+        virtual void processTrigger(Source *source, boost::any data);
+}
+
+void DummyNode::processTrigger(Source *source, boost::any data)
+{
+    // pass
+}
+
 bool check_simple()
 {
-    Node a;
-    Node b;
+    DummyNode a;
+    DummyNode b;
     if (! a.addSource(SourcePtr(new Source())))
     {
         std::cout << "Could not add source." << std::endl;
