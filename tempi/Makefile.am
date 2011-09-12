@@ -17,9 +17,12 @@ lib_LTLIBRARIES = libtempi-@TEMPI_API_VERSION@.la
 ## PLEASE KEEP THEM IN ALPHABETICAL ORDER
 libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     marker.cpp \
+    node.cpp \
     player.cpp \
     recorder.cpp \
     rule.cpp \
+    sink.cpp \
+    source.cpp \
     state.cpp \
     statemachine.cpp \
     tempi.cpp \
@@ -40,9 +43,12 @@ libtempi_@TEMPI_API_VERSION@_la_includedir = $(includedir)/tempi-$(TEMPI_API_VER
 libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     identifier.h \
     marker.h \
+    node.h \
     player.h \
     recorder.h \
     rule.h \
+    sink.h \
+    source.h \
     state.h \
     statemachine.h \
     tempi-version.h \
