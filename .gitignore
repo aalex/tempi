@@ -32,6 +32,7 @@ tests/check_version
 tests/check_fsm
 tests/check_timer
 tests/check_track
+tests/check_node
 *.dia~
 prototypes/any
 prototypes/variant
