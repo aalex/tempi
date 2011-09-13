@@ -1,0 +1,6 @@
+Debugging
+---------
+To use gdb, type this:
+
+  $ libtool –mode=execute gdb ./src/tempi
+
