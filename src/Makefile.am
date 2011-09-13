@@ -16,11 +16,10 @@ tempi_CXXFLAGS = $(AM_CXXFLAGS)
 tempi_LDADD = $(LDADD)
 
 headers = \
-	gui.h
+    particlegenerator.h
 
 tempi_SOURCES = \
-	gui.cpp \
 	main.cpp \
+    particlegenerator.cpp \
 	$(headers)
-
 

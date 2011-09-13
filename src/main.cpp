@@ -17,14 +17,15 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <boost/any.hpp>
-//#include <boost/any_cast.hpp>
-#include <clutter/clutter.h>
-#include <iostream>
+#include "particlegenerator.h"
 #include "tempi/tempi.h"
-#include <unistd.h>
+#include <boost/any.hpp>
+#include <clutter/clutter.h>
+#include <glib.h>
+#include <iostream>
 #include <tr1/memory>
-
+#include <unistd.h>
+//#include <boost/any_cast.hpp>
 
 struct App
 {
@@ -34,11 +35,13 @@ struct App
         std::tr1::shared_ptr<tempi::Player> player_;
         bool recording_;
         ClutterActor *rectangle_;
+        ParticleGenerator generator_;
 };
 
 static void on_frame_cb(ClutterTimeline * /*timeline*/, guint * /*ms*/, gpointer user_data)
 {
     App *app = (App *) user_data;
+    app->generator_.onDraw();
     try
     {
         //std::cout << __FUNCTION__ << std::endl;
@@ -137,6 +140,7 @@ int main(int argc, char *argv[])
     app.player_.reset(new tempi::Player(&app.sampler_));
     app.recording_ = false;
     app.rectangle_ = rectangle;
+    clutter_container_add_actor(CLUTTER_CONTAINER(stage), app.generator_.getRoot());
 
     // timeline to attach a callback for each frame that is rendered
     ClutterTimeline *timeline;
@@ -150,7 +154,7 @@ int main(int argc, char *argv[])
     g_signal_connect(stage, "button-release-event", G_CALLBACK(button_released_cb), &app);
     g_signal_connect(stage, "motion-event", G_CALLBACK(motion_event_cb), &app);
 
-    clutter_container_add(CLUTTER_CONTAINER(stage), rectangle, NULL);
+    clutter_container_add_actor(CLUTTER_CONTAINER(stage), rectangle);
     clutter_actor_show(stage);
 
     clutter_main();
