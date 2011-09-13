@@ -51,7 +51,36 @@ bool ParticlesApplication::frameRenderingQueued(const Ogre::FrameEvent& evt)
     bool ret = BaseApplication::frameRenderingQueued(evt);
     if (! processUnbufferedInput(evt)) 
         return false;
+
     return ret;
+}
+
+void ParticlesApplication::drawParticles()
+{
+    const float maxDist  = 250.0;
+    const float mirrorDist = maxDist * 0.99;
+    const float dimFactor = 0.8 * 0.005 * 0.005;
+    const float maxDist2 = maxDist * maxDist;
+    Ogre::Camera* cam = mCamera; // ->getCamera();
+    const Ogre::Vector3& camPos = cam->getPositionForViewUpdate(); // getWorldPosition();
+    Ogre::ParticleIterator pit = mParticleSystem->_getIterator();
+ 
+    while (! pit.end())
+    {
+        Ogre::Particle* particle = pit.getNext();
+        Ogre::Vector3& pos = particle->position;
+        particle->timeToLive = 999999.0f;
+        Ogre::Vector3 pDir = pos-camPos;
+        float dist = pDir.squaredLength();
+        float dim = dist * dimFactor;
+        particle->setDimensions(dim, dim);
+        if (dist > maxDist2)
+        {
+            pDir.normalise();
+            Ogre::Vector3 p = camPos - pDir * mirrorDist;
+            particle->position = p;
+        } 
+    }
 }
 
 bool ParticlesApplication::processUnbufferedInput(const Ogre::FrameEvent &evt)
@@ -63,11 +92,16 @@ bool ParticlesApplication::processUnbufferedInput(const Ogre::FrameEvent &evt)
     }
     else if (mKeyboard == 0)
         return false;
+
+    drawParticles();
     return true;
 }
 
 void ParticlesApplication::createScene()
 {
+    // particle system:
+    mParticleSystem = mSceneMgr->createParticleSystem("particleSystem_0", "Examples/PurpleFountain");
+
     // set ambient light
     mSceneMgr->setAmbientLight(Ogre::ColourValue(0.8, 0.6, 0.2));
 

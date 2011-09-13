@@ -19,6 +19,7 @@ This source file is part of the
 
 #include "base_application.h"
 #include <tempi/tempi.h>
+#include <OgreParticleSystem.h>
 
 namespace Ogre
 {
@@ -35,8 +36,10 @@ class ParticlesApplication : public BaseApplication
         virtual bool processUnbufferedInput(const Ogre::FrameEvent& evt);
         virtual bool frameRenderingQueued(const Ogre::FrameEvent& evt);
         virtual void createScene();
+        void drawParticles();
         //Ogre::SceneNode *headNode_;
         //Ogre::SceneNode *nodeTwo_;
+        Ogre::ParticleSystem *mParticleSystem;
 };
 
 #endif // #ifndef
