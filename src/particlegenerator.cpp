@@ -39,8 +39,8 @@ void ParticleGenerator::onDraw()
     clutter_actor_set_size(particle, size, size);
     clutter_actor_set_opacity(particle, 255);
     ClutterAnimation *animation = clutter_actor_animate(particle, CLUTTER_LINEAR, duration, 
-        "x", (float) g_rand_double_range(random_generator_, 0.0, 200.0),
-        "y", (float) g_rand_double_range(random_generator_, 0.0, 200.0),
+        "x", (float) g_rand_double_range(random_generator_, -100.0, 100.0),
+        "y", (float) g_rand_double_range(random_generator_, -100.0, 100.0),
         "width", 0.0f,
         "height", 0.0f,
         "opacity", 0,

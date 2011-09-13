@@ -34,7 +34,6 @@ struct App
         std::tr1::shared_ptr<tempi::Recorder> recorder_;
         std::tr1::shared_ptr<tempi::Player> player_;
         bool recording_;
-        ClutterActor *rectangle_;
         ParticleGenerator generator_;
 };
 
@@ -50,7 +49,7 @@ static void on_frame_cb(ClutterTimeline * /*timeline*/, guint * /*ms*/, gpointer
         {
             tempi::_ff *value = boost::any_cast<tempi::_ff>(any);
             //std::cout << "Read " << value.get<0>() << ", " << value.get<1>() << std::endl;
-            clutter_actor_set_position(app->rectangle_, value->get<0>(), value->get<1>());
+            clutter_actor_set_position(app->generator_.getRoot(), value->get<0>(), value->get<1>());
         }
     }
     catch (const boost::bad_any_cast &e)
@@ -120,7 +119,6 @@ int main(int argc, char *argv[])
     ClutterColor black = { 0x00, 0x00, 0x00, 0xff };
     ClutterColor red = { 0xff, 0x00, 0x00, 0xff };
     ClutterActor *stage;
-    ClutterActor *rectangle;
 
     if (clutter_init(&argc, &argv) != CLUTTER_INIT_SUCCESS)
         return 1;
@@ -131,15 +129,11 @@ int main(int argc, char *argv[])
     g_signal_connect(stage, "destroy", G_CALLBACK(clutter_main_quit), NULL);
     clutter_actor_set_reactive(stage, TRUE);
 
-    rectangle = clutter_rectangle_new_with_color(&red);
-    clutter_actor_set_size(rectangle, 50, 50);
-    clutter_actor_set_position(rectangle, 0, 0);
 
     App app;
     app.recorder_.reset(new tempi::Recorder(&app.sampler_));
     app.player_.reset(new tempi::Player(&app.sampler_));
     app.recording_ = false;
-    app.rectangle_ = rectangle;
     clutter_container_add_actor(CLUTTER_CONTAINER(stage), app.generator_.getRoot());
 
     // timeline to attach a callback for each frame that is rendered
@@ -154,7 +148,6 @@ int main(int argc, char *argv[])
     g_signal_connect(stage, "button-release-event", G_CALLBACK(button_released_cb), &app);
     g_signal_connect(stage, "motion-event", G_CALLBACK(motion_event_cb), &app);
 
-    clutter_container_add_actor(CLUTTER_CONTAINER(stage), rectangle);
     clutter_actor_show(stage);
 
     clutter_main();
