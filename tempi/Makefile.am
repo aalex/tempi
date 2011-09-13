@@ -51,6 +51,8 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     marker.h \
     node.h \
     player.h \
+    properties.h \
+    property.h \
     recorder.h \
     rule.h \
     sharedptr.h \
