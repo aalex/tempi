@@ -40,3 +40,12 @@ tests/check_slide
 tests/check_timer
 tests/check_track
 tests/check_version
+examples/particules/Makefile
+examples/particules/Ogre.log
+examples/particules/partickle
+examples/particules/config.h
+examples/particules/config.h.in
+examples/particules/COPYING
+examples/particules/INSTALL
+examples/particules/stamp-h1
+

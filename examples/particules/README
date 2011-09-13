@@ -1,0 +1,6 @@
+Dependencies:
+-------------
+ * libogre-dev 
+ * libois-dev 
+ * tempi (install from sources)
+
