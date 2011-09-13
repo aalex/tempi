@@ -36,17 +36,17 @@ class Node
 {
     public:
         Node();
-        std::vector<std::tr1::shared_ptr<Source> > getSources();
-        std::vector<std::tr1::shared_ptr<Sink> > getSinks();
-        bool addSource(std::tr1::shared_ptr<Source> source);
-        bool addSink(std::tr1::shared_ptr<Sink> sink);
+        std::vector<std::tr1::shared_ptr<Source> > getOutlets();
+        std::vector<std::tr1::shared_ptr<Sink> > getInlets();
+        bool addOutlet(std::tr1::shared_ptr<Source> source);
+        bool addInlet(std::tr1::shared_ptr<Sink> sink);
     private:
-        std::vector<std::tr1::shared_ptr<Source> > sources_;
-        std::vector<std::tr1::shared_ptr<Sink> > sinks_;
-        void onSinkTriggered(Source *source, boost::any data);
-        virtual void processTrigger(Source *source, boost::any data) = 0;
-        bool hasSink(Sink *sink);
-        bool hasSource(Source *source);
+        std::vector<std::tr1::shared_ptr<Source> > outlets_;
+        std::vector<std::tr1::shared_ptr<Sink> > inlets_;
+        void onInletTriggered(Source *source, boost::any data);
+        virtual void processMessage(Source *source, boost::any data) = 0;
+        bool hasInlet(Sink *sink);
+        bool hasOutlet(Source *source);
 };
 
 } // end of namespace

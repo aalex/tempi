@@ -29,48 +29,48 @@ Node::Node()
     // pass
 }
 
-std::vector<std::tr1::shared_ptr<Source> > Node::getSources()
+std::vector<std::tr1::shared_ptr<Source> > Node::getOutlets()
 {
-    return sources_;
+    return outlets_;
 }
 
-void Node::onSinkTriggered(Source *source, boost::any data)
+void Node::onInletTriggered(Source *source, boost::any data)
 {
     // TODO
     std::cout << __FUNCTION__ << std::endl;
-    processTrigger(source, data);
+    processMessage(source, data);
 }
 
-std::vector<std::tr1::shared_ptr<Sink> > Node::getSinks()
+std::vector<std::tr1::shared_ptr<Sink> > Node::getInlets()
 {
-    return sinks_;
+    return inlets_;
 }
 
-bool Node::addSource(std::tr1::shared_ptr<Source> source)
+bool Node::addOutlet(std::tr1::shared_ptr<Source> source)
 {
-    if (! hasSource(source.get()))
+    if (! hasOutlet(source.get()))
     {
-        sources_.push_back(source);
+        outlets_.push_back(source);
         return true;
     }
     return false;
 }
 
-bool Node::addSink(std::tr1::shared_ptr<Sink> sink)
+bool Node::addInlet(std::tr1::shared_ptr<Sink> sink)
 {
-    if (! hasSink(sink.get()))
+    if (! hasInlet(sink.get()))
     {
-        sinks_.push_back(sink);
-        sink.get()->on_triggered_signal_.connect(boost::bind(&Node::onSinkTriggered, this, _1, _2));
+        inlets_.push_back(sink);
+        sink.get()->on_triggered_signal_.connect(boost::bind(&Node::onInletTriggered, this, _1, _2));
         return true;
     }
     return false;
 }
 
-bool Node::hasSink(Sink *sink)
+bool Node::hasInlet(Sink *sink)
 {
     typename std::vector<std::tr1::shared_ptr<Sink> >::iterator iter;
-    for (iter = sinks_.begin(); iter != sinks_.end(); ++iter)
+    for (iter = inlets_.begin(); iter != inlets_.end(); ++iter)
     {
         if ((*iter).get() == sink)
         {
@@ -80,10 +80,10 @@ bool Node::hasSink(Sink *sink)
     return false;
 }
 
-bool Node::hasSource(Source *source)
+bool Node::hasOutlet(Source *source)
 {
     typename std::vector<std::tr1::shared_ptr<Source> >::iterator iter;
-    for (iter = sources_.begin(); iter != sources_.end(); ++iter)
+    for (iter = outlets_.begin(); iter != outlets_.end(); ++iter)
     {
         if ((*iter).get() == source)
         {

@@ -35,11 +35,13 @@ class Filter : public Node
 {
     public:
         Filter();
-        Source *getSource();
-        Sink *getSink();
+        Source *getOutlet();
+        Sink *getInlet();
     private:
-        virtual void processTrigger(Source *source, boost::any data);
-        virtual boost::any filter(Source *source, boost::any data) = 0;
+        // Inherited from Node:
+        virtual void processMessage(Source *source, boost::any data);
+        // New virtual method:
+        virtual boost::any filter(boost::any data) = 0;
 };
 
 } // end of namespace

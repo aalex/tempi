@@ -29,25 +29,23 @@ namespace tempi
 Filter::Filter() :
     Node()
 {
-    addSource(std::tr1::shared_ptr<Source>(new Source()));
-    addSink(std::tr1::shared_ptr<Sink>(new Sink()));
+    addOutlet(std::tr1::shared_ptr<Source>(new Source()));
+    addInlet(std::tr1::shared_ptr<Sink>(new Sink()));
 }
 
-Sink *Filter::getSink()
+Sink *Filter::getInlet()
 {
-    return getSinks()[0].get();
+    return getInlets()[0].get();
 }
 
-Source *Filter::getSource()
+Source *Filter::getOutlet()
 {
-    return getSources()[0].get();
+    return getOutlets()[0].get();
 }
 
-void Filter::processTrigger(Source *source, boost::any data)
+void Filter::processMessage(Source *source, boost::any data)
 {
-    // TODO
-    // ?????
-    getSource()->trigger(filter(source, data));
+    getOutlet()->trigger(filter(data));
 }
 
 } // end of namespace
