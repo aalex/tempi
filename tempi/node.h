@@ -40,6 +40,19 @@ class Node
         std::vector<std::tr1::shared_ptr<Sink> > getInlets();
         bool addOutlet(std::tr1::shared_ptr<Source> source);
         bool addInlet(std::tr1::shared_ptr<Sink> sink);
+        bool addOutlet();
+        bool addInlet();
+        // TODO: properties:
+        // std::map<std::string, boost::any> getProperties();
+        // boost::any *getProperty(std::string);
+        // bool addProperty(std::string name, boost::any &value);
+        // bool setProperty(std::string name, boost::any &value);
+        // type_info *getPropertyType(std::string property);
+        //
+        // TODO: signals:
+        // typedef boost::signals2::signal<void(boost::any)> Signal;
+        // std::map<std::string, Signal> getSignals();
+        // type_info *getSignalType(std::string signal);
     private:
         std::vector<std::tr1::shared_ptr<Source> > outlets_;
         std::vector<std::tr1::shared_ptr<Sink> > inlets_;

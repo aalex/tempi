@@ -19,6 +19,8 @@
 
 #include <boost/bind.hpp>
 #include "tempi/node.h"
+#include "tempi/sink.h"
+#include "tempi/sharedptr.h"
 #include <iostream>
 
 namespace tempi
@@ -65,6 +67,15 @@ bool Node::addInlet(std::tr1::shared_ptr<Sink> sink)
         return true;
     }
     return false;
+}
+
+bool Node::addInlet()
+{
+    addInlet(std::tr1::shared_ptr<Sink>(new Sink()));
+}
+bool Node::addOutlet()
+{
+    addOutlet(std::tr1::shared_ptr<Source>(new Source()));
 }
 
 bool Node::hasInlet(Sink *sink)
