@@ -161,6 +161,8 @@ int main(int argc, char *argv[])
     // Create application object
     ParticlesApplication app;
 
+    // TODO: call Ogre::Root::addResourceLocation (const String &name, const String &locType, const String &groupName=ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, bool recursive=false)
+
     try 
     {
         app.go();
