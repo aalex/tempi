@@ -23,7 +23,9 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     recorder.cpp \
     rule.cpp \
     sink.cpp \
+    sinknode.cpp \
     source.cpp \
+    sourcenode.cpp \
     state.cpp \
     statemachine.cpp \
     tempi.cpp \
@@ -51,7 +53,9 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     rule.h \
     sharedptr.h \
     sink.h \
+    sinknode.h \
     source.h \
+    sourcenode.h \
     state.h \
     statemachine.h \
     tempi-version.h \

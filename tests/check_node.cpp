@@ -6,29 +6,47 @@
 
 using namespace tempi;
 
-class DummyNode: public Node
+/**
+ * Dummy source node.
+ */
+class DummySourceNode: public Node
 {
     public:
-        DummyNode();
+        DummySourceNode();
+    private:
+        virtual void processMessage(Source *source, boost::any data);
+};
+
+DummySourceNode::DummySourceNode() : Node() {}
+void DummySourceNode::processMessage(Source *source, boost::any data) {}
+
+/**
+ * Dummy sink node.
+ */
+class DummySinkNode: public Node
+{
+    public:
+        DummySinkNode();
         bool triggered_;
     private:
         virtual void processMessage(Source *source, boost::any data);
 };
 
-DummyNode::DummyNode() : Node()
+DummySinkNode::DummySinkNode() : Node()
 {
     triggered_ = false;
 }
 
-void DummyNode::processMessage(Source *source, boost::any data)
+void DummySinkNode::processMessage(Source *source, boost::any data)
 {
     triggered_ = true;
 }
 
+
 bool check_simple()
 {
-    DummyNode a;
-    DummyNode b;
+    DummySourceNode a;
+    DummySinkNode b;
     if (! a.addOutlet(std::tr1::shared_ptr<Source>(new Source())))
     {
         std::cout << "Could not add outlet." << std::endl;
