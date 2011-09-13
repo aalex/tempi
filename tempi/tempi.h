@@ -28,19 +28,29 @@ void get_version();
 
 }; // end of namespace
 
-
+#include "tempi/filter.h"
 #include "tempi/identifier.h"
 #include "tempi/marker.h"
+#include "tempi/node.h"
+#include "tempi/player.h"
+#include "tempi/properties.h"
+#include "tempi/property.h"
+#include "tempi/recorder.h"
 #include "tempi/rule.h"
+#include "tempi/sharedptr.h"
+#include "tempi/sink.h"
+#include "tempi/sinknode.h"
+#include "tempi/slide.h"
+#include "tempi/slidefilter.h"
+#include "tempi/source.h"
+#include "tempi/sourcenode.h"
 #include "tempi/state.h"
 #include "tempi/statemachine.h"
-#include "tempi/tempi.h"
 #include "tempi/tempi-version.h"
+#include "tempi/tempi.h"
 #include "tempi/timeposition.h"
 #include "tempi/timer.h"
 #include "tempi/track.h"
-#include "tempi/player.h"
-#include "tempi/recorder.h"
 #include "tempi/types.h"
 
 #endif // __TEMPI_H__
