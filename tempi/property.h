@@ -47,14 +47,7 @@ class Property
          * Typedef for the value_changed_signal_ signal.
          */
         typedef boost::signals2::signal<void (std::string, T)> OnChanged;
-#if 0
-        typedef OnChanged::slot_type OnChangedSlotType;
-
-        boost::signals2::connection register_on_changed_slot(const OnChangedSlotType & slot)
-        {
-            return value_changed_signal_.connect(slot);
-        }
-#endif
+        //TODO: typedef boost::signals2::signal<void (std::string, boost::any)> OnChanged;
         /**
          * Constructor with name and value as arguments.
          */
