@@ -24,6 +24,7 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     rule.cpp \
     sink.cpp \
     sinknode.cpp \
+    slidefilter.cpp \
     source.cpp \
     sourcenode.cpp \
     state.cpp \
@@ -54,6 +55,7 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     sharedptr.h \
     sink.h \
     sinknode.h \
+    slidefilter.h \
     source.h \
     sourcenode.h \
     state.h \
