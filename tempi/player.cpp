@@ -65,6 +65,7 @@ boost::any *Player::readLoop()
         //std::cout << "duration: " << getDuration() << std::endl;
         // FIXME: using the modulo here should not be mandatory
         TimeStamp cursor = elapsed % duration;
+        setPosition(cursor);
         //std::cout << "elapsed modulo duration: " << cursor << std::endl;
         return track_->getClosest(cursor);
     }
