@@ -27,36 +27,102 @@
 #include <unistd.h>
 //#include <boost/any_cast.hpp>
 
-struct App
+struct Sampler
 {
     public:
-        tempi::Track sampler_;
+        Sampler();
+        tempi::Track track_;
         std::tr1::shared_ptr<tempi::Recorder> recorder_;
         std::tr1::shared_ptr<tempi::Player> player_;
         bool recording_;
         ParticleGenerator generator_;
 };
 
+Sampler::Sampler()
+{
+    recorder_.reset(new tempi::Recorder(&track_));
+    player_.reset(new tempi::Player(&track_));
+    recording_ = false;
+}
+
+struct App
+{
+    public:
+        App();
+        void startRecording();
+        void stopRecording();
+        void write(float x, float y);
+        bool isRecording();
+        void onDraw();
+        unsigned int current_;
+        std::vector<std::tr1::shared_ptr<Sampler> > samplers_;
+};
+
+App::App() : 
+    current_(0)
+{
+    for (int i = 0; i < 10; ++i)
+    {
+        samplers_.push_back(std::tr1::shared_ptr<Sampler>(new Sampler()));
+    }
+}
+
+void App::startRecording()
+{
+    if (samplers_.size() != 0)
+    {
+        Sampler *sampler = samplers_[current_].get();
+        sampler->recording_ = true;
+        sampler->track_.reset(); // clears the track
+        sampler->recorder_.get()->reset();
+    }
+}
+
+void App::stopRecording()
+{
+    if (samplers_.size() != 0)
+    {
+        samplers_[current_].get()->recording_ = false;
+        current_ = (current_ + 1) % samplers_.size();
+    }
+}
+void App::write(float x, float y)
+{
+    if (samplers_.size() != 0)
+    {
+        Sampler *sampler = samplers_[current_].get();
+        sampler->recorder_.get()->add(boost::any(tempi::_ff(x, y)));
+    }
+}
+bool App::isRecording()
+{
+    return samplers_[current_].get()->recording_;
+}
+
+void App::onDraw()
+{
+    typename std::vector<std::tr1::shared_ptr<Sampler> >::iterator iter;
+    for (iter = samplers_.begin(); iter < samplers_.end(); ++iter)
+    {
+        Sampler *sampler = (*iter).get();
+
+        boost::any *any = sampler->player_.get()->readLoop();
+        if (any)
+        {
+            if (any->type() == typeid(tempi::_ff))
+            {
+                tempi::_ff *value = boost::any_cast<tempi::_ff>(any);
+                sampler->generator_.setSourcePosition(value->get<0>(), value->get<1>());
+            }
+        }
+        sampler->generator_.onDraw();
+    }
+}
+
 static void on_frame_cb(ClutterTimeline * /*timeline*/, guint * /*ms*/, gpointer user_data)
 {
     App *app = (App *) user_data;
-    app->generator_.onDraw();
-    try
-    {
-        //std::cout << __FUNCTION__ << std::endl;
-        boost::any *any = app->player_.get()->readLoop();
-        if (any)
-        {
-            tempi::_ff *value = boost::any_cast<tempi::_ff>(any);
-            //std::cout << "Read " << value.get<0>() << ", " << value.get<1>() << std::endl;
-            app->generator_.setSourcePosition(value->get<0>(), value->get<1>());
-        }
-    }
-    catch (const boost::bad_any_cast &e)
-    {
-        std::cout << "bad any cast exception" << std::endl;
-        return;
-    }
+    app->onDraw();
 }
 
 static gboolean motion_event_cb(ClutterActor *stage, ClutterEvent *event, gpointer user_data)
@@ -65,8 +131,8 @@ static gboolean motion_event_cb(ClutterActor *stage, ClutterEvent *event, gpoint
     gfloat x, y;
     clutter_event_get_coords(event, &x, &y);
 
-    if (app->recording_)
-        app->recorder_.get()->add(boost::any(tempi::_ff(x, y)));
+    if (app->isRecording())
+        app->write(x, y);
     return TRUE;
 }
 
@@ -76,8 +142,8 @@ static gboolean button_released_cb(ClutterActor *stage, ClutterEvent *event, gpo
     gfloat x, y;
     clutter_event_get_coords(event, &x, &y);
 
-    app->recorder_.get()->add(boost::any(tempi::_ff(x, y)));
-    app->recording_ = false;
+    app->write(x, y);
+    app->stopRecording();
     return TRUE;
 }
 
@@ -86,11 +152,8 @@ static gboolean button_press_cb(ClutterActor *actor, ClutterEvent *event, gpoint
     App *app = (App *) user_data;
     gfloat x, y;
     clutter_event_get_coords(event, &x, &y);
-
-    app->sampler_.reset();
-    app->recorder_.get()->reset();
-    app->recorder_.get()->add(boost::any(tempi::_ff(x, y)));
-    app->recording_ = true;
+    app->startRecording();
+    app->write(x, y);
     return TRUE;
 }
 
@@ -103,13 +166,13 @@ static void key_event_cb(ClutterActor *actor, ClutterKeyEvent *event, gpointer u
             clutter_main_quit();
             break;
         case CLUTTER_KEY_space:
-            app->sampler_.print();
+            //app->track_.print();
             break;
         case CLUTTER_KEY_Up:
-            app->player_.get()->setSpeed(app->player_.get()->getSpeed() * 1.1);
+            //app->player_.get()->setSpeed(app->player_.get()->getSpeed() * 1.1);
             break;
         case CLUTTER_KEY_Down:
-            app->player_.get()->setSpeed(app->player_.get()->getSpeed() / 1.1);
+            //app->player_.get()->setSpeed(app->player_.get()->getSpeed() / 1.1);
             break;
     }
 }
@@ -122,19 +185,19 @@ int main(int argc, char *argv[])
 
     if (clutter_init(&argc, &argv) != CLUTTER_INIT_SUCCESS)
         return 1;
-
+    App app;
     stage = clutter_stage_get_default();
     clutter_actor_set_size(stage, 1024, 768);
     clutter_stage_set_color(CLUTTER_STAGE(stage), &black);
     g_signal_connect(stage, "destroy", G_CALLBACK(clutter_main_quit), NULL);
     clutter_actor_set_reactive(stage, TRUE);
 
-
-    App app;
-    app.recorder_.reset(new tempi::Recorder(&app.sampler_));
-    app.player_.reset(new tempi::Player(&app.sampler_));
-    app.recording_ = false;
-    clutter_container_add_actor(CLUTTER_CONTAINER(stage), app.generator_.getRoot());
+    typename std::vector<std::tr1::shared_ptr<Sampler> >::iterator iter;
+    for (iter = app.samplers_.begin(); iter < app.samplers_.end(); ++iter)
+    {
+        Sampler *sampler = (*iter).get();
+        clutter_container_add_actor(CLUTTER_CONTAINER(stage), sampler->generator_.getRoot());
+    }
 
     // timeline to attach a callback for each frame that is rendered
     ClutterTimeline *timeline;
