@@ -43,6 +43,7 @@ class Player
          * Resets the internal Timer of this Player.
          */
         void reset();
+        bool setPosition(TimePosition position);
         /**
          * Changes the speed of this Player. Default is 1.0.
          */

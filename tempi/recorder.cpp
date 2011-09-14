@@ -43,6 +43,11 @@ void Recorder::reset()
     timer_.reset();
 }
 
+bool Recorder::setPosition(TimePosition position)
+{
+    return timer_.setPosition(position);
+}
+
 void Recorder::add(boost::any value)
 {
     if (track_)

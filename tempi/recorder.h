@@ -43,6 +43,7 @@ class Recorder
          * Resets the internal timer of this Recorder.
          */
         void reset();
+        bool setPosition(TimePosition position);
         /**
          * Adds an event to the track now.
          */

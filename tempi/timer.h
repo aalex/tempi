@@ -40,6 +40,7 @@ class Timer
         TimePosition elapsed();
         void reset();
         TimePosition now();
+        bool setPosition(TimePosition position);
     private:
         TimePosition start_tick_;
 };

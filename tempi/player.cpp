@@ -28,6 +28,11 @@ void Player::reset()
     timer_.reset();
 }
 
+bool Player::setPosition(TimePosition position)
+{
+    return timer_.setPosition(position);
+}
+
 boost::any *Player::readLoop()
 {
     if (! track_)
