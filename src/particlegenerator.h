@@ -3,6 +3,7 @@
 
 #include <clutter/clutter.h>
 #include <glib.h>
+#include <vector>
 
 class Actor
 {
@@ -23,6 +24,9 @@ class ParticleGenerator : public Actor
         GRand *random_generator_;
         double source_x_;
         double source_y_;
+        std::vector<ClutterActor *> actors_;
+        static const unsigned int NUM_PARTICLE_PER_SAMPLER = 100;
+        int current_particle_;
 };
 
 #endif // ifndef

@@ -28,6 +28,9 @@
 #include <unistd.h>
 //#include <boost/any_cast.hpp>
 
+static const unsigned int NUM_PARTICLE_PER_SAMPLER = 100;
+static const unsigned int NUM_SAMPLER = 3;
+
 struct Sampler
 {
     public:
@@ -63,7 +66,7 @@ struct App
 App::App() : 
     current_(0)
 {
-    for (int i = 0; i < 10; ++i)
+    for (unsigned int i = 0; i < NUM_SAMPLER; ++i)
     {
         samplers_.push_back(std::tr1::shared_ptr<Sampler>(new Sampler()));
     }
