@@ -17,6 +17,10 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @file
+ * The StateMachine class.
+ */
 #ifndef __TEMPI_STATEMACHINE_H__
 #define __TEMPI_STATEMACHINE_H__
 

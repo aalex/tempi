@@ -17,6 +17,10 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @file
+ * The Recorder class.
+ */
 #ifndef __TEMPI_RECORDER_H__
 #define __TEMPI_RECORDER_H__
 

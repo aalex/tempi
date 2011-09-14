@@ -17,6 +17,10 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @file
+ * The Source class.
+ */
 #ifndef __TEMPI_SOURCE_H__
 #define __TEMPI_SOURCE_H__
 

@@ -17,6 +17,10 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @file
+ * The Marker class.
+ */
 #ifndef __TEMPI_MARKER_H__
 #define __TEMPI_MARKER_H__
 

@@ -17,6 +17,10 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @file
+ * The SinkNode class.
+ */
 #ifndef __TEMPI_SINKNODE_H__
 #define __TEMPI_SINKNODE_H__
 

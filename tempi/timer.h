@@ -17,6 +17,10 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @file
+ * The Timer class.
+ */
 #ifndef __TEMPI_TIMER_H__
 #define __TEMPI_TIMER_H__
 

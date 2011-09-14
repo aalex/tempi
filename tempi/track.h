@@ -17,6 +17,10 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @file
+ * The Track class.
+ */
 #ifndef __TEMPI_TRACK_H__
 #define __TEMPI_TRACK_H__
 

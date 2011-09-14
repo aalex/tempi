@@ -17,6 +17,10 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @file
+ * The Player class.
+ */
 #ifndef __TEMPI_PLAYER_H__
 #define __TEMPI_PLAYER_H__
 

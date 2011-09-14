@@ -17,6 +17,10 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @file
+ * The Sink class.
+ */
 #ifndef __TEMPI_SINK_H__
 #define __TEMPI_SINK_H__
 

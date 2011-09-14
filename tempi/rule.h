@@ -17,6 +17,10 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @file
+ * The Rule class.
+ */
 #ifndef __TEMPI_RULE_H__
 #define __TEMPI_RULE_H__
 

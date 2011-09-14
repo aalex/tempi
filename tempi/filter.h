@@ -17,6 +17,11 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @file
+ * The Filter class.
+ */
+
 #ifndef __TEMPI_FILTER_H__
 #define __TEMPI_FILTER_H__
 

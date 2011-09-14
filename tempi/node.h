@@ -17,6 +17,10 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @file
+ * The Node class.
+ */
 #ifndef __TEMPI_NODE_H__
 #define __TEMPI_NODE_H__
 
