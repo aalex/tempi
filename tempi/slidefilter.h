@@ -28,7 +28,6 @@ namespace tempi
 
 /**
  * The slide filter smooths changes in streams of numbers.
- * A slide of 0 is impossible. If given 0, it will be 1.
  */
 class SlideFilter : public Filter
 {

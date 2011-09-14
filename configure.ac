@@ -83,6 +83,12 @@ AC_PROG_CXX
 AC_PROG_INSTALL
 AC_PROG_LIBTOOL
 
+AC_CHECK_PROGS([DOXYGEN], [doxygen])
+if test -z "$DOXYGEN";
+    then AC_MSG_WARN([Doxygen not found - continuing without Doxygen support])
+fi
+AM_CONDITIONAL([HAVE_DOXYGEN], [test -n "$DOXYGEN"])
+
 # Checks for typedefs, structures, and compiler characteristics.
 AC_HEADER_STDBOOL
 AC_C_INLINE
@@ -148,6 +154,7 @@ AC_CONFIG_FILES([
         tempi/Makefile 
         src/Makefile
         tests/Makefile
+        doxyfile 
         data/Makefile
         doc/Makefile
         tempi-${TEMPI_API_VERSION}.pc:tempi.pc.in

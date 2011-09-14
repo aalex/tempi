@@ -24,18 +24,20 @@ namespace tempi
 {
 
 /**
- * The slide filter smooths changes in streams of numbers.
+ * Slide smooths changes in streams of numbers.
  * A slide of 0 is impossible. If given 0, it will be 1.
  */
 class Slide
 {
     public:
         Slide();
+        /**
+         * A given sample output from slide is equal to the last value plus the difference between the last value and the input divided by the slide value. Given a slide value of 1, the output will therefore always equal the input. Given a slide value of 10, the output will only change 1/10th as quickly as the input. This can be particularly useful for lowpass filtering or envelope following. 
+         */
         bool setSlide(double slide);
         double getSlide();
         double slide(double value);
     private:
-        // Inherited from Filter:
         double slide_;
         double last_out_;
         bool had_some_in_yet_;

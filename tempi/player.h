@@ -36,18 +36,21 @@ class Player
         void setTrack(Track *track);
         Track *getTrack();
         /**
-         * Resets the internal timer of this Recorder.
+         * Resets the internal Timer of this Player.
          */
         void reset();
+        /**
+         * Changes the speed of this Player. Default is 1.0.
+         */
         void setSpeed(double factor);
         double getSpeed() const;
         /**
-         * Reads an event from the track now.
-         * Reads an event.
+         * Reads an event from the track at the time pointed to by the internal Timer.
          * Returns 0 if none is found.
          * Never free this pointer.
          */
         boost::any *readLoop();
+        // TODO: add a signal
     private:
         Timer timer_;
         Track *track_;

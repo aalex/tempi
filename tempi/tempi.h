@@ -17,8 +17,23 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @file
+ * Single public header file for tempi.
+ *
+ * Includes the other header files.
+ */
+
 #ifndef __TEMPI_H__
 #define __TEMPI_H__
+
+/**
+ * @namspace tempi
+ *
+ * C++ library that deals with timed events.
+ *
+ * The whole library is within this single namespace.
+ */
 
 namespace tempi
 {
