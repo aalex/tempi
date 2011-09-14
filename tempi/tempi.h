@@ -28,7 +28,7 @@
 #define __TEMPI_H__
 
 /**
- * @namspace tempi
+ * @namespace tempi
  *
  * C++ library that deals with timed events.
  *
