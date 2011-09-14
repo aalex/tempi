@@ -68,6 +68,15 @@ class Player
          */
         boost::any *read();
         // TODO: add a signal
+        
+        /**
+         * Sets the Playback mode.
+         * You can create a new instance of a Playback class and not care about deleting it.
+         * The memory will be freed by the Player's shared_ptr.
+         */
+        void setPlaybackMode(Playback *playback);
+
+        Playback *getPlaybackMode();
     private:
         Timer timer_;
         Track *track_;

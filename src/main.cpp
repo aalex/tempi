@@ -19,6 +19,7 @@
 
 #include "particlegenerator.h"
 #include "tempi/tempi.h"
+#include "tempi/pingpongplayback.h"
 #include <boost/any.hpp>
 #include <clutter/clutter.h>
 #include <glib.h>
@@ -42,6 +43,7 @@ Sampler::Sampler()
 {
     recorder_.reset(new tempi::Recorder(&track_));
     player_.reset(new tempi::Player(&track_));
+    player_.get()->setPlaybackMode(new tempi::PingPongPlayback());
     recording_ = false;
 }
 
