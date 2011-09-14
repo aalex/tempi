@@ -17,9 +17,12 @@ class ParticleGenerator : public Actor
         ParticleGenerator();
         virtual ClutterActor *getRoot();
         virtual void onDraw();
+        void setSourcePosition(double x, double y);
     private:
         ClutterActor *group_;
         GRand *random_generator_;
+        double source_x_;
+        double source_y_;
 };
 
 #endif // ifndef

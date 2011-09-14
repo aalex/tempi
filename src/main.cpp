@@ -49,7 +49,7 @@ static void on_frame_cb(ClutterTimeline * /*timeline*/, guint * /*ms*/, gpointer
         {
             tempi::_ff *value = boost::any_cast<tempi::_ff>(any);
             //std::cout << "Read " << value.get<0>() << ", " << value.get<1>() << std::endl;
-            clutter_actor_set_position(app->generator_.getRoot(), value->get<0>(), value->get<1>());
+            app->generator_.setSourcePosition(value->get<0>(), value->get<1>());
         }
     }
     catch (const boost::bad_any_cast &e)
