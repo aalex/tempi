@@ -106,7 +106,7 @@ void App::onDraw()
     {
         Sampler *sampler = (*iter).get();
 
-        boost::any *any = sampler->player_.get()->readLoop();
+        boost::any *any = sampler->player_.get()->read();
         if (any)
         {
             if (any->type() == typeid(tempi::_ff))

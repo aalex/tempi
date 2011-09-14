@@ -17,6 +17,7 @@ lib_LTLIBRARIES = libtempi-@TEMPI_API_VERSION@.la
 ## PLEASE KEEP THEM IN ALPHABETICAL ORDER
 libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     filter.cpp \
+    loopingplayback.cpp \
     marker.cpp \
     node.cpp \
     player.cpp \
@@ -48,8 +49,10 @@ libtempi_@TEMPI_API_VERSION@_la_includedir = $(includedir)/tempi-$(TEMPI_API_VER
 libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     filter.h \
     identifier.h \
+    loopingplayback.h \
     marker.h \
     node.h \
+    playback.h \
     player.h \
     properties.h \
     property.h \

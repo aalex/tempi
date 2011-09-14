@@ -25,7 +25,11 @@
 #define __TEMPI_PLAYER_H__
 
 #include <boost/any.hpp>
+#include "tempi/sharedptr.h"
+#include "tempi/timer.h"
 #include "tempi/track.h"
+#include "tempi/playback.h"
+#include "tempi/timeposition.h"
 
 namespace tempi
 {
@@ -38,7 +42,15 @@ class Player
     public:
         Player(Track *track);
         void setTrack(Track *track);
+        /**
+         * Returns the Track played by this Timer.
+         */
         Track *getTrack();
+        /**
+         * Returns this Timer's internal Timer.
+         * Never free this pointer.
+         */
+        Timer *getTimer();
         /**
          * Resets the internal Timer of this Player.
          */
@@ -54,13 +66,13 @@ class Player
          * Returns 0 if none is found.
          * Never free this pointer.
          */
-        boost::any *readLoop();
+        boost::any *read();
         // TODO: add a signal
     private:
         Timer timer_;
         Track *track_;
-        boost::any empty_;
         double speed_;
+        std::tr1::shared_ptr<Playback> playback_;
 };
 
 } // end of namespace
