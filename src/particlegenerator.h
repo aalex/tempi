@@ -25,8 +25,11 @@ class ParticleGenerator : public Actor
         double source_x_;
         double source_y_;
         std::vector<ClutterActor *> actors_;
-        static const unsigned int NUM_PARTICLE_PER_SAMPLER = 100;
+        static const unsigned int NUM_PARTICLE_PER_SAMPLER = 300;
+        static const unsigned int NUM_PARTICLE_PER_FRAME = 2;
+        static const double MAX_DISTANCE = 50.0;
         int current_particle_;
+        void generateOneParticle();
 };
 
 #endif // ifndef

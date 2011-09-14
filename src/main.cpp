@@ -28,7 +28,6 @@
 #include <unistd.h>
 //#include <boost/any_cast.hpp>
 
-static const unsigned int NUM_PARTICLE_PER_SAMPLER = 100;
 static const unsigned int NUM_SAMPLER = 3;
 
 struct Sampler
