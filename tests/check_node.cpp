@@ -1,5 +1,4 @@
 #include <iostream>
-#include <boost/any.hpp>
 #include "tempi/tempi.h"
 #include "tempi/node.h"
 #include "tempi/sink.h"
@@ -18,11 +17,11 @@ class DummySourceNode: public SourceNode
     public:
         DummySourceNode();
     private:
-        virtual void processMessage(Source *source, boost::any data);
+        virtual void processMessage(Source *source, Message &message);
 };
 
 DummySourceNode::DummySourceNode() : SourceNode() {}
-void DummySourceNode::processMessage(Source *source, boost::any data) {}
+void DummySourceNode::processMessage(Source *source, Message &message) {}
 
 /**
  * Dummy filter node.
@@ -35,14 +34,18 @@ class DummyFilterNode: public Filter
         /**
          * Inverts the boolean value.
          */
-        virtual boost::any filter(boost::any data);
+        virtual Message &filter(Message &message);
 };
 
 DummyFilterNode::DummyFilterNode() : Filter() {}
 
-boost::any DummyFilterNode::filter(boost::any data)
+Message &DummyFilterNode::filter(Message &message)
 {
-    return boost::any(! boost::any_cast<bool>(data)); // pass through
+    bool value = false;
+    message.getBoolean(0, value);
+    value = ! value;
+    message.setBoolean(0, value);
+    return message;
 }
 
 /**
@@ -56,7 +59,7 @@ class DummySinkNode: public SinkNode
         bool last_value_was_ok_;
         bool expected_;
     private:
-        virtual void processMessage(Source *source, boost::any data);
+        virtual void processMessage(Source *source, Message &message);
 };
 
 DummySinkNode::DummySinkNode() :
@@ -67,10 +70,12 @@ DummySinkNode::DummySinkNode() :
     last_value_was_ok_ = false;
 }
 
-void DummySinkNode::processMessage(Source *source, boost::any data)
+void DummySinkNode::processMessage(Source *source, Message &message)
 {
     triggered_ = true;
-    last_value_was_ok_ = boost::any_cast<bool>(data) == expected_;
+    bool value;
+    message.getBoolean(0, value);
+    last_value_was_ok_ = value == expected_;
 }
 
 bool check_simple()
@@ -99,14 +104,15 @@ bool check_simple()
         return false;
     }
     Source *source = a.getOutlets()[0].get();
-    boost::any data(true);
+    Message message;
+    message.appendBoolean(true);
     if (c.triggered_)
     {
         std::cout << "Callback has already been called. Weird" << std::endl;
         return false;
     }
     c.expected_ = false;
-    source->trigger(data);
+    source->trigger(message);
     if (! c.triggered_)
     {
         std::cout << "Callback has not been called." << std::endl;

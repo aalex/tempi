@@ -36,11 +36,11 @@ std::vector<std::tr1::shared_ptr<Source> > Node::getOutlets()
     return outlets_;
 }
 
-void Node::onInletTriggered(Source *source, boost::any data)
+void Node::onInletTriggered(Source *source, Message &message)
 {
     // TODO
     //std::cout << __FUNCTION__ << std::endl;
-    processMessage(source, data);
+    processMessage(source, message);
 }
 
 std::vector<std::tr1::shared_ptr<Sink> > Node::getInlets()

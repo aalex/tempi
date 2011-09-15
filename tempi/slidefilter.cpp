@@ -34,16 +34,17 @@ SlideFilter::SlideFilter() :
 {
 }
 
-boost::any SlideFilter::filter(boost::any data)
+Message &SlideFilter::filter(Message &message)
 {
-    if (data.type() == typeid(_d))
+    if (message.typesMatch("d"))
     {
-        double value = boost::any_cast<_d>(data).get<0>();
+        double value = 0.0;
+        message.getDouble(0, value);
         value = slide(value);
-        return boost::any(_d(value));
+        return message;
     }
     else
-        return data;
+        return message;
 }
 
 double SlideFilter::slide(double value)

@@ -53,11 +53,11 @@ bool Sink::hasSource(Source *source)
     return false;
 }
 
-void Sink::onTriggered(Source *source, boost::any data)
+void Sink::onTriggered(Source *source, Message &message)
 {
     // TODO
     //std::cout << __FUNCTION__ << std::endl;
-    on_triggered_signal_(source, data);
+    on_triggered_signal_(source, message);
 }
 
 } // end of namespace

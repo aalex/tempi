@@ -24,7 +24,6 @@
 #ifndef __TEMPI_SLIDEFILTER_H__
 #define __TEMPI_SLIDEFILTER_H__
 
-#include <boost/any.hpp>
 #include "tempi/filter.h"
 
 namespace tempi
@@ -40,7 +39,7 @@ class SlideFilter : public Filter
         bool setSlide(double slide);
     private:
         // Inherited from Filter:
-        virtual boost::any filter(boost::any data);
+        virtual Message &filter(Message &message);
         double slide(double value);
         double slide_;
         double last_out_;

@@ -24,10 +24,10 @@
 #ifndef __TEMPI_SINK_H__
 #define __TEMPI_SINK_H__
 
-#include <boost/any.hpp>
 #include <boost/signals2.hpp>
 #include <vector>
 #include "tempi/sharedptr.h"
+#include "tempi/message.h"
 
 namespace tempi
 {
@@ -42,8 +42,8 @@ class Sink
     public:
         Sink();
         bool connect(std::tr1::shared_ptr<Source> source);
-        void onTriggered(Source *source, boost::any data);
-        boost::signals2::signal<void (Source *, boost::any)> on_triggered_signal_;
+        void onTriggered(Source *source, Message &message);
+        boost::signals2::signal<void (Source *, Message&)> on_triggered_signal_;
     private:
         std::vector<std::tr1::shared_ptr<Source> > sources_;
         bool hasSource(Source *source);

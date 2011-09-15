@@ -24,9 +24,9 @@
 #ifndef __TEMPI_NODE_H__
 #define __TEMPI_NODE_H__
 
-#include <boost/any.hpp>
 #include <vector>
 #include "tempi/source.h"
+#include "tempi/message.h"
 #include "tempi/sink.h"
 #include "tempi/sharedptr.h"
 
@@ -47,21 +47,21 @@ class Node
         bool addOutlet();
         bool addInlet();
         // TODO: properties:
-        // std::map<std::string, boost::any> getProperties();
-        // boost::any *getProperty(std::string);
-        // bool addProperty(std::string name, boost::any &value);
-        // bool setProperty(std::string name, boost::any &value);
+        // std::map<std::string, Message> getProperties();
+        // Message *getProperty(std::string);
+        // bool addProperty(std::string name, Message &value);
+        // bool setProperty(std::string name, Message &value);
         // type_info *getPropertyType(std::string property);
         //
         // TODO: signals:
-        // typedef boost::signals2::signal<void(boost::any)> Signal;
+        // typedef boost::signals2::signal<void(Message)> Signal;
         // std::map<std::string, Signal> getSignals();
         // type_info *getSignalType(std::string signal);
     private:
         std::vector<std::tr1::shared_ptr<Source> > outlets_;
         std::vector<std::tr1::shared_ptr<Sink> > inlets_;
-        void onInletTriggered(Source *source, boost::any data);
-        virtual void processMessage(Source *source, boost::any data) = 0;
+        void onInletTriggered(Source *source, Message &data);
+        virtual void processMessage(Source *source, Message &message) = 0;
         bool hasInlet(Sink *sink);
         bool hasOutlet(Source *source);
 };
