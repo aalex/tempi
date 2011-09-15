@@ -78,8 +78,7 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     tempi.h \
     timeposition.h \
     timer.h \
-    track.h \
-    types.h
+    track.h
 
 # TODO:averagefilter.h
 

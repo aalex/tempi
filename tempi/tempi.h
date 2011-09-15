@@ -45,17 +45,21 @@ void get_version();
 
 #include "tempi/filter.h"
 #include "tempi/identifier.h"
+#include "tempi/loopingplayback.h"
 #include "tempi/marker.h"
+#include "tempi/message.h"
 #include "tempi/node.h"
+#include "tempi/pingpongplayback.h"
+#include "tempi/playback.h"
 #include "tempi/player.h"
 #include "tempi/properties.h"
 #include "tempi/property.h"
 #include "tempi/recorder.h"
 #include "tempi/rule.h"
+//TODO: #include "tempi/score.h"
 #include "tempi/sharedptr.h"
 #include "tempi/sink.h"
 #include "tempi/sinknode.h"
-#include "tempi/slide.h"
 #include "tempi/slidefilter.h"
 #include "tempi/source.h"
 #include "tempi/sourcenode.h"
@@ -66,7 +70,6 @@ void get_version();
 #include "tempi/timeposition.h"
 #include "tempi/timer.h"
 #include "tempi/track.h"
-#include "tempi/types.h"
 
 #endif // __TEMPI_H__
 

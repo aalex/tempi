@@ -20,7 +20,6 @@
 #include <boost/any.hpp>
 #include "tempi/slidefilter.h"
 #include "tempi/sharedptr.h"
-#include "tempi/types.h"
 #include <iostream>
 
 namespace tempi
