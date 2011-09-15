@@ -54,11 +54,14 @@ struct App
         App();
         void startRecording();
         void stopRecording();
+        void toggleFullscreen();
         void write(float x, float y);
         bool isRecording();
         void onDraw();
         unsigned int current_;
         std::vector<std::tr1::shared_ptr<Sampler> > samplers_;
+        ClutterActor *stage_;
+        bool fullscreen_;
 };
 
 App::App() : 
@@ -105,6 +108,15 @@ void App::write(float x, float y)
 bool App::isRecording()
 {
     return samplers_[current_].get()->recording_;
+}
+
+void App::toggleFullscreen()
+{
+    fullscreen_ = ! fullscreen_;
+    if (fullscreen_)
+        clutter_stage_set_fullscreen(CLUTTER_STAGE(stage_), TRUE);
+    else
+        clutter_stage_set_fullscreen(CLUTTER_STAGE(stage_), FALSE);
 }
 
 void App::onDraw()
@@ -175,6 +187,9 @@ static void key_event_cb(ClutterActor *actor, ClutterKeyEvent *event, gpointer u
     switch (event->keyval)
     {
         case CLUTTER_Escape:
+            app->toggleFullscreen();
+            break;
+        case CLUTTER_KEY_q:
             clutter_main_quit();
             break;
         case CLUTTER_KEY_space:
@@ -197,8 +212,10 @@ int main(int argc, char *argv[])
 
     if (clutter_init(&argc, &argv) != CLUTTER_INIT_SUCCESS)
         return 1;
-    App app;
     stage = clutter_stage_get_default();
+    App app;
+    app.fullscreen_ = false;;
+    app.stage_ = stage;
     clutter_actor_set_size(stage, 1024, 768);
     clutter_stage_set_color(CLUTTER_STAGE(stage), &black);
     g_signal_connect(stage, "destroy", G_CALLBACK(clutter_main_quit), NULL);
