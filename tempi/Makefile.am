@@ -35,7 +35,6 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     statemachine.cpp \
     tempi.cpp \
     track.cpp \
-    tempi.cpp \
     timer.cpp
 
 # TODO averagefilter.cpp

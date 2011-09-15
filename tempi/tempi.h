@@ -27,6 +27,8 @@
 #ifndef __TEMPI_H__
 #define __TEMPI_H__
 
+#include <string>
+
 /**
  * @namespace tempi
  *
@@ -38,8 +40,15 @@
 namespace tempi
 {
 
+/**
+ * Prints a greeting.
+ */
 void hello();
-void get_version();
+
+/**
+ * Returns the version of Tempi as a string.
+ */
+std::string get_version();
 
 }; // end of namespace
 
@@ -70,5 +79,5 @@ void get_version();
 #include "tempi/timer.h"
 #include "tempi/track.h"
 
-#endif // __TEMPI_H__
+#endif // ifndef
 
