@@ -39,7 +39,7 @@ std::vector<std::tr1::shared_ptr<Source> > Node::getOutlets()
 void Node::onInletTriggered(Source *source, boost::any data)
 {
     // TODO
-    std::cout << __FUNCTION__ << std::endl;
+    //std::cout << __FUNCTION__ << std::endl;
     processMessage(source, data);
 }
 

@@ -4,6 +4,8 @@
 
 using namespace tempi::fsm;
 
+// static const bool VERBOSE = false;
+
 bool check_simple()
 {
     StateMachine machine;

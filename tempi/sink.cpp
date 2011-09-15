@@ -56,7 +56,7 @@ bool Sink::hasSource(Source *source)
 void Sink::onTriggered(Source *source, boost::any data)
 {
     // TODO
-    std::cout << __FUNCTION__ << std::endl;
+    //std::cout << __FUNCTION__ << std::endl;
     on_triggered_signal_(source, data);
 }
 

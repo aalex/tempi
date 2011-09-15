@@ -30,7 +30,7 @@ Source::Source()
 
 void Source::trigger(boost::any data)
 {
-    std::cout << __FUNCTION__ << std::endl;
+    //std::cout << __FUNCTION__ << std::endl;
     on_triggered_signal_(this, data);
 }
 

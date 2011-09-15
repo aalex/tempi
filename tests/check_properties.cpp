@@ -6,24 +6,30 @@
 
 using namespace tempi;
 
+static const bool VERBOSE = false;
+
 void int_cb(std::string &name, int value)
 {
-    std::cout << name << " changed to " << value << std::endl;
+    if (VERBOSE)
+        std::cout << name << " changed to " << value << std::endl;
 }
 
 void float_cb(std::string &name, float value)
 {
-    std::cout << name << " changed to " << value << std::endl;
+    if (VERBOSE)
+        std::cout << name << " changed to " << value << std::endl;
 }
 
 void string_cb(std::string &name, std::string value)
 {
-    std::cout << name << " changed to " << value << std::endl;
+    if (VERBOSE)
+        std::cout << name << " changed to " << value << std::endl;
 }
 
 void bool_cb(std::string &name, bool value)
 {
-    std::cout << name << " changed to " << value << std::endl;
+    if (VERBOSE)
+        std::cout << name << " changed to " << value << std::endl;
 }
 
 int main(int /* argc */, char ** /*argv */)
@@ -47,10 +53,12 @@ int main(int /* argc */, char ** /*argv */)
         return 1;
     }
     else
-        std::cout << "Good! Did not get a valid pointer " << val << std::endl;
+        if (VERBOSE)
+            std::cout << "Good! Did not get a valid pointer " << val << std::endl;
     
     if (! holder.has_property("qweqwe"))
-        std::cout << "Good, it still doesnt find qweqwe " << std::endl;
+        if (VERBOSE)
+            std::cout << "Good, it still doesnt find qweqwe " << std::endl;
     else 
         return 1;
 

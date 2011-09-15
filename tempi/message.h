@@ -46,7 +46,12 @@ class Message
         bool setArgument(unsigned int index, boost::any &value);
         boost::any *getArgument(unsigned int index);
         unsigned int getSize() const;
-        bool append(boost::any &value);
+        bool append(boost::any value);
+        template <typename T>
+        bool appendAny(T value)
+        {
+            return append(boost::any(value));
+        }
     private:
         std::vector<boost::any> arguments_;
 };

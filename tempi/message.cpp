@@ -33,7 +33,7 @@ Message::Message()
     // pass
 }
 
-bool Message::append(boost::any &value)
+bool Message::append(boost::any value)
 {
     arguments_.push_back(value);
 }
