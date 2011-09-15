@@ -33,6 +33,9 @@
 namespace tempi
 {
 
+/**
+ * Type tags for Message arguments.
+ */
 typedef enum
 {
     BOOLEAN = 'b',
@@ -45,6 +48,10 @@ typedef enum
     //TODO: POINTER = 'p'
 } ArgumentType;
 
+/**
+ * A Message contains a list of arguments whose types are one of ArgumentType.
+ * Message objects can be stored in a Track, and passed from/to Node inlets and outlets.
+ */
 class Message
 {
     public:

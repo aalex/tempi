@@ -51,7 +51,7 @@ Marker *Score::getMarker(Identifier identifier)
     return 0;
 }
 
-std::map<TimePosition, MarkerPtr> getMarkers();
+std::map<TimePosition, MarkerPtr> Score::getMarkers();
 {
     return markers_; // FIXME: is this ok?
 }

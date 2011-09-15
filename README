@@ -31,7 +31,7 @@ Thanks to the Ministère du Développement économique, de l'Innovation et de l'
 Installation
 ------------
 Here is how to build and install it::
-  $ sudo apt-get install help2man gettext libxml2-dev automake bison build-essential flex libtool libclutter-1.0-dev libglib-2.0-dev
+  $ sudo apt-get install help2man gettext libxml2-dev automake bison build-essential flex libtool libclutter-1.0-dev libglib-2.0-dev libboost-all-dev
   $ ./autogen.sh
   $ ./configure
   $ make
