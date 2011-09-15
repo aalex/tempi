@@ -19,6 +19,7 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     filter.cpp \
     loopingplayback.cpp \
     marker.cpp \
+    message.cpp \
     node.cpp \
     pingpongplayback.cpp \
     player.cpp \
@@ -55,6 +56,7 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     identifier.h \
     loopingplayback.h \
     marker.h \
+    message.h \
     node.h \
     pingpongplayback.h \
     playback.h \
