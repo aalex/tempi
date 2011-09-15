@@ -44,6 +44,7 @@ tempi/config.h
 tempi/config.h.in
 tempi/stamp-h1
 tempi/tempi-version.h
+tests/check_average
 tests/check_fsm
 tests/check_node
 tests/check_properties
