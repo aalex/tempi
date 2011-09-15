@@ -56,11 +56,14 @@ int main(int /* argc */, char ** /*argv */)
         if (VERBOSE)
             std::cout << "Good! Did not get a valid pointer " << val << std::endl;
     
-    if (! holder.has_property("qweqwe"))
+    if (holder.has_property("qweqwe"))
+    {
+        std::cout << "It finds qweqwe. weird " << std::endl;
+        return 1;
+    }
+    else 
         if (VERBOSE)
             std::cout << "Good, it still doesnt find qweqwe " << std::endl;
-    else 
-        return 1;
 
     Property<float> f("float property", 0.0);
     f.value_changed_signal_.connect(&float_cb);
