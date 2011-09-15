@@ -41,7 +41,7 @@ bool Player::setPosition(TimePosition position)
     return timer_.setPosition(position);
 }
 
-boost::any *Player::read()
+Message *Player::read()
 {
     if (! track_)
     {

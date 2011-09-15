@@ -24,7 +24,6 @@
 #ifndef __TEMPI_LOOPINGPLAYBACK_H__
 #define __TEMPI_LOOPINGPLAYBACK_H__
 
-#include <boost/any.hpp>
 #include "tempi/playback.h"
 
 namespace tempi
@@ -36,7 +35,7 @@ namespace tempi
 class LoopingPlayback : public Playback
 {
     public:
-        virtual boost::any *read(Player &player);
+        virtual Message *read(Player &player);
 };
 
 } // end of namespace

@@ -6,11 +6,11 @@
 namespace tempi
 {
 
-boost::any *LoopingPlayback::read(Player &player)
+Message *LoopingPlayback::read(Player &player)
 {
     Track *track = player.getTrack();
-    TimeStamp duration = track->getDuration();
-    TimeStamp elapsed = player.getTimer()->elapsed();
+    TimePosition duration = track->getDuration();
+    TimePosition elapsed = player.getTimer()->elapsed();
     elapsed *= player.getSpeed();
     if (duration == 0L)
     {
@@ -27,7 +27,7 @@ boost::any *LoopingPlayback::read(Player &player)
     {
         //std::cout << "duration: " << getDuration() << std::endl;
         // FIXME: using the modulo here should not be mandatory
-        TimeStamp cursor = elapsed % duration;
+        TimePosition cursor = elapsed % duration;
         player.setPosition(cursor);
         //std::cout << "elapsed modulo duration: " << cursor << std::endl;
         return track->getClosest(cursor);

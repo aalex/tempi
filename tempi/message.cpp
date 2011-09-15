@@ -19,6 +19,7 @@
 
 #include "tempi/message.h"
 #include <iostream>
+#include <sstream>
 
 namespace tempi
 {
@@ -193,7 +194,7 @@ bool Message::setString(unsigned int index, std::string value)
 
 static bool getArgumentTypeForAny(boost::any &value, ArgumentType &type)
 {
-    const std::type_info &actual = typeid(value);
+    const std::type_info &actual = value.type();
     if (actual == typeid(bool))
         type = BOOLEAN;
     else if (actual == typeid(char))
@@ -209,7 +210,10 @@ static bool getArgumentTypeForAny(boost::any &value, ArgumentType &type)
     else if (actual == typeid(std::string))
         type = STRING;
     else
+    {
+        std::cerr << __FUNCTION__ << ": Could not figure out type of value. It's " << actual.name() << std::endl;
         return false;
+    }
     return true;
 }
 
@@ -237,6 +241,19 @@ bool Message::typesMatch(std::string &types)
         ++index;
     }
     return true;
+}
+
+std::string Message::getTypes()
+{
+    std::ostringstream os;
+    for (unsigned int i = 0; i < getSize(); ++i)
+    {
+        ArgumentType type;
+        if (! getArgumentType(i, type))
+            std::cerr << "Message::" << __FUNCTION__ << ": Could not get type for arg" << i << std::endl;
+        os << type;
+    }
+    return os.str();
 }
 
 } // end of namespace

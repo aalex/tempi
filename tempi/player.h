@@ -24,11 +24,11 @@
 #ifndef __TEMPI_PLAYER_H__
 #define __TEMPI_PLAYER_H__
 
-#include <boost/any.hpp>
 #include "tempi/sharedptr.h"
 #include "tempi/timer.h"
 #include "tempi/track.h"
 #include "tempi/playback.h"
+#include "tempi/message.h"
 #include "tempi/timeposition.h"
 
 namespace tempi
@@ -66,7 +66,7 @@ class Player
          * Returns 0 if none is found.
          * Never free this pointer.
          */
-        boost::any *read();
+        Message *read();
         // TODO: add a signal
         
         /**

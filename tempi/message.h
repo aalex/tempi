@@ -82,6 +82,13 @@ class Message
         bool setString(unsigned int index, std::string value);
 
         bool typesMatch(std::string &types);
+        bool typesMatch(const char *types)
+        {
+            std::string s(types);
+            return typesMatch(s);
+        }
+
+        std::string getTypes();
 
         // template <typename T>
         // bool appendAny(T value)

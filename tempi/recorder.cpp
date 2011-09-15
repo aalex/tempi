@@ -48,7 +48,7 @@ bool Recorder::setPosition(TimePosition position)
     return timer_.setPosition(position);
 }
 
-void Recorder::add(boost::any value)
+void Recorder::add(Message value)
 {
     if (track_)
         track_->add(timer_.elapsed(), value);

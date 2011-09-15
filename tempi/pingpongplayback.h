@@ -24,7 +24,6 @@
 #ifndef __TEMPI_PINGPONGPLAYBACK_H__
 #define __TEMPI_PINGPONGPLAYBACK_H__
 
-#include <boost/any.hpp>
 #include "tempi/playback.h"
 
 namespace tempi
@@ -37,7 +36,7 @@ class PingPongPlayback : public Playback
 {
     public:
         PingPongPlayback();
-        virtual boost::any *read(Player &player);
+        virtual Message *read(Player &player);
     private:
         bool direction_is_forward_;
 };

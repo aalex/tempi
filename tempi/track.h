@@ -24,52 +24,51 @@
 #ifndef __TEMPI_TRACK_H__
 #define __TEMPI_TRACK_H__
 
-#include <boost/any.hpp>
 #include <boost/tuple/tuple.hpp>
 #include <vector>
 #include "tempi/timer.h"
+#include "tempi/message.h"
 
 namespace tempi
 {
 
-typedef TimePosition TimeStamp;
-typedef boost::tuple<TimeStamp, boost::any> Event;
-typedef std::vector<Event> EventVec;
-typedef EventVec::iterator EventVecIter;
-
 /**
- * A Track contains timed Events. 
- * Events are any data, typically a boost::tuple.
+ * A Track contains timed Message objects. 
  */
 class Track
 {
     public:
+
         Track();
         /**
          * Clears this Track.
          */
         void reset();
         /**
-         * Returns the TimeStamp of the last event in this Track.
+         * Returns the TimePosition of the last event in this Track.
          */
-        TimeStamp getDuration();
+        TimePosition getDuration();
         /**
          * Adds an event to this track.
          */
-        void add(TimeStamp time, boost::any value);
+        void add(TimePosition time, Message message);
+        /** TODO */
         void print();
-        // TODO eraseBetween(TimeStamp from, TimeStamp to);
+        // TODO eraseBetween(TimePosition from, TimePosition to);
         unsigned int numberOfEvents();
-        boost::any *getFirst();
-        boost::any *getLast();
-        boost::any *getClosest(TimeStamp target);
+        Message *getFirst();
+        Message *getLast();
+        Message *getClosest(TimePosition target);
     private:
-        //Timer reader_timer_;
-        EventVec events_;
+        typedef boost::tuple<TimePosition, Message> Event;
+        typedef std::vector<Event>::iterator EventVecIter;
+        typedef std::vector<Event> EventVec;
+
+        std::vector<Event> events_;
         /**
          * Useful to insert an event before what it returns.
          */
-        EventVecIter getIteratorAfter(TimeStamp target);
+        EventVecIter getIteratorAfter(TimePosition target);
 };
 
 } // end of namespace

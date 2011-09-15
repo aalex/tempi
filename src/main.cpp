@@ -20,15 +20,14 @@
 #include "particlegenerator.h"
 #include "tempi/tempi.h"
 #include "tempi/pingpongplayback.h"
-#include <boost/any.hpp>
 #include <clutter/clutter.h>
 #include <glib.h>
 #include <iostream>
 #include <tr1/memory>
 #include <unistd.h>
-//#include <boost/any_cast.hpp>
 
 static const unsigned int NUM_SAMPLER = 3;
+static const bool VERBOSE = false;
 
 struct Sampler
 {
@@ -95,7 +94,12 @@ void App::write(float x, float y)
     if (samplers_.size() != 0)
     {
         Sampler *sampler = samplers_[current_].get();
-        sampler->recorder_.get()->add(boost::any(tempi::_ff(x, y)));
+        tempi::Message m;
+        m.appendFloat(x);
+        m.appendFloat(y);
+        if (VERBOSE)
+            std::cout << "write " << x << " " << y << std::endl;
+        sampler->recorder_.get()->add(m);
     }
 }
 bool App::isRecording()
@@ -110,14 +114,18 @@ void App::onDraw()
     {
         Sampler *sampler = (*iter).get();
 
-        boost::any *any = sampler->player_.get()->read();
-        if (any)
+        tempi::Message *m = sampler->player_.get()->read();
+        if (m)
         {
-            if (any->type() == typeid(tempi::_ff))
+            if (m->typesMatch("ff"))
             {
-                tempi::_ff *value = boost::any_cast<tempi::_ff>(any);
-                sampler->generator_.setSourcePosition(value->get<0>(), value->get<1>());
+                float x, y;
+                m->getFloat(0, x);
+                m->getFloat(1, y);
+                sampler->generator_.setSourcePosition(x, y);
             }
+            else
+                std::cout << "types don't match: " << m->getTypes() << std::endl;
         }
         sampler->generator_.onDraw();
     }

@@ -24,7 +24,7 @@
 #ifndef __TEMPI_PLAYBACK_H__
 #define __TEMPI_PLAYBACK_H__
 
-#include <boost/any.hpp>
+#include "tempi/message.h"
 
 namespace tempi
 {
@@ -42,7 +42,7 @@ class Playback
          * Returns 0 if none is found.
          * Never free this pointer.
          */
-        virtual boost::any *read(Player &player) = 0;
+        virtual Message *read(Player &player) = 0;
 };
 
 } // end of namespace

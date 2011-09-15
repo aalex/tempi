@@ -12,12 +12,12 @@ PingPongPlayback::PingPongPlayback() :
     // pass
 }
 
-boost::any *PingPongPlayback::read(Player &player)
+Message *PingPongPlayback::read(Player &player)
 {
     // FIXME: should the Timer belong to the Playback?
     Track *track = player.getTrack();
-    TimeStamp duration = track->getDuration();
-    TimeStamp elapsed = player.getTimer()->elapsed();
+    TimePosition duration = track->getDuration();
+    TimePosition elapsed = player.getTimer()->elapsed();
     elapsed *= player.getSpeed();
     if (duration == 0L)
     {
@@ -38,7 +38,7 @@ boost::any *PingPongPlayback::read(Player &player)
             player.setPosition(0L);
             elapsed = 0L;
         }
-        TimeStamp cursor = elapsed % duration;
+        TimePosition cursor = elapsed % duration;
         player.setPosition(cursor);
         if (direction_is_forward_)
             return track->getClosest(cursor);
