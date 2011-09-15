@@ -66,7 +66,6 @@ void get_version();
 #include "tempi/state.h"
 #include "tempi/statemachine.h"
 #include "tempi/tempi-version.h"
-#include "tempi/tempi.h"
 #include "tempi/timeposition.h"
 #include "tempi/timer.h"
 #include "tempi/track.h"
