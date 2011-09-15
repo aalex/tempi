@@ -27,10 +27,23 @@
 
 #include <boost/any.hpp>
 #include <vector>
+#include <string>
 #include <typeinfo>
 
 namespace tempi
 {
+
+typedef enum
+{
+    BOOLEAN = 'b',
+    CHAR = 'c',
+    DOUBLE = 'd',
+    FLOAT = 'f',
+    INT = 'i',
+    LONG = 'l',
+    STRING = 's'
+    //TODO: POINTER = 'p'
+} ArgumentType;
 
 class Message
 {
@@ -39,21 +52,80 @@ class Message
          * Constructor with no argument.
          */
         Message();
-        Message(std::vector<boost::any> arguments);
-        std::vector<boost::any> &getArguments();
-        //std::vector<std::type_info&> &getTypes();
-        const std::type_info *getType(unsigned int index) const;
-        bool setArgument(unsigned int index, boost::any &value);
-        boost::any *getArgument(unsigned int index);
+        //const std::type_info *getType(unsigned int index) const;
+        bool getArgumentType(unsigned int index, ArgumentType &type);
+        //bool setArgument(unsigned int index, boost::any &value);
         unsigned int getSize() const;
-        bool append(boost::any value);
-        template <typename T>
-        bool appendAny(T value)
-        {
-            return append(boost::any(value));
-        }
+
+        bool appendBoolean(bool value);
+        bool appendChar(char value);
+        bool appendDouble(double value);
+        bool appendFloat(float value);
+        bool appendInt(int value);
+        bool appendLong(long long int value);
+        bool appendString(std::string value);
+
+        bool getBoolean(unsigned int index, bool &value);
+        bool getChar(unsigned int index, char &value);
+        bool getDouble(unsigned int index, double &value);
+        bool getFloat(unsigned int index, float &value);
+        bool getInt(unsigned int index, int &value);
+        bool getLong(unsigned int index, long long int &value);
+        bool getString(unsigned int index, std::string &value);
+
+        bool setBoolean(unsigned int index, bool value);
+        bool setChar(unsigned int index, char value);
+        bool setDouble(unsigned int index, double value);
+        bool setFloat(unsigned int index, float value);
+        bool setInt(unsigned int index, int value);
+        bool setLong(unsigned int index, long long int value);
+        bool setString(unsigned int index, std::string value);
+
+        bool typesMatch(std::string &types);
+
+        // template <typename T>
+        // bool appendAny(T value)
+        // {
+        //     return append(boost::any(value));
+        // }
     private:
+        // Message(std::vector<boost::any> arguments);
+        // std::vector<boost::any> &getArguments();
+        boost::any *getArgument(unsigned int index);
         std::vector<boost::any> arguments_;
+        bool append(boost::any value);
+
+        template <typename T>
+        bool get(unsigned int index, T &value)
+        {
+            boost::any *tmp = getArgument(index);
+            if (tmp)
+                if (tmp->type() == typeid(value))
+                {
+                    value = boost::any_cast<T>(*tmp);
+                    return true;
+                }
+                else
+                    return false;
+            else
+                return false;
+        }
+
+        template <typename T>
+        bool set(unsigned int index, T value)
+        {
+            boost::any *tmp = getArgument(index);
+            if (tmp)
+                if (tmp->type() == typeid(value))
+                {
+                    (*tmp) = boost::any(value);
+                    return true;
+                }
+                else
+                    return false;
+            else
+                return false;
+        }
 };
 
 } // end of namespace

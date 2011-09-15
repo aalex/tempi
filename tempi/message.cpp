@@ -23,10 +23,10 @@
 namespace tempi
 {
 
-Message::Message(std::vector<boost::any> arguments)
-{
-    arguments_ = arguments;
-}
+// Message::Message(std::vector<boost::any> arguments)
+// {
+//     arguments_ = arguments;
+// }
 
 Message::Message()
 {
@@ -38,10 +38,10 @@ bool Message::append(boost::any value)
     arguments_.push_back(value);
 }
 
-std::vector<boost::any> &Message::getArguments()
-{
-    return arguments_;
-}
+// std::vector<boost::any> &Message::getArguments()
+// {
+//     return arguments_;
+// }
 
 // std::vector<std::type_info> Message::getTypes()
 // {
@@ -59,24 +59,24 @@ unsigned int Message::getSize() const
     return arguments_.size();
 }
 
-bool Message::setArgument(unsigned int index, boost::any &value)
-{
-    if (index >= getSize())
-    {
-        std::cerr << "Message::" << __FUNCTION__ << ": Index too big: " << index << std::endl;
-        return false;
-    }
-//    else if (value.type() != arguments_[index].type())
-//    {
-//        std::cerr << "Message::" << __FUNCTION__ << ": Wrong type for index " << index << " " << value.type().name() << std::endl;
-//        return false;
-//    }
-    else
-    {
-        arguments_[index] = value;
-        return true;
-    }
-}
+// bool Message::setArgument(unsigned int index, boost::any &value)
+// {
+//     if (index >= getSize())
+//     {
+//         std::cerr << "Message::" << __FUNCTION__ << ": Index too big: " << index << std::endl;
+//         return false;
+//     }
+// //    else if (value.type() != arguments_[index].type())
+// //    {
+// //        std::cerr << "Message::" << __FUNCTION__ << ": Wrong type for index " << index << " " << value.type().name() << std::endl;
+// //        return false;
+// //    }
+//     else
+//     {
+//         arguments_[index] = value;
+//         return true;
+//     }
+// }
 
 boost::any *Message::getArgument(unsigned int index)
 {
@@ -91,18 +91,152 @@ boost::any *Message::getArgument(unsigned int index)
     }
 }
 
+// const std::type_info *Message::getType(unsigned int index) const
+// {
+//     if (index >= getSize())
+//     {
+//         std::cerr << "Message::" << __FUNCTION__ << ": Index too big: " << index << std::endl;
+//         return 0;
+//     }
+//     else
+//     {
+//         return &(arguments_[index].type());
+//     }
+// }
 
-const std::type_info *Message::getType(unsigned int index) const
+bool Message::appendFloat(float value)
 {
-    if (index >= getSize())
-    {
-        std::cerr << "Message::" << __FUNCTION__ << ": Index too big: " << index << std::endl;
-        return 0;
-    }
+    append(boost::any(value));
+}
+bool Message::appendInt(int value)
+{
+    append(boost::any(value));
+}
+bool Message::appendLong(long long int value)
+{
+    append(boost::any(value));
+}
+bool Message::appendString(std::string value)
+{
+    append(boost::any(value));
+}
+bool Message::appendBoolean(bool value)
+{
+    append(boost::any(value));
+}
+bool Message::appendChar(char value)
+{
+    append(boost::any(value));
+}
+bool Message::appendDouble(double value)
+{
+    append(boost::any(value));
+}
+
+bool Message::getInt(unsigned int index, int &value)
+{
+    return get<int>(index, value);
+}
+bool Message::getLong(unsigned int index, long long int &value)
+{
+    return get<long long int>(index, value);
+}
+bool Message::getDouble(unsigned int index, double &value)
+{
+    return get<double>(index, value);
+}
+bool Message::getString(unsigned int index, std::string &value)
+{
+    return get<std::string>(index, value);
+}
+bool Message::getFloat(unsigned int index, float &value)
+{
+    return get<float>(index, value);
+}
+bool Message::getChar(unsigned int index, char &value)
+{
+    return get<char>(index, value);
+}
+bool Message::getBoolean(unsigned int index, bool &value)
+{
+    return get<bool>(index, value);
+}
+
+bool Message::setBoolean(unsigned int index, bool value)
+{
+    return set<bool>(index, value);
+}
+bool Message::setChar(unsigned int index, char value)
+{
+    return set<char>(index, value);
+}
+bool Message::setDouble(unsigned int index, double value)
+{
+    return set<double>(index, value);
+}
+bool Message::setFloat(unsigned int index, float value)
+{
+    return set<float>(index, value);
+}
+bool Message::setInt(unsigned int index, int value)
+{
+    return set<int>(index, value);
+}
+bool Message::setLong(unsigned int index, long long int value)
+{
+    return set<long long int>(index, value);
+}
+bool Message::setString(unsigned int index, std::string value)
+{
+    return set<std::string>(index, value);
+}
+
+static bool getArgumentTypeForAny(boost::any &value, ArgumentType &type)
+{
+    const std::type_info &actual = typeid(value);
+    if (actual == typeid(bool))
+        type = BOOLEAN;
+    else if (actual == typeid(char))
+        type = CHAR;
+    else if (actual == typeid(double))
+        type = DOUBLE;
+    else if (actual == typeid(float))
+        type = FLOAT;
+    else if (actual == typeid(int))
+        type = INT;
+    else if (actual == typeid(long long int))
+        type = LONG;
+    else if (actual == typeid(std::string))
+        type = STRING;
     else
+        return false;
+    return true;
+}
+
+bool Message::getArgumentType(unsigned int index, ArgumentType &type)
+{
+    boost::any *tmp = getArgument(index);
+    if (tmp)
+        return getArgumentTypeForAny(*tmp, type);
+    else
+        return false;
+}
+
+bool Message::typesMatch(std::string &types)
+{
+    if (types.size() != getSize())
+        return false;
+    unsigned int index = 0;
+    ArgumentType actual;
+    std::string::iterator iter;
+    for (iter = types.begin(); iter < types.end(); ++iter)
     {
-        return &(arguments_[index].type());
+        getArgumentType(index, actual);
+        if ((*iter) != actual)
+            return false;
+        ++index;
     }
+    return true;
 }
 
 } // end of namespace

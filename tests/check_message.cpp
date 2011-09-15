@@ -9,23 +9,22 @@ static const bool VERBOSE = true;
 bool check_message()
 {
     Message m;
-    m.appendAny(3.14159);
-    m.appendAny(std::string("hello"));
-    m.appendAny(2);
+    m.appendFloat(3.14159);
+    m.appendString(std::string("hello"));
+    m.appendInt(2);
 
     if (VERBOSE)
     {
-        std::cout << boost::any_cast<double>(*m.getArgument(0));
-        std::cout << boost::any_cast<std::string>(*m.getArgument(1));
-        std::cout << boost::any_cast<int>(*m.getArgument(2));
+        float f;
+        m.getFloat(0, f);
+        std::cout << "float: " << f << std::endl;
+        int i;
+        m.getInt(1, i);
+        std::cout << "int: " << i << std::endl;
+        std::string s;
+        m.getString(2, s);
+        std::cout << "string: " << s << std::endl;
     }
-
-//    if (result != 2.0)
-//    {
-//        std::cout << "Expected average of 2.0 but got " << result << std::endl;
-//        return false;
-//    }
-
     return true;
 }
 
