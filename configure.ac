@@ -131,6 +131,39 @@ fi
 AC_SUBST([LIBXML_LIBS])
 AC_SUBST([LIBXML_CFLAGS])
 
+# BOOST
+AX_BOOST_BASE([1.35])
+
+AX_BOOST_SIGNALS
+if test "x${ax_cv_boost_signals}" = "xno" ; then
+	AC_MSG_ERROR([missing package: libboost-signals-dev])
+fi
+
+dnl AX_BOOST_PROGRAM_OPTIONS
+dnl if test "x${ax_cv_boost_program_options}" = "xno" ; then
+dnl 	AC_MSG_ERROR([missing package: libboost-program-options-dev])
+dnl fi
+dnl 
+dnl AX_BOOST_FILESYSTEM
+dnl if test "x${ax_cv_boost_filesystem}" = "xno" ; then
+dnl 	AC_MSG_ERROR([missing package: libboost-filesystem-dev])
+dnl fi
+dnl 
+dnl AX_BOOST_THREAD
+dnl if test "x${ax_cv_boost_thread}" = "xno" ; then
+dnl     AC_MSG_ERROR([missing package: libboost-thread-dev])
+dnl fi
+dnl 
+dnl AX_BOOST_DATE_TIME
+dnl if test "x${ax_cv_boost_date_time}" = "xno" ; then
+dnl 	AC_MSG_ERROR([missing package: libboost-date-time-dev])
+dnl fi
+dnl 
+dnl AX_BOOST_SYSTEM
+dnl if test "x${ax_cv_boost_system}" = "xno" ; then
+dnl 	AC_MSG_ERROR([missing package: libboost-system-dev])
+dnl fi
+
 CFLAGS+=" -Wall -Wextra -Wfatal-errors -Werror "
 
 # GNU help2man creates man pages from --help output; in many cases, this
