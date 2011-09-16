@@ -24,6 +24,8 @@ bool check_message()
         std::string s;
         m.getString(2, s);
         std::cout << "string: " << s << std::endl;
+        // operator<<:
+        std::cout << "Message: " << m << std::endl;
     }
     return true;
 }

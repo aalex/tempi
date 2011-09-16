@@ -26,9 +26,11 @@
 #define __TEMPI_MESSAGE_H__
 
 #include <boost/any.hpp>
-#include <vector>
+#include <iostream>
+#include <ostream>
 #include <string>
 #include <typeinfo>
+#include <vector>
 
 namespace tempi
 {
@@ -60,7 +62,7 @@ class Message
          */
         Message();
         //const std::type_info *getType(unsigned int index) const;
-        bool getArgumentType(unsigned int index, ArgumentType &type);
+        bool getArgumentType(unsigned int index, ArgumentType &type) const;
         //bool setArgument(unsigned int index, boost::any &value);
         unsigned int getSize() const;
 
@@ -72,13 +74,13 @@ class Message
         bool appendLong(long long int value);
         bool appendString(std::string value);
 
-        bool getBoolean(unsigned int index, bool &value);
-        bool getChar(unsigned int index, char &value);
-        bool getDouble(unsigned int index, double &value);
-        bool getFloat(unsigned int index, float &value);
-        bool getInt(unsigned int index, int &value);
-        bool getLong(unsigned int index, long long int &value);
-        bool getString(unsigned int index, std::string &value);
+        bool getBoolean(unsigned int index, bool &value) const;
+        bool getChar(unsigned int index, char &value) const;
+        bool getDouble(unsigned int index, double &value) const;
+        bool getFloat(unsigned int index, float &value) const;
+        bool getInt(unsigned int index, int &value) const;
+        bool getLong(unsigned int index, long long int &value) const;
+        bool getString(unsigned int index, std::string &value) const;
 
         bool setBoolean(unsigned int index, bool value);
         bool setChar(unsigned int index, char value);
@@ -105,14 +107,14 @@ class Message
     private:
         // Message(std::vector<boost::any> arguments);
         // std::vector<boost::any> &getArguments();
-        boost::any *getArgument(unsigned int index);
+        const boost::any *getArgument(unsigned int index) const;
         std::vector<boost::any> arguments_;
         bool append(boost::any value);
 
         template <typename T>
-        bool get(unsigned int index, T &value)
+        bool get(unsigned int index, T &value) const
         {
-            boost::any *tmp = getArgument(index);
+            const boost::any *tmp = getArgument(index);
             if (tmp)
                 if (tmp->type() == typeid(value))
                 {
@@ -128,19 +130,30 @@ class Message
         template <typename T>
         bool set(unsigned int index, T value)
         {
-            boost::any *tmp = getArgument(index);
-            if (tmp)
-                if (tmp->type() == typeid(value))
+            if (index >= getSize())
+            {
+                std::cerr << "Message::" << __FUNCTION__ << ": Index too big: " << index << std::endl;
+                return false;
+            }
+            else
+            {
+                const boost::any *current = getArgument(index);
+                if (current->type() == typeid(value))
                 {
-                    (*tmp) = boost::any(value);
+                    arguments_[index] = boost::any(value);
                     return true;
                 }
                 else
+                {
+                    std::cerr << "Message::" << __FUNCTION__ << ": Wrong type for arg: " << index << std::endl;
                     return false;
-            else
-                return false;
+                }
+
+            }
         }
 };
+
+std::ostream &operator<<(std::ostream &os, const Message &message);
 
 } // end of namespace
 

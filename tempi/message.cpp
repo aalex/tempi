@@ -79,7 +79,7 @@ unsigned int Message::getSize() const
 //     }
 // }
 
-boost::any *Message::getArgument(unsigned int index)
+const boost::any *Message::getArgument(unsigned int index) const
 {
     if (index >= getSize())
     {
@@ -134,31 +134,31 @@ bool Message::appendDouble(double value)
     append(boost::any(value));
 }
 
-bool Message::getInt(unsigned int index, int &value)
+bool Message::getInt(unsigned int index, int &value) const
 {
     return get<int>(index, value);
 }
-bool Message::getLong(unsigned int index, long long int &value)
+bool Message::getLong(unsigned int index, long long int &value) const
 {
     return get<long long int>(index, value);
 }
-bool Message::getDouble(unsigned int index, double &value)
+bool Message::getDouble(unsigned int index, double &value) const
 {
     return get<double>(index, value);
 }
-bool Message::getString(unsigned int index, std::string &value)
+bool Message::getString(unsigned int index, std::string &value) const
 {
     return get<std::string>(index, value);
 }
-bool Message::getFloat(unsigned int index, float &value)
+bool Message::getFloat(unsigned int index, float &value) const
 {
     return get<float>(index, value);
 }
-bool Message::getChar(unsigned int index, char &value)
+bool Message::getChar(unsigned int index, char &value) const
 {
     return get<char>(index, value);
 }
-bool Message::getBoolean(unsigned int index, bool &value)
+bool Message::getBoolean(unsigned int index, bool &value) const
 {
     return get<bool>(index, value);
 }
@@ -192,7 +192,7 @@ bool Message::setString(unsigned int index, std::string value)
     return set<std::string>(index, value);
 }
 
-static bool getArgumentTypeForAny(boost::any &value, ArgumentType &type)
+static bool getArgumentTypeForAny(const boost::any &value, ArgumentType &type)
 {
     const std::type_info &actual = value.type();
     if (actual == typeid(bool))
@@ -217,9 +217,9 @@ static bool getArgumentTypeForAny(boost::any &value, ArgumentType &type)
     return true;
 }
 
-bool Message::getArgumentType(unsigned int index, ArgumentType &type)
+bool Message::getArgumentType(unsigned int index, ArgumentType &type) const
 {
-    boost::any *tmp = getArgument(index);
+    const boost::any *tmp = getArgument(index);
     if (tmp)
         return getArgumentTypeForAny(*tmp, type);
     else
@@ -254,6 +254,60 @@ std::string Message::getTypes()
         os << type;
     }
     return os.str();
+}
+
+std::ostream &operator<<(std::ostream &os, const Message &message)
+{
+    for (unsigned int i = 0; i < message.getSize(); ++i)
+    {
+        ArgumentType type;
+        message.getArgumentType(i, type);
+        if (type == BOOLEAN)
+        {
+            bool value;
+            message.getBoolean(i, value);
+            os << value;
+        }
+        else if (type == CHAR)
+        {
+            char value;
+            message.getChar(i, value);
+            os << value;
+        }
+        else if (type == DOUBLE)
+        {
+            double value;
+            message.getDouble(i, value);
+            os << value;
+        }
+        else if (type == FLOAT)
+        {
+            float value;
+            message.getFloat(i, value);
+            os << value;
+        }
+        else if (type == INT)
+        {
+            int value;
+            message.getInt(i, value);
+            os << value;
+        }
+        else if (type == LONG)
+        {
+            long long int value;
+            message.getLong(i, value);
+            os << value;
+        }
+        else if (type == STRING)
+        {
+            std::string value;
+            message.getString(i, value);
+            os << value;
+        }
+        if (i < (message.getSize() - 1))
+            os << " ";
+    }
+    return os;
 }
 
 } // end of namespace
