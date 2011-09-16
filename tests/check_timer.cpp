@@ -4,7 +4,7 @@
 
 using namespace tempi;
 
-static const bool VERBOSE = true;
+static const bool VERBOSE = false;
 
 bool check_simple()
 {

@@ -31,7 +31,7 @@ namespace tempi
 {
 
 /**
- * Marker for the beginning of a section.
+ * Marker for the beginning of a section in a Track.
  */
 class Marker 
 {

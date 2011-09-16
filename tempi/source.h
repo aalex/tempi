@@ -24,9 +24,9 @@
 #ifndef __TEMPI_SOURCE_H__
 #define __TEMPI_SOURCE_H__
 
-#include <boost/any.hpp>
 #include <boost/signals2.hpp>
 #include "tempi/sharedptr.h"
+#include "tempi/message.h"
 
 namespace tempi
 {
@@ -37,9 +37,9 @@ namespace tempi
 class Source
 {
     public:
-        boost::signals2::signal<void (Source *, boost::any)> on_triggered_signal_;
+        boost::signals2::signal<void (Source *, Message&)> on_triggered_signal_;
         Source();
-        void trigger(boost::any data);
+        void trigger(Message &message);
     private:
 };
 

@@ -47,7 +47,7 @@ class Recorder
         /**
          * Adds an event to the track now.
          */
-        void add(boost::any value);
+        void add(Message value);
     private:
         Timer timer_;
         Track *track_;

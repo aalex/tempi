@@ -12,14 +12,16 @@ bool check_simple()
         return false;
     }
 
-    track.add(1L, _f(0.0f));
+    Message m;
+    m.appendFloat(0.0f);
+    track.add(1L, m);
     if (track.getDuration() != 1L)
     {
         std::cout << "Duration should be 1 ns." << std::endl;
         return false;
     }
 
-    track.add(2L, _f(0.0f));
+    track.add(2L, m);
     if (track.getDuration() != 2L)
     {
         std::cout << "Duration should be 2 ns." << std::endl;

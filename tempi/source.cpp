@@ -28,10 +28,10 @@ Source::Source()
     // pass
 }
 
-void Source::trigger(boost::any data)
+void Source::trigger(Message &message)
 {
-    std::cout << __FUNCTION__ << std::endl;
-    on_triggered_signal_(this, data);
+    //std::cout << __FUNCTION__ << std::endl;
+    on_triggered_signal_(this, message);
 }
 
 } // end of namespace

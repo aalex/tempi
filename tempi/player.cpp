@@ -41,11 +41,16 @@ bool Player::setPosition(TimePosition position)
     return timer_.setPosition(position);
 }
 
-boost::any *Player::read()
+Message *Player::read()
 {
     if (! track_)
     {
         std::cout << "This Recorder has an invalid Track. Cannot read events." << std::endl;
+        return 0;
+    }
+    else if (track_->numberOfEvents() == 0)
+    {
+        //std::cout << "No point to read." << std::endl;
         return 0;
     }
     else
@@ -60,6 +65,16 @@ void Player::setSpeed(double factor)
 double Player::getSpeed() const
 {
     return speed_;
+}
+
+void Player::setPlaybackMode(Playback *playback)
+{
+    playback_.reset(playback);
+}
+
+Playback *Player::getPlaybackMode()
+{
+    return playback_.get();
 }
 
 } // end of namespace

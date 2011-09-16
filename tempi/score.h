@@ -49,8 +49,7 @@ class Score
         Marker *getMarker(Identifier identifier);
         std::map<TimePosition, MarkerPtr> getMarkers();
         bool removeMarker(Identifier identifier);
-
-        bool addTrack<typename T> (Identifier identifier);
+        //bool addTrack<typename T> (Identifier identifier);
         Track* getTrack(Identifier identifier);
         bool removeTrack(Identifier identifier);
         std::map<Identifier, TrackPtr> getTracks();

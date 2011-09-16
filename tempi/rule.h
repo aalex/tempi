@@ -32,6 +32,9 @@ namespace tempi
 namespace fsm
 {
 
+/**
+ * A Rule is used to configure how to switch between States in a StateMachine, upon Events occurrign.
+ */
 class Rule 
 {
     public:

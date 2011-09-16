@@ -28,6 +28,7 @@ namespace tempi
 {
 
 /**
+ * FIXME: Not working yet.
  * Slide smooths changes in streams of numbers.
  * A slide of 0 is impossible. If given 0, it will be 1.
  */

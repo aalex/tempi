@@ -12,6 +12,20 @@ Tempi is a multi-modal sampler-sequencer.
 
 It should supports OSC messaging soon, as well as finite state machines, timelines and flexible message routing.
 
+Tempi is a C++ library for multi-modal sampling. It allows recording and playback of flows of messages whose types can be arbitrary. We can then record series of events encoded as numbers, texts, 3D trajectories, list of images or sounds files. For example, one could use Tempi to store musical notes sequenced over time, to do rapid prototyping of motion, or any type of changes that are then easy to reproduce again.
+
+Tempi also eases routing data. It is possible to apply filters on those streams of data, to detect thresholds, to change their scale or to script finite state machines according to what happens in the streams. For each state, one could play different tracks, or choose different filters to apply on the transmitted data. Tempi is a temporal editor, as opposed to the SPIN Framework, which is a spatial editor.
+
+
+History
+-------
+Tempi is inspired by the Toonloop application, developed since 2008 by the artist-developper Alexandre Quessy. Toonloop is an in situ frame by frame animation editor, whose clips are played back as we add frames to them. It eases spontaneous creation. Tempi expands this idea to apply it to any type of data that can be produced by sensors.
+
+The first prototypes have been done as of August 2011. It should soon support sending and receiving OSC messages.
+
+This library offers new possibilities for in situ data sampling. One can record trajectories, data from any kind of sensor, as well as image and sound files. These tracks could potentially be integrated to timeline-based graphical editors.
+
+
 License
 -------
 This program is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License and GNU General Public License as published by the Free Software Foundation; either version 3 of the Licenses, or (at your option) any later version. The library itself is licensed under LGPL while the commandline application is licensed under GPL.
@@ -20,6 +34,7 @@ This program is free software; you can redistribute it and/or modify it under th
 Authors
 -------
 Alexandre Quessy <alexandre@quessy.net>
+Michal Seta <mis@artengine.ca>
 
 
 Sponsors
@@ -30,8 +45,9 @@ Thanks to the Ministère du Développement économique, de l'Innovation et de l'
 
 Installation
 ------------
-Here is how to build and install it::
-  $ sudo apt-get install help2man gettext libxml2-dev automake bison build-essential flex libtool libclutter-1.0-dev libglib-2.0-dev
+Here is how to build and install it on Debian GNU/Linux or Ubuntu::
+  $ sudo apt-get install help2man gettext automake bison build-essential flex libtool 
+  $ sudo apt-get install libxml2-dev libclutter-1.0-dev libglib-2.0-dev libboost-all-dev
   $ ./autogen.sh
   $ ./configure
   $ make

@@ -17,36 +17,31 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <boost/any.hpp>
-#include <boost/bind.hpp>
-#include "tempi/filter.h"
-#include "tempi/sharedptr.h"
-#include <iostream>
+/**
+ * @file
+ * The PingPongPlayback class.
+ */
+#ifndef __TEMPI_PINGPONGPLAYBACK_H__
+#define __TEMPI_PINGPONGPLAYBACK_H__
+
+#include "tempi/playback.h"
 
 namespace tempi
 {
 
-Filter::Filter() :
-    Node()
+/**
+ * A PingPongPlayback plays a Track from beginning to end, and then from the end to the beginning.
+ */
+class PingPongPlayback : public Playback
 {
-    addOutlet(std::tr1::shared_ptr<Source>(new Source()));
-    addInlet(std::tr1::shared_ptr<Sink>(new Sink()));
-}
-
-Sink *Filter::getInlet()
-{
-    return getInlets()[0].get();
-}
-
-Source *Filter::getOutlet()
-{
-    return getOutlets()[0].get();
-}
-
-void Filter::processMessage(Source *source, Message &message)
-{
-    getOutlet()->trigger(filter(message));
-}
+    public:
+        PingPongPlayback();
+        virtual Message *read(Player &player);
+    private:
+        bool direction_is_forward_;
+};
 
 } // end of namespace
+
+#endif // ifndef
 

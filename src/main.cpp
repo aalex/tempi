@@ -19,13 +19,15 @@
 
 #include "particlegenerator.h"
 #include "tempi/tempi.h"
-#include <boost/any.hpp>
+#include "tempi/pingpongplayback.h"
 #include <clutter/clutter.h>
 #include <glib.h>
 #include <iostream>
 #include <tr1/memory>
 #include <unistd.h>
-//#include <boost/any_cast.hpp>
+
+static const unsigned int NUM_SAMPLER = 3;
+static const bool VERBOSE = false;
 
 struct Sampler
 {
@@ -42,6 +44,7 @@ Sampler::Sampler()
 {
     recorder_.reset(new tempi::Recorder(&track_));
     player_.reset(new tempi::Player(&track_));
+    player_.get()->setPlaybackMode(new tempi::PingPongPlayback());
     recording_ = false;
 }
 
@@ -51,17 +54,20 @@ struct App
         App();
         void startRecording();
         void stopRecording();
+        void toggleFullscreen();
         void write(float x, float y);
         bool isRecording();
         void onDraw();
         unsigned int current_;
         std::vector<std::tr1::shared_ptr<Sampler> > samplers_;
+        ClutterActor *stage_;
+        bool fullscreen_;
 };
 
 App::App() : 
     current_(0)
 {
-    for (int i = 0; i < 10; ++i)
+    for (unsigned int i = 0; i < NUM_SAMPLER; ++i)
     {
         samplers_.push_back(std::tr1::shared_ptr<Sampler>(new Sampler()));
     }
@@ -91,12 +97,26 @@ void App::write(float x, float y)
     if (samplers_.size() != 0)
     {
         Sampler *sampler = samplers_[current_].get();
-        sampler->recorder_.get()->add(boost::any(tempi::_ff(x, y)));
+        tempi::Message m;
+        m.appendFloat(x);
+        m.appendFloat(y);
+        if (VERBOSE)
+            std::cout << "write " << x << " " << y << std::endl;
+        sampler->recorder_.get()->add(m);
     }
 }
 bool App::isRecording()
 {
     return samplers_[current_].get()->recording_;
+}
+
+void App::toggleFullscreen()
+{
+    fullscreen_ = ! fullscreen_;
+    if (fullscreen_)
+        clutter_stage_set_fullscreen(CLUTTER_STAGE(stage_), TRUE);
+    else
+        clutter_stage_set_fullscreen(CLUTTER_STAGE(stage_), FALSE);
 }
 
 void App::onDraw()
@@ -106,14 +126,18 @@ void App::onDraw()
     {
         Sampler *sampler = (*iter).get();
 
-        boost::any *any = sampler->player_.get()->read();
-        if (any)
+        tempi::Message *m = sampler->player_.get()->read();
+        if (m)
         {
-            if (any->type() == typeid(tempi::_ff))
+            if (m->typesMatch("ff"))
             {
-                tempi::_ff *value = boost::any_cast<tempi::_ff>(any);
-                sampler->generator_.setSourcePosition(value->get<0>(), value->get<1>());
+                float x, y;
+                m->getFloat(0, x);
+                m->getFloat(1, y);
+                sampler->generator_.setSourcePosition(x, y);
             }
+            else
+                std::cout << "types don't match: " << m->getTypes() << std::endl;
         }
         sampler->generator_.onDraw();
     }
@@ -163,6 +187,9 @@ static void key_event_cb(ClutterActor *actor, ClutterKeyEvent *event, gpointer u
     switch (event->keyval)
     {
         case CLUTTER_Escape:
+            app->toggleFullscreen();
+            break;
+        case CLUTTER_KEY_q:
             clutter_main_quit();
             break;
         case CLUTTER_KEY_space:
@@ -185,8 +212,10 @@ int main(int argc, char *argv[])
 
     if (clutter_init(&argc, &argv) != CLUTTER_INIT_SUCCESS)
         return 1;
-    App app;
     stage = clutter_stage_get_default();
+    App app;
+    app.fullscreen_ = false;;
+    app.stage_ = stage;
     clutter_actor_set_size(stage, 1024, 768);
     clutter_stage_set_color(CLUTTER_STAGE(stage), &black);
     g_signal_connect(stage, "destroy", G_CALLBACK(clutter_main_quit), NULL);

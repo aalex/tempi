@@ -19,7 +19,9 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     filter.cpp \
     loopingplayback.cpp \
     marker.cpp \
+    message.cpp \
     node.cpp \
+    pingpongplayback.cpp \
     player.cpp \
     recorder.cpp \
     rule.cpp \
@@ -35,6 +37,8 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     track.cpp \
     timer.cpp
 
+# TODO averagefilter.cpp
+
 ## Instruct libtool to include ABI version information in the generated shared
 ## library file (.so).  The library ABI version is defined in configure.ac, so
 ## that all version information is kept in one place.
@@ -47,11 +51,14 @@ libtempi_@TEMPI_API_VERSION@_la_includedir = $(includedir)/tempi-$(TEMPI_API_VER
 
 ## PLEASE KEEP THEM IN ALPHABETICAL ORDER
 libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
+    average.h \
     filter.h \
     identifier.h \
     loopingplayback.h \
     marker.h \
+    message.h \
     node.h \
+    pingpongplayback.h \
     playback.h \
     player.h \
     properties.h \
@@ -71,8 +78,9 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     tempi.h \
     timeposition.h \
     timer.h \
-    track.h \
-    types.h
+    track.h
+
+# TODO:averagefilter.h
 
 EXTRA_DIST = config.h
 

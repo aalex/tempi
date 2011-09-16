@@ -2,6 +2,8 @@
 #include "tempi/tempi.h"
 #include "tempi/slide.h"
 
+static const bool VERBOSE = false;
+
 using namespace tempi;
 
 bool check_slide()
@@ -13,7 +15,8 @@ bool check_slide()
     for (int i = 0; i < 100; ++i)
     {
         double result = slide.slide(i * factor);
-        std::cout << "" << i << " = " << result << std::endl;
+        if (VERBOSE)
+            std::cout << "" << i << " = " << result << std::endl;
     }
     return true;
 }

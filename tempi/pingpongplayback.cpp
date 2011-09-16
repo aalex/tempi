@@ -1,4 +1,4 @@
-#include "tempi/loopingplayback.h"
+#include "tempi/pingpongplayback.h"
 #include "tempi/track.h"
 #include "tempi/player.h"
 #include <iostream>
@@ -6,8 +6,15 @@
 namespace tempi
 {
 
-Message *LoopingPlayback::read(Player &player)
+PingPongPlayback::PingPongPlayback() :
+    direction_is_forward_(true)
 {
+    // pass
+}
+
+Message *PingPongPlayback::read(Player &player)
+{
+    // FIXME: should the Timer belong to the Playback?
     Track *track = player.getTrack();
     TimePosition duration = track->getDuration();
     TimePosition elapsed = player.getTimer()->elapsed();
@@ -25,12 +32,18 @@ Message *LoopingPlayback::read(Player &player)
     }
     else
     {
-        //std::cout << "duration: " << getDuration() << std::endl;
-        // FIXME: using the modulo here should not be mandatory
+        if (elapsed >= duration)
+        {
+            direction_is_forward_ = ! direction_is_forward_;
+            player.setPosition(0L);
+            elapsed = 0L;
+        }
         TimePosition cursor = elapsed % duration;
         player.setPosition(cursor);
-        //std::cout << "elapsed modulo duration: " << cursor << std::endl;
-        return track->getClosest(cursor);
+        if (direction_is_forward_)
+            return track->getClosest(cursor);
+        else
+            return track->getClosest(duration - cursor);
     }
 }
 

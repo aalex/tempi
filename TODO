@@ -1,0 +1,10 @@
+To do in Tempi
+==============
+
+ * Create the tempi-plugins-base library
+ * Create a timeline viewing actor.
+ * Create a HACKING file
+ * Enclose signals as private data member. Provide accessors to it, or allow to add callbacks to it.
+ * Write a prototype for using oscpack
+ * Many sender with the same host+port should share the same OSC sender. Use a map of tuple<ip,port> to shared_ptr<OscSender>.
+ * Create ostream<< operator for Message
