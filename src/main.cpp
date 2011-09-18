@@ -29,6 +29,20 @@
 static const unsigned int NUM_SAMPLER = 3;
 static const bool VERBOSE = false;
 
+#if CLUTTER_CHECK_VERSION(1,4,0)
+#else
+#define CLUTTER_KEY_Down CLUTTER_Down
+#define CLUTTER_KEY_Escape CLUTTER_Escape
+#define CLUTTER_KEY_F1 CLUTTER_F1
+#define CLUTTER_KEY_Left CLUTTER_Left
+#define CLUTTER_KEY_Return CLUTTER_Return
+#define CLUTTER_KEY_Right CLUTTER_Right
+#define CLUTTER_KEY_Tab CLUTTER_Tab
+#define CLUTTER_KEY_Up CLUTTER_Up
+#define CLUTTER_KEY_q CLUTTER_q
+#define CLUTTER_KEY_space CLUTTER_space
+#endif
+
 struct Sampler
 {
     public:
@@ -121,7 +135,7 @@ void App::toggleFullscreen()
 
 void App::onDraw()
 {
-    typename std::vector<std::tr1::shared_ptr<Sampler> >::iterator iter;
+    std::vector<std::tr1::shared_ptr<Sampler> >::iterator iter;
     for (iter = samplers_.begin(); iter < samplers_.end(); ++iter)
     {
         Sampler *sampler = (*iter).get();
@@ -221,7 +235,7 @@ int main(int argc, char *argv[])
     g_signal_connect(stage, "destroy", G_CALLBACK(clutter_main_quit), NULL);
     clutter_actor_set_reactive(stage, TRUE);
 
-    typename std::vector<std::tr1::shared_ptr<Sampler> >::iterator iter;
+    std::vector<std::tr1::shared_ptr<Sampler> >::iterator iter;
     for (iter = app.samplers_.begin(); iter < app.samplers_.end(); ++iter)
     {
         Sampler *sampler = (*iter).get();
