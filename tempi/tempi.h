@@ -74,6 +74,7 @@ std::string get_version();
 #include "tempi/sourcenode.h"
 #include "tempi/state.h"
 #include "tempi/statemachine.h"
+#include "tempi/table.h"
 #include "tempi/tempi-version.h"
 #include "tempi/timeposition.h"
 #include "tempi/timer.h"
