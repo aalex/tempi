@@ -26,5 +26,24 @@ BOOST_PYTHON_MODULE(tempi)
     using namespace tempi;
     def("hello", hello);
     def("get_version", get_version);
+
+    class_<Message>("Message")
+        .def("appendBoolean", &Message::appendBoolean)
+        .def("appendChar", &Message::appendChar)
+        .def("appendDouble", &Message::appendDouble)
+        .def("appendFloat", &Message::appendFloat)
+        .def("appendInt", &Message::appendInt)
+        .def("appendLong", &Message::appendLong)
+        .def("appendString", &Message::appendString)
+        .def("getBoolean", &Message::getBoolean)
+        .def("getChar", &Message::getChar)
+        .def("getDouble", &Message::getDouble)
+        .def("getFloat", &Message::getFloat)
+        .def("getInt", &Message::getInt)
+        .def("getLong", &Message::getLong)
+        .def("getString", &Message::getString)
+        .def("getTypes", &Message::getTypes)
+        .def("getSize", &Message::getSize)
+        ;
 }
 
