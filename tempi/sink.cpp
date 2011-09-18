@@ -42,7 +42,7 @@ bool Sink::connect(std::tr1::shared_ptr<Source>  source)
 
 bool Sink::hasSource(Source *source)
 {
-    typename std::vector<std::tr1::shared_ptr<Source> >::iterator iter;
+    std::vector<std::tr1::shared_ptr<Source> >::iterator iter;
     for (iter = sources_.begin(); iter != sources_.end(); ++iter)
     {
         if ((*iter).get() == source)

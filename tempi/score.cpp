@@ -41,7 +41,7 @@ bool Score::addMarker(TimePosition timePosition, Identifier identifier)
 
 Marker *Score::getMarker(Identifier identifier)
 {
-    typename std::map<TimePosition, MarkerPtr>::iterator iter;
+    std::map<TimePosition, MarkerPtr>::iterator iter;
     for (iter = markers_.begin(); iter != markers_.end(); ++iter)
     {
         Maker *current = iter->second.get();
@@ -58,7 +58,7 @@ std::map<TimePosition, MarkerPtr> Score::getMarkers();
 
 bool removeMarker(Identifier identifier)
 {
-    typename std::map<TimePosition, MarkerPtr>::iterator iter;
+    std::map<TimePosition, MarkerPtr>::iterator iter;
     for (iter = markers_.begin(); iter != markers_.end(); ++iter)
     {
         Maker *current = iter->second.get();
