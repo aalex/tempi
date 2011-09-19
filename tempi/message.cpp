@@ -47,7 +47,7 @@ bool Message::append(boost::any value)
 // std::vector<std::type_info> Message::getTypes()
 // {
 //     std::vector<std::type_info> ret;
-//     typename std::vector<boost::any>::iterator iter;
+//     std::vector<boost::any>::iterator iter;
 //     for (iter = arguments_.begin(); iter < arguments_.end(); ++iter)
 //     {
 //         ret.push_back((*iter).type());

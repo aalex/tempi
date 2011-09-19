@@ -74,7 +74,7 @@ Message *Track::getClosest(TimePosition target)
     for (iter = events_.begin(); iter < events_.end(); ++iter)
     {
         TimePosition pos = (*iter).get<0>();
-        TimePosition distance = std::abs(target - pos);
+        TimePosition distance = (TimePosition) std::abs(((double) target) - ((double) pos));
         if (distance < smallest)
         {
             //std::cout << "smallest:" << smallest << " target=" << target << " pos=" << pos << " abs:" << distance << std::endl;

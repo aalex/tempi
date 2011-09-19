@@ -52,3 +52,4 @@ tests/check_slide
 tests/check_timer
 tests/check_track
 tests/check_version
+tempi/tempi.so
