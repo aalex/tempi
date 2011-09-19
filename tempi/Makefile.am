@@ -35,6 +35,7 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     statemachine.cpp \
     table.cpp \
     table_player.cpp \
+    table_writer.cpp \
     tempi.cpp \
     track.cpp \
     timer.cpp
@@ -78,6 +79,7 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     statemachine.h \
     table.h \
     table_player.h \
+    table_writer.h \
     tempi-version.h \
     tempi.h \
     timeposition.h \
