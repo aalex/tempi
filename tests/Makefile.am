@@ -8,6 +8,7 @@ check_PROGRAMS = \
     check_node \
     check_properties \
     check_slide \
+    check_table \
     check_timer \
     check_track \
     check_version
