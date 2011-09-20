@@ -1,6 +1,5 @@
 AM_CXXFLAGS = -I$(top_srcdir)
 LDADD = $(top_builddir)/tempi/libtempi-@TEMPI_API_VERSION@.la
-LDFLAGS = -loscpack
 
 check_PROGRAMS = \
     check_average \

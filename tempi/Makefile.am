@@ -1,6 +1,6 @@
 AM_CXXFLAGS = $(LIBXML_CFLAGS) -I$(top_srcdir)  -I$(top_srcdir)/tempi
 
-AM_LIBS = $(LIBXML_LIBS)
+AM_LIBS = $(LIBXML_LIBS) -loscpack
 
 # use lib_LTLIBRARIES to build a shared lib:
 lib_LTLIBRARIES = libtempi-@TEMPI_API_VERSION@.la
@@ -21,6 +21,7 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     marker.cpp \
     message.cpp \
     node.cpp \
+    oscsender.cpp \
     pingpongplayback.cpp \
     player.cpp \
     recorder.cpp \
@@ -61,6 +62,7 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     marker.h \
     message.h \
     node.h \
+    oscsender.h \
     pingpongplayback.h \
     playback.h \
     player.h \
