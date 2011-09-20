@@ -1,6 +1,6 @@
 AM_CXXFLAGS = $(LIBXML_CFLAGS) -I$(top_srcdir)  -I$(top_srcdir)/tempi
 
-AM_LIBS = $(LIBXML_LIBS)
+AM_LIBS = $(LIBXML_LIBS) $(OSCPACK_LIBS)
 
 # use lib_LTLIBRARIES to build a shared lib:
 lib_LTLIBRARIES = libtempi-@TEMPI_API_VERSION@.la
