@@ -139,6 +139,21 @@ if test "x${ax_cv_boost_signals}" = "xno" ; then
 	AC_MSG_ERROR([missing package: libboost-signals-dev])
 fi
 
+dnl Check for OSCPACK:
+AC_LANG(C++)
+SAVED_LDFLAGS=$LDFLAGS
+LDFLAGS="$LDFLAGS -loscpack"
+AC_LINK_IFELSE(
+    [AC_LANG_PROGRAM([#include <oscpack/osc/OscTypes.h>],
+    [osc::TimeTag dummy])],
+    [TEST_LIBS="$TEST_LIBS -loscpack"] [OSCPACK_LIBS=-loscpack] [HAVE_OSCPACK=1],
+    [AC_MSG_WARN([liboscpack is not installed.])]
+    )
+LDFLAGS=$SAVED_LDFLAGS
+
+AC_SUBST([OSCPACK_LIBS])
+AC_SUBST([OSCPACK_CFLAGS])
+
 dnl AX_BOOST_PROGRAM_OPTIONS
 dnl if test "x${ax_cv_boost_program_options}" = "xno" ; then
 dnl 	AC_MSG_ERROR([missing package: libboost-program-options-dev])
