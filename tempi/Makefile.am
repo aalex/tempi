@@ -27,6 +27,7 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     player.cpp \
     recorder.cpp \
     rule.cpp \
+    samplernode.cpp \
     sink.cpp \
     sinknode.cpp \
     slide.cpp \
@@ -47,7 +48,7 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
 ## Instruct libtool to include ABI version information in the generated shared
 ## library file (.so).  The library ABI version is defined in configure.ac, so
 ## that all version information is kept in one place.
-libtempi_@TEMPI_API_VERSION@_la_LDFLAGS = -export-dynamic -version-info $(TEMPI_LT_VERSION) $(AM_LIBS) $(OSCPACK_LIBS)
+libtempi_@TEMPI_API_VERSION@_la_LDFLAGS = -export-dynamic -version-info $(TEMPI_LT_VERSION) $(AM_LIBS) $(OSCPACK_LIBS) -loscpack
 
 libtempi_@TEMPI_API_VERSION@_la_LIBS = $(AM_LIBS)
 libtempi_@TEMPI_API_VERSION@_la_CXXFLAGS = $(AM_CXXFLAGS)
@@ -57,6 +58,7 @@ libtempi_@TEMPI_API_VERSION@_la_includedir = $(includedir)/tempi-$(TEMPI_API_VER
 ## PLEASE KEEP THEM IN ALPHABETICAL ORDER
 libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     average.h \
+    concurrentqueue.h \
     filter.h \
     identifier.h \
     loopingplayback.h \
@@ -72,6 +74,7 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     property.h \
     recorder.h \
     rule.h \
+    samplernode.h \
     sharedptr.h \
     sink.h \
     sinknode.h \

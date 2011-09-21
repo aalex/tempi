@@ -18,4 +18,9 @@ Later
  * Create a OscReceiver, using a ConcurrentQueue<boost::tuple<std::string, Message> > (and a boost::signals2::signal?)
  * Create a OscSourceNode
  * Many sender/receiver with the same host+port should share the same OSC sender. Use a map of tuple<ip,port> to shared_ptr<OscSender>.
+ * Get done with tempi/samplernode.cpp
+ * Get done with prototypes/nodefactory.cpp
+ * Get done with tempi/graph.cpp
+ * Get done with tempi/noderegistry.h
+ * Get done with tempi/tempi-signal.h
 

@@ -1,5 +1,4 @@
-
- /*
+/*
  * Copyright (C) 2011 Alexandre Quessy
  * 
  * This file is part of Tempi.
@@ -18,46 +17,37 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * @file 
- * The OscSender class.
- */
+#ifndef __TEMPI_NODEREGISTRY_H__
+#define __TEMPI_NODEREGISTRY_H__
 
-#ifndef __OSC_SENDER_H__
-#define __OSC_SENDER_H__
-
-//#ifdef HAVE_OSCPACK
-
-#include <iostream>
-#include <string>
-#include "tempi/message.h"
-#include <oscpack/osc/OscOutboundPacketStream.h>
-#include <oscpack/ip/UdpSocket.h>
+#include <boost/signals2.hpp>
+#include <tr1/memory>
+#include <map>
 
 namespace tempi
 {
 
-class OscSender
+/**
+ * A NodeRegistry store the type info about the Node classes available.
+ */
+class NodeRegistry
 {
     public:
-        /**
-         * Constructor will create a UdpTransmitSocket to host:port
-         */
-        OscSender(const std::string  &host, const int port=17666);
-        virtual ~OscSender();
-        void sendMessage(const std::string &oscPath, const Message &message);
+        NodeRegistry();
+        // Node types:
+        bool addNodeType(std::string &name, type_info *type);
+        std::map<std::string, type_info> getNodeTypes();
+        type_info getNodeType(std::string &name);
 
+        // Property types:
+        std::map<std::string name, Property> getProperties();
+        std::map<std::string name, type_info> getPropertyTypes();
+        type_info getPropertyType(std::string &name);
     private:
-        int port_;
-        char *ADDRESS;
-        static const int BUFF_SIZE = 1024;
-        UdpTransmitSocket *socket_;
-        char *oscBuffer_;
+        std::map<std::string name, *type_info> node_types_;
 };
 
 } // end of namespace
 
-//#endif // HAVE_OSCPACK
-
-#endif // __OSC_SENDER_H__
+#endif // ifndef
 
