@@ -52,6 +52,7 @@ tempi/stamp-h1
 tempi/tempi-version.h
 tests/check_average
 tests/check_fsm
+tests/check_graph
 tests/check_message
 tests/check_node
 tests/check_osc

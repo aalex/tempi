@@ -27,12 +27,12 @@ Graph::Graph()
 {
 }
 
-std::map<std::string, std::tr1::shared_ptr<Node> > Graph::getNodes()
+std::map<std::string, std::tr1::shared_ptr<Node> > Graph::getNodes() const
 {
     return nodes_;
 }
 
-bool Graph::addNode(std::string &name, std::tr1::shared_ptr<Node> &node)
+bool Graph::addNode(const char *name, std::tr1::shared_ptr<Node> node)
 {
     if (getNode(name) != 0)
     {
@@ -43,7 +43,7 @@ bool Graph::addNode(std::string &name, std::tr1::shared_ptr<Node> &node)
     return true;
 }
 
-bool Graph::message(std::string &node, unsigned int inlet, const Message &message)
+bool Graph::message(const char *node, unsigned int inlet, const Message &message)
 {
     Node *nodePtr = getNode(node);
     if (nodePtr == 0)
@@ -61,7 +61,7 @@ bool Graph::message(std::string &node, unsigned int inlet, const Message &messag
     return true;
 }
 
-bool Graph::connect(std::string &from, unsigned int outlet, std::string &to, unsigned int inlet)
+bool Graph::connect(const char *from, unsigned int outlet, const char *to, unsigned int inlet)
 {
     Node *fromNode = getNode(from);
     if (fromNode == 0)
@@ -99,9 +99,10 @@ bool Graph::connect(std::string &from, unsigned int outlet, std::string &to, uns
     return true;
 }
 
-Node *Graph::getNode(std::string &name) const
+Node *Graph::getNode(const char *name) const
 {
-    std::map<std::string, std::tr1::shared_ptr<Node> >::const_iterator iter = nodes_.find(name);
+    std::string nameString(name);
+    std::map<std::string, std::tr1::shared_ptr<Node> >::const_iterator iter = nodes_.find(nameString);
     if (iter == nodes_.end())
     {
         return 0;

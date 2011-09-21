@@ -38,13 +38,13 @@ class Graph
 {
     public:
         Graph();
-        std::map<std::string, std::tr1::shared_ptr<Node> > getNodes();
-        bool addNode(std::string &name, std::tr1::shared_ptr<Node> &node);
-        bool message(std::string &node, unsigned int inlet, const Message &message);
-        bool connect(std::string &from, unsigned int outlet, std::string &to, unsigned int inlet);
+        std::map<std::string, std::tr1::shared_ptr<Node> > getNodes() const;
+        bool addNode(const char *name, std::tr1::shared_ptr<Node> node);
+        bool message(const char *node, unsigned int inlet, const Message &message);
+        bool connect(const char *from, unsigned int outlet, const char *to, unsigned int inlet);
         //TODO: bool disconnect(std::string &from, unsigned int outlet, std::string &to, unsigned int inlet);
         //TODO: std::vector<boost::tuple<std::string, unsigned int, std::string, unsigned int> > getConnections();
-        Node *getNode(std::string &name) const;
+        Node *getNode(const char *name) const;
         void tick();
     private:
         std::map<std::string, std::tr1::shared_ptr<Node> > nodes_;
