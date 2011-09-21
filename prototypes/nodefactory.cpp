@@ -2,77 +2,106 @@
 #include <map>
 #include <iostream>
 #include <string>
+#include <tr1/memory>
 
 class Node; // forward declaration
+
+class AbstractNodeType
+{
+    public:
+        //virtual const std::string &getId() const = 0;
+        virtual Node *create() = 0;
+};
+/**
+ * An entry in the registry.
+ */
+template <class T>
+class NodeType
+{
+    public:
+        //virtual const std::string &getId() const
+        //{
+        //    return T::factory_key;
+        //}
+        virtual Node *create()
+        {
+            return new T();
+        }
+};
 
 class NodeFactory
 {
     public:
-        class EntryBase
+        bool registerType(const char *name, std::tr1::shared_ptr<AbstractNodeType> entry)
         {
-            public:
-                virtual const std::string &getId() const = 0;
-                virtual Node *create() = 0;
-        };
-        /**
-         * An entry in the registry.
-         */
-        template <class T>
-        class Entry
-        {
-            public:
-                virtual const std::string &getId() const
-                {
-                    return T::factory_key;
-                }
-                virtual Node *create()
-                {
-                    return new T();
-                }
-        };
-        static std::string registerEntry(EntryBase *entry)
-        {
-            std::cout << "Register node type " << entry->getId() << std::endl;
-            entries_[entry->getId()] = entry;
-            return entry->getId();
+            std::cout << "Register node type " << name << std::endl;
+            entries_[std::string(name)] = entry;
+            return true;
         }
-        static Node *create(const std::string &id)
+        bool registerType(const char *name, AbstractNodeType *entry)
         {
-            return entries_[id]->create();
+            return registerType(name, std::tr1::shared_ptr<AbstractNodeType>(entry));
+        }
+        Node *create(const char *name)
+        {
+            // TODO: throw error if type not found
+            return entries_[std::string(name)].get()->create();
         }
     private:
-        std::map<std::string, EntryBase *> entries_;
+        std::map<std::string, std::tr1::shared_ptr<AbstractNodeType> > entries_;
 };
-
-std::map<std::string, EntryBase *> NodeFactory::entries_;
 
 class Node
 {
     public:
-        virtual ~Node()
+        Node() {}
+        virtual void say()
         {
+            std::cout << "I am just a Node." << std::endl;
         }
-        const std::string &getType() const
-        {
-            return type_;
-        }
-    private:
-        std::string type_;
 };
 
-class 
+class FooNode : public Node
+{
+    public:
+        FooNode() :
+            Node()
+        {
+            std::cout << "Created FooNode." << std::endl;
+        }
+        virtual void say()
+        {
+            std::cout << "I am a FooNode." << std::endl;    
+        }
+};
+
+class BarNode : public Node
+{
+    public:
+        BarNode() :
+            Node()
+        {
+            std::cout << "Created BarNode." << std::endl;
+        }
+        virtual void say()
+        {
+            std::cout << "I am a BarNode." << std::endl;    
+        }
+};
 
 int main(int argc, char **argv)
 {
-    Message *msg1;
-    Message *msg2;
+    NodeFactory factory;
+    factory.registerType("foo", (AbstractNodeType*) new NodeType<FooNode>());
+    factory.registerType("bar", (AbstractNodeType*) new NodeType<BarNode>());
 
-    msg1 = MessageFactory::Create(10);
-    msg1->say();
+    Node *foo = factory.create("foo");
+    foo->say();
 
-    msg2 = MessageFactory::Create(11);
-    msg2->say();
+    Node *bar = factory.create("bar");
+    bar->say();
 
-    delete msg1;
+    delete foo;
+    delete bar;
 }
 
