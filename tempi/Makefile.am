@@ -22,6 +22,7 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     player.cpp \
     recorder.cpp \
     rule.cpp \
+    samplernode.cpp \
     sink.cpp \
     sinknode.cpp \
     slide.cpp \
@@ -55,6 +56,7 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     property.h \
     recorder.h \
     rule.h \
+    samplernode.h \
     sharedptr.h \
     sink.h \
     sinknode.h \

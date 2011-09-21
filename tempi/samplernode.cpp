@@ -17,53 +17,16 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <boost/any.hpp>
-#include <boost/bind.hpp>
-#include "tempi/filter.h"
-#include "tempi/sharedptr.h"
-#include <iostream>
+#include "tempi/samplernode.h"
 
 namespace tempi
 {
 
-Filter::Filter() :
-    Node()
+SamplerNode::SamplerNode() :
+    Filter()
 {
-    addOutlet();
-    addInlet();
-}
-
-Sink *Filter::getInlet()
-{
-    return getInlets()[0].get();
-}
-
-Source *Filter::getOutlet()
-{
-    return getOutlets()[0].get();
-}
-
-void Filter::processMessage(Source *source, boost::any data)
-{
-    getOutlet()->trigger(filter(data));
+    // pass
 }
 
 } // end of namespace
 
-    App *app = (App *) user_data;
-    try
-    {
-        //std::cout << __FUNCTION__ << std::endl;
-        boost::any *any = app->player_.get()->readLoop();
-        if (any)
-        {
-            tempi::_ff *value = boost::any_cast<tempi::_ff>(any);
-            //std::cout << "Read " << value.get<0>() << ", " << value.get<1>() << std::endl;
-            clutter_actor_set_position(app->rectangle_, value->get<0>(), value->get<1>());
-        }
-    }
-    catch (const boost::bad_any_cast &e)
-    {
-        std::cout << "bad any cast exception" << std::endl;
-        return;
-    }
