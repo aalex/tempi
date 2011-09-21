@@ -19,7 +19,7 @@ bool check_oscsender()
         std::cout << m << std::endl;
     }
     OscSender sender("localhost", 17666);
-    OscReceiver(17666);
+    //TODO: OscReceiver(17666);
     sender.sendMessage("/bogus", m);
     return true;
 }

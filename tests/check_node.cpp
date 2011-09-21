@@ -17,11 +17,11 @@ class DummySourceNode: public SourceNode
     public:
         DummySourceNode();
     private:
-        virtual void processMessage(Source *source, Message &message);
+        virtual void processMessage(const Message &message);
 };
 
 DummySourceNode::DummySourceNode() : SourceNode() {}
-void DummySourceNode::processMessage(Source *source, Message &message) {}
+void DummySourceNode::processMessage(const Message &message) {}
 
 /**
  * Dummy filter node.
@@ -34,18 +34,19 @@ class DummyFilterNode: public Filter
         /**
          * Inverts the boolean value.
          */
-        virtual Message &filter(Message &message);
+        virtual Message filter(const Message &message);
 };
 
 DummyFilterNode::DummyFilterNode() : Filter() {}
 
-Message &DummyFilterNode::filter(Message &message)
+Message DummyFilterNode::filter(const Message &message)
 {
+    Message ret = message;
     bool value = false;
     message.getBoolean(0, value);
     value = ! value;
-    message.setBoolean(0, value);
-    return message;
+    ret.setBoolean(0, value);
+    return ret;
 }
 
 /**
@@ -59,7 +60,7 @@ class DummySinkNode: public SinkNode
         bool last_value_was_ok_;
         bool expected_;
     private:
-        virtual void processMessage(Source *source, Message &message);
+        virtual void processMessage(const Message &message);
 };
 
 DummySinkNode::DummySinkNode() :
@@ -70,7 +71,7 @@ DummySinkNode::DummySinkNode() :
     last_value_was_ok_ = false;
 }
 
-void DummySinkNode::processMessage(Source *source, Message &message)
+void DummySinkNode::processMessage(const Message &message)
 {
     triggered_ = true;
     bool value;
