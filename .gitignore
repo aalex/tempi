@@ -41,6 +41,7 @@ m4/lt~obsolete.m4
 missing
 prototypes/any
 prototypes/fusion/vec
+prototypes/nodefactory
 prototypes/phoenix/findif
 prototypes/tuples
 prototypes/variant
