@@ -73,7 +73,6 @@ bool Graph::connect(const char *from, unsigned int outlet, const char *to, unsig
     Node *toNode = getNode(to);
     if (toNode == 0)
     {
-
         std::cout << "Graph::" << __FUNCTION__ << ": Cannot find node " << to << "." << std::endl;
         return false;
     }
