@@ -42,6 +42,8 @@ class Graph
         bool addNode(std::string &name, std::tr1::shared_ptr<Node> &node);
         bool message(std::string &node, unsigned int inlet, const Message &message);
         bool connect(std::string &from, unsigned int outlet, std::string &to, unsigned int inlet);
+        //TODO: bool disconnect(std::string &from, unsigned int outlet, std::string &to, unsigned int inlet);
+        //TODO: std::vector<boost::tuple<std::string, unsigned int, std::string, unsigned int> > getConnections();
         Node *getNode(std::string &name) const;
         void tick();
     private:

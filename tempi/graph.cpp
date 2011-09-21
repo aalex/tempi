@@ -90,7 +90,8 @@ bool Graph::connect(std::string &from, unsigned int outlet, std::string &to, uns
     try
     {
         toNode->getInlet(inlet)->connect(fromNode->getOutletSharedPtr(outlet));
-    } catch (const BadIndexException &e)
+    }
+    catch (const BadIndexException &e)
     {
         std::cout << e.what() << std::endl;
         return false;
@@ -107,6 +108,15 @@ Node *Graph::getNode(std::string &name) const
     }
     else
         return (*iter).second.get();
+}
+
+void Graph::tick()
+{
+    std::map<std::string, std::tr1::shared_ptr<Node> >::iterator iter;
+    for (iter = nodes_.begin(); iter != nodes_.end(); ++iter)
+    {
+        (*iter).second.get()->tick();
+    }
 }
 
 } // end of namespace

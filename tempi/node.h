@@ -66,6 +66,7 @@ class Node
         bool addOutlet();
 
         Sink *getInlet(unsigned int number) const;
+        // TODO: deprecate getOutlet?
         Source *getOutlet(unsigned int number) const;
         std::tr1::shared_ptr<Source> getOutletSharedPtr(unsigned int number) const throw(BadIndexException);
         /**
