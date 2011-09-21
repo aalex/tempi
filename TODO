@@ -1,10 +1,11 @@
 To do in Tempi
 ==============
 
+ * Update the tempi demo to optionally (boost::options) use a Wacom pen
  * Create the tempi-plugins-base library
  * Create a timeline viewing actor.
- * Create a HACKING file
  * Enclose signals as private data member. Provide accessors to it, or allow to add callbacks to it.
- * Write a prototype for using oscpack
- * Many sender with the same host+port should share the same OSC sender. Use a map of tuple<ip,port> to shared_ptr<OscSender>.
- * Create ostream<< operator for Message
+ * Create Node::onSchedulerTick()
+ * Create a Graph class, with a tick() method, which calls each node's onSchedulerTick().
+ * Create a OscSourceNode, using a ConcurrentQueue<boost::tuple<std::string, Message> >
+ * Many sender/receiver with the same host+port should share the same OSC sender. Use a map of tuple<ip,port> to shared_ptr<OscSender>.
