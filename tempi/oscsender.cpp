@@ -4,6 +4,8 @@
 namespace tempi
 {
     
+#ifdef HAVE_OSCPACK
+
 OscSender::OscSender(const std::string &host, const int port)
 {
     socket_ = new UdpTransmitSocket(IpEndpointName(host.c_str(), port));
@@ -71,5 +73,7 @@ void OscSender::sendMessage(const std::string &oscpath, const Message &message)
     os << osc::EndMessage;
     socket_->Send(os.Data(), os.Size());
 }
+
+#endif // HAVE_OSCPACK
 
 } // end of namespace temp
