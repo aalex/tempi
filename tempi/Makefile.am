@@ -17,6 +17,7 @@ lib_LTLIBRARIES = libtempi-@TEMPI_API_VERSION@.la
 ## PLEASE KEEP THEM IN ALPHABETICAL ORDER
 libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     filter.cpp \
+    graph.cpp \
     loopingplayback.cpp \
     marker.cpp \
     message.cpp \
@@ -60,6 +61,7 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     average.h \
     concurrentqueue.h \
     filter.h \
+    graph.h \
     identifier.h \
     loopingplayback.h \
     marker.h \

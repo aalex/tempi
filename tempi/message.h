@@ -90,8 +90,8 @@ class Message
         bool setLong(unsigned int index, long long int value);
         bool setString(unsigned int index, std::string value);
 
-        bool typesMatch(std::string &types);
-        bool typesMatch(const char *types)
+        bool typesMatch(std::string &types) const;
+        bool typesMatch(const char *types) const
         {
             std::string s(types);
             return typesMatch(s);

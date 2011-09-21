@@ -34,7 +34,7 @@ bool Sink::connect(std::tr1::shared_ptr<Source>  source)
     if (! hasSource(source.get()))
     {
         sources_.push_back(source);
-        source.get()->on_triggered_signal_.connect(boost::bind(&Sink::onTriggered, this, _1, _2));
+        source.get()->on_triggered_signal_.connect(boost::bind(&Sink::trigger, this, _1));
         return true;
     }
     return false;
@@ -53,11 +53,11 @@ bool Sink::hasSource(Source *source)
     return false;
 }
 
-void Sink::onTriggered(Source *source, Message &message)
+void Sink::trigger(const Message &message)
 {
     // TODO
     //std::cout << __FUNCTION__ << std::endl;
-    on_triggered_signal_(source, message);
+    on_triggered_signal_(message);
 }
 
 } // end of namespace

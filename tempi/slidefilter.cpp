@@ -33,14 +33,16 @@ SlideFilter::SlideFilter() :
 {
 }
 
-Message &SlideFilter::filter(Message &message)
+Message SlideFilter::filter(const Message &message)
 {
     if (message.typesMatch("d"))
     {
+        Message ret = message;
         double value = 0.0;
         message.getDouble(0, value);
         value = slide(value);
-        return message;
+        ret.setDouble(0, value);
+        return ret;
     }
     else
         return message;

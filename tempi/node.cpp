@@ -36,11 +36,11 @@ std::vector<std::tr1::shared_ptr<Source> > Node::getOutlets()
     return outlets_;
 }
 
-void Node::onInletTriggered(Source *source, Message &message)
+void Node::onInletTriggered(const Message &message)
 {
     // TODO
     //std::cout << __FUNCTION__ << std::endl;
-    processMessage(source, message);
+    processMessage(message);
 }
 
 std::vector<std::tr1::shared_ptr<Sink> > Node::getInlets()
@@ -63,7 +63,7 @@ bool Node::addInlet(std::tr1::shared_ptr<Sink> sink)
     if (! hasInlet(sink.get()))
     {
         inlets_.push_back(sink);
-        sink.get()->on_triggered_signal_.connect(boost::bind(&Node::onInletTriggered, this, _1, _2));
+        sink.get()->on_triggered_signal_.connect(boost::bind(&Node::onInletTriggered, this, _1));
         return true;
     }
     return false;
@@ -73,6 +73,7 @@ bool Node::addInlet()
 {
     addInlet(std::tr1::shared_ptr<Sink>(new Sink()));
 }
+
 bool Node::addOutlet()
 {
     addOutlet(std::tr1::shared_ptr<Source>(new Source()));
@@ -102,6 +103,46 @@ bool Node::hasOutlet(Source *source)
         }
     }
     return false;
+}
+
+void Node::tick()
+{
+    doTick();
+}
+
+void Node::doTick()
+{
+    // pass
+}
+
+unsigned int Node::getNumberOfInlets() const
+{
+    return inlets_.size();
+}
+
+unsigned int Node::getNumberOfOutlets() const
+{
+    return inlets_.size();
+}
+
+Sink *Node::getInlet(unsigned int number) const
+{
+    if (number >= getNumberOfInlets())
+    {
+        std::cout << "Node::" << __FUNCTION__ << ": Inlet " << number << "too big for node." << std::endl;
+        return 0;
+    }
+    return inlets_[number].get();
+}
+
+Source *Node::getOutlet(unsigned int number) const
+{
+    if (number >= getNumberOfInlets())
+    {
+        std::cout << "Node::" << __FUNCTION__ << ": Outlet " << number << "too big for node." << std::endl;
+        return 0;
+    }
+    return outlets_[number].get();
 }
 
 } // end of namespace

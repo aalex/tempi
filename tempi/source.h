@@ -37,9 +37,10 @@ namespace tempi
 class Source
 {
     public:
-        boost::signals2::signal<void (Source *, Message&)> on_triggered_signal_;
+        boost::signals2::signal<void (const Message&)> on_triggered_signal_;
         Source();
-        void trigger(Message &message);
+        // TODO: return success
+        void trigger(const Message &message);
     private:
 };
 

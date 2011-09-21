@@ -24,4 +24,5 @@ Later
  * Get done with tempi/noderegistry.h
  * Get done with tempi/tempi-signal.h
  * Get done with tempi/oscreceiver.cpp
+ * Implement Sink::disconnect and the likes
 

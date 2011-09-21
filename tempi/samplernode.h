@@ -63,6 +63,8 @@ class SamplerNode : public Filter
         // TODO:
         //std::map<Identifier, TrackPtr> tracks_;
         //std::map<TimePosition, MarkerPtr> markers_;
+        // TODO
+        virtual Message filter(const Message &message) = 0;
 };
 
 } // end of namespace

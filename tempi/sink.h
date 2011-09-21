@@ -42,8 +42,10 @@ class Sink
     public:
         Sink();
         bool connect(std::tr1::shared_ptr<Source> source);
-        void onTriggered(Source *source, Message &message);
-        boost::signals2::signal<void (Source *, Message&)> on_triggered_signal_;
+        //TODO: bool disconnect(std::tr1::shared_ptr<Source> source);
+        // TODO: return success?
+        void trigger(const Message &message);
+        boost::signals2::signal<void (const Message&)> on_triggered_signal_;
     private:
         std::vector<std::tr1::shared_ptr<Source> > sources_;
         bool hasSource(Source *source);

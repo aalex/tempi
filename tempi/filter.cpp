@@ -17,10 +17,7 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <boost/any.hpp>
-#include <boost/bind.hpp>
 #include "tempi/filter.h"
-#include "tempi/sharedptr.h"
 #include <iostream>
 
 namespace tempi
@@ -43,7 +40,7 @@ Source *Filter::getOutlet()
     return getOutlets()[0].get();
 }
 
-void Filter::processMessage(Source *source, Message &message)
+void Filter::processMessage(const Message &message)
 {
     getOutlet()->trigger(filter(message));
 }

@@ -40,12 +40,40 @@ class Node
 {
     public:
         Node();
+        /**
+         * Returns all its outlets.
+         */
         std::vector<std::tr1::shared_ptr<Source> > getOutlets();
+        /**
+         * Returns all its inlets.
+         */
         std::vector<std::tr1::shared_ptr<Sink> > getInlets();
+
+        unsigned int getNumberOfInlets() const;
+        unsigned int getNumberOfOutlets() const;
+        /**
+         * Adds a outlet.
+         */
         bool addOutlet(std::tr1::shared_ptr<Source> source);
+        /**
+         * Adds a inlet.
+         */
         bool addInlet(std::tr1::shared_ptr<Sink> sink);
+        /**
+         * Adds a outlet.
+         */
         bool addOutlet();
+
+        Sink *getInlet(unsigned int number) const;
+        Source *getOutlet(unsigned int number) const;
+        /**
+         * Adds a inlet.
+         */
         bool addInlet();
+        /**
+         * Triggers whatever time-dependent events. Calleds by the Graph.
+         */
+        void tick();
         // TODO: properties:
         // std::map<std::string, Message> getProperties();
         // Message *getProperty(std::string);
@@ -60,8 +88,10 @@ class Node
     private:
         std::vector<std::tr1::shared_ptr<Source> > outlets_;
         std::vector<std::tr1::shared_ptr<Sink> > inlets_;
-        void onInletTriggered(Source *source, Message &data);
-        virtual void processMessage(Source *source, Message &message) = 0;
+        // TODO: return success
+        void onInletTriggered(const Message &message);
+        virtual void processMessage(const Message &message) = 0;
+        virtual void doTick();
         bool hasInlet(Sink *sink);
         bool hasOutlet(Source *source);
 };

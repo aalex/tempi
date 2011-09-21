@@ -17,14 +17,7 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <boost/any.hpp>
-#include <boost/bind.hpp>
-#include "tempi/filter.h"
-#include "tempi/node.h"
-#include "tempi/source.h"
-#include "tempi/sink.h"
-#include "tempi/filter.h"
-#include "tempi/sharedptr.h"
+#include "tempi/graph.h"
 #include <iostream>
 
 namespace tempi
@@ -34,14 +27,12 @@ Graph::Graph()
 {
 }
 
-Graph::Graph()
-{
-}
 std::map<std::string, std::tr1::shared_ptr<Node> > Graph::getNodes()
 {
     return nodes_;
 }
-bool Graph::addNode(std::string &name, std::tr1::shared_ptr<Node> node)
+
+bool Graph::addNode(std::string &name, std::tr1::shared_ptr<Node> &node)
 {
     if (getNode(name) != 0)
     {
@@ -51,28 +42,39 @@ bool Graph::addNode(std::string &name, std::tr1::shared_ptr<Node> node)
     nodes_[name] = node;
     return true;
 }
-bool Graph::addSource(std::string &name)
+
+bool Graph::message(std::string &node, unsigned int inlet, const Message &message)
 {
+    Node *nodePtr = getNode(node);
+    if (nodePtr == 0)
+    {
+        std::cout << "Graph::" << __FUNCTION__ << ": No such node: " << node << std::endl;
+        return false;
+    }
+    if (inlet >= nodePtr->getNumberOfInlets())
+    {
+        std::cout << "Graph::" << __FUNCTION__ << ": Inlet " << inlet << "too big for node " << node << "." << std::endl;
+        return false;
+    }
+    Sink *inletPtr = nodePtr->getInlet(inlet);
+    inletPtr->trigger(message);
+    return true;
 }
-bool Graph::addSink(std::string &name)
-{
-}
-bool Graph::addFilter(std::string &name)
-{
-}
-bool Graph::message(std::string &node, boost::any &message)
-{
-}
-bool Graph::connect(std::string &from, std::string &to)
-{
-}
-Sink *Graph::getSink(std::string &name) const
-{
-}
-Node *Graph::getNode(std::string &name) const
+
+bool Graph::connect(std::string &from, unsigned int outlet, std::string &to, unsigned int inlet)
 {
 }
 
+Node *Graph::getNode(std::string &name) const
+{
+    std::map<std::string, std::tr1::shared_ptr<Node> >::const_iterator iter = nodes_.find(name);
+    if (iter == nodes_.end())
+    {
+        return 0;
+    }
+    else
+        return (*iter).second.get();
+}
 
 } // end of namespace
 

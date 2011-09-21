@@ -23,7 +23,9 @@
 #include <boost/any.hpp>
 #include <vector>
 #include "tempi/source.h"
+#include "tempi/message.h"
 #include "tempi/sink.h"
+#include "tempi/node.h"
 #include "tempi/sharedptr.h"
 
 namespace tempi
@@ -37,14 +39,11 @@ class Graph
     public:
         Graph();
         std::map<std::string, std::tr1::shared_ptr<Node> > getNodes();
-        bool addNode(std::string &name, std::tr1::shared_ptr<Node> node);
-        bool addSource(std::string &name);
-        bool addSink(std::string &name);
-        bool addFilter(std::string &name);
-        bool message(std::string &node, boost::any &message);
-        bool connect(std::string &from, std::string &to);
-        Sink *getSink(std::string &name) const;
+        bool addNode(std::string &name, std::tr1::shared_ptr<Node> &node);
+        bool message(std::string &node, unsigned int inlet, const Message &message);
+        bool connect(std::string &from, unsigned int outlet, std::string &to, unsigned int inlet);
         Node *getNode(std::string &name) const;
+        void tick();
     private:
         std::map<std::string, std::tr1::shared_ptr<Node> > nodes_;
         //void onInletTriggered(Source *source, boost::any data);

@@ -19,7 +19,6 @@
 
 #include "tempi/message.h"
 #include <iostream>
-#include <sstream>
 
 namespace tempi
 {
@@ -226,7 +225,7 @@ bool Message::getArgumentType(unsigned int index, ArgumentType &type) const
         return false;
 }
 
-bool Message::typesMatch(std::string &types)
+bool Message::typesMatch(std::string &types) const
 {
     if (types.size() != getSize())
         return false;
@@ -245,15 +244,16 @@ bool Message::typesMatch(std::string &types)
 
 std::string Message::getTypes()
 {
-    std::ostringstream os;
+    std::string ret;
     for (unsigned int i = 0; i < getSize(); ++i)
     {
         ArgumentType type;
         if (! getArgumentType(i, type))
             std::cerr << "Message::" << __FUNCTION__ << ": Could not get type for arg" << i << std::endl;
-        os << type;
+        else
+            ret.append(1, (char) type);
     }
-    return os.str();
+    return ret;
 }
 
 std::ostream &operator<<(std::ostream &os, const Message &message)

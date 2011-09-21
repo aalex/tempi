@@ -26,6 +26,7 @@
 #define __TEMPI_FILTER_H__
 
 #include "tempi/node.h"
+#include "tempi/sharedptr.h"
 #include "tempi/source.h"
 #include "tempi/sink.h"
 
@@ -43,9 +44,9 @@ class Filter : public Node
         Sink *getInlet();
     private:
         // Inherited from Node:
-        virtual void processMessage(Source *source, Message &message);
+        virtual void processMessage(const Message &message);
         // New virtual method:
-        virtual Message &filter(Message &message) = 0;
+        virtual Message filter(const Message &message) = 0;
 };
 
 } // end of namespace

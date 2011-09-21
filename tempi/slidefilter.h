@@ -39,7 +39,7 @@ class SlideFilter : public Filter
         bool setSlide(double slide);
     private:
         // Inherited from Filter:
-        virtual Message &filter(Message &message);
+        virtual Message filter(const Message &message);
         double slide(double value);
         double slide_;
         double last_out_;

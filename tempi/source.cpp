@@ -28,10 +28,10 @@ Source::Source()
     // pass
 }
 
-void Source::trigger(Message &message)
+void Source::trigger(const Message &message)
 {
     //std::cout << __FUNCTION__ << std::endl;
-    on_triggered_signal_(this, message);
+    on_triggered_signal_(message);
 }
 
 } // end of namespace
