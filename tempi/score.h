@@ -17,6 +17,10 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @file
+ * The Score class.
+ */
 #ifndef __TEMPI_SCORE_H__
 #define __TEMPI_SCORE_H__
 
@@ -45,8 +49,6 @@ class Score
         Marker *getMarker(Identifier identifier);
         std::map<TimePosition, MarkerPtr> getMarkers();
         bool removeMarker(Identifier identifier);
-
-        
         //bool addTrack<typename T> (Identifier identifier);
         Track* getTrack(Identifier identifier);
         bool removeTrack(Identifier identifier);

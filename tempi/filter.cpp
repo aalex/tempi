@@ -43,9 +43,9 @@ Source *Filter::getOutlet()
     return getOutlets()[0].get();
 }
 
-void Filter::processMessage(Source *source, boost::any data)
+void Filter::processMessage(Source *source, Message &message)
 {
-    getOutlet()->trigger(filter(data));
+    getOutlet()->trigger(filter(message));
 }
 
 } // end of namespace

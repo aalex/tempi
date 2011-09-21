@@ -18,7 +18,10 @@
  * along with Toonloop.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/** The Property template class holds a single value. */
+/** 
+ * @file
+ * The Property template class.
+ * */
 
 #ifndef __TEMPI_PROPERTY_H__
 #define __TEMPI_PROPERTY_H__
@@ -26,6 +29,9 @@
 #include <boost/bind.hpp>
 #include <boost/signals2.hpp>
 #include <string>
+
+namespace tempi
+{
 
 /**
  * Property that can be changed by user interfaces.
@@ -35,10 +41,6 @@
  * When its value changes, its signal is triggered with its name
  * and its new value as arguments.
  */
-
-namespace tempi
-{
-
 template <typename T>
 class Property
 {

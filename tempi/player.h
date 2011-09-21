@@ -17,11 +17,19 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @file
+ * The Player class.
+ */
 #ifndef __TEMPI_PLAYER_H__
 #define __TEMPI_PLAYER_H__
 
-#include <boost/any.hpp>
+#include "tempi/sharedptr.h"
+#include "tempi/timer.h"
 #include "tempi/track.h"
+#include "tempi/playback.h"
+#include "tempi/message.h"
+#include "tempi/timeposition.h"
 
 namespace tempi
 {
@@ -34,25 +42,46 @@ class Player
     public:
         Player(Track *track);
         void setTrack(Track *track);
+        /**
+         * Returns the Track played by this Timer.
+         */
         Track *getTrack();
         /**
-         * Resets the internal timer of this Recorder.
+         * Returns this Timer's internal Timer.
+         * Never free this pointer.
+         */
+        Timer *getTimer();
+        /**
+         * Resets the internal Timer of this Player.
          */
         void reset();
+        bool setPosition(TimePosition position);
+        /**
+         * Changes the speed of this Player. Default is 1.0.
+         */
         void setSpeed(double factor);
         double getSpeed() const;
         /**
-         * Reads an event from the track now.
-         * Reads an event.
+         * Reads an event from the track at the time pointed to by the internal Timer.
          * Returns 0 if none is found.
          * Never free this pointer.
          */
-        boost::any *readLoop();
+        Message *read();
+        // TODO: add a signal
+        
+        /**
+         * Sets the Playback mode.
+         * You can create a new instance of a Playback class and not care about deleting it.
+         * The memory will be freed by the Player's shared_ptr.
+         */
+        void setPlaybackMode(Playback *playback);
+
+        Playback *getPlaybackMode();
     private:
         Timer timer_;
         Track *track_;
-        boost::any empty_;
         double speed_;
+        std::tr1::shared_ptr<Playback> playback_;
 };
 
 } // end of namespace

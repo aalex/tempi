@@ -83,6 +83,12 @@ AC_PROG_CXX
 AC_PROG_INSTALL
 AC_PROG_LIBTOOL
 
+AC_CHECK_PROGS([DOXYGEN], [doxygen])
+if test -z "$DOXYGEN";
+    then AC_MSG_WARN([Doxygen not found - continuing without Doxygen support])
+fi
+AM_CONDITIONAL([HAVE_DOXYGEN], [test -n "$DOXYGEN"])
+
 # Checks for typedefs, structures, and compiler characteristics.
 AC_HEADER_STDBOOL
 AC_C_INLINE
@@ -125,6 +131,55 @@ fi
 AC_SUBST([LIBXML_LIBS])
 AC_SUBST([LIBXML_CFLAGS])
 
+# BOOST
+AX_BOOST_BASE([1.35])
+
+AX_BOOST_SIGNALS
+if test "x${ax_cv_boost_signals}" = "xno" ; then
+	AC_MSG_ERROR([missing package: libboost-signals-dev])
+fi
+
+dnl Check for OSCPACK:
+AC_LANG(C++)
+SAVED_LDFLAGS=$LDFLAGS
+LDFLAGS="$LDFLAGS -loscpack"
+AC_LINK_IFELSE(
+    [AC_LANG_PROGRAM(
+        [#include <oscpack/osc/OscTypes.h>],
+        [osc::TimeTag dummy],
+    [TEST_LIBS="$TEST_LIBS -loscpack"]), 
+    [[OSCPACK_LIBS=-loscpack],[AC_DEFINE([HAVE_OSCPACK])]],
+    [[AC_MSG_WARN([liboscpack is not installed.])]]])
+LDFLAGS=$SAVED_LDFLAGS
+
+AC_SUBST([OSCPACK_LIBS])
+AC_SUBST([OSCPACK_CFLAGS])
+
+dnl AX_BOOST_PROGRAM_OPTIONS
+dnl if test "x${ax_cv_boost_program_options}" = "xno" ; then
+dnl 	AC_MSG_ERROR([missing package: libboost-program-options-dev])
+dnl fi
+dnl 
+dnl AX_BOOST_FILESYSTEM
+dnl if test "x${ax_cv_boost_filesystem}" = "xno" ; then
+dnl 	AC_MSG_ERROR([missing package: libboost-filesystem-dev])
+dnl fi
+dnl 
+dnl AX_BOOST_THREAD
+dnl if test "x${ax_cv_boost_thread}" = "xno" ; then
+dnl     AC_MSG_ERROR([missing package: libboost-thread-dev])
+dnl fi
+dnl 
+dnl AX_BOOST_DATE_TIME
+dnl if test "x${ax_cv_boost_date_time}" = "xno" ; then
+dnl 	AC_MSG_ERROR([missing package: libboost-date-time-dev])
+dnl fi
+dnl 
+dnl AX_BOOST_SYSTEM
+dnl if test "x${ax_cv_boost_system}" = "xno" ; then
+dnl 	AC_MSG_ERROR([missing package: libboost-system-dev])
+dnl fi
+
 CFLAGS+=" -Wall -Wextra -Wfatal-errors -Werror "
 
 # GNU help2man creates man pages from --help output; in many cases, this
@@ -148,6 +203,7 @@ AC_CONFIG_FILES([
         tempi/Makefile 
         src/Makefile
         tests/Makefile
+        doxyfile 
         data/Makefile
         doc/Makefile
         tempi-${TEMPI_API_VERSION}.pc:tempi.pc.in

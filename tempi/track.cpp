@@ -16,14 +16,14 @@ void Track::reset()
     events_.clear();
 }
 
-TimeStamp Track::getDuration()
+TimePosition Track::getDuration()
 {
     if (events_.size() == 0)
         return 0L;
     return ((events_[events_.size() - 1])).get<0>();
 }
 
-void Track::add(TimeStamp position, boost::any value)
+void Track::add(TimePosition position, Message value)
 {
     events_.insert(getIteratorAfter(position), Event(position, value));
     //std::cout << "add " << position << ": ?";
@@ -31,17 +31,17 @@ void Track::add(TimeStamp position, boost::any value)
     //std::cout << std::endl;
 }
 
-EventVecIter Track::getIteratorAfter(TimeStamp target)
+Track::EventVecIter Track::getIteratorAfter(TimePosition target)
 {
     EventVecIter iter;
     EventVecIter ret;
     ret = events_.begin();
-    TimeStamp smallest = getDuration();
+    TimePosition smallest = getDuration();
     bool found_it = false;
     
     for (iter = events_.begin(); iter < events_.end(); ++iter)
     {
-        TimeStamp pos = (*iter).get<0>();
+        TimePosition pos = (*iter).get<0>();
         //if (target >= pos)
         if (pos >= target)
         {
@@ -55,9 +55,9 @@ EventVecIter Track::getIteratorAfter(TimeStamp target)
     return ret;
 }
 
-boost::any *Track::getClosest(TimeStamp target)
+Message *Track::getClosest(TimePosition target)
 {
-    TimeStamp duration = getDuration();
+    TimePosition duration = getDuration();
     if (numberOfEvents() == 0)
     {
         return 0;
@@ -69,12 +69,12 @@ boost::any *Track::getClosest(TimeStamp target)
     EventVecIter iter;
     EventVecIter ret;
     ret = events_.begin();
-    TimeStamp smallest = getDuration();
+    TimePosition smallest = getDuration();
     
     for (iter = events_.begin(); iter < events_.end(); ++iter)
     {
-        TimeStamp pos = (*iter).get<0>();
-        TimeStamp distance = std::abs(target - pos);
+        TimePosition pos = (*iter).get<0>();
+        TimePosition distance = (TimePosition) std::abs(((double) target) - ((double) pos));
         if (distance < smallest)
         {
             //std::cout << "smallest:" << smallest << " target=" << target << " pos=" << pos << " abs:" << distance << std::endl;
@@ -87,12 +87,13 @@ boost::any *Track::getClosest(TimeStamp target)
 
 void Track::print()
 {
+    // TODO
     EventVecIter iter;
     for (iter = events_.begin(); iter < events_.end(); ++iter)
     {
-        TimeStamp point = (*iter).get<0>();
-        boost::any value = (*iter).get<1>();
-        //std::cout << " * " << point << ": " << boost::any_cast<boost::tuple<double, double> >(value) << std::endl;
+        //TimePosition point = (*iter).get<0>();
+        //Message value = (*iter).get<1>();
+        //std::cout << " * " << point << ": " << Message_cast<boost::tuple<double, double> >(value) << std::endl;
     }
 }
 
@@ -101,12 +102,12 @@ unsigned int Track::numberOfEvents()
     return events_.size();
 }
 
-boost::any *Track::getFirst()
+Message *Track::getFirst()
 {
     return &(*events_.begin()).get<1>();
 }
 
-boost::any *Track::getLast()
+Message *Track::getLast()
 {
     &events_[events_.size() - 1].get<1>();
 }

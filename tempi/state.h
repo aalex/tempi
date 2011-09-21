@@ -17,6 +17,10 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @file
+ * The State class.
+ */
 #ifndef __TEMPI_STATE_H__
 #define __TEMPI_STATE_H__
 

@@ -17,6 +17,10 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @file
+ * The Identifier typedef.
+ */
 #ifndef __TEMPI_IDENTIFIER_H__
 #define __TEMPI_IDENTIFIER_H__
 
@@ -28,5 +32,4 @@ typedef unsigned int Identifier;
 } // end of namespace
 
 #endif // ifndef
-
 

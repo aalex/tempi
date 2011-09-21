@@ -17,6 +17,10 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @file
+ * The SourceNode class.
+ */
 #ifndef __TEMPI_SOURCENODE_H__
 #define __TEMPI_SOURCENODE_H__
 

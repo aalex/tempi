@@ -17,6 +17,10 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @file
+ * The Recorder class.
+ */
 #ifndef __TEMPI_RECORDER_H__
 #define __TEMPI_RECORDER_H__
 
@@ -39,10 +43,11 @@ class Recorder
          * Resets the internal timer of this Recorder.
          */
         void reset();
+        bool setPosition(TimePosition position);
         /**
          * Adds an event to the track now.
          */
-        void add(boost::any value);
+        void add(Message value);
     private:
         Timer timer_;
         Track *track_;

@@ -4,7 +4,9 @@
 
 using namespace tempi::fsm;
 
-bool check_simple()
+// static const bool VERBOSE = false;
+
+bool check_fsm()
 {
     StateMachine machine;
     machine.addState(new State("foo"));
@@ -47,7 +49,7 @@ bool check_simple()
 
 int main(int argc, char *argv[])
 {
-    if (not check_simple())
+    if (not check_fsm())
         return 1;
     return 0;
 }

@@ -17,6 +17,10 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @file
+ * The Rule class.
+ */
 #ifndef __TEMPI_RULE_H__
 #define __TEMPI_RULE_H__
 
@@ -28,6 +32,9 @@ namespace tempi
 namespace fsm
 {
 
+/**
+ * A Rule is used to configure how to switch between States in a StateMachine, upon Events occurrign.
+ */
 class Rule 
 {
     public:

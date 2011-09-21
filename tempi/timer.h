@@ -17,6 +17,10 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @file
+ * The Timer class.
+ */
 #ifndef __TEMPI_TIMER_H__
 #define __TEMPI_TIMER_H__
 
@@ -36,6 +40,7 @@ class Timer
         TimePosition elapsed();
         void reset();
         TimePosition now();
+        bool setPosition(TimePosition position);
     private:
         TimePosition start_tick_;
 };

@@ -17,10 +17,13 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @file
+ * The SlideFilter class.
+ */
 #ifndef __TEMPI_SLIDEFILTER_H__
 #define __TEMPI_SLIDEFILTER_H__
 
-#include <boost/any.hpp>
 #include "tempi/filter.h"
 
 namespace tempi
@@ -28,7 +31,6 @@ namespace tempi
 
 /**
  * The slide filter smooths changes in streams of numbers.
- * A slide of 0 is impossible. If given 0, it will be 1.
  */
 class SlideFilter : public Filter
 {
@@ -37,7 +39,7 @@ class SlideFilter : public Filter
         bool setSlide(double slide);
     private:
         // Inherited from Filter:
-        virtual boost::any filter(boost::any data);
+        virtual Message &filter(Message &message);
         double slide(double value);
         double slide_;
         double last_out_;

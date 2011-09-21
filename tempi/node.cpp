@@ -36,11 +36,11 @@ std::vector<std::tr1::shared_ptr<Source> > Node::getOutlets()
     return outlets_;
 }
 
-void Node::onInletTriggered(Source *source, boost::any data)
+void Node::onInletTriggered(Source *source, Message &message)
 {
     // TODO
-    std::cout << __FUNCTION__ << std::endl;
-    processMessage(source, data);
+    //std::cout << __FUNCTION__ << std::endl;
+    processMessage(source, message);
 }
 
 std::vector<std::tr1::shared_ptr<Sink> > Node::getInlets()
@@ -80,7 +80,7 @@ bool Node::addOutlet()
 
 bool Node::hasInlet(Sink *sink)
 {
-    typename std::vector<std::tr1::shared_ptr<Sink> >::iterator iter;
+    std::vector<std::tr1::shared_ptr<Sink> >::iterator iter;
     for (iter = inlets_.begin(); iter != inlets_.end(); ++iter)
     {
         if ((*iter).get() == sink)
@@ -93,7 +93,7 @@ bool Node::hasInlet(Sink *sink)
 
 bool Node::hasOutlet(Source *source)
 {
-    typename std::vector<std::tr1::shared_ptr<Source> >::iterator iter;
+    std::vector<std::tr1::shared_ptr<Source> >::iterator iter;
     for (iter = outlets_.begin(); iter != outlets_.end(); ++iter)
     {
         if ((*iter).get() == source)

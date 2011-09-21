@@ -1,6 +1,6 @@
 AM_CXXFLAGS = $(LIBXML_CFLAGS) -I$(top_srcdir)  -I$(top_srcdir)/tempi
 
-AM_LIBS = $(LIBXML_LIBS)
+AM_LIBS = $(LIBXML_LIBS) $(OSCPACK_LIBS)
 
 # use lib_LTLIBRARIES to build a shared lib:
 lib_LTLIBRARIES = libtempi-@TEMPI_API_VERSION@.la
@@ -17,8 +17,12 @@ lib_LTLIBRARIES = libtempi-@TEMPI_API_VERSION@.la
 ## PLEASE KEEP THEM IN ALPHABETICAL ORDER
 libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     filter.cpp \
+    loopingplayback.cpp \
     marker.cpp \
+    message.cpp \
     node.cpp \
+    oscsender.cpp \
+    pingpongplayback.cpp \
     player.cpp \
     recorder.cpp \
     rule.cpp \
@@ -31,14 +35,19 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     sourcenode.cpp \
     state.cpp \
     statemachine.cpp \
+    table.cpp \
+    table_player.cpp \
+    table_writer.cpp \
     tempi.cpp \
     track.cpp \
     timer.cpp
 
+# TODO averagefilter.cpp
+
 ## Instruct libtool to include ABI version information in the generated shared
 ## library file (.so).  The library ABI version is defined in configure.ac, so
 ## that all version information is kept in one place.
-libtempi_@TEMPI_API_VERSION@_la_LDFLAGS = -export-dynamic -version-info $(TEMPI_LT_VERSION)
+libtempi_@TEMPI_API_VERSION@_la_LDFLAGS = -export-dynamic -version-info $(TEMPI_LT_VERSION) $(AM_LIBS) $(OSCPACK_LIBS)
 
 libtempi_@TEMPI_API_VERSION@_la_LIBS = $(AM_LIBS)
 libtempi_@TEMPI_API_VERSION@_la_CXXFLAGS = $(AM_CXXFLAGS)
@@ -47,10 +56,17 @@ libtempi_@TEMPI_API_VERSION@_la_includedir = $(includedir)/tempi-$(TEMPI_API_VER
 
 ## PLEASE KEEP THEM IN ALPHABETICAL ORDER
 libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
+    average.h \
+    concurrentqueue.h \
     filter.h \
     identifier.h \
+    loopingplayback.h \
     marker.h \
+    message.h \
     node.h \
+    oscsender.h \
+    pingpongplayback.h \
+    playback.h \
     player.h \
     properties.h \
     property.h \
@@ -66,12 +82,16 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     sourcenode.h \
     state.h \
     statemachine.h \
+    table.h \
+    table_player.h \
+    table_writer.h \
     tempi-version.h \
     tempi.h \
     timeposition.h \
     timer.h \
-    track.h \
-    types.h
+    track.h
+
+# TODO:averagefilter.h
 
 EXTRA_DIST = config.h
 

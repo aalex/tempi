@@ -17,4 +17,31 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @file
+ * The PingPongPlayback class.
+ */
+#ifndef __TEMPI_PINGPONGPLAYBACK_H__
+#define __TEMPI_PINGPONGPLAYBACK_H__
+
+#include "tempi/playback.h"
+
+namespace tempi
+{
+
+/**
+ * A PingPongPlayback plays a Track from beginning to end, and then from the end to the beginning.
+ */
+class PingPongPlayback : public Playback
+{
+    public:
+        PingPongPlayback();
+        virtual Message *read(Player &player);
+    private:
+        bool direction_is_forward_;
+};
+
+} // end of namespace
+
+#endif // ifndef
 

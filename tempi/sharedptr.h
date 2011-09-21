@@ -17,6 +17,10 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @file
+ * Include <tr1/memory> or <memory>, depending which is available.
+ */
 #ifndef __TEMPI_SHAREDPTR_H__
 #define __TEMPI_SHAREDPTR_H__
 

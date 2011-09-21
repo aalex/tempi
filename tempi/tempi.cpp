@@ -1,5 +1,6 @@
 #include <iostream>
 #include "tempi/tempi-version.h"
+#include "tempi/tempi.h"
 
 namespace tempi
 {

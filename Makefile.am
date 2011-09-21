@@ -21,3 +21,23 @@ DISTCLEANFILES = tempi.pc
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = tempi-@TEMPI_API_VERSION@.pc
 
+html-local: htmldoc
+htmldoc:
+	@if [ -z `which doxygen` ]; then echo "No Doxygen!"; else doxygen; fi
+
+# Documentation:
+if HAVE_DOXYGEN
+
+doxyfile.stamp:
+	$(DOXYGEN) doxyfile
+	echo `date -R` > doxyfile.stamp
+
+CLEANFILES = doxyfile.stamp
+
+all-local: doxyfile.stamp
+
+clean-local:
+	rm -rf html
+
+endif
+

@@ -1,0 +1,11 @@
+Features
+--------
+ * display some particles, randomly
+ * control particles with the mouse
+ * record trajectories with tempi
+ * control particles with (optionnaly) the Kinect
+
+Packaging
+---------
+ * install config files, and load them if found
+

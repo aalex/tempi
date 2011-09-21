@@ -55,5 +55,12 @@ TimePosition Timer::now()
     //return std::clock() * (1000000000L / CLOCKS_PER_SEC);
 }
 
+bool Timer::setPosition(TimePosition position)
+{
+    // FIXME: is this always valid?
+    start_tick_ = now() - position;
+    return true;
+}
+
 };
 

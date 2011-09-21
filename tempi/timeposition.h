@@ -17,6 +17,10 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @file
+ * The TimePosition typedef.
+ */
 #ifndef __TEMPI_TIMEPOSITION_H__
 #define __TEMPI_TIMEPOSITION_H__
 

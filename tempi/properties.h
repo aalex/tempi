@@ -18,7 +18,10 @@
  * along with Toonloop.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/** Map or Property instances. */
+/** 
+ * @file 
+ * The Properties template class.
+ */
 
 #ifndef __TEMPI_PROPERTIES_H__
 #define __TEMPI_PROPERTIES_H__
@@ -29,15 +32,14 @@
 #include <string>
 #include <tr1/memory> // shared_ptr
 #include <typeinfo> // typeid
-
 #include "tempi/property.h"
 
 namespace tempi
 {
 
-
 /**
  * Holds many properties identified by their name.
+ * Map of Property instances.
  */
 template <typename T> class Properties
 {

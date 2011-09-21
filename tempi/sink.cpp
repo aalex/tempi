@@ -42,7 +42,7 @@ bool Sink::connect(std::tr1::shared_ptr<Source>  source)
 
 bool Sink::hasSource(Source *source)
 {
-    typename std::vector<std::tr1::shared_ptr<Source> >::iterator iter;
+    std::vector<std::tr1::shared_ptr<Source> >::iterator iter;
     for (iter = sources_.begin(); iter != sources_.end(); ++iter)
     {
         if ((*iter).get() == source)
@@ -53,11 +53,11 @@ bool Sink::hasSource(Source *source)
     return false;
 }
 
-void Sink::onTriggered(Source *source, boost::any data)
+void Sink::onTriggered(Source *source, Message &message)
 {
     // TODO
-    std::cout << __FUNCTION__ << std::endl;
-    on_triggered_signal_(source, data);
+    //std::cout << __FUNCTION__ << std::endl;
+    on_triggered_signal_(source, message);
 }
 
 } // end of namespace

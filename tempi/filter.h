@@ -17,10 +17,14 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @file
+ * The Filter class.
+ */
+
 #ifndef __TEMPI_FILTER_H__
 #define __TEMPI_FILTER_H__
 
-#include <boost/any.hpp>
 #include "tempi/node.h"
 #include "tempi/source.h"
 #include "tempi/sink.h"
@@ -39,9 +43,9 @@ class Filter : public Node
         Sink *getInlet();
     private:
         // Inherited from Node:
-        virtual void processMessage(Source *source, boost::any data);
+        virtual void processMessage(Source *source, Message &message);
         // New virtual method:
-        virtual boost::any filter(boost::any data) = 0;
+        virtual Message &filter(Message &message) = 0;
 };
 
 } // end of namespace
