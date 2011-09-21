@@ -144,11 +144,12 @@ AC_LANG(C++)
 SAVED_LDFLAGS=$LDFLAGS
 LDFLAGS="$LDFLAGS -loscpack"
 AC_LINK_IFELSE(
-    [AC_LANG_PROGRAM([#include <oscpack/osc/OscTypes.h>],
-    [osc::TimeTag dummy])],
-    [TEST_LIBS="$TEST_LIBS -loscpack"] [OSCPACK_LIBS=-loscpack] [HAVE_OSCPACK=1],
-    [AC_MSG_WARN([liboscpack is not installed.])]
-    )
+    [AC_LANG_PROGRAM(
+        [#include <oscpack/osc/OscTypes.h>],
+        [osc::TimeTag dummy],
+    [TEST_LIBS="$TEST_LIBS -loscpack"]), 
+    [[OSCPACK_LIBS=-loscpack],[AC_DEFINE([HAVE_OSCPACK])]],
+    [[AC_MSG_WARN([liboscpack is not installed.])]]])
 LDFLAGS=$SAVED_LDFLAGS
 
 AC_SUBST([OSCPACK_LIBS])

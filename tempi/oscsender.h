@@ -1,6 +1,8 @@
 #ifndef __OSC_SENDER_H__
 #define __OSC_SENDER_H__
 
+#ifdef HAVE_OSCPACK
+
 #include <iostream>
 #include <string>
 #include "tempi/message.h"
@@ -30,5 +32,7 @@ private:
 };
 
 } // end of namespace
+
+#endif // HAVE_OSCPACK
 
 #endif // __OSC_SENDER_H__
