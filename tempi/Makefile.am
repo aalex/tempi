@@ -47,7 +47,7 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
 ## Instruct libtool to include ABI version information in the generated shared
 ## library file (.so).  The library ABI version is defined in configure.ac, so
 ## that all version information is kept in one place.
-libtempi_@TEMPI_API_VERSION@_la_LDFLAGS = -export-dynamic -version-info $(TEMPI_LT_VERSION) $(AM_LIBS) $(OSCPACK_LIBS)
+libtempi_@TEMPI_API_VERSION@_la_LDFLAGS = -export-dynamic -version-info $(TEMPI_LT_VERSION) $(AM_LIBS) $(OSCPACK_LIBS) -loscpack
 
 libtempi_@TEMPI_API_VERSION@_la_LIBS = $(AM_LIBS)
 libtempi_@TEMPI_API_VERSION@_la_CXXFLAGS = $(AM_CXXFLAGS)

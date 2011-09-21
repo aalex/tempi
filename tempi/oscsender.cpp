@@ -4,7 +4,7 @@
 namespace tempi
 {
     
-#ifdef HAVE_OSCPACK
+//#ifdef HAVE_OSCPACK
 
 OscSender::OscSender(const std::string &host, const int port)
 {
@@ -74,6 +74,6 @@ void OscSender::sendMessage(const std::string &oscpath, const Message &message)
     socket_->Send(os.Data(), os.Size());
 }
 
-#endif // HAVE_OSCPACK
+//#endif // HAVE_OSCPACK
 
 } // end of namespace temp
