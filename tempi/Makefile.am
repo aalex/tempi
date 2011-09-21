@@ -60,6 +60,7 @@ libtempi_@TEMPI_API_VERSION@_la_includedir = $(includedir)/tempi-$(TEMPI_API_VER
 libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     average.h \
     concurrentqueue.h \
+    exceptions.h \
     filter.h \
     graph.h \
     identifier.h \

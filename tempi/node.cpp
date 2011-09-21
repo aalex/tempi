@@ -17,11 +17,10 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <boost/bind.hpp>
 #include "tempi/node.h"
-#include "tempi/sink.h"
-#include "tempi/sharedptr.h"
+#include <boost/bind.hpp>
 #include <iostream>
+#include <sstream>
 
 namespace tempi
 {
@@ -143,6 +142,17 @@ Source *Node::getOutlet(unsigned int number) const
         return 0;
     }
     return outlets_[number].get();
+}
+
+std::tr1::shared_ptr<Source> Node::getOutletSharedPtr(unsigned int number) const throw(BadIndexException)
+{
+    if (number >= getNumberOfInlets())
+    {
+        std::ostringstream os;
+        os << "Node::" << __FUNCTION__ << ": Bad outlet index: " << number;
+        throw BadIndexException(os.str().c_str());
+    }
+    return outlets_[number];
 }
 
 } // end of namespace

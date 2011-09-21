@@ -29,6 +29,7 @@
 #include "tempi/message.h"
 #include "tempi/sink.h"
 #include "tempi/sharedptr.h"
+#include "tempi/exceptions.h"
 
 namespace tempi
 {
@@ -66,6 +67,7 @@ class Node
 
         Sink *getInlet(unsigned int number) const;
         Source *getOutlet(unsigned int number) const;
+        std::tr1::shared_ptr<Source> getOutletSharedPtr(unsigned int number) const throw(BadIndexException);
         /**
          * Adds a inlet.
          */

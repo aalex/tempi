@@ -63,6 +63,39 @@ bool Graph::message(std::string &node, unsigned int inlet, const Message &messag
 
 bool Graph::connect(std::string &from, unsigned int outlet, std::string &to, unsigned int inlet)
 {
+    Node *fromNode = getNode(from);
+    if (fromNode == 0)
+    {
+
+        std::cout << "Graph::" << __FUNCTION__ << ": Cannot find node " << from << "." << std::endl;
+        return false;
+    }
+    Node *toNode = getNode(to);
+    if (toNode == 0)
+    {
+
+        std::cout << "Graph::" << __FUNCTION__ << ": Cannot find node " << to << "." << std::endl;
+        return false;
+    }
+    if (outlet >= fromNode->getNumberOfOutlets())
+    {
+        std::cout << "Graph::" << __FUNCTION__ << ": Outlet " << outlet << "too big for node " << from << "." << std::endl;
+        return false;
+    }
+    if (inlet >= toNode->getNumberOfInlets())
+    {
+        std::cout << "Graph::" << __FUNCTION__ << ": Inlet " << inlet << "too big for node " << to << "." << std::endl;
+        return false;
+    }
+    try
+    {
+        toNode->getInlet(inlet)->connect(fromNode->getOutletSharedPtr(outlet));
+    } catch (const BadIndexException &e)
+    {
+        std::cout << e.what() << std::endl;
+        return false;
+    }
+    return true;
 }
 
 Node *Graph::getNode(std::string &name) const
