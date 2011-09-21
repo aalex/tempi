@@ -148,8 +148,8 @@ AC_LINK_IFELSE(
         [#include <oscpack/osc/OscTypes.h>],
         [osc::TimeTag dummy],
     [TEST_LIBS="$TEST_LIBS -loscpack"]), 
-    [[OSCPACK_LIBS=-loscpack],[AC_DEFINE([HAVE_OSCPACK])]],
-    [[AC_MSG_WARN([liboscpack is not installed.])]]])
+    [[OSCPACK_LIBS=-loscpack],[AC_DEFINE([HAVE_OSCPACK], 1)]],
+    [[AC_MSG_WARN([liboscpack is not installed.])], [AC_DEFINE([HAVE_OSCPACK], 0)]])
 LDFLAGS=$SAVED_LDFLAGS
 
 AC_SUBST([OSCPACK_LIBS])
