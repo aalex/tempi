@@ -59,6 +59,7 @@ std::string get_version();
 #include "tempi/marker.h"
 #include "tempi/message.h"
 #include "tempi/node.h"
+#include "tempi/nodefactory.h"
 #include "tempi/pingpongplayback.h"
 #include "tempi/playback.h"
 #include "tempi/player.h"
