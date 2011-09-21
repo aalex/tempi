@@ -8,7 +8,7 @@
 
 About
 -----
-Tempi is a multi-modal sampler-sequencer.
+Tempi is a multimodal sampling library.
 
 It should supports OSC messaging soon, as well as finite state machines, timelines and flexible message routing.
 

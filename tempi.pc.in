@@ -4,7 +4,7 @@ libdir=@libdir@
 includedir=@includedir@
 
 Name: tempi
-Description: Multi-modal sampling tool
+Description: Multimodal sampling library
 URL: @PACKAGE_URL@
 Version: @PACKAGE_VERSION@
 Requires.private:
