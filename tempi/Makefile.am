@@ -56,6 +56,7 @@ libtempi_@TEMPI_API_VERSION@_la_includedir = $(includedir)/tempi-$(TEMPI_API_VER
 ## PLEASE KEEP THEM IN ALPHABETICAL ORDER
 libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     average.h \
+    concurrentqueue.h \
     filter.h \
     identifier.h \
     loopingplayback.h \
