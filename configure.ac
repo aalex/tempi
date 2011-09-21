@@ -140,6 +140,7 @@ if test "x${ax_cv_boost_signals}" = "xno" ; then
 fi
 
 dnl Check for OSCPACK:
+AC_MSG_WARN([Checking for oscpack...])
 AC_LANG(C++)
 SAVED_LDFLAGS=$LDFLAGS
 LDFLAGS="$LDFLAGS -loscpack"

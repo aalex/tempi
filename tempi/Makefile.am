@@ -21,6 +21,7 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     marker.cpp \
     message.cpp \
     node.cpp \
+    oscreceiver.cpp \
     oscsender.cpp \
     pingpongplayback.cpp \
     player.cpp \
@@ -62,6 +63,7 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     marker.h \
     message.h \
     node.h \
+    oscreceiver.h \
     oscsender.h \
     pingpongplayback.h \
     playback.h \
