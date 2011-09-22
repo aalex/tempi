@@ -27,6 +27,16 @@ BOOST_PYTHON_MODULE(tempi)
     def("hello", hello);
     def("get_version", get_version);
 
+    enum_<ArgumentType>("ArgumentType")
+        .value("BOOLEAN", BOOLEAN)
+        .value("CHAR", CHAR)
+        .value("DOUBLE", DOUBLE)
+        .value("FLOAT", FLOAT)
+        .value("INT", INT)
+        .value("LONG", LONG)
+        .value("STRING", STRING)
+        ;
+
     class_<Message>("Message")
         .def("appendBoolean", &Message::appendBoolean)
         .def("appendChar", &Message::appendChar)
@@ -45,5 +55,38 @@ BOOST_PYTHON_MODULE(tempi)
         .def("getTypes", &Message::getTypes)
         .def("getSize", &Message::getSize)
         ;
+        //TODO: .def("getArgumentType", &Message::ArgumentType)
+
+    class_<Track>("Track")
+        .def("reset", &Track::reset)
+        .def("add", &Track::add)
+        .def("numberOfEvents", &Track::numberOfEvents)
+        .def("getDuration", &Track::getDuration)
+        ;
+
+        //TODO: .def("getFirst", &Track::getFirst, return_internal_reference<return_internal_reference>)
+        //TODO: .def("getLast", &Track::getLast)
+        //TODO: .def("getClosest", &Track::getClosest)
+
+    class_<Recorder>("Recorder", init<Track*>())
+        .def("setTrack", &Recorder::setTrack)
+        .def("getTrack", &Recorder::getTrack)
+        .def("reset", &Recorder::reset)
+        .def("setPosition", &Recorder::setPosition)
+        .def("add", &Recorder::add)
+        ;
+
+    // class_<Player>("Player", init<Track*>())
+    //     .def("setTrack", &Player::setTrack)
+    //     .def("getTrack", &Player::getTrack)
+    //     .def("getTimer", &Player::getTimer)
+    //     .def("reset", &Player::reset)
+    //     .def("setPosition", &Player::setPosition)
+    //     .def("read", &Player::read)
+    //     .def("getSpeed", &Player::getSpeed)
+    //     .def("setSpeed", &Player::setSpeed)
+    //     // TODO setPlaybackMode
+    //     // TODO getPlaybackMode
+    //     ;
 }
 

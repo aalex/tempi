@@ -85,17 +85,17 @@ Message *Track::getClosest(TimePosition target)
     return &(*ret).get<1>();
 }
 
-void Track::print()
-{
-    // TODO
-    EventVecIter iter;
-    for (iter = events_.begin(); iter < events_.end(); ++iter)
-    {
-        //TimePosition point = (*iter).get<0>();
-        //Message value = (*iter).get<1>();
-        //std::cout << " * " << point << ": " << Message_cast<boost::tuple<double, double> >(value) << std::endl;
-    }
-}
+//void Track::print()
+//{
+//    // TODO
+//    EventVecIter iter;
+//    for (iter = events_.begin(); iter < events_.end(); ++iter)
+//    {
+//        //TimePosition point = (*iter).get<0>();
+//        //Message value = (*iter).get<1>();
+//        //std::cout << " * " << point << ": " << Message_cast<boost::tuple<double, double> >(value) << std::endl;
+//    }
+//}
 
 unsigned int Track::numberOfEvents()
 {
