@@ -157,7 +157,10 @@ void Message::setString(unsigned int index, std::string value) throw(BadArgument
     set<std::string>(index, value);
 }
 
-static bool getArgumentTypeForAny(const boost::any &value, ArgumentType &type)
+namespace types
+{
+
+bool getArgumentTypeForAny(const boost::any &value, ArgumentType &type)
 {
     const std::type_info &actual = value.type();
     if (actual == typeid(bool))
@@ -182,11 +185,13 @@ static bool getArgumentTypeForAny(const boost::any &value, ArgumentType &type)
     return true;
 }
 
+} // end of namespace
+
 bool Message::getArgumentType(unsigned int index, ArgumentType &type) const
 {
     const boost::any *tmp = getArgument(index);
     if (tmp)
-        return getArgumentTypeForAny(*tmp, type);
+        return types::getArgumentTypeForAny(*tmp, type);
     else
         return false;
 }

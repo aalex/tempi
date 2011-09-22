@@ -1,5 +1,4 @@
 #include "tempi/property.h"
-#include "tempi/properties.h"
 #include <string>
 #include <map>
 #include <iostream>
@@ -8,74 +7,26 @@ using namespace tempi;
 
 static const bool VERBOSE = false;
 
-void int_cb(std::string &name, int value)
+static void cb(const Property &property)
 {
     if (VERBOSE)
-        std::cout << name << " changed to " << value << std::endl;
+        std::cout << property.getName() << " changed to " << property.getValue_ff() << std::endl;
 }
 
-void float_cb(std::string &name, float value)
+bool check_property()
 {
-    if (VERBOSE)
-        std::cout << name << " changed to " << value << std::endl;
-}
+    Property foo("foo", _ff(1.0, 2.0), "some description");
+    foo.value_changed_signal_.connect(&cb);
+    foo.setValue<_ff>(_ff(3.0, 4.0));
 
-void string_cb(std::string &name, std::string value)
-{
-    if (VERBOSE)
-        std::cout << name << " changed to " << value << std::endl;
-}
-
-void bool_cb(std::string &name, bool value)
-{
-    if (VERBOSE)
-        std::cout << name << " changed to " << value << std::endl;
+    return true;
 }
 
 int main(int /* argc */, char ** /*argv */)
 {
-    std::string name("hello");
-    Property<int> p(name, 0);
-    p.value_changed_signal_.connect(&int_cb);
-    p.set_value(8);
-
-    Properties<int> holder = Properties<int>();
-    holder.add_property("bar", 9);
-    Property<int> *x = holder.get_property("bar");
-    x->value_changed_signal_.connect(&int_cb);
-    //x->register_on_changed_slot(&cb);
-    x->set_value(6);
-    holder.remove_property("bar");
-    Property<int> *val = holder.get_property("bar");
-    if (val != 0)
-    {
-        std::cout << "Should not get a valid pointer " << val << std::endl;
+    if (! check_property())
         return 1;
-    }
-    else
-        if (VERBOSE)
-            std::cout << "Good! Did not get a valid pointer " << val << std::endl;
-    
-    if (holder.has_property("qweqwe"))
-    {
-        std::cout << "It finds qweqwe. weird " << std::endl;
-        return 1;
-    }
-    else 
-        if (VERBOSE)
-            std::cout << "Good, it still doesnt find qweqwe " << std::endl;
-
-    Property<float> f("float property", 0.0);
-    f.value_changed_signal_.connect(&float_cb);
-    f.set_value(3.14159);
-
-    Property<std::string> s("string property", "");
-    s.value_changed_signal_.connect(&string_cb);
-    s.set_value("some string");
-
-    Property<bool> b("bool property", false);
-    b.value_changed_signal_.connect(&bool_cb);
-    b.set_value(true);
 
     return 0;
 }
+

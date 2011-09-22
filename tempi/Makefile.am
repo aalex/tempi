@@ -75,7 +75,6 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     pingpongplayback.h \
     playback.h \
     player.h \
-    properties.h \
     property.h \
     recorder.h \
     rule.h \
@@ -97,6 +96,8 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     timeposition.h \
     timer.h \
     track.h
+
+#  properties.h
 
 # TODO:averagefilter.h
 

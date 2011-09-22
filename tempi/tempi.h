@@ -63,7 +63,6 @@ std::string get_version();
 #include "tempi/pingpongplayback.h"
 #include "tempi/playback.h"
 #include "tempi/player.h"
-#include "tempi/properties.h"
 #include "tempi/property.h"
 #include "tempi/recorder.h"
 #include "tempi/rule.h"

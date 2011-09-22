@@ -52,6 +52,11 @@ typedef enum
     //TODO: POINTER = 'p'
 } ArgumentType;
 
+namespace types
+{
+    bool getArgumentTypeForAny(const boost::any &value, ArgumentType &type);
+} // end of namespace
+
 /**
  * A Message contains a list of arguments whose types are one of ArgumentType.
  * Message objects can be stored in a Track, and passed from/to Node inlets and outlets.
@@ -136,7 +141,7 @@ class Message
                 {
                     std::ostringstream os;
                     os << "Message::" << __FUNCTION__ << ": Bad argument type " << index << " " << typeid(value).name();
-                    throw BadIndexException(os.str().c_str());
+                    throw BadArgumentTypeException(os.str().c_str());
                 }
             else
             {
