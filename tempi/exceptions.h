@@ -66,6 +66,14 @@ class BadNodeTypeException : public BaseException
         {}
 };
 
+class BadArgumentTypeException : public BaseException
+{
+    public:
+        BadArgumentTypeException(const char *error_message) :
+            BaseException(error_message)
+        {}
+};
+
 } // end of namespace
 
 #endif // ifndef

@@ -38,8 +38,7 @@ Message SlideFilter::filter(const Message &message)
     if (message.typesMatch("d"))
     {
         Message ret = message;
-        double value = 0.0;
-        message.getDouble(0, value);
+        double value = message.getDouble(0);
         value = slide(value);
         ret.setDouble(0, value);
         return ret;

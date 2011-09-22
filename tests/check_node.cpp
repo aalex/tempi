@@ -42,10 +42,7 @@ DummyFilterNode::DummyFilterNode() : Filter() {}
 Message DummyFilterNode::filter(const Message &message)
 {
     Message ret = message;
-    bool value = false;
-    message.getBoolean(0, value);
-    value = ! value;
-    ret.setBoolean(0, value);
+    ret.setBoolean(0, ! message.getBoolean(0));
     return ret;
 }
 
@@ -74,8 +71,7 @@ DummySinkNode::DummySinkNode() :
 void DummySinkNode::processMessage(const Message &message)
 {
     triggered_ = true;
-    bool value;
-    message.getBoolean(0, value);
+    bool value = message.getBoolean(0);
     last_value_was_ok_ = value == expected_;
 }
 

@@ -27,10 +27,12 @@
 
 #include <boost/any.hpp>
 #include <iostream>
+#include <sstream>
 #include <ostream>
 #include <string>
 #include <typeinfo>
 #include <vector>
+#include "tempi/exceptions.h"
 
 namespace tempi
 {
@@ -66,29 +68,38 @@ class Message
         //bool setArgument(unsigned int index, boost::any &value);
         unsigned int getSize() const;
 
-        bool appendBoolean(bool value);
-        bool appendChar(char value);
-        bool appendDouble(double value);
-        bool appendFloat(float value);
-        bool appendInt(int value);
-        bool appendLong(long long int value);
-        bool appendString(std::string value);
+        void appendBoolean(bool value);
+        void appendChar(char value);
+        void appendDouble(double value);
+        void appendFloat(float value);
+        void appendInt(int value);
+        void appendLong(long long int value);
+        void appendString(std::string value);
+        void appendString(const char *value)
+        {
+            appendString(std::string(value));
+        }
 
-        bool getBoolean(unsigned int index, bool &value) const;
-        bool getChar(unsigned int index, char &value) const;
-        bool getDouble(unsigned int index, double &value) const;
-        bool getFloat(unsigned int index, float &value) const;
-        bool getInt(unsigned int index, int &value) const;
-        bool getLong(unsigned int index, long long int &value) const;
-        bool getString(unsigned int index, std::string &value) const;
+        bool getBoolean(unsigned int index) const throw(BadArgumentTypeException, BadIndexException);
+        char getChar(unsigned int index) const throw(BadArgumentTypeException, BadIndexException);
+        double getDouble(unsigned int index) const throw(BadArgumentTypeException, BadIndexException);
+        float getFloat(unsigned int index) const throw(BadArgumentTypeException, BadIndexException);
+        int getInt(unsigned int index) const throw(BadArgumentTypeException, BadIndexException);
+        long long int getLong(unsigned int index) const throw(BadArgumentTypeException, BadIndexException);
+        std::string getString(unsigned int index) const throw(BadArgumentTypeException, BadIndexException);
+        void getString(unsigned int index, std::string &value) const throw(BadArgumentTypeException, BadIndexException);
 
-        bool setBoolean(unsigned int index, bool value);
-        bool setChar(unsigned int index, char value);
-        bool setDouble(unsigned int index, double value);
-        bool setFloat(unsigned int index, float value);
-        bool setInt(unsigned int index, int value);
-        bool setLong(unsigned int index, long long int value);
-        bool setString(unsigned int index, std::string value);
+        void setBoolean(unsigned int index, bool value) throw(BadArgumentTypeException, BadIndexException);
+        void setChar(unsigned int index, char value) throw(BadArgumentTypeException, BadIndexException);
+        void setDouble(unsigned int index, double value) throw(BadArgumentTypeException, BadIndexException);
+        void setFloat(unsigned int index, float value) throw(BadArgumentTypeException, BadIndexException);
+        void setInt(unsigned int index, int value) throw(BadArgumentTypeException, BadIndexException);
+        void setLong(unsigned int index, long long int value) throw(BadArgumentTypeException, BadIndexException);
+        void setString(unsigned int index, std::string value) throw(BadArgumentTypeException, BadIndexException);
+        void setString(unsigned int index, const char *value) throw(BadArgumentTypeException, BadIndexException)
+        {
+            setString(index, std::string(value));
+        }
 
         bool typesMatch(std::string &types) const;
         bool typesMatch(const char *types) const
@@ -107,33 +118,41 @@ class Message
     private:
         // Message(std::vector<boost::any> arguments);
         // std::vector<boost::any> &getArguments();
-        const boost::any *getArgument(unsigned int index) const;
+        const boost::any *getArgument(unsigned int index) const; // throw(BadIndexException);
         std::vector<boost::any> arguments_;
         bool append(boost::any value);
 
         template <typename T>
-        bool get(unsigned int index, T &value) const
+        void get(unsigned int index, T &value) const throw(BadArgumentTypeException, BadIndexException)
         {
             const boost::any *tmp = getArgument(index);
             if (tmp)
                 if (tmp->type() == typeid(value))
                 {
                     value = boost::any_cast<T>(*tmp);
-                    return true;
                 }
                 else
-                    return false;
+                {
+                    std::ostringstream os;
+                    os << "Message::" << __FUNCTION__ << ": Bad argument type " << index << " " << typeid(value).name();
+                    throw BadIndexException(os.str().c_str());
+                }
             else
-                return false;
+            {
+                std::ostringstream os;
+                os << "Message::" << __FUNCTION__ << ": Bad argument index " << index;
+                throw BadIndexException(os.str().c_str());
+            }
         }
 
         template <typename T>
-        bool set(unsigned int index, T value)
+        void set(unsigned int index, T value) throw(BadArgumentTypeException, BadIndexException)
         {
             if (index >= getSize())
             {
-                std::cerr << "Message::" << __FUNCTION__ << ": Index too big: " << index << std::endl;
-                return false;
+                std::ostringstream os;
+                os << "Message::" << __FUNCTION__ << ": Index too big: " << index << std::endl;
+                throw BadIndexException(os.str().c_str());
             }
             else
             {
@@ -141,14 +160,13 @@ class Message
                 if (current->type() == typeid(value))
                 {
                     arguments_[index] = boost::any(value);
-                    return true;
                 }
                 else
                 {
-                    std::cerr << "Message::" << __FUNCTION__ << ": Wrong type for arg: " << index << std::endl;
-                    return false;
+                    std::ostringstream os;
+                    os << "Message::" << __FUNCTION__ << ": Wrong type " << typeid(value).name() << " for arg: " << index << std::endl;
+                    throw BadIndexException(os.str().c_str());
                 }
-
             }
         }
 };
