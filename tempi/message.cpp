@@ -68,7 +68,7 @@ void Message::appendLong(long long int value)
 {
     append(boost::any(value));
 }
-void Message::appendString(std::string value)
+void Message::appendStdString(std::string value)
 {
     append(boost::any(value));
 }

@@ -74,10 +74,9 @@ class Message
         void appendFloat(float value);
         void appendInt(int value);
         void appendLong(long long int value);
-        void appendString(std::string value);
         void appendString(const char *value)
         {
-            appendString(std::string(value));
+            appendStdString(std::string(value));
         }
 
         bool getBoolean(unsigned int index) const throw(BadArgumentTypeException, BadIndexException);
@@ -87,7 +86,7 @@ class Message
         int getInt(unsigned int index) const throw(BadArgumentTypeException, BadIndexException);
         long long int getLong(unsigned int index) const throw(BadArgumentTypeException, BadIndexException);
         std::string getString(unsigned int index) const throw(BadArgumentTypeException, BadIndexException);
-        void getString(unsigned int index, std::string &value) const throw(BadArgumentTypeException, BadIndexException);
+        //void getString(unsigned int index, std::string &value) const throw(BadArgumentTypeException, BadIndexException);
 
         void setBoolean(unsigned int index, bool value) throw(BadArgumentTypeException, BadIndexException);
         void setChar(unsigned int index, char value) throw(BadArgumentTypeException, BadIndexException);
@@ -116,6 +115,8 @@ class Message
         //     return append(boost::any(value));
         // }
     private:
+
+        void appendStdString(std::string value);
         // Message(std::vector<boost::any> arguments);
         // std::vector<boost::any> &getArguments();
         const boost::any *getArgument(unsigned int index) const; // throw(BadIndexException);
