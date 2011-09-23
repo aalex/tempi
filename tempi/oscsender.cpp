@@ -23,64 +23,35 @@ void OscSender::sendMessage(const std::string &oscPath, const Message &message)
     os << osc::BeginMessage(oscPath.c_str());
     for (unsigned int i = 0; i < message.getSize(); ++i)
     {
+
         ArgumentType type;
         message.getArgumentType(i, type);
         switch (type)
         {
             case BOOLEAN:
-            {
-                bool value;
-                message.getBoolean(i, value);
-                os << value;
+                os << message.getBoolean(i);
                 break;
-            }
             case CHAR:
-            {
-                char value;
-                message.getChar(i, value);
-                os << value;
+                os << message.getChar(i);
                 break;
-            }
             case DOUBLE:
-            {
-                double value;
-                message.getDouble(i, value);
-                os << value;
+                os << message.getDouble(i);
                 break;
-            }
             case FLOAT:
-            {
-                float value;
-                message.getFloat(i, value);
-                os << value;
+                os << message.getFloat(i);
                 break;
-            }
             case INT:
-            {
-                int value;
-                message.getInt(i, value);
-                os << value;
+                os << message.getInt(i);
                 break;
-            }
             case LONG:
-            {
-                long long int value;
-                message.getLong(i, value);
-                os << value;
+                os << message.getLong(i);
                 break;
-            }
             case STRING:
-            {
-                std::string value;
-                message.getString(i, value);
-                os << value.c_str();
+                os << message.getString(i).c_str();
                 break;
-            }
             defaut:
-            {
-                std::cout << "OscSender::" << __FUNCTION__ << ": Unsupported type." << std::endl;
+                std::cerr << "OscSender::" << __FUNCTION__ << ": Unsupported type." << std::endl;
                 break;
-            }
         }
     }
     os << osc::EndMessage;

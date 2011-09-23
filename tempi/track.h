@@ -52,8 +52,8 @@ class Track
          * Adds an event to this track.
          */
         void add(TimePosition time, Message message);
-        /** TODO */
-        void print();
+        /** TODO ostream << thing*/
+        //void print();
         // TODO eraseBetween(TimePosition from, TimePosition to);
         unsigned int numberOfEvents();
         Message *getFirst();

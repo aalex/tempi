@@ -145,9 +145,8 @@ void App::onDraw()
         {
             if (m->typesMatch("ff"))
             {
-                float x, y;
-                m->getFloat(0, x);
-                m->getFloat(1, y);
+                float x  = m->getFloat(0);
+                float y = m->getFloat(1);
                 sampler->generator_.setSourcePosition(x, y);
             }
             else

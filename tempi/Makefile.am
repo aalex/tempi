@@ -22,6 +22,7 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     marker.cpp \
     message.cpp \
     node.cpp \
+    nodefactory.cpp \
     oscreceiver.cpp \
     oscsender.cpp \
     pingpongplayback.cpp \
@@ -68,12 +69,12 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     marker.h \
     message.h \
     node.h \
+    nodefactory.h \
     oscreceiver.h \
     oscsender.h \
     pingpongplayback.h \
     playback.h \
     player.h \
-    properties.h \
     property.h \
     recorder.h \
     rule.h \
@@ -95,6 +96,8 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     timeposition.h \
     timer.h \
     track.h
+
+#  properties.h
 
 # TODO:averagefilter.h
 

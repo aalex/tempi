@@ -11,7 +11,7 @@ bool check_oscsender()
 {
     Message m;
     m.appendFloat(3.14159);
-    m.appendString(std::string("hello"));
+    m.appendString("hello");
     m.appendInt(2);
 
     if (VERBOSE)
