@@ -44,24 +44,24 @@ Marker *Score::getMarker(Identifier identifier)
     std::map<TimePosition, MarkerPtr>::iterator iter;
     for (iter = markers_.begin(); iter != markers_.end(); ++iter)
     {
-        Maker *current = iter->second.get();
+        Marker *current = iter->second.get();
         if (current->getIdentifier() == identifier)
             return current;
     }
     return 0;
 }
 
-std::map<TimePosition, MarkerPtr> Score::getMarkers();
+std::map<TimePosition, std::tr1::shared_ptr<Marker> > Score::getMarkers()
 {
     return markers_; // FIXME: is this ok?
 }
 
-bool removeMarker(Identifier identifier)
+bool Score::removeMarker(Identifier identifier)
 {
-    std::map<TimePosition, MarkerPtr>::iterator iter;
+    std::map<TimePosition, std::tr1::shared_ptr<Marker> >::iterator iter;
     for (iter = markers_.begin(); iter != markers_.end(); ++iter)
     {
-        Maker *current = iter->second.get();
+        Marker *current = iter->second.get();
         if (current->getIdentifier() == identifier)
         {
             markers_.erase(iter);

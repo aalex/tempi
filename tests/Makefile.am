@@ -27,6 +27,7 @@ check_nodefactory_SOURCES = check_nodefactory.cpp
 check_osc_SOURCES = check_osc.cpp
 check_properties_SOURCES = check_properties.cpp
 check_slide_SOURCES = check_slide.cpp
+check_table_SOURCES = check_table.cpp
 check_timer_SOURCES = check_timer.cpp
 check_track_SOURCES = check_track.cpp
 check_version_SOURCES = check_version.cpp

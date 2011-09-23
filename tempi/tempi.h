@@ -79,6 +79,7 @@ std::string get_version();
 #include "tempi/timeposition.h"
 #include "tempi/timer.h"
 #include "tempi/track.h"
+#include "tempi/types.h"
 
 //TODO: #include "tempi/score.h"
 

@@ -30,6 +30,7 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     recorder.cpp \
     rule.cpp \
     samplernode.cpp \
+    score.cpp \
     sink.cpp \
     sinknode.cpp \
     slide.cpp \
@@ -79,6 +80,7 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     recorder.h \
     rule.h \
     samplernode.h \
+    score.h \
     sharedptr.h \
     sink.h \
     sinknode.h \
@@ -95,7 +97,8 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     tempi.h \
     timeposition.h \
     timer.h \
-    track.h
+    track.h \
+    types.h
 
 #  properties.h
 
