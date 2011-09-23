@@ -100,8 +100,6 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     track.h \
     types.h
 
-#  properties.h
-
 # TODO:averagefilter.h
 
 EXTRA_DIST = config.h
