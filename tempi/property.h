@@ -36,62 +36,24 @@
 #include <typeinfo>
 #include "tempi/exceptions.h"
 #include "tempi/message.h"
+#include "tempi/types.h"
 
 namespace tempi
 {
 
-typedef boost::tuple<float> _f;
-typedef boost::tuple<float, float> _ff;
-typedef boost::tuple<float, float, float> _fff;
-typedef boost::tuple<float, float, float, float> _ffff;
-
 namespace types
 {
 
-// boost::any makeTuple(const char *typeTags) throw(BadArgumentTypeException)
-// {
-//     std::string type(typeTags);
-//     if (type == "ff")
-//         return boost::any(_ff());
-//     else if (type == "fff")
-//         return boost::any(_fff());
-//     else if (type == "ffff")
-//         return boost::any(_ffff());
-//     else
-//     {
-//         std::ostringstream os;
-//         os << __FUNCTION__ << ": Type tag not supported: " << typeTags;
-//         throw BadArgumentTypeException(os.str.c_str());
-//     }
-// }
-
-std::string getPropertyTypeForAny(const boost::any &value)
-{
-    if (value.type() == typeid(_f))
-        return "f";
-    if (value.type() == typeid(_ff))
-        return "ff";
-    if (value.type() == typeid(_fff))
-        return "fff";
-    if (value.type() == typeid(_ffff))
-        return "ffff";
-    else
-    {
-        std::ostringstream os;
-        os << __FUNCTION__ << ": Type not supported: " << value.type().name();
-        throw BadArgumentTypeException(os.str().c_str());
-    }
-}
+std::string getPropertyTypeForAny(const boost::any &value);
 
 } // end of namespace
 
 /**
- * Property.
- *
+ * A Property holds a value of any type, and triggers a signal every time it is changed.
+ * 
  * Can hold a value of a type such as int, float, boost::tuple<float,float>, etc.
  *
- * When its value changes, its signal is triggered with its name
- * and its new value as arguments.
+ * When its value changes, its signal is triggered with itself as an argument.
  */
 class Property
 {
@@ -103,29 +65,25 @@ class Property
         /**
          * Constructor with name and value as arguments.
          */
-        Property(const char *name, boost::any value, const char *description="") :
-            name_(name),
-            value_(value),
-            description_(description)
-        {}
-
-        std::string getTypeName() const
-        {
-            return types::getPropertyTypeForAny(value_);
-        }
-
-        const std::type_info &getType() const
-        {
-            return value_.type();
-        }
-
-        bool typeMatches(const char *type) const
-        {
-            return getTypeName() == type;
-        }
+        Property(const char *name, boost::any value, const char *description="");
 
         /**
-         * Returns the current value of this property.
+         * Returns the type name of the value of this Property.
+         */
+        std::string getTypeName() const;
+
+        /**
+         * Returns the type info for the value of this Property.
+         */
+        const std::type_info &getType() const;
+
+        /**
+         * Checks whether or not the type name of the value of this Property matches a given one.
+         */
+        bool typeMatches(const char *type) const;
+
+        /**
+         * Returns the current value of this Property.
          */
         template <typename T>
         T getValue() const throw(BadArgumentTypeException)
@@ -143,20 +101,20 @@ class Property
         }
 
         /**
-         * Returns the name of this property.
+         * Returns the name of this Property.
          */
-        const std::string &getName() const
-        {
-            return name_;
-        }
+        const std::string &getName() const;
 
-        const std::string &getDescription() const
-        {
-            return description_;
-        }
+        /**
+         * Returns the description of this Property.
+         */
+        const std::string &getDescription() const;
 
+        /**
+         * Changes the value of this Property and triggers its OnChange signal.
+         */
         template <typename T>
-        void setValue(const T &value) throw(BadArgumentTypeException)
+        void setValue(T value) throw(BadArgumentTypeException)
         {
             if (value_.type() == typeid(T))
             {
@@ -171,10 +129,13 @@ class Property
             }
         }
 
-        OnChanged &getOnChanged()
-        {
-            return value_changed_signal_;
-        }
+        /**
+         * Returns the OnChanged signal of this Property.
+         * Useful to register callbacks as slots to it.
+         * Callbacks to this signal should return void and accept a reference to a Property object as argument.
+         */
+        OnChanged &getOnChangedSignal();
+
     private:
         OnChanged value_changed_signal_;
         std::string name_;

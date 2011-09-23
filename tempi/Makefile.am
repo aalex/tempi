@@ -27,6 +27,7 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     oscsender.cpp \
     pingpongplayback.cpp \
     player.cpp \
+    property.cpp \
     recorder.cpp \
     rule.cpp \
     samplernode.cpp \

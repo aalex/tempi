@@ -24,12 +24,14 @@
 #ifndef __TEMPI_NODE_H__
 #define __TEMPI_NODE_H__
 
+#include <boost/bind.hpp>
 #include <vector>
-#include "tempi/source.h"
-#include "tempi/message.h"
-#include "tempi/sink.h"
-#include "tempi/sharedptr.h"
 #include "tempi/exceptions.h"
+#include "tempi/message.h"
+#include "tempi/property.h"
+#include "tempi/sharedptr.h"
+#include "tempi/sink.h"
+#include "tempi/source.h"
 
 namespace tempi
 {
@@ -79,8 +81,9 @@ class Node
         void tick();
         // TODO: properties:
         // std::map<std::string, Message> getProperties();
-        // Message *getProperty(std::string);
-        // bool addProperty(std::string name, Message &value);
+        Property &getProperty(const char *name) throw(BadIndexException);;
+        void addProperty(std::tr1::shared_ptr<Property> property) throw(BadIndexException);
+        bool hasProperty(const char *name);
         // bool setProperty(std::string name, Message &value);
         // type_info *getPropertyType(std::string property);
         //
@@ -89,7 +92,9 @@ class Node
         // std::map<std::string, Signal> getSignals();
         // type_info *getSignalType(std::string signal);
     private:
+        virtual void onPropertyChanged(Property &property) {}
         std::vector<std::tr1::shared_ptr<Source> > outlets_;
+        std::vector<std::tr1::shared_ptr<Property> > properties_;
         std::vector<std::tr1::shared_ptr<Sink> > inlets_;
         // TODO: return success
         void onInletTriggered(const Message &message);

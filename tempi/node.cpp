@@ -155,5 +155,47 @@ std::tr1::shared_ptr<Source> Node::getOutletSharedPtr(unsigned int number) const
     return outlets_[number];
 }
 
+Property &Node::getProperty(const char *name) throw(BadIndexException)
+{
+    std::vector<std::tr1::shared_ptr<Property> >::iterator iter;
+    for (iter = properties_.begin(); iter != properties_.end(); ++iter)
+    {
+        Property *property = (*iter).get();
+        if (property->getName() == name)
+        {
+            return (*property);
+        }
+    }
+    std::ostringstream os;
+    os << "Node::" << __FUNCTION__ << ": No such property: " << name;
+    throw (BadIndexException(os.str().c_str()));
+}
+
+bool Node::hasProperty(const char *name)
+{
+    try
+    {
+        getProperty(name);
+        return true;
+    }
+    catch (const BadIndexException &e)
+    {
+        return false;
+    }
+}
+
+void Node::addProperty(std::tr1::shared_ptr<Property> property) throw(BadIndexException)
+{
+    std::string name = property.get()->getName();
+    if (hasProperty(name.c_str()))
+    {
+        std::ostringstream os;
+        os << "Node::" << __FUNCTION__ << ": Already has property: " << name;
+        throw (BadIndexException(os.str().c_str()));
+    }
+    properties_.push_back(property);
+    property.get()->getOnChangedSignal().connect(boost::bind(&Node::onPropertyChanged, this, _1));
+}
+
 } // end of namespace
 

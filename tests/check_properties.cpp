@@ -27,7 +27,7 @@ static void cb(Property &property)
 bool check_property()
 {
     Property foo("foo", _ff(3.14159, 0.12345678910111213), "Some description.");
-    foo.getOnChanged().connect(&cb);
+    foo.getOnChangedSignal().connect(&cb);
     foo.setValue<_ff>(_ff(2.7182818284, 1.6180339887));
     try
     {
