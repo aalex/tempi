@@ -40,6 +40,7 @@
 namespace tempi
 {
 
+typedef boost::tuple<float> _f;
 typedef boost::tuple<float, float> _ff;
 typedef boost::tuple<float, float, float> _fff;
 typedef boost::tuple<float, float, float, float> _ffff;
@@ -66,6 +67,8 @@ namespace types
 
 std::string getPropertyTypeForAny(const boost::any &value)
 {
+    if (value.type() == typeid(_f))
+        return "f";
     if (value.type() == typeid(_ff))
         return "ff";
     if (value.type() == typeid(_fff))
@@ -74,9 +77,9 @@ std::string getPropertyTypeForAny(const boost::any &value)
         return "ffff";
     else
     {
-        // std::ostringstream os;
-        //os << __FUNCTION__ << ": Type not supported: " << value.type().name();
-        throw BadArgumentTypeException("type not supported"); // os.str.c_str());
+        std::ostringstream os;
+        os << __FUNCTION__ << ": Type not supported: " << value.type().name();
+        throw BadArgumentTypeException(os.str().c_str());
     }
 }
 
@@ -85,7 +88,7 @@ std::string getPropertyTypeForAny(const boost::any &value)
 /**
  * Property.
  *
- * Can hold a value of a type such as int, float, etc.
+ * Can hold a value of a type such as int, float, boost::tuple<float,float>, etc.
  *
  * When its value changes, its signal is triggered with its name
  * and its new value as arguments.
@@ -96,7 +99,7 @@ class Property
         /** 
          * Typedef for the value_changed_signal_ signal.
          */
-        typedef boost::signals2::signal<void (const Property &property)> OnChanged;
+        typedef boost::signals2::signal<void (Property &property)> OnChanged;
         /**
          * Constructor with name and value as arguments.
          */
@@ -106,51 +109,37 @@ class Property
             description_(description)
         {}
 
-        std::string getType() const
+        std::string getTypeName() const
         {
             return types::getPropertyTypeForAny(value_);
         }
 
+        const std::type_info &getType() const
+        {
+            return value_.type();
+        }
+
         bool typeMatches(const char *type) const
         {
-            return getType() == type;
+            return getTypeName() == type;
         }
 
         /**
          * Returns the current value of this property.
          */
-        const boost::any &getValue() const
-        {
-            return value_;
-        }
-
         template <typename T>
-        T getValue(const boost::any &value) const throw(BadArgumentTypeException)
+        T getValue() const throw(BadArgumentTypeException)
         {
-            if (value.type() == typeid(value))
+            if (typeid(T) == value_.type())
             {
                 return boost::any_cast<T>(value_);
             }
             else
             {
-                //std::ostringstream os;
-                //os << "Message::" << __FUNCTION__ << ": Bad argument type "; // FIXME: << typeid(value).name();
-                //throw BadArgumentTypeException(os.str().c_str());
-                throw BadArgumentTypeException("Bad arg type");
+                std::ostringstream os;
+                os << "Message::" << __FUNCTION__ << ": Bad argument type. Expected " << value_.type().name() << " but got " << typeid(T).name();
+                throw BadArgumentTypeException(os.str().c_str());
             }
-        }
-
-        _ff getValue_ff() const throw(BadArgumentTypeException)
-        {
-            return getValue<_ff>(value_);
-        }
-        _fff getValue_fff() const throw(BadArgumentTypeException)
-        {
-            return getValue<_fff>(value_);
-        }
-        _ffff getValue_ffff() const throw(BadArgumentTypeException)
-        {
-            return getValue<_ffff>(value_);
         }
 
         /**
@@ -167,24 +156,27 @@ class Property
         }
 
         template <typename T>
-        void setValue(T value)
+        void setValue(const T &value) throw(BadArgumentTypeException)
         {
-            if (value_.type() == typeid(value))
+            if (value_.type() == typeid(T))
             {
-                value_ = boost::any(value);
+                value_ = value;
                 value_changed_signal_(*this);
             }
             else
             {
-                //std::ostringstream os;
-                //os << "Message::" << __FUNCTION__ << ": Bad argument type " << index << " " << typeid(value).name();
-                //throw BadArgumentTypeException(os.str().c_str());
-                throw BadArgumentTypeException("Bad arg type");
+                std::ostringstream os;
+                os << "Message::" << __FUNCTION__ << ": Bad argument type. Expected " << value_.type().name() << " but got " << typeid(T).name();
+                throw BadArgumentTypeException(os.str().c_str());
             }
         }
-        // TODO: make private, and ask to user to use the register_on_changed_slot method.
-        OnChanged value_changed_signal_;
+
+        OnChanged &getOnChanged()
+        {
+            return value_changed_signal_;
+        }
     private:
+        OnChanged value_changed_signal_;
         std::string name_;
         boost::any value_;
         std::string description_;
