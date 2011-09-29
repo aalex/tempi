@@ -1,6 +1,12 @@
-AM_CXXFLAGS = $(LIBXML_CFLAGS) -I$(top_srcdir)  -I$(top_srcdir)/tempi
+AM_CXXFLAGS = \
+    $(LIBXML_CFLAGS) \
+    $(LIBLO_CFLAGS) \
+    -I$(top_srcdir) \
+    -I$(top_srcdir)/tempi
 
-AM_LIBS = $(LIBXML_LIBS) $(OSCPACK_LIBS)
+AM_LIBS = \
+    $(LIBLO_LIBS) \
+    $(LIBXML_LIBS)
 
 # use lib_LTLIBRARIES to build a shared lib:
 lib_LTLIBRARIES = libtempi-@TEMPI_API_VERSION@.la
@@ -52,7 +58,7 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
 ## Instruct libtool to include ABI version information in the generated shared
 ## library file (.so).  The library ABI version is defined in configure.ac, so
 ## that all version information is kept in one place.
-libtempi_@TEMPI_API_VERSION@_la_LDFLAGS = -export-dynamic -version-info $(TEMPI_LT_VERSION) $(AM_LIBS) $(OSCPACK_LIBS) -loscpack
+libtempi_@TEMPI_API_VERSION@_la_LDFLAGS = -export-dynamic -version-info $(TEMPI_LT_VERSION) $(AM_LIBS)
 
 libtempi_@TEMPI_API_VERSION@_la_LIBS = $(AM_LIBS)
 libtempi_@TEMPI_API_VERSION@_la_CXXFLAGS = $(AM_CXXFLAGS)

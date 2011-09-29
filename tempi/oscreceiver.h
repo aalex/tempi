@@ -27,32 +27,13 @@
 
 //#ifdef HAVE_OSCPACK
 
-#include "oscpack/ip/PacketListener.h"
-#include "oscpack/osc/OscPacketListener.h"
-#include "oscpack/ip/UdpSocket.h"
-#include "oscpack/osc/OscPrintReceivedElements.h"
-#include "oscpack/osc/OscReceivedElements.h"
 #include "tempi/message.h"
-//#include <cstdlib>
-//#include <cstring>
 #include <iostream>
 #include <string>
 
 namespace tempi
 {
 
-class OscDumpPacketListener : public osc::OscPacketListener
-{
-    public:
-        //virtual void ProcessPacket(const char *data, int size, const IpEndpointName& remoteEndpoint)
-        //{
-        //    std::cout << osc::ReceivedPacket(data, size);
-        //}
-        virtual void ProcessMessage(const osc::ReceivedMessage &message, const IpEndpointName &remoteEndpoint)
-        {
-            //std::cout << message << " " << remoteEndpoint << std::endl;
-        }
-};
 
 class OscReceiver
 {
@@ -61,10 +42,10 @@ class OscReceiver
         virtual ~OscReceiver();
         void poll(std::string &oscPath, Message &message);
     private:
-        int port_;
-        static const int BUFF_SIZE = 1024;
-        OscDumpPacketListener *listener_;
-        UdpListeningReceiveSocket *socket_;
+//        int port_;
+//        static const int BUFF_SIZE = 1024;
+//        OscDumpPacketListener *listener_;
+//        UdpListeningReceiveSocket *socket_;
 };
 
 } // end of namespace

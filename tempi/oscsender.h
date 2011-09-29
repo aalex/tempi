@@ -31,8 +31,8 @@
 #include <iostream>
 #include <string>
 #include "tempi/message.h"
-#include <oscpack/osc/OscOutboundPacketStream.h>
-#include <oscpack/ip/UdpSocket.h>
+//#include <oscpack/osc/OscOutboundPacketStream.h>
+//#include <oscpack/ip/UdpSocket.h>
 
 namespace tempi
 {
@@ -48,11 +48,11 @@ class OscSender
         void sendMessage(const std::string &oscPath, const Message &message);
 
     private:
-        int port_;
-        char *ADDRESS;
-        static const int BUFF_SIZE = 1024;
-        UdpTransmitSocket *socket_;
-        char *oscBuffer_;
+//        int port_;
+//        char *ADDRESS;
+//        static const int BUFF_SIZE = 1024;
+//        UdpTransmitSocket *socket_;
+//        char *oscBuffer_;
 };
 
 } // end of namespace

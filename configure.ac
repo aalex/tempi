@@ -139,28 +139,11 @@ if test "x${ax_cv_boost_signals}" = "xno" ; then
 	AC_MSG_ERROR([missing package: libboost-signals-dev])
 fi
 
-dnl Check for OSCPACK:
-AC_MSG_WARN([Checking for oscpack...])
-AC_LANG(C++)
-SAVED_LDFLAGS=$LDFLAGS
-LDFLAGS="$LDFLAGS -loscpack"
-dnl AC_LINK_IFELSE(
-dnl     [AC_LANG_PROGRAM(
-dnl         [#include <oscpack/osc/OscTypes.h>],
-dnl         [osc::TimeTag dummy],
-dnl     [TEST_LIBS="$TEST_LIBS -loscpack"]), 
-dnl     [[OSCPACK_LIBS=-loscpack],[AC_DEFINE([HAVE_OSCPACK])]],
-dnl     [[AC_MSG_WARN([liboscpack is not installed.])]]])
-AC_LINK_IFELSE(
-    [AC_LANG_PROGRAM([#include <oscpack/osc/OscTypes.h>],
-    [osc::TimeTag dummy])],
-    [TEST_LIBS="$TEST_LIBS -loscpack"] [OSCPACK_LIBS=-loscpack] [HAVE_OSCPACK=1],
-    [AC_MSG_ERROR([liboscpack is not installed.])]
-    )
-LDFLAGS=$SAVED_LDFLAGS
-
-AC_SUBST([OSCPACK_LIBS])
-AC_SUBST([OSCPACK_CFLAGS])
+#Set LIBLO with pkg-config
+PKG_CHECK_MODULES(LIBLO, liblo, have_liblo=true, have_liblo=false)
+if test "x${have_liblo}" = "xfalse" ; then
+    AC_MSG_ERROR([Missing liblo])
+fi
 
 dnl AX_BOOST_PROGRAM_OPTIONS
 dnl if test "x${ax_cv_boost_program_options}" = "xno" ; then
