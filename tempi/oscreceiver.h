@@ -52,7 +52,6 @@ class OscReceiver
         std::vector<Message> poll();
         unsigned int getPort() const;
         void setDebug(bool enabled);
-        bool start();
     private:
         unsigned int port_;
         bool running_;
@@ -62,6 +61,7 @@ class OscReceiver
         std::vector<Message> messages_;
         static int generic_handler(const char *path, const char *types, lo_arg **argv,
             int argc, void *data, void *user_data);
+        bool start();
 };
 
 std::ostream &operator<<(std::ostream &os, const OscReceiver &osc_receiver);

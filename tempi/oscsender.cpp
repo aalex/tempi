@@ -1,65 +1,80 @@
 #include "oscsender.h"
+#include <sstream>
+#include <string>
 
 namespace tempi
 {
-    
-//#ifdef HAVE_OSCPACK
 
-OscSender::OscSender(const std::string &host, const int port)
+OscSender::OscSender(const char *host, unsigned int port) :
+    port_(port),
+    host_(host)
 {
-//    socket_ = new UdpTransmitSocket(IpEndpointName(host.c_str(), port));
-//    oscBuffer_ = new char[BUFF_SIZE];
+    std::ostringstream os;
+    os << port_;
+    lo_address_ = lo_address_new(host_.c_str(), os.str().c_str());
 }
 
 OscSender::~OscSender()
 {
-//    delete socket_;
-//    delete[] oscBuffer_;
+    lo_address_free(lo_address_);
 }
 
-void OscSender::sendMessage(const std::string &oscPath, const Message &message)
+bool OscSender::sendMessage(const Message &message)
 {
-// TODO
-    std::cerr << "OscSender::" << __FUNCTION__ << " is not implemented" << std::endl;
-//    osc::OutboundPacketStream os = osc::OutboundPacketStream(oscBuffer_, BUFF_SIZE);
-//    os << osc::BeginMessage(oscPath.c_str());
-//    for (unsigned int i = 0; i < message.getSize(); ++i)
-//    {
-//
-//        ArgumentType type;
-//        message.getArgumentType(i, type);
-//        switch (type)
-//        {
-//            case BOOLEAN:
-//                os << message.getBoolean(i);
-//                break;
-//            case CHAR:
-//                os << message.getChar(i);
-//                break;
-//            case DOUBLE:
-//                os << message.getDouble(i);
-//                break;
-//            case FLOAT:
-//                os << message.getFloat(i);
-//                break;
-//            case INT:
-//                os << message.getInt(i);
-//                break;
-//            case LONG:
-//                os << message.getLong(i);
-//                break;
-//            case STRING:
-//                os << message.getString(i).c_str();
-//                break;
-//            defaut:
-//                std::cerr << "OscSender::" << __FUNCTION__ << ": Unsupported type." << std::endl;
-//                break;
-//        }
-//    }
-//    os << osc::EndMessage;
-//    socket_->Send(os.Data(), os.Size());
+    std::string path;
+    ArgumentType firstArgType;
+    message.getArgumentType(0, firstArgType);
+    if (firstArgType == 's')
+        path = message.getString(0);
+    else
+    {
+        std::cerr << "OscSender::" << __FUNCTION__ << ": First arg must be an OSC path";
+        return false;
+    }
+
+    lo_message loMess = lo_message_new();
+    for (unsigned int i = 1; i < message.getSize(); ++i)
+    {
+        ArgumentType type;
+        message.getArgumentType(i, type);
+        switch (type)
+        {
+            case BOOLEAN:
+            {
+                bool value = message.getBoolean(i);
+                if (value)
+                    lo_message_add_true(loMess);
+                else
+                    lo_message_add_false(loMess);
+                break;
+            }
+            case CHAR:
+                lo_message_add_char(loMess, message.getChar(i));
+                break;
+            case DOUBLE:
+                lo_message_add_double(loMess, message.getDouble(i));
+                break;
+            case FLOAT:
+                lo_message_add_float(loMess, message.getFloat(i));
+                break;
+            case INT:
+                lo_message_add_int32(loMess, message.getInt(i));
+                break;
+            case LONG:
+                lo_message_add_int64(loMess, (int64_t) message.getLong(i));
+                break;
+            case STRING:
+                lo_message_add_string(loMess, message.getString(i).c_str());
+                break;
+            defaut:
+                std::cerr << "OscSender::" << __FUNCTION__ << ": Unsupported type." << std::endl;
+                break;
+        }
+    }
+    lo_send_message(lo_address_, path.c_str(), loMess);
+    lo_message_free(loMess);
+    return true;
 }
 
-//#endif // HAVE_OSCPACK
+} // end of namespace
 
-} // end of namespace temp

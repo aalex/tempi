@@ -34,7 +34,8 @@ void OscReceiver::onError(int num, const char *msg, const char *path)
 
 OscReceiver::~OscReceiver()
 {
-    lo_server_free(server_);
+    if (running_)
+        lo_server_free(server_);
 }
 
 /**

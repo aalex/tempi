@@ -213,7 +213,7 @@ bool Message::typesMatch(std::string &types) const
     return true;
 }
 
-std::string Message::getTypes()
+std::string Message::getTypes() const
 {
     std::string ret;
     for (unsigned int i = 0; i < getSize(); ++i)

@@ -112,7 +112,7 @@ class Message
             return typesMatch(s);
         }
 
-        std::string getTypes();
+        std::string getTypes() const;
 
         // template <typename T>
         // bool appendAny(T value)
