@@ -33,7 +33,7 @@
 namespace po = boost::program_options;
 
 static const unsigned int NUM_SAMPLER = 3;
-static const bool VERBOSE = false;
+static const bool VERBOSE = true;
 
 #if CLUTTER_CHECK_VERSION(1,4,0)
 #else
@@ -118,6 +118,8 @@ ClutterActor *App::getStage()
 
 void App::startRecording()
 {
+    if (verbose_)
+        std::cout << __FUNCTION__ << std::endl;
     if (samplers_.size() != 0)
     {
         Sampler *sampler = samplers_[current_].get();
@@ -129,6 +131,8 @@ void App::startRecording()
 
 void App::stopRecording()
 {
+    if (verbose_)
+        std::cout << __FUNCTION__ << std::endl;
     if (samplers_.size() != 0)
     {
         samplers_[current_].get()->recording_ = false;
@@ -138,6 +142,8 @@ void App::stopRecording()
 
 void App::write(float x, float y)
 {
+    if (verbose_)
+        std::cout << __FUNCTION__ << " " << x << " " << y << std::endl;
     if (samplers_.size() != 0)
     {
         Sampler *sampler = samplers_[current_].get();
@@ -187,6 +193,8 @@ void App::pollOSC()
             if (msg.indexMatchesType(0, tempi::STRING))
                 if (! handleOscMessage(msg))
                     std::cout << "Unhandled OSC message: " << msg << std::endl;
+                else if (verbose_)
+                    std::cout << "Handled OSC message: " << msg << std::endl;
         }
     }
 }
@@ -200,46 +208,50 @@ static std::string removeFirstChar(const std::string &from)
 
 static bool oscMessageMatches(const tempi::Message &message, const char *path, const char *types)
 {
-    //std::cout << __FUNCTION__ << "(" << message << path << " " << types << std::endl;
-    std::string desiredTypes = types;
-    if (desiredTypes.size() == 0)
-    {
-        //std::cout << " - wrong size" << std::endl;
-        return false; //TODO throw
-    }
-    if (message.getSize() == 0)
-    {
-        //std::cout << " - wrong size" << std::endl;
-        return false;
-    }
+    bool verbose = false;
+    if (verbose)
+        std::cout << __FUNCTION__ << "(" << message << path << " " << types << std::endl;
+    // first, check that the first arg is a string
     if (! message.indexMatchesType(0, tempi::STRING))
     {
-        //std::cout << " - wrong 0th arg type" << std::endl;
+        if (verbose)
+            std::cout << __FUNCTION__ << "message doesn't have a path" << std::endl;
+        return false;
+    }
+    unsigned int message_size = message.getSize() - 1;
+    std::string desiredTypes = types;
+    if (desiredTypes.size() != message_size)
+    {
+        if (verbose)
+            std::cout << " - wrong size. expected " << desiredTypes.size() << ", got " << message_size << std::endl;
         return false;
     }
     std::string actualPath = message.getString(0);
     if (actualPath != path)
     {
-        //std::cout << " - wrong path: expected " << path << " got " << actualPath << std::endl;
+        if (verbose)
+            std::cout << " - wrong path: expected " << path << " got " << actualPath << std::endl;
         return false;
     }
     std::string actual = removeFirstChar(message.getTypes());
     if (desiredTypes != actual)
     {
-        //std::cout << " - wrong types: expected " << desiredTypes << " got " << actual << std::endl;
+        if (verbose)
+            std::cout << " - wrong types: expected " << desiredTypes << " got " << actual << std::endl;
         return false;
     }
-    //std::cout << " - success!" << std::endl;
+    if (verbose)
+        std::cout << " - success!" << std::endl;
     return true;
 }
 
 bool App::handleOscMessage(const tempi::Message &message)
 {
-    if (oscMessageMatches(message, "/tempi/rec/select", "i"))
-    {
-        std::cout << "TODO: /tempi/rec/select i" << std::endl;
-        return true;
-    }
+    //if (oscMessageMatches(message, "/tempi/rec/select", "i"))
+    //{
+    //    std::cout << "TODO: /tempi/rec/select i" << std::endl;
+    //    return true;
+    //}
     if (oscMessageMatches(message, "/tempi/rec/start", ""))
     {
         startRecording();
@@ -282,7 +294,7 @@ void App::drawSamplers()
         {
             if (m->typesMatch("ff"))
             {
-                float x  = m->getFloat(0);
+                float x = m->getFloat(0);
                 float y = m->getFloat(1);
                 sampler->generator_.setSourcePosition(x, y);
             }
