@@ -1,7 +1,10 @@
 #include <iostream>
 #include <string>
+#include <vector>
+#include <unistd.h>
 #include "tempi/message.h"
 #include "tempi/oscsender.h"
+#include "tempi/oscreceiver.h"
 
 using namespace tempi;
 
@@ -24,9 +27,28 @@ bool check_oscsender()
     return true;
 }
 
+bool check_oscreceiver()
+{
+    OscReceiver receiver(14444);
+    for (int i = 0; i < 10; ++i)
+    {
+        std::cout << "Please wait 1 second..." << std::endl;
+        sleep(1); // 1 second
+        std::vector<OscMessage> messages = receiver.poll();
+        std::vector<OscMessage>::iterator iter;
+        for (iter = messages.begin(); iter != messages.end(); ++iter)
+        {
+            std::cout << (*iter).get<0>() << ": " << (*iter).get<1>() << std::endl;
+        }
+    }
+    return true;
+}
+
 int main(int argc, char *argv[])
 {
-    if (not check_oscsender())
+    if (! check_oscsender())
+        return 1;
+    if (! check_oscreceiver())
         return 1;
     return 0;
 }

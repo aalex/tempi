@@ -25,32 +25,43 @@
 #ifndef __OSC_RECEIVER_H__
 #define __OSC_RECEIVER_H__
 
-//#ifdef HAVE_OSCPACK
-
 #include "tempi/message.h"
+#include <boost/tuple/tuple.hpp>
 #include <iostream>
 #include <string>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/time.h>
+#include <sys/types.h>
+#include <strings.h>
+#include <unistd.h>
+#include <lo/lo.h>
 
 namespace tempi
 {
 
-
+typedef boost::tuple<std::string, Message>  OscMessage;
+/**
+ * OpenSoundControl receiver.
+ * To use it, you must extend this class and implement its onMessageReceived virtual method.
+ */
 class OscReceiver
 {
     public:
-        OscReceiver(const int port=17666);
+        OscReceiver(unsigned int port);
         virtual ~OscReceiver();
-        void poll(std::string &oscPath, Message &message);
+        std::vector<OscMessage> poll();
     private:
-//        int port_;
-//        static const int BUFF_SIZE = 1024;
-//        OscDumpPacketListener *listener_;
-//        UdpListeningReceiveSocket *socket_;
+        unsigned int port_;
+        bool running_;
+        lo_server server_;
+        static void onError(int num, const char *m, const char *path);
+        std::vector<OscMessage> messages_;
+        static int generic_handler(const char *path, const char *types, lo_arg **argv,
+            int argc, void *data, void *user_data);
 };
 
 } // end of namespace
-
-//#endif // HAVE_OSCPACK
 
 #endif // include guard
 
