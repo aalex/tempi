@@ -42,16 +42,22 @@ namespace tempi
 
 /**
  * OpenSoundControl receiver.
- * To use it, you must extend this class and implement its onMessageReceived virtual method.
  */
 class OscReceiver
 {
     public:
-        OscReceiver(unsigned int port);
+        /**
+         * Use port 0 to disable OSC receiving.
+         */
+        OscReceiver(unsigned int port = 0);
         virtual ~OscReceiver();
+        /**
+         * Flushes all the messages since last time we flushed.
+         */
         std::vector<Message> poll();
         unsigned int getPort() const;
         void setDebug(bool enabled);
+        bool isRunning() const;
     private:
         unsigned int port_;
         bool running_;

@@ -105,12 +105,15 @@ class Message
             setString(index, std::string(value));
         }
 
+        // TODO: deprecate the string version
         bool typesMatch(std::string &types) const;
         bool typesMatch(const char *types) const
         {
             std::string s(types);
             return typesMatch(s);
         }
+
+        bool indexMatchesType(unsigned int index, char type);
 
         std::string getTypes() const;
 

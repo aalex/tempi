@@ -19,12 +19,18 @@
 
 #include "particlegenerator.h"
 #include "tempi/tempi.h"
+#include "tempi/config.h"
+#include "tempi/oscreceiver.h"
 #include "tempi/pingpongplayback.h"
+#include <boost/lexical_cast.hpp>
+#include <boost/program_options.hpp>
 #include <clutter/clutter.h>
 #include <glib.h>
 #include <iostream>
 #include <tr1/memory>
 #include <unistd.h>
+
+namespace po = boost::program_options;
 
 static const unsigned int NUM_SAMPLER = 3;
 static const bool VERBOSE = false;
@@ -62,7 +68,7 @@ Sampler::Sampler()
     recording_ = false;
 }
 
-struct App
+class App
 {
     public:
         App();
@@ -71,20 +77,38 @@ struct App
         void toggleFullscreen();
         void write(float x, float y);
         bool isRecording();
+        bool launch(int argc, char **argv);
+        bool parse_options(int argc, char **argv);
         void onDraw();
+    private:
         unsigned int current_;
-        std::vector<std::tr1::shared_ptr<Sampler> > samplers_;
-        ClutterActor *stage_;
+        unsigned int osc_recv_port_;
         bool fullscreen_;
+        bool verbose_;
+        ClutterActor *stage_;
+        std::vector<std::tr1::shared_ptr<Sampler> > samplers_;
+        std::tr1::shared_ptr<tempi::OscReceiver> osc_receiver_;
+        void pollOSC();
+        bool startOSC();
+        ClutterActor *getStage();
+        void drawSamplers();
 };
 
 App::App() : 
-    current_(0)
+    current_(0),
+    osc_recv_port_(0),
+    fullscreen_(false)
 {
     for (unsigned int i = 0; i < NUM_SAMPLER; ++i)
     {
         samplers_.push_back(std::tr1::shared_ptr<Sampler>(new Sampler()));
     }
+
+}
+
+ClutterActor *App::getStage()
+{
+    return stage_;
 }
 
 void App::startRecording()
@@ -106,6 +130,7 @@ void App::stopRecording()
         current_ = (current_ + 1) % samplers_.size();
     }
 }
+
 void App::write(float x, float y)
 {
     if (samplers_.size() != 0)
@@ -127,14 +152,39 @@ bool App::isRecording()
 void App::toggleFullscreen()
 {
     fullscreen_ = ! fullscreen_;
+    if (verbose_)
+        std::cout << "App::" << __FUNCTION__ << ": " << fullscreen_ << std::endl;
     if (fullscreen_)
         clutter_stage_set_fullscreen(CLUTTER_STAGE(stage_), TRUE);
     else
         clutter_stage_set_fullscreen(CLUTTER_STAGE(stage_), FALSE);
 }
 
-void App::onDraw()
+void App::pollOSC()
 {
+    if (0 == osc_receiver_.get())
+        return;
+    if (osc_receiver_.get()->isRunning())
+    {
+        std::vector<tempi::Message> messages = osc_receiver_.get()->poll();
+        std::vector<tempi::Message>::iterator iter;
+        for (iter = messages.begin(); iter != messages.end(); ++iter)
+        {
+            tempi::Message msg = (*iter);
+            std::cout << "Got " << msg << std::endl;
+            std::string types = msg.getTypes();
+            if (0 == types.compare(0, 1, "s", 0, 1))
+            {
+                std::cout << "First arg is a string." << std::endl;
+
+            }
+        }
+    }
+}
+
+void App::drawSamplers()
+{
+    // Draw each sampler
     std::vector<std::tr1::shared_ptr<Sampler> >::iterator iter;
     for (iter = samplers_.begin(); iter < samplers_.end(); ++iter)
     {
@@ -154,6 +204,13 @@ void App::onDraw()
         }
         sampler->generator_.onDraw();
     }
+}
+
+void App::onDraw()
+{
+    // Poll incoming OSC messages
+    pollOSC();
+    drawSamplers();
 }
 
 static void on_frame_cb(ClutterTimeline * /*timeline*/, guint * /*ms*/, gpointer user_data)
@@ -217,28 +274,32 @@ static void key_event_cb(ClutterActor *actor, ClutterKeyEvent *event, gpointer u
     }
 }
 
-int main(int argc, char *argv[])
-{
-    ClutterColor black = { 0x00, 0x00, 0x00, 0xff };
-    ClutterColor red = { 0xff, 0x00, 0x00, 0xff };
-    ClutterActor *stage;
+bool App::launch(int argc, char **argv)
 
-    if (clutter_init(&argc, &argv) != CLUTTER_INIT_SUCCESS)
-        return 1;
-    stage = clutter_stage_get_default();
-    App app;
-    app.fullscreen_ = false;;
-    app.stage_ = stage;
-    clutter_actor_set_size(stage, 1024, 768);
-    clutter_stage_set_color(CLUTTER_STAGE(stage), &black);
-    g_signal_connect(stage, "destroy", G_CALLBACK(clutter_main_quit), NULL);
-    clutter_actor_set_reactive(stage, TRUE);
+{
+    if (osc_recv_port_ == 0)
+        std::cout << "OSC receiving disabled." << std::endl;
+    else
+        startOSC();
+    // Poll OSC receiver only when we render a Clutter frame.
+
+    if (stage_)
+    {
+        std::cerr << "cannot create stage twice" << std::endl;
+        return false;
+    }
+    stage_ = clutter_stage_get_default();
+    clutter_actor_set_size(stage_, 1024, 768);
+    ClutterColor black = { 0x00, 0x00, 0x00, 0xff };
+    clutter_stage_set_color(CLUTTER_STAGE(stage_), &black);
+    g_signal_connect(stage_, "destroy", G_CALLBACK(clutter_main_quit), NULL);
+    clutter_actor_set_reactive(stage_, TRUE);
 
     std::vector<std::tr1::shared_ptr<Sampler> >::iterator iter;
-    for (iter = app.samplers_.begin(); iter < app.samplers_.end(); ++iter)
+    for (iter = samplers_.begin(); iter < samplers_.end(); ++iter)
     {
         Sampler *sampler = (*iter).get();
-        clutter_container_add_actor(CLUTTER_CONTAINER(stage), sampler->generator_.getRoot());
+        clutter_container_add_actor(CLUTTER_CONTAINER(stage_), sampler->generator_.getRoot());
     }
 
     // timeline to attach a callback for each frame that is rendered
@@ -247,13 +308,91 @@ int main(int argc, char *argv[])
     clutter_timeline_set_loop(timeline, TRUE);
     clutter_timeline_start(timeline);
 
-    g_signal_connect(timeline, "new-frame", G_CALLBACK(on_frame_cb), &app);
-    g_signal_connect(stage, "key-press-event", G_CALLBACK(key_event_cb), &app);
-    g_signal_connect(stage, "button-press-event", G_CALLBACK(button_press_cb), &app);
-    g_signal_connect(stage, "button-release-event", G_CALLBACK(button_released_cb), &app);
-    g_signal_connect(stage, "motion-event", G_CALLBACK(motion_event_cb), &app);
+    g_signal_connect(timeline, "new-frame", G_CALLBACK(on_frame_cb), this);
+    g_signal_connect(stage_, "key-press-event", G_CALLBACK(key_event_cb), this);
+    g_signal_connect(stage_, "button-press-event", G_CALLBACK(button_press_cb), this);
+    g_signal_connect(stage_, "button-release-event", G_CALLBACK(button_released_cb), this);
+    g_signal_connect(stage_, "motion-event", G_CALLBACK(motion_event_cb), this);
 
-    clutter_actor_show(stage);
+    if (fullscreen_)
+    {
+        fullscreen_ = false;
+        toggleFullscreen();
+    }
+
+    clutter_actor_show(stage_);
+    return true;
+}
+
+bool App::startOSC()
+{
+    // starts OSC
+    if (osc_recv_port_ == 0)
+    {
+        std::cout << "OSC receiving disabled." << std::endl;
+        return false;
+    }
+    else
+    {
+        osc_receiver_.reset(new tempi::OscReceiver(osc_recv_port_));
+        std::cout << "Receive OSC from " << (*osc_receiver_.get()) << std::endl;
+    }
+    return true;
+}
+
+/**
+ * Return true if should exit the program.
+ * Call this begore launching the app.
+ */
+bool App::parse_options(int argc, char **argv)
+{
+    po::options_description desc("Options");
+    desc.add_options()
+        ("help,h", "Show this help message and exit")
+        ("version", "Show program's version number and exit")
+        ("verbose,v", po::bool_switch(), "Enables a verbose output")
+        ("fullscreen,f", po::bool_switch(), "Runs in fullscreen mode")
+        ("osc-receive-port,p", po::value<unsigned int>()->default_value(0), "Listening OSC port [1024,65535]")
+        ;
+    po::variables_map options;
+    po::store(po::parse_command_line(argc, argv, desc), options);
+    po::notify(options);
+    
+    verbose_ = options["verbose"].as<bool>();
+    fullscreen_ = options["fullscreen"].as<bool>();
+    // Options that makes the program exit:
+    if (options.count("help"))
+    {
+        std::cout << desc << std::endl;
+        return true;
+    }
+    if (options.count("version"))
+    {
+        std::cout << PACKAGE << " " << PACKAGE_VERSION << std::endl;
+        return true; 
+    }
+    // Options that leaves the App alive:
+    if (options.count("osc-receive-port"))
+    {
+        osc_recv_port_ = options["osc-receive-port"].as<unsigned int>();
+        if (osc_recv_port_ > 65535)
+        {
+            std::cerr << "OSC receiving Port number too high: " << osc_recv_port_ << std::endl;
+            //return false;
+        }
+    }
+    return false;
+}
+
+int main(int argc, char *argv[])
+{
+    if (clutter_init(&argc, &argv) != CLUTTER_INIT_SUCCESS)
+        return 1;
+
+    App app;
+    if (app.parse_options(argc, argv))
+        return 0;
+    app.launch(argc, argv);
 
     clutter_main();
     return 0;

@@ -145,11 +145,11 @@ if test "x${have_liblo}" = "xfalse" ; then
     AC_MSG_ERROR([Missing liblo])
 fi
 
-dnl AX_BOOST_PROGRAM_OPTIONS
-dnl if test "x${ax_cv_boost_program_options}" = "xno" ; then
-dnl 	AC_MSG_ERROR([missing package: libboost-program-options-dev])
-dnl fi
-dnl 
+AX_BOOST_PROGRAM_OPTIONS
+if test "x${ax_cv_boost_program_options}" = "xno" ; then
+	AC_MSG_ERROR([missing package: libboost-program-options-dev])
+fi
+
 dnl AX_BOOST_FILESYSTEM
 dnl if test "x${ax_cv_boost_filesystem}" = "xno" ; then
 dnl 	AC_MSG_ERROR([missing package: libboost-filesystem-dev])

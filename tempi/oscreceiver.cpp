@@ -120,6 +120,11 @@ void OscReceiver::setDebug(bool enabled)
     debug_ = enabled;
 }
 
+bool OscReceiver::isRunning() const
+{
+    return running_;
+}
+
 std::ostream &operator<<(std::ostream &os, const OscReceiver &osc_receiver)
 {
     os << "tempi::OscReceiver listening on osc.udp://localhost:" << osc_receiver.getPort();
