@@ -6,6 +6,57 @@
 namespace tempi
 {
 
+namespace osc
+{
+
+std::string removeFirstChar(const std::string &from)
+{
+    if (from.size() == 0)
+        return std::string();
+    return from.substr(1, from.size() - 1);
+}
+
+bool oscMessageMatches(const tempi::Message &message, const char *path, const char *types)
+{
+    //bool verbose = false;
+    //if (verbose)
+    //    std::cout << __FUNCTION__ << "(" << message << path << " " << types << std::endl;
+    // first, check that the first arg is a string
+    if (! message.indexMatchesType(0, STRING))
+    {
+        //if (verbose)
+        //    std::cout << __FUNCTION__ << "message doesn't have a path" << std::endl;
+        return false;
+    }
+    unsigned int message_size = message.getSize() - 1;
+    std::string desiredTypes = types;
+    if (desiredTypes.size() != message_size)
+    {
+        //if (verbose)
+        //    std::cout << " - wrong size. expected " << desiredTypes.size() << ", got " << message_size << std::endl;
+        return false;
+    }
+    std::string actualPath = message.getString(0);
+    if (actualPath != path)
+    {
+        //if (verbose)
+        //    std::cout << " - wrong path: expected " << path << " got " << actualPath << std::endl;
+        return false;
+    }
+    std::string actual = removeFirstChar(message.getTypes());
+    if (desiredTypes != actual)
+    {
+        //if (verbose)
+        //    std::cout << " - wrong types: expected " << desiredTypes << " got " << actual << std::endl;
+        return false;
+    }
+    //if (verbose)
+    //    std::cout << " - success!" << std::endl;
+    return true;
+}
+
+} // end of namespace
+
 OscReceiver::OscReceiver(unsigned int port) :
     port_(port),
     running_(false),
@@ -92,6 +143,7 @@ int OscReceiver::generic_handler(const char *path, const char *types, lo_arg **a
     context->messages_.push_back(message);
     return 1;
 }
+
 
 std::vector<Message> OscReceiver::poll()
 {

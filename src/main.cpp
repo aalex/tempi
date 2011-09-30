@@ -199,80 +199,36 @@ void App::pollOSC()
     }
 }
 
-static std::string removeFirstChar(const std::string &from)
-{
-    if (from.size() == 0)
-        return std::string();
-    return from.substr(1, from.size() - 1);
-}
 
-static bool oscMessageMatches(const tempi::Message &message, const char *path, const char *types)
-{
-    bool verbose = false;
-    if (verbose)
-        std::cout << __FUNCTION__ << "(" << message << path << " " << types << std::endl;
-    // first, check that the first arg is a string
-    if (! message.indexMatchesType(0, tempi::STRING))
-    {
-        if (verbose)
-            std::cout << __FUNCTION__ << "message doesn't have a path" << std::endl;
-        return false;
-    }
-    unsigned int message_size = message.getSize() - 1;
-    std::string desiredTypes = types;
-    if (desiredTypes.size() != message_size)
-    {
-        if (verbose)
-            std::cout << " - wrong size. expected " << desiredTypes.size() << ", got " << message_size << std::endl;
-        return false;
-    }
-    std::string actualPath = message.getString(0);
-    if (actualPath != path)
-    {
-        if (verbose)
-            std::cout << " - wrong path: expected " << path << " got " << actualPath << std::endl;
-        return false;
-    }
-    std::string actual = removeFirstChar(message.getTypes());
-    if (desiredTypes != actual)
-    {
-        if (verbose)
-            std::cout << " - wrong types: expected " << desiredTypes << " got " << actual << std::endl;
-        return false;
-    }
-    if (verbose)
-        std::cout << " - success!" << std::endl;
-    return true;
-}
 
 bool App::handleOscMessage(const tempi::Message &message)
 {
-    //if (oscMessageMatches(message, "/tempi/rec/select", "i"))
+    //if (tempi::osc::oscMessageMatches(message, "/tempi/rec/select", "i"))
     //{
     //    std::cout << "TODO: /tempi/rec/select i" << std::endl;
     //    return true;
     //}
-    if (oscMessageMatches(message, "/tempi/rec/start", ""))
+    if (tempi::osc::oscMessageMatches(message, "/tempi/rec/start", ""))
     {
         startRecording();
         return true;
     }
-    if (oscMessageMatches(message, "/tempi/rec/stop", ""))
+    if (tempi::osc::oscMessageMatches(message, "/tempi/rec/stop", ""))
     {
         stopRecording();
         return true;
     }
-    if (oscMessageMatches(message, "/tempi/play/speed", "f"))
+    if (tempi::osc::oscMessageMatches(message, "/tempi/play/speed", "f"))
     {
         setSpeed(message.getFloat(1));
         return true;
     }
-    if (oscMessageMatches(message, "/tempi/preferences/fullscreen", "b"))
+    if (tempi::osc::oscMessageMatches(message, "/tempi/preferences/fullscreen", "b"))
     {
         setFullscreen(message.getBoolean(1));
         return true;
     }
-    if (oscMessageMatches(message, "/tempi/rec/write", "ff"))
+    if (tempi::osc::oscMessageMatches(message, "/tempi/rec/write", "ff"))
     {
         if (isRecording())
             write(message.getFloat(1), message.getFloat(2));

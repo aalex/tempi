@@ -44,6 +44,12 @@
 namespace tempi
 {
 
+namespace osc
+{
+std::string removeFirstChar(const std::string &from);
+bool oscMessageMatches(const tempi::Message &message, const char *path, const char *types);
+}
+
 /**
  * OpenSoundControl receiver.
  */
@@ -62,6 +68,7 @@ class OscReceiver
         unsigned int getPort() const;
         void setDebug(bool enabled);
         bool isRunning() const;
+        static bool oscMessageMatches(const tempi::Message &message, const char *path, const char *types);
     private:
         unsigned int port_;
         bool running_;
