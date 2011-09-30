@@ -45,54 +45,6 @@ bool check_oscreceiver()
     return true;
 }
 
-bool messages_match(const Message &a, const Message &b)
-{
-    if (a.getTypes() != b.getTypes())
-    {
-        return false;
-    }
-    for (unsigned int i = 1; i < a.getSize(); ++i)
-    {
-        ArgumentType type;
-        a.getArgumentType(i, type);
-        switch (type)
-        {
-            case BOOLEAN:
-                if (a.getBoolean(i) != b.getBoolean(i))
-                    return false;
-                break;
-            case CHAR:
-                if (a.getChar(i) != b.getChar(i))
-                    return false;
-                break;
-            case DOUBLE:
-                if (a.getDouble(i) != b.getDouble(i))
-                    return false;
-                break;
-            case FLOAT:
-                if (a.getFloat(i) != b.getFloat(i))
-                    return false;
-                break;
-            case INT:
-                if (a.getInt(i) != b.getInt(i))
-                    return false;
-                break;
-            case LONG:
-                if (a.getLong(i) != b.getLong(i))
-                    return false;
-                break;
-            case STRING:
-                if (a.getString(i) != b.getString(i))
-                    return false;
-                break;
-            defaut:
-                std::cerr << __FUNCTION__ << ": Unsupported type." << std::endl;
-                break;
-        }
-    }
-    return true;
-}
-
 bool sent_and_received_matches(OscSender &sender, OscReceiver &receiver, const Message &message)
 {
     sender.sendMessage(message);
@@ -112,7 +64,7 @@ bool sent_and_received_matches(OscSender &sender, OscReceiver &receiver, const M
     {
         std::cout << "Got " << (*iter) << std::endl;
         Message received = (*iter);
-        if (! messages_match(message, received))
+        if (message != received)
         {
             std::cout << "Messages don't match: Sent " << message << " but got " << received << std::endl;
             return false;

@@ -119,6 +119,9 @@ class Message
         // {
         //     return append(boost::any(value));
         // }
+
+        bool operator==(const Message &other) const;
+        bool operator!=(const Message &other) const;
     private:
 
         void appendStdString(std::string value);

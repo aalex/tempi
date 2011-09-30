@@ -227,6 +227,59 @@ std::string Message::getTypes() const
     return ret;
 }
 
+bool Message::operator!=(const Message &other) const
+{
+    return ! (*this == other);
+}
+
+bool Message::operator==(const Message &other) const
+{
+    if (getTypes() != other.getTypes())
+    {
+        return false;
+    }
+    for (unsigned int i = 1; i < getSize(); ++i)
+    {
+        ArgumentType type;
+        getArgumentType(i, type);
+        switch (type)
+        {
+            case BOOLEAN:
+                if (getBoolean(i) != other.getBoolean(i))
+                    return false;
+                break;
+            case CHAR:
+                if (getChar(i) != other.getChar(i))
+                    return false;
+                break;
+            case DOUBLE:
+                if (getDouble(i) != other.getDouble(i))
+                    return false;
+                break;
+            case FLOAT:
+                if (getFloat(i) != other.getFloat(i))
+                    return false;
+                break;
+            case INT:
+                if (getInt(i) != other.getInt(i))
+                    return false;
+                break;
+            case LONG:
+                if (getLong(i) != other.getLong(i))
+                    return false;
+                break;
+            case STRING:
+                if (getString(i) != other.getString(i))
+                    return false;
+                break;
+            defaut:
+                std::cerr << "Message" << __FUNCTION__ << ": Unsupported type." << std::endl;
+                break;
+        }
+    }
+    return true;
+}
+
 std::ostream &operator<<(std::ostream &os, const Message &message)
 {
     os << "(";
