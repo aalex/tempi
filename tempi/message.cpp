@@ -213,7 +213,7 @@ bool Message::typesMatch(std::string &types) const
     return true;
 }
 
-bool Message::indexMatchesType(unsigned int index, char type)
+bool Message::indexMatchesType(unsigned int index, char type) const
 {
     ArgumentType actual;
     if ( ! getArgumentType(index, actual))

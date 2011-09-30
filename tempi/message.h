@@ -113,7 +113,7 @@ class Message
             return typesMatch(s);
         }
 
-        bool indexMatchesType(unsigned int index, char type);
+        bool indexMatchesType(unsigned int index, char type) const;
 
         std::string getTypes() const;
 

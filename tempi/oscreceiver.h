@@ -37,6 +37,10 @@
 #include <unistd.h>
 #include <lo/lo.h>
 
+/**
+ * The OscReceiver class.
+ */
+
 namespace tempi
 {
 

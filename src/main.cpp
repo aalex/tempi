@@ -80,6 +80,8 @@ class App
         bool launch(int argc, char **argv);
         bool parse_options(int argc, char **argv);
         void onDraw();
+        void playSlower();
+        void playFaster();
     private:
         unsigned int current_;
         unsigned int osc_recv_port_;
@@ -92,6 +94,7 @@ class App
         bool startOSC();
         ClutterActor *getStage();
         void drawSamplers();
+        bool handleOscMessage(const tempi::Message &message);
 };
 
 App::App() : 
@@ -171,15 +174,78 @@ void App::pollOSC()
         for (iter = messages.begin(); iter != messages.end(); ++iter)
         {
             tempi::Message msg = (*iter);
-            std::cout << "Got " << msg << std::endl;
-            std::string types = msg.getTypes();
-            if (0 == types.compare(0, 1, "s", 0, 1))
-            {
-                std::cout << "First arg is a string." << std::endl;
-
-            }
+            if (msg.indexMatchesType(0, tempi::STRING))
+                if (! handleOscMessage(msg))
+                    std::cout << "Unhandled OSC message: " << msg << std::endl;
         }
     }
+}
+
+static std::string removeFirstChar(const std::string &from)
+{
+    if (from.size() == 0)
+        return std::string();
+    return from.substr(1, from.size() - 1);
+}
+
+static bool oscMessageMatches(const tempi::Message &message, const char *path, const char *types)
+{
+    //std::cout << __FUNCTION__ << "(" << message << path << " " << types << std::endl;
+    std::string desiredTypes = types;
+    if (desiredTypes.size() == 0)
+    {
+        //std::cout << " - wrong size" << std::endl;
+        return false; //TODO throw
+    }
+    if (message.getSize() == 0)
+    {
+        //std::cout << " - wrong size" << std::endl;
+        return false;
+    }
+    if (! message.indexMatchesType(0, tempi::STRING))
+    {
+        //std::cout << " - wrong 0th arg type" << std::endl;
+        return false;
+    }
+    std::string actualPath = message.getString(0);
+    if (actualPath != path)
+    {
+        //std::cout << " - wrong path: expected " << path << " got " << actualPath << std::endl;
+        return false;
+    }
+    std::string actual = removeFirstChar(message.getTypes());
+    if (desiredTypes != actual)
+    {
+        //std::cout << " - wrong types: expected " << desiredTypes << " got " << actual << std::endl;
+        return false;
+    }
+    //std::cout << " - success!" << std::endl;
+    return true;
+}
+
+bool App::handleOscMessage(const tempi::Message &message)
+{
+    if (oscMessageMatches(message, "/tempi/rec/select", "i"))
+    {
+        std::cout << "TODO: /tempi/rec/select i" << std::endl;
+        return true;
+    }
+    if (oscMessageMatches(message, "/tempi/rec/start", ""))
+    {
+        std::cout << "TODO: /tempi/rec/start" << std::endl;
+        return true;
+    }
+    if (oscMessageMatches(message, "/tempi/rec/stop", ""))
+    {
+        std::cout << "TODO: /tempi/rec/stop" << std::endl;
+        return true;
+    }
+    if (oscMessageMatches(message, "/tempi/play/speed", "f"))
+    {
+        std::cout << "TODO: /tempi/play/speed f" << std::endl;
+        return true;
+    }
+    return false;
 }
 
 void App::drawSamplers()
@@ -266,12 +332,24 @@ static void key_event_cb(ClutterActor *actor, ClutterKeyEvent *event, gpointer u
             //app->track_.print();
             break;
         case CLUTTER_KEY_Up:
-            //app->player_.get()->setSpeed(app->player_.get()->getSpeed() * 1.1);
+            app->playFaster();
             break;
         case CLUTTER_KEY_Down:
-            //app->player_.get()->setSpeed(app->player_.get()->getSpeed() / 1.1);
+            app->playSlower();
             break;
     }
+}
+
+void App::playFaster()
+{
+    Sampler *sampler = samplers_[current_].get();
+    sampler->player_.get()->setSpeed(sampler->player_.get()->getSpeed() * 1.1);
+}
+
+void App::playSlower()
+{
+    Sampler *sampler = samplers_[current_].get();
+    sampler->player_.get()->setSpeed(sampler->player_.get()->getSpeed() / 1.1);
 }
 
 bool App::launch(int argc, char **argv)
