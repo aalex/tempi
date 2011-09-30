@@ -295,6 +295,7 @@ std::ostream &operator<<(std::ostream &os, const Message &message)
     {
         ArgumentType type;
         message.getArgumentType(i, type);
+        os << (char) type << ":";
         switch (type)
         {
             case BOOLEAN:
@@ -316,7 +317,7 @@ std::ostream &operator<<(std::ostream &os, const Message &message)
                 os << message.getLong(i);
                 break;
             case STRING:
-                os << message.getString(i);
+                os << "\"" << message.getString(i) << "\"";
                 break;
             defaut:
                 std::cerr << "std::ostream &operator<<(std::ostream &os, const Message &message): Unsupported type." << std::endl;

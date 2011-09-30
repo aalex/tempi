@@ -75,6 +75,7 @@ class App
         void startRecording();
         void stopRecording();
         void toggleFullscreen();
+        void setFullscreen(bool enabled);
         void write(float x, float y);
         bool isRecording();
         bool launch(int argc, char **argv);
@@ -82,6 +83,7 @@ class App
         void onDraw();
         void playSlower();
         void playFaster();
+        void setSpeed(float factor);
     private:
         unsigned int current_;
         unsigned int osc_recv_port_;
@@ -163,6 +165,14 @@ void App::toggleFullscreen()
         clutter_stage_set_fullscreen(CLUTTER_STAGE(stage_), FALSE);
 }
 
+void App::setFullscreen(bool enabled)
+{
+    if (fullscreen_ != enabled)
+    {
+        toggleFullscreen();
+    }
+}
+
 void App::pollOSC()
 {
     if (0 == osc_receiver_.get())
@@ -232,19 +242,31 @@ bool App::handleOscMessage(const tempi::Message &message)
     }
     if (oscMessageMatches(message, "/tempi/rec/start", ""))
     {
-        std::cout << "TODO: /tempi/rec/start" << std::endl;
+        startRecording();
         return true;
     }
     if (oscMessageMatches(message, "/tempi/rec/stop", ""))
     {
-        std::cout << "TODO: /tempi/rec/stop" << std::endl;
+        stopRecording();
         return true;
     }
     if (oscMessageMatches(message, "/tempi/play/speed", "f"))
     {
-        std::cout << "TODO: /tempi/play/speed f" << std::endl;
+        setSpeed(message.getFloat(1));
         return true;
     }
+    if (oscMessageMatches(message, "/tempi/preferences/fullscreen", "b"))
+    {
+        setFullscreen(message.getBoolean(1));
+        return true;
+    }
+    if (oscMessageMatches(message, "/tempi/rec/write", "ff"))
+    {
+        if (isRecording())
+            write(message.getFloat(1), message.getFloat(2));
+        return true;
+    }
+
     return false;
 }
 
@@ -255,7 +277,6 @@ void App::drawSamplers()
     for (iter = samplers_.begin(); iter < samplers_.end(); ++iter)
     {
         Sampler *sampler = (*iter).get();
-
         tempi::Message *m = sampler->player_.get()->read();
         if (m)
         {
@@ -352,8 +373,13 @@ void App::playSlower()
     sampler->player_.get()->setSpeed(sampler->player_.get()->getSpeed() / 1.1);
 }
 
-bool App::launch(int argc, char **argv)
+void App::setSpeed(float speed)
+{
+    Sampler *sampler = samplers_[current_].get();
+    sampler->player_.get()->setSpeed(speed);
+}
 
+bool App::launch(int argc, char **argv)
 {
     if (osc_recv_port_ == 0)
         std::cout << "OSC receiving disabled." << std::endl;
