@@ -8,14 +8,23 @@ namespace tempi
 
 OscReceiver::OscReceiver(unsigned int port) :
     port_(port),
-    running_(false)
+    running_(false),
+    debug_(false)
 {
+    if (port_ != 0)
+        start();
+}
+
+bool OscReceiver::start()
+{
+    if (running_)
+        return false;
     // TODO: handle errors
     server_ = lo_server_new(boost::lexical_cast<std::string>(port_).c_str(), onError);
     /* add method that will match any path and args */
     lo_server_add_method(server_, NULL, NULL, generic_handler, this);
-    /* get the file descriptor of the server socket, if supported */
-    //lo_fd_ = lo_server_get_socket_fd(server_);
+    running_ = true;
+    return true;
 }
 
 void OscReceiver::onError(int num, const char *msg, const char *path)
@@ -36,40 +45,84 @@ OscReceiver::~OscReceiver()
 int OscReceiver::generic_handler(const char *path, const char *types, lo_arg **argv,
                     int argc, void *data, void *user_data)
 {
-    Message args;
+    Message message;
+    message.appendString(path);
     OscReceiver *context = static_cast<OscReceiver *>(user_data);
-    printf("path: <%s>\n", path);
+    if (context->debug_)
+        printf("path: <%s>\n", path);
     for (int i = 0; i < argc; i++)
     {
-        //printf("arg %d '%c' ", i, types[i]);
-        lo_arg_pp(static_cast<lo_type>(types[i]), argv[i]);
-        //printf("\n");
+        if (context->debug_)
+        {
+            printf("arg %d '%c' ", i, types[i]);
+            lo_arg_pp(static_cast<lo_type>(types[i]), argv[i]);
+            printf("\n");
+            fflush(stdout);
+        }
         switch (types[i])
         {
             case 'i':
-                args.appendInt(argv[i]->i);
+                message.appendInt(argv[i]->i);
                 break;
             case 'f':
-                args.appendFloat(argv[i]->f);
+                message.appendFloat(argv[i]->f);
+                break;
+            case 's':
+                message.appendString(static_cast<const char *>(&argv[i]->s));
+                break;
+            case 'c':
+                message.appendChar(argv[i]->c);
+                break;
+            case 'd':
+                message.appendChar(argv[i]->d);
+                break;
+            case 'T':
+                message.appendBoolean(true);
+                break;
+            case 'F':
+                message.appendBoolean(false);
                 break;
             default:
-                std::cout << "cannot handle lo arg type " << types[i] << std::endl;
+                std::cerr << "OscReceiver::" << __FUNCTION__ << ": cannot handle lo arg type " << types[i] << std::endl;
                 break;
         }
     }
-    //printf("\n");
-    //fflush(stdout);
     // TODO: time OSC messages so that timing be exact.
-    context->messages_.push_back(OscMessage(std::string(path), args));
+    context->messages_.push_back(message);
     return 1;
 }
 
-std::vector<OscMessage> OscReceiver::poll()
+std::vector<Message> OscReceiver::poll()
 {
-    lo_server_recv_noblock(server_, 0);
-    std::vector<OscMessage> ret = messages_;
-    messages_.clear();
-    return ret;
+    if (running_)
+    {
+        lo_server_recv_noblock(server_, 0);
+        std::vector<Message> ret = messages_;
+        messages_.clear();
+        return ret;
+    }
+    else
+    {
+        std::cerr << "OscReceiver::" << __FUNCTION__ << ": Not running" << std::endl;
+        std::vector<Message> ret;
+        return ret;
+    }
+}
+
+unsigned int OscReceiver::getPort() const
+{
+    return port_;
+}
+
+void OscReceiver::setDebug(bool enabled)
+{
+    debug_ = enabled;
+}
+
+std::ostream &operator<<(std::ostream &os, const OscReceiver &osc_receiver)
+{
+    os << "tempi::OscReceiver listening on osc.udp://localhost:" << osc_receiver.getPort();
+    return os;
 }
 
 } // end of namespace temp

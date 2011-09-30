@@ -40,7 +40,6 @@
 namespace tempi
 {
 
-typedef boost::tuple<std::string, Message>  OscMessage;
 /**
  * OpenSoundControl receiver.
  * To use it, you must extend this class and implement its onMessageReceived virtual method.
@@ -50,16 +49,22 @@ class OscReceiver
     public:
         OscReceiver(unsigned int port);
         virtual ~OscReceiver();
-        std::vector<OscMessage> poll();
+        std::vector<Message> poll();
+        unsigned int getPort() const;
+        void setDebug(bool enabled);
+        bool start();
     private:
         unsigned int port_;
         bool running_;
+        bool debug_;
         lo_server server_;
         static void onError(int num, const char *m, const char *path);
-        std::vector<OscMessage> messages_;
+        std::vector<Message> messages_;
         static int generic_handler(const char *path, const char *types, lo_arg **argv,
             int argc, void *data, void *user_data);
 };
+
+std::ostream &operator<<(std::ostream &os, const OscReceiver &osc_receiver);
 
 } // end of namespace
 

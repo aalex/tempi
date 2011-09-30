@@ -30,15 +30,16 @@ bool check_oscsender()
 bool check_oscreceiver()
 {
     OscReceiver receiver(14444);
+    std::cout << receiver << std::endl;
     for (int i = 0; i < 10; ++i)
     {
         std::cout << "Please wait 1 second..." << std::endl;
         sleep(1); // 1 second
-        std::vector<OscMessage> messages = receiver.poll();
-        std::vector<OscMessage>::iterator iter;
+        std::vector<Message> messages = receiver.poll();
+        std::vector<Message>::iterator iter;
         for (iter = messages.begin(); iter != messages.end(); ++iter)
         {
-            std::cout << (*iter).get<0>() << ": " << (*iter).get<1>() << std::endl;
+            std::cout << "Got " << (*iter) << std::endl;
         }
     }
     return true;
