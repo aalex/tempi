@@ -46,6 +46,13 @@ ParticleGenerator::ParticleGenerator()
     current_particle_ = 0;
 }
 
+void ParticleGenerator::setColor(int r, int g, int b)
+{
+    color_.red = r;
+    color_.green = g;
+    color_.blue = b;
+}
+
 ClutterActor *ParticleGenerator::getRoot()
 {
     return group_;
@@ -74,12 +81,17 @@ void ParticleGenerator::onDraw()
 
 void ParticleGenerator::generateOneParticle()
 {
+    int r = color_.red;
+    int g = color_.green;
+    int b = color_.blue;
+    int a = 200;
+    int delta = 17;
     ClutterColor color = 
     { 
-        g_rand_int_range(random_generator_, 0, 100), // red
-        g_rand_int_range(random_generator_, 100, 200), // green
-        g_rand_int_range(random_generator_, 150, 255), // blue
-        g_rand_int_range(random_generator_, 150, 255) // alpha
+        g_rand_int_range(random_generator_, r - delta, r + delta),
+        g_rand_int_range(random_generator_,  g - delta, g + delta),
+        g_rand_int_range(random_generator_,  b - delta, b + delta),
+        g_rand_int_range(random_generator_,  a - delta, a + delta)
     };
     ClutterActor *particle = actors_[current_particle_];
     current_particle_ = (current_particle_ + 1) % NUM_PARTICLE_PER_SAMPLER;

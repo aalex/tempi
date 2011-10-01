@@ -43,6 +43,11 @@ tempi::Recorder *Sampler::getRecorder()
     return recorder_.get();
 }
 
+void Sampler::setColor(int r, int g, int b)
+{
+    generator_.setColor(r, g, b);
+}
+
 void Sampler::startRecording()
 {
     recording_ = true;

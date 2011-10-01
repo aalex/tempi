@@ -17,6 +17,10 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @file A simple drawing application.
+ */
+
 #include "legacy.h"
 #include "particlegenerator.h"
 #include "sampler.h"
@@ -51,6 +55,8 @@ class App
         void setSpeed(float factor);
         void clearAll();
         bool clearLast();
+        void setSelectionPosition(float x, float y);
+        void setColor(int r, int g, int b);
     private:
         unsigned int current_;
         unsigned int osc_recv_port_;
@@ -58,7 +64,9 @@ class App
         bool recording_;
         bool verbose_;
         float speed_;
+        ClutterColor color_;
         ClutterActor *stage_;
+        ClutterActor *selection_rect_;
         std::vector<std::tr1::shared_ptr<Sampler> > samplers_;
         std::tr1::shared_ptr<tempi::OscReceiver> osc_receiver_;
         void pollOSC();
@@ -68,6 +76,7 @@ class App
         unsigned int addSampler();
         Sampler *getCurrentlyRecordingSampler();
         void updateSpeed();
+        void createPalette();
 };
 
 App::App() : 
@@ -78,6 +87,7 @@ App::App() :
     verbose_(false),
     speed_(1.0f)
 {
+    clutter_color_from_string(&color_, "#ffffffff");
 }
 
 unsigned int App::addSampler()
@@ -137,6 +147,7 @@ void App::startRecording()
     Sampler *current = getCurrentlyRecordingSampler();
     if (current)
     {
+        current->setColor(color_.red, color_.green, color_.blue);
         current->startRecording();
         recording_ = true;
     }
@@ -148,7 +159,8 @@ void App::stopRecording()
         std::cout << "App::" << __FUNCTION__ << "();" << std::endl;
     if (! recording_)
     {
-        std::cerr << "Was not recording." << std::endl;
+        if (verbose_)
+            std::cerr << "Was not recording." << std::endl;
         return;
     }
     Sampler *current = getCurrentlyRecordingSampler();
@@ -167,7 +179,8 @@ void App::write(float x, float y)
         std::cout << "App::" << __FUNCTION__ << "(" << x << ", " << y << ");" << std::endl;
     if (! recording_)
     {
-        std::cerr << "Was not recording." << std::endl;
+        if (verbose_)
+            std::cerr << "Was not recording." << std::endl;
         return;
     }
     Sampler *current = getCurrentlyRecordingSampler();
@@ -327,6 +340,32 @@ static gboolean button_released_cb(ClutterActor *stage, ClutterEvent *event, gpo
     return TRUE;
 }
 
+static gboolean button_press_color_cb(ClutterActor *actor, ClutterEvent *event, gpointer user_data)
+{
+    App *app = (App *) user_data;
+    ClutterColor color;
+    clutter_rectangle_get_color(CLUTTER_RECTANGLE(actor), &color);
+    int r = color.red;
+    int g = color.green;
+    int b = color.blue;
+    app->setColor(r, g, b);
+    app->setSelectionPosition(clutter_actor_get_x(actor), clutter_actor_get_x(actor));
+    return TRUE; // handled. Do not propagate to stage
+}
+
+void App::setSelectionPosition(float x, float y)
+{
+    clutter_actor_set_position(selection_rect_, x, y);
+}
+
+void App::setColor(int r, int g, int b)
+{
+    color_.red = r;
+    color_.green = g;
+    color_.blue = b;
+    color_.alpha = 255;
+}
+
 static gboolean button_press_cb(ClutterActor *actor, ClutterEvent *event, gpointer user_data)
 {
     App *app = (App *) user_data;
@@ -349,7 +388,7 @@ static void key_event_cb(ClutterActor *actor, ClutterKeyEvent *event, gpointer u
             clutter_main_quit();
             break;
         case CLUTTER_KEY_Delete:
-            app->clearAll();
+            //app->clearAll(); // FIXME: segfaults
             break;
         case CLUTTER_KEY_BackSpace:
             app->clearLast();
@@ -391,6 +430,47 @@ void App::setSpeed(float speed)
     updateSpeed();
 }
 
+void App::createPalette()
+{
+    ClutterColor white = { 255, 255, 255, 255 };
+    selection_rect_ = clutter_rectangle_new_with_color(&white);
+    clutter_actor_set_size(selection_rect_, 65.0f, 65.0f);
+    clutter_actor_set_anchor_point_from_gravity(selection_rect_, CLUTTER_GRAVITY_CENTER);
+
+    std::vector<std::string> colors;
+    colors.push_back(std::string("#c33")); // red
+    colors.push_back(std::string("#cc3"));
+    colors.push_back(std::string("#3c3")); // green
+    colors.push_back(std::string("#3cc"));
+    colors.push_back(std::string("#33c")); // blue
+    colors.push_back(std::string("#c3c"));
+    colors.push_back(std::string("#333")); // black
+    colors.push_back(std::string("#999"));
+    colors.push_back(std::string("#ccc"));
+
+    int i = 0;
+    std::vector<std::string>::iterator iter;
+    for (iter = colors.begin(); iter != colors.end(); ++iter)
+    {
+        ++i;
+        ClutterColor color;
+        clutter_color_from_string(&color, (*iter).c_str());
+        ClutterActor *rect = clutter_rectangle_new_with_color(&color);
+        clutter_actor_set_size(rect, 50.0f, 50.0f);
+        clutter_actor_set_anchor_point_from_gravity(rect, CLUTTER_GRAVITY_CENTER);
+        clutter_actor_set_position(rect, 35.0f, i * 60.0f + 30.0f);
+        clutter_actor_set_reactive(rect, TRUE);
+        clutter_container_add_actor(CLUTTER_CONTAINER(stage_), rect);
+        g_signal_connect(rect, "button-press-event", G_CALLBACK(button_press_color_cb), this);
+    }
+
+    // initial color:
+    ClutterColor chosen;
+    clutter_color_from_string(&chosen, (*colors.begin()).c_str());
+    setColor(chosen.red, chosen.green, chosen.blue);
+    setSelectionPosition(35.0f, 90.0f); // FIXME: too much hard-coded
+}
+
 bool App::launch()
 {
     if (osc_recv_port_ == 0)
@@ -403,7 +483,7 @@ bool App::launch()
     if (stage_)
     {
         std::cerr << "cannot create stage twice" << std::endl;
-        return false;
+        //return false;
     }
     stage_ = clutter_stage_get_default();
     clutter_actor_set_size(stage_, 1024, 768);
@@ -411,7 +491,6 @@ bool App::launch()
     clutter_stage_set_color(CLUTTER_STAGE(stage_), &black);
     g_signal_connect(stage_, "destroy", G_CALLBACK(clutter_main_quit), NULL);
     clutter_actor_set_reactive(stage_, TRUE);
-
 
     // timeline to attach a callback for each frame that is rendered
     ClutterTimeline *timeline;
@@ -430,6 +509,8 @@ bool App::launch()
         fullscreen_ = false;
         toggleFullscreen();
     }
+
+    createPalette();
 
     clutter_actor_show(stage_);
     return true;

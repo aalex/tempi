@@ -34,6 +34,7 @@ struct Sampler
         tempi::Player *getPlayer();
         tempi::Recorder *getRecorder();
         ParticleGenerator *getGenerator();
+        void setColor(int r, int g, int b);
     private:
         tempi::Track track_;
         std::tr1::shared_ptr<tempi::Recorder> recorder_;

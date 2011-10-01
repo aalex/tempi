@@ -19,6 +19,7 @@ class ParticleGenerator : public Actor
         virtual ClutterActor *getRoot();
         virtual void onDraw();
         void setSourcePosition(double x, double y);
+        void setColor(int r, int g, int b);
     private:
         ClutterActor *group_;
         GRand *random_generator_;
@@ -30,6 +31,8 @@ class ParticleGenerator : public Actor
         static const double MAX_DISTANCE = 25.0;
         int current_particle_;
         void generateOneParticle();
+    private:
+        ClutterColor color_;
 };
 
 #endif // ifndef
