@@ -24,7 +24,7 @@ Sampler::Sampler()
 {
     recorder_.reset(new tempi::Recorder(&track_));
     player_.reset(new tempi::Player(&track_));
-    player_.get()->setPlaybackMode(new tempi::PingPongPlayback());
+    player_.get()->setPlaybackMode(new tempi::LoopingPlayback()); //new tempi::PingPongPlayback());
     recording_ = false;
 }
 

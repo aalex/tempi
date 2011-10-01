@@ -43,13 +43,14 @@ class App
         void setFullscreen(bool enabled);
         void write(float x, float y);
         bool isRecording();
-        bool launch(int argc, char **argv);
+        bool launch();
         bool parse_options(int argc, char **argv);
         void onDraw();
         void playSlower();
         void playFaster();
         void setSpeed(float factor);
         void clearAll();
+        bool clearLast();
     private:
         unsigned int current_;
         unsigned int osc_recv_port_;
@@ -91,6 +92,7 @@ unsigned int App::addSampler()
 
 void App::clearAll()
 {
+    // XXX if you edit this, also edit clearLast
     std::vector<std::tr1::shared_ptr<Sampler> >::iterator iter;
     for (iter = samplers_.begin(); iter < samplers_.end(); ++iter)
     {
@@ -99,6 +101,17 @@ void App::clearAll()
         clutter_container_remove_actor(CLUTTER_CONTAINER(stage_), sampler->getGenerator()->getRoot());
     }
     samplers_.clear();
+}
+
+bool App::clearLast()
+{
+    // XXX if you edit this, also edit clearAll
+    if (samplers_.size() == 0)
+        return false;
+    Sampler *sampler = samplers_[samplers_.size() - 1].get();
+    clutter_container_remove_actor(CLUTTER_CONTAINER(stage_), sampler->getGenerator()->getRoot());
+    samplers_.erase(samplers_.end() - 1);
+    return true;
 }
 
 Sampler *App::getCurrentlyRecordingSampler()
@@ -335,8 +348,11 @@ static void key_event_cb(ClutterActor *actor, ClutterKeyEvent *event, gpointer u
         case CLUTTER_KEY_q:
             clutter_main_quit();
             break;
-        case CLUTTER_KEY_space:
+        case CLUTTER_KEY_Delete:
             app->clearAll();
+            break;
+        case CLUTTER_KEY_BackSpace:
+            app->clearLast();
             break;
         case CLUTTER_KEY_Up:
             app->playFaster();
@@ -375,10 +391,11 @@ void App::setSpeed(float speed)
     updateSpeed();
 }
 
-bool App::launch(int argc, char **argv)
+bool App::launch()
 {
     if (osc_recv_port_ == 0)
-        std::cout << "OSC receiving disabled." << std::endl;
+        if (verbose_)
+            std::cout << "OSC receiving disabled." << std::endl;
     else
         startOSC();
     // Poll OSC receiver only when we render a Clutter frame.
@@ -486,7 +503,7 @@ int main(int argc, char *argv[])
     App app;
     if (app.parse_options(argc, argv))
         return 0;
-    app.launch(argc, argv);
+    app.launch();
 
     clutter_main();
     return 0;

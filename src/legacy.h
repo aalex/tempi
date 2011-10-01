@@ -15,6 +15,8 @@
 #define CLUTTER_KEY_Up CLUTTER_Up
 #define CLUTTER_KEY_q CLUTTER_q
 #define CLUTTER_KEY_space CLUTTER_space
+#define CLUTTER_KEY_Delete CLUTTER_Delete
+#define CLUTTER_KEY_BackSpace CLUTTER_BackSpace
 #endif
 
 #endif // ifndef

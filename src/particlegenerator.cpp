@@ -87,7 +87,7 @@ void ParticleGenerator::generateOneParticle()
     clutter_rectangle_set_color(CLUTTER_RECTANGLE(particle), &color);
     clutter_actor_set_position(particle, source_x_, source_y_);
     double size = g_rand_double_range(random_generator_, 5.0, 10.0);
-    gint duration = g_rand_int_range(random_generator_, 500, 1500);
+    gint duration = g_rand_int_range(random_generator_, 1000, 2000);
     clutter_actor_set_size(particle, size, size);
     clutter_actor_set_opacity(particle, 255);
     clutter_actor_set_anchor_point_from_gravity(particle, CLUTTER_GRAVITY_CENTER);
