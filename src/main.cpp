@@ -33,9 +33,6 @@
 
 namespace po = boost::program_options;
 
-static const unsigned int NUM_SAMPLER = 3;
-static const bool VERBOSE = true;
-
 class App
 {
     public:
@@ -52,79 +49,131 @@ class App
         void playSlower();
         void playFaster();
         void setSpeed(float factor);
+        void clearAll();
     private:
         unsigned int current_;
         unsigned int osc_recv_port_;
         bool fullscreen_;
+        bool recording_;
         bool verbose_;
+        float speed_;
         ClutterActor *stage_;
         std::vector<std::tr1::shared_ptr<Sampler> > samplers_;
         std::tr1::shared_ptr<tempi::OscReceiver> osc_receiver_;
         void pollOSC();
         bool startOSC();
-        ClutterActor *getStage();
         void drawSamplers();
         bool handleOscMessage(const tempi::Message &message);
+        unsigned int addSampler();
+        Sampler *getCurrentlyRecordingSampler();
+        void updateSpeed();
 };
 
 App::App() : 
     current_(0),
     osc_recv_port_(0),
-    fullscreen_(false)
+    fullscreen_(false),
+    recording_(false),
+    verbose_(false),
+    speed_(1.0f)
 {
-    for (unsigned int i = 0; i < NUM_SAMPLER; ++i)
-    {
-        samplers_.push_back(std::tr1::shared_ptr<Sampler>(new Sampler()));
-    }
 }
 
-ClutterActor *App::getStage()
+unsigned int App::addSampler()
 {
-    return stage_;
+    samplers_.push_back(std::tr1::shared_ptr<Sampler>(new Sampler()));
+
+    unsigned int index = samplers_.size() - 1;
+    Sampler *sampler = samplers_[index].get();
+    clutter_container_add_actor(CLUTTER_CONTAINER(stage_), sampler->getGenerator()->getRoot());
+    return samplers_.size() - 1;
+}
+
+void App::clearAll()
+{
+    std::vector<std::tr1::shared_ptr<Sampler> >::iterator iter;
+    for (iter = samplers_.begin(); iter < samplers_.end(); ++iter)
+    {
+        Sampler *sampler = (*iter).get();
+        // deletes the ClutterActors
+        clutter_container_remove_actor(CLUTTER_CONTAINER(stage_), sampler->getGenerator()->getRoot());
+    }
+    samplers_.clear();
+}
+
+Sampler *App::getCurrentlyRecordingSampler()
+{
+    if (samplers_.size() == 0)
+        return 0;
+    else
+        return samplers_[samplers_.size() - 1].get();
 }
 
 void App::startRecording()
 {
     if (verbose_)
         std::cout << __FUNCTION__ << std::endl;
-    if (samplers_.size() != 0)
+    if (recording_)
     {
-        Sampler *sampler = samplers_[current_].get();
-        sampler->startRecording();
+        std::cerr << "Already recording." << std::endl;
+        return;
+    }
+    //current_ = addSampler();
+
+    addSampler();
+    Sampler *current = getCurrentlyRecordingSampler();
+    if (current)
+    {
+        current->startRecording();
+        recording_ = true;
     }
 }
 
 void App::stopRecording()
 {
     if (verbose_)
-        std::cout << __FUNCTION__ << std::endl;
-    if (samplers_.size() != 0)
+        std::cout << "App::" << __FUNCTION__ << "();" << std::endl;
+    if (! recording_)
     {
-        Sampler *sampler = samplers_[current_].get();
-        sampler->stopRecording();
-        current_ = (current_ + 1) % samplers_.size();
+        std::cerr << "Was not recording." << std::endl;
+        return;
     }
+    Sampler *current = getCurrentlyRecordingSampler();
+    if (current)
+    {
+        current->stopRecording();
+        recording_ = false;
+    }
+    else
+        std::cerr << "invalid sampler\n";
 }
 
 void App::write(float x, float y)
 {
     if (verbose_)
-        std::cout << __FUNCTION__ << " " << x << " " << y << std::endl;
-    if (samplers_.size() != 0)
+        std::cout << "App::" << __FUNCTION__ << "(" << x << ", " << y << ");" << std::endl;
+    if (! recording_)
     {
-        Sampler *sampler = samplers_[current_].get();
+        std::cerr << "Was not recording." << std::endl;
+        return;
+    }
+    Sampler *current = getCurrentlyRecordingSampler();
+    if (current)
+    {
         tempi::Message m;
         m.appendFloat(x);
         m.appendFloat(y);
-        if (VERBOSE)
+        if (verbose_)
             std::cout << "write " << x << " " << y << std::endl;
-        sampler->getRecorder()->add(m);
+        current->getRecorder()->add(m);
     }
+    else
+        std::cerr << "Invalid sampler \n";
 }
 
 bool App::isRecording()
 {
-    return samplers_[current_].get()->isRecording();
+    return recording_;
 }
 
 void App::toggleFullscreen()
@@ -294,22 +343,32 @@ static void key_event_cb(ClutterActor *actor, ClutterKeyEvent *event, gpointer u
     }
 }
 
+void App::updateSpeed()
+{
+    std::vector<std::tr1::shared_ptr<Sampler> >::iterator iter;
+    for (iter = samplers_.begin(); iter < samplers_.end(); ++iter)
+    {
+        Sampler *sampler = (*iter).get();
+        sampler->getPlayer()->setSpeed(speed_);
+    }
+}
+
 void App::playFaster()
 {
-    Sampler *sampler = samplers_[current_].get();
-    sampler->getPlayer()->setSpeed(sampler->getPlayer()->getSpeed() * 1.1);
+    speed_ = speed_ * 2.0;
+    updateSpeed();
 }
 
 void App::playSlower()
 {
-    Sampler *sampler = samplers_[current_].get();
-    sampler->getPlayer()->setSpeed(sampler->getPlayer()->getSpeed() / 1.1);
+    speed_ = speed_ * 0.5;
+    updateSpeed();
 }
 
 void App::setSpeed(float speed)
 {
-    Sampler *sampler = samplers_[current_].get();
-    sampler->getPlayer()->setSpeed(speed);
+    speed_ = speed;
+    updateSpeed();
 }
 
 bool App::launch(int argc, char **argv)
@@ -332,12 +391,6 @@ bool App::launch(int argc, char **argv)
     g_signal_connect(stage_, "destroy", G_CALLBACK(clutter_main_quit), NULL);
     clutter_actor_set_reactive(stage_, TRUE);
 
-    std::vector<std::tr1::shared_ptr<Sampler> >::iterator iter;
-    for (iter = samplers_.begin(); iter < samplers_.end(); ++iter)
-    {
-        Sampler *sampler = (*iter).get();
-        clutter_container_add_actor(CLUTTER_CONTAINER(stage_), sampler->getGenerator()->getRoot());
-    }
 
     // timeline to attach a callback for each frame that is rendered
     ClutterTimeline *timeline;
