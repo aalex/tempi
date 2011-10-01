@@ -18,6 +18,7 @@
  */
 
 #include "particlegenerator.h"
+#include "legacy.h"
 #include "tempi/tempi.h"
 #include "tempi/config.h"
 #include "tempi/oscreceiver.h"
@@ -35,24 +36,17 @@ namespace po = boost::program_options;
 static const unsigned int NUM_SAMPLER = 3;
 static const bool VERBOSE = true;
 
-#if CLUTTER_CHECK_VERSION(1,4,0)
-#else
-#define CLUTTER_KEY_Down CLUTTER_Down
-#define CLUTTER_KEY_Escape CLUTTER_Escape
-#define CLUTTER_KEY_F1 CLUTTER_F1
-#define CLUTTER_KEY_Left CLUTTER_Left
-#define CLUTTER_KEY_Return CLUTTER_Return
-#define CLUTTER_KEY_Right CLUTTER_Right
-#define CLUTTER_KEY_Tab CLUTTER_Tab
-#define CLUTTER_KEY_Up CLUTTER_Up
-#define CLUTTER_KEY_q CLUTTER_q
-#define CLUTTER_KEY_space CLUTTER_space
-#endif
-
 struct Sampler
 {
     public:
         Sampler();
+        void startRecording();
+        void stopRecording();
+        bool isRecording();
+        tempi::Player *getPlayer();
+        tempi::Recorder *getRecorder();
+        ParticleGenerator *getGenerator();
+    private:
         tempi::Track track_;
         std::tr1::shared_ptr<tempi::Recorder> recorder_;
         std::tr1::shared_ptr<tempi::Player> player_;
@@ -67,6 +61,40 @@ Sampler::Sampler()
     player_.get()->setPlaybackMode(new tempi::PingPongPlayback());
     recording_ = false;
 }
+
+ParticleGenerator *Sampler::getGenerator()
+{
+    return &generator_;
+}
+
+tempi::Player *Sampler::getPlayer()
+{
+    return player_.get();
+}
+
+tempi::Recorder *Sampler::getRecorder()
+{
+    return recorder_.get();
+}
+
+void Sampler::startRecording()
+{
+    recording_ = true;
+    track_.reset(); // clears the track
+    recorder_.get()->reset();
+}
+
+void Sampler::stopRecording()
+{
+     recording_ = false;
+}
+
+bool Sampler::isRecording()
+{
+     return recording_;
+}
+
+// ------------------------
 
 class App
 {
@@ -108,7 +136,6 @@ App::App() :
     {
         samplers_.push_back(std::tr1::shared_ptr<Sampler>(new Sampler()));
     }
-
 }
 
 ClutterActor *App::getStage()
@@ -123,9 +150,7 @@ void App::startRecording()
     if (samplers_.size() != 0)
     {
         Sampler *sampler = samplers_[current_].get();
-        sampler->recording_ = true;
-        sampler->track_.reset(); // clears the track
-        sampler->recorder_.get()->reset();
+        sampler->startRecording();
     }
 }
 
@@ -135,7 +160,8 @@ void App::stopRecording()
         std::cout << __FUNCTION__ << std::endl;
     if (samplers_.size() != 0)
     {
-        samplers_[current_].get()->recording_ = false;
+        Sampler *sampler = samplers_[current_].get();
+        sampler->stopRecording();
         current_ = (current_ + 1) % samplers_.size();
     }
 }
@@ -152,12 +178,13 @@ void App::write(float x, float y)
         m.appendFloat(y);
         if (VERBOSE)
             std::cout << "write " << x << " " << y << std::endl;
-        sampler->recorder_.get()->add(m);
+        sampler->getRecorder()->add(m);
     }
 }
+
 bool App::isRecording()
 {
-    return samplers_[current_].get()->recording_;
+    return samplers_[current_].get()->isRecording();
 }
 
 void App::toggleFullscreen()
@@ -198,8 +225,6 @@ void App::pollOSC()
         }
     }
 }
-
-
 
 bool App::handleOscMessage(const tempi::Message &message)
 {
@@ -245,19 +270,19 @@ void App::drawSamplers()
     for (iter = samplers_.begin(); iter < samplers_.end(); ++iter)
     {
         Sampler *sampler = (*iter).get();
-        tempi::Message *m = sampler->player_.get()->read();
+        tempi::Message *m = sampler->getPlayer()->read();
         if (m)
         {
             if (m->typesMatch("ff"))
             {
                 float x = m->getFloat(0);
                 float y = m->getFloat(1);
-                sampler->generator_.setSourcePosition(x, y);
+                sampler->getGenerator()->setSourcePosition(x, y);
             }
             else
                 std::cout << "types don't match: " << m->getTypes() << std::endl;
         }
-        sampler->generator_.onDraw();
+        sampler->getGenerator()->onDraw();
     }
 }
 
@@ -332,19 +357,19 @@ static void key_event_cb(ClutterActor *actor, ClutterKeyEvent *event, gpointer u
 void App::playFaster()
 {
     Sampler *sampler = samplers_[current_].get();
-    sampler->player_.get()->setSpeed(sampler->player_.get()->getSpeed() * 1.1);
+    sampler->getPlayer()->setSpeed(sampler->getPlayer()->getSpeed() * 1.1);
 }
 
 void App::playSlower()
 {
     Sampler *sampler = samplers_[current_].get();
-    sampler->player_.get()->setSpeed(sampler->player_.get()->getSpeed() / 1.1);
+    sampler->getPlayer()->setSpeed(sampler->getPlayer()->getSpeed() / 1.1);
 }
 
 void App::setSpeed(float speed)
 {
     Sampler *sampler = samplers_[current_].get();
-    sampler->player_.get()->setSpeed(speed);
+    sampler->getPlayer()->setSpeed(speed);
 }
 
 bool App::launch(int argc, char **argv)
@@ -371,7 +396,7 @@ bool App::launch(int argc, char **argv)
     for (iter = samplers_.begin(); iter < samplers_.end(); ++iter)
     {
         Sampler *sampler = (*iter).get();
-        clutter_container_add_actor(CLUTTER_CONTAINER(stage_), sampler->generator_.getRoot());
+        clutter_container_add_actor(CLUTTER_CONTAINER(stage_), sampler->getGenerator()->getRoot());
     }
 
     // timeline to attach a callback for each frame that is rendered

@@ -19,6 +19,7 @@ tempi_CXXFLAGS = $(AM_CXXFLAGS)
 tempi_LDADD = $(LDADD)
 
 headers = \
+    legacy.h \
     particlegenerator.h
 
 tempi_SOURCES = \
