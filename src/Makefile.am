@@ -20,10 +20,12 @@ tempi_LDADD = $(LDADD)
 
 headers = \
     legacy.h \
+	sampler.h \
     particlegenerator.h
 
 tempi_SOURCES = \
 	main.cpp \
+	sampler.cpp \
     particlegenerator.cpp \
 	$(headers)
 

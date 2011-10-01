@@ -17,12 +17,12 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "particlegenerator.h"
 #include "legacy.h"
-#include "tempi/tempi.h"
+#include "particlegenerator.h"
+#include "sampler.h"
 #include "tempi/config.h"
 #include "tempi/oscreceiver.h"
-#include "tempi/pingpongplayback.h"
+#include "tempi/tempi.h"
 #include <boost/lexical_cast.hpp>
 #include <boost/program_options.hpp>
 #include <clutter/clutter.h>
@@ -35,66 +35,6 @@ namespace po = boost::program_options;
 
 static const unsigned int NUM_SAMPLER = 3;
 static const bool VERBOSE = true;
-
-struct Sampler
-{
-    public:
-        Sampler();
-        void startRecording();
-        void stopRecording();
-        bool isRecording();
-        tempi::Player *getPlayer();
-        tempi::Recorder *getRecorder();
-        ParticleGenerator *getGenerator();
-    private:
-        tempi::Track track_;
-        std::tr1::shared_ptr<tempi::Recorder> recorder_;
-        std::tr1::shared_ptr<tempi::Player> player_;
-        bool recording_;
-        ParticleGenerator generator_;
-};
-
-Sampler::Sampler()
-{
-    recorder_.reset(new tempi::Recorder(&track_));
-    player_.reset(new tempi::Player(&track_));
-    player_.get()->setPlaybackMode(new tempi::PingPongPlayback());
-    recording_ = false;
-}
-
-ParticleGenerator *Sampler::getGenerator()
-{
-    return &generator_;
-}
-
-tempi::Player *Sampler::getPlayer()
-{
-    return player_.get();
-}
-
-tempi::Recorder *Sampler::getRecorder()
-{
-    return recorder_.get();
-}
-
-void Sampler::startRecording()
-{
-    recording_ = true;
-    track_.reset(); // clears the track
-    recorder_.get()->reset();
-}
-
-void Sampler::stopRecording()
-{
-     recording_ = false;
-}
-
-bool Sampler::isRecording()
-{
-     return recording_;
-}
-
-// ------------------------
 
 class App
 {
