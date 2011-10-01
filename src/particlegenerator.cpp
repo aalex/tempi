@@ -54,7 +54,8 @@ ClutterActor *ParticleGenerator::getRoot()
 static gboolean hide_the_actor(gpointer user_data)
 {
     ClutterActor *actor = (ClutterActor *) user_data;
-    clutter_actor_hide(actor);
+    if (CLUTTER_IS_ACTOR(actor))
+        clutter_actor_hide(actor);
     return TRUE;
 }
 

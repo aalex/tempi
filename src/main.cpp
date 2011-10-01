@@ -222,6 +222,12 @@ bool App::handleOscMessage(const tempi::Message &message)
     //    std::cout << "TODO: /tempi/rec/select i" << std::endl;
     //    return true;
     //}
+    if (tempi::osc::oscMessageMatches(message, "/tempi/rec/write", "ff"))
+    {
+        if (isRecording())
+            write(message.getFloat(1), message.getFloat(2));
+        return true;
+    }
     if (tempi::osc::oscMessageMatches(message, "/tempi/rec/start", ""))
     {
         startRecording();
@@ -242,13 +248,11 @@ bool App::handleOscMessage(const tempi::Message &message)
         setFullscreen(message.getBoolean(1));
         return true;
     }
-    if (tempi::osc::oscMessageMatches(message, "/tempi/rec/write", "ff"))
+    if (tempi::osc::oscMessageMatches(message, "/tempi/clear", ""))
     {
-        if (isRecording())
-            write(message.getFloat(1), message.getFloat(2));
+        clearAll();
         return true;
     }
-
     return false;
 }
 
@@ -332,7 +336,7 @@ static void key_event_cb(ClutterActor *actor, ClutterKeyEvent *event, gpointer u
             clutter_main_quit();
             break;
         case CLUTTER_KEY_space:
-            //app->track_.print();
+            app->clearAll();
             break;
         case CLUTTER_KEY_Up:
             app->playFaster();
