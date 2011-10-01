@@ -349,7 +349,7 @@ static gboolean button_press_color_cb(ClutterActor *actor, ClutterEvent *event, 
     int g = color.green;
     int b = color.blue;
     app->setColor(r, g, b);
-    app->setSelectionPosition(clutter_actor_get_x(actor), clutter_actor_get_x(actor));
+    app->setSelectionPosition(clutter_actor_get_x(actor), clutter_actor_get_y(actor));
     return TRUE; // handled. Do not propagate to stage
 }
 
@@ -434,8 +434,9 @@ void App::createPalette()
 {
     ClutterColor white = { 255, 255, 255, 255 };
     selection_rect_ = clutter_rectangle_new_with_color(&white);
-    clutter_actor_set_size(selection_rect_, 65.0f, 65.0f);
+    clutter_actor_set_size(selection_rect_, 55.0f, 55.0f);
     clutter_actor_set_anchor_point_from_gravity(selection_rect_, CLUTTER_GRAVITY_CENTER);
+    clutter_container_add_actor(CLUTTER_CONTAINER(stage_), selection_rect_);
 
     std::vector<std::string> colors;
     colors.push_back(std::string("#c33")); // red
@@ -448,11 +449,15 @@ void App::createPalette()
     colors.push_back(std::string("#999"));
     colors.push_back(std::string("#ccc"));
 
+    // initial color:
+    ClutterColor chosen;
+    clutter_color_from_string(&chosen, (*colors.begin()).c_str());
+    setColor(chosen.red, chosen.green, chosen.blue);
+
     int i = 0;
     std::vector<std::string>::iterator iter;
     for (iter = colors.begin(); iter != colors.end(); ++iter)
     {
-        ++i;
         ClutterColor color;
         clutter_color_from_string(&color, (*iter).c_str());
         ClutterActor *rect = clutter_rectangle_new_with_color(&color);
@@ -462,13 +467,15 @@ void App::createPalette()
         clutter_actor_set_reactive(rect, TRUE);
         clutter_container_add_actor(CLUTTER_CONTAINER(stage_), rect);
         g_signal_connect(rect, "button-press-event", G_CALLBACK(button_press_color_cb), this);
-    }
 
-    // initial color:
-    ClutterColor chosen;
-    clutter_color_from_string(&chosen, (*colors.begin()).c_str());
-    setColor(chosen.red, chosen.green, chosen.blue);
-    setSelectionPosition(35.0f, 90.0f); // FIXME: too much hard-coded
+        if (i == 0)
+        {
+            float x = clutter_actor_get_x(rect);
+            float y = clutter_actor_get_y(rect);
+            setSelectionPosition(x, y);
+        }
+        ++i;
+    }
 }
 
 bool App::launch()
