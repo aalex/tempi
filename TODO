@@ -26,3 +26,56 @@ Later
  * Get done with tempi/oscreceiver.cpp
  * Implement Sink::disconnect and the likes
 
+Refactoring
+-----------
+ * Create tempi-base, containing sampling nodes, MIDI and OSC stuff.
+
+ * tempi:
+   - rule.h
+   - graph.h
+   - concurrent_queue.h
+   - exceptions.h
+   - identifier.h
+   - property.h
+   - shared_ptr.h
+   - message.h
+   - node.h
+   - node_factory.h
+   - timer.h
+   - tempi.h
+   - time_position.h
+   - tempi_version.h
+   - filter.h
+   - types.h
+
+ * tempi::base_plugins:
+   - state.h
+   - state_machine.h
+   - table.h
+   - table_player.h
+   - table_writer.h
+   - track.h
+   - pingpong_playback.h
+   - playback.h
+   - average.h
+   - looping_playback.h
+   - marker.h
+   - player.h
+   - recorder.h
+   - sampler_node.h
+   - score.h
+   - sink.h
+   - slide.h
+   - slide_filter.h
+   - source.h
+
+ * tempi::osc_plugins:
+   - osc_receiver.h
+   - osc_sender.h
+   - osc_receiver_node.h
+   - osc_sender_node.h
+
+ * remove:
+   - sourcenode.h
+   - sinknode.h
+
