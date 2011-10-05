@@ -31,35 +31,29 @@ Refactoring
  * Create tempi-base, containing sampling nodes, MIDI and OSC stuff.
 
  * tempi:
-   - rule.h
-   - graph.h
    - concurrent_queue.h
    - exceptions.h
+   - filter.h
+   - graph.h
    - identifier.h
-   - property.h
-   - shared_ptr.h
    - message.h
    - node.h
    - node_factory.h
-   - timer.h
+   - property.h
+   - rule.h
+   - shared_ptr.h
    - tempi.h
-   - time_position.h
    - tempi_version.h
-   - filter.h
+   - time_position.h
+   - timer.h
    - types.h
 
  * tempi::base_plugins:
-   - state.h
-   - state_machine.h
-   - table.h
-   - table_player.h
-   - table_writer.h
-   - track.h
-   - pingpong_playback.h
-   - playback.h
    - average.h
    - looping_playback.h
    - marker.h
+   - pingpong_playback.h
+   - playback.h
    - player.h
    - recorder.h
    - sampler_node.h
@@ -68,11 +62,17 @@ Refactoring
    - slide.h
    - slide_filter.h
    - source.h
+   - state.h
+   - state_machine.h
+   - table.h
+   - table_player.h
+   - table_writer.h
+   - track.h
 
  * tempi::osc_plugins:
    - osc_receiver.h
-   - osc_sender.h
    - osc_receiver_node.h
+   - osc_sender.h
    - osc_sender_node.h
 
  * remove:
