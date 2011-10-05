@@ -43,6 +43,7 @@ class Node
 {
     public:
         Node();
+        virtual ~Node() {}
         /**
          * Returns all its outlets.
          */

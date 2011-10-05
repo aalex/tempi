@@ -26,5 +26,15 @@
 
 #include <tr1/memory>
 
+namespace tempi
+{
+
+template <typename T>
+struct SharedPtr : public std::tr1::shared_ptr<T>
+{
+};
+
+} // end of namespace
+
 #endif // ifndef
 

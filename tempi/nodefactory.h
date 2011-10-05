@@ -41,6 +41,7 @@ class AbstractNodeType
 {
     public:
         virtual Node *create() = 0;
+        virtual ~AbstractNodeType() {}
 };
 
 /**
@@ -63,7 +64,14 @@ class NodeType
 class NodeFactory
 {
     public:
+        /**
+         * Registers a node type.
+         * Returns false if it failed.
+         */
         bool registerType(const char *name, AbstractNodeType *entry);
+        /**
+         * Checks for a given node type.
+         */
         bool hasType(const char *name);
         std::tr1::shared_ptr<Node> create(const char *name) throw(BadNodeTypeException);
         // TODO: std::map<std::string name, Property> getProperties();

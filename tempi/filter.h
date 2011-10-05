@@ -40,6 +40,7 @@ class Filter : public Node
 {
     public:
         Filter();
+        virtual ~Filter() {}
         Source *getOutlet();
         Sink *getInlet();
     private:

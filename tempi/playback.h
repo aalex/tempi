@@ -43,6 +43,7 @@ class Playback
          * Never free this pointer.
          */
         virtual Message *read(Player &player) = 0;
+        virtual ~Playback() {}
 };
 
 } // end of namespace
