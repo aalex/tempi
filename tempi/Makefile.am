@@ -33,7 +33,6 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     oscsender.cpp \
     pingpongplayback.cpp \
     player.cpp \
-    property.cpp \
     recorder.cpp \
     rule.cpp \
     samplernode.cpp \
@@ -52,6 +51,8 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     tempi.cpp \
     track.cpp \
     timer.cpp
+
+#TODO property.cpp
 
 # TODO averagefilter.cpp
 
@@ -83,7 +84,6 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     pingpongplayback.h \
     playback.h \
     player.h \
-    property.h \
     recorder.h \
     rule.h \
     samplernode.h \
@@ -108,6 +108,7 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     types.h
 
 # TODO:averagefilter.h
+#TODO property.h 
 
 EXTRA_DIST = config.h
 

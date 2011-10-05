@@ -36,7 +36,7 @@
 #include <typeinfo>
 #include "tempi/exceptions.h"
 #include "tempi/message.h"
-#include "tempi/types.h"
+//#include "tempi/types.h"
 
 namespace tempi
 {

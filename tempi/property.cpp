@@ -17,7 +17,7 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "tempi/property.h"
+//#include "tempi/property.h"
 #include <iostream>
 #include <sstream>
 
@@ -27,23 +27,23 @@ namespace tempi
 namespace types
 {
 
-std::string getPropertyTypeForAny(const boost::any &value)
-{
-    if (value.type() == typeid(_f))
-        return "f";
-    if (value.type() == typeid(_ff))
-        return "ff";
-    if (value.type() == typeid(_fff))
-        return "fff";
-    if (value.type() == typeid(_ffff))
-        return "ffff";
-    else
-    {
-        std::ostringstream os;
-        os << __FUNCTION__ << ": Type not supported: " << value.type().name();
-        throw BadArgumentTypeException(os.str().c_str());
-    }
-}
+//std::string getPropertyTypeForAny(const boost::any &value)
+//{
+//    if (value.type() == typeid(_f))
+//        return "f";
+//    if (value.type() == typeid(_ff))
+//        return "ff";
+//    if (value.type() == typeid(_fff))
+//        return "fff";
+//    if (value.type() == typeid(_ffff))
+//        return "ffff";
+//    else
+//    {
+//        std::ostringstream os;
+//        os << __FUNCTION__ << ": Type not supported: " << value.type().name();
+//        throw BadArgumentTypeException(os.str().c_str());
+//    }
+//}
 
 } // end of namespace
 
@@ -54,10 +54,10 @@ Property::Property(const char *name, boost::any value, const char *description) 
     description_(description)
 {}
 
-std::string Property::getTypeName() const
-{
-    return types::getPropertyTypeForAny(value_);
-}
+// std::string Property::getTypeName() const
+// {
+//     return types::getPropertyTypeForAny(value_);
+// }
 
 const std::type_info &Property::getType() const
 {

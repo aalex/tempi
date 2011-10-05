@@ -123,48 +123,48 @@ bool check_simple()
     return true;
 }
 
-class FooNode: public Node
-{
-    public:
-        FooNode();
-        bool property_changed_triggered_;
-    private:
-        virtual void processMessage(const Message &message) {}
-        virtual void onPropertyChanged(Property &property);
-};
-
-FooNode::FooNode() :
-    Node(),
-    property_changed_triggered_(false)
-{
-    addProperty(std::tr1::shared_ptr<Property>(new Property("hello", boost::any(_ff(1.234, 5.678)), "Description")));
-    property_changed_triggered_ = false;
-}
-
-void FooNode::onPropertyChanged(Property &property)
-{
-    property_changed_triggered_ = true;
-}
-
-
-bool check_node_properties()
-{
-    FooNode foo;
-    foo.getProperty("hello").setValue<_ff>(_ff(2.345, 6.789));
-    if (! foo.property_changed_triggered_)
-    {
-        std::cout << "Property signal not triggered." << std::endl;
-        return false;
-    }
-    return true;
-}
+// class FooNode: public Node
+// {
+//     public:
+//         FooNode();
+//         bool property_changed_triggered_;
+//     private:
+//         virtual void processMessage(const Message &message) {}
+//         virtual void onPropertyChanged(Property &property);
+// };
+// 
+// FooNode::FooNode() :
+//     Node(),
+//     property_changed_triggered_(false)
+// {
+//     addProperty(std::tr1::shared_ptr<Property>(new Property("hello", boost::any(_ff(1.234, 5.678)), "Description")));
+//     property_changed_triggered_ = false;
+// }
+// 
+// void FooNode::onPropertyChanged(Property &property)
+// {
+//     property_changed_triggered_ = true;
+// }
+// 
+// 
+// bool check_node_properties()
+// {
+//     FooNode foo;
+//     foo.getProperty("hello").setValue<_ff>(_ff(2.345, 6.789));
+//     if (! foo.property_changed_triggered_)
+//     {
+//         std::cout << "Property signal not triggered." << std::endl;
+//         return false;
+//     }
+//     return true;
+// }
 
 int main(int argc, char *argv[])
 {
     if (! check_simple())
         return 1;
-    if (! check_node_properties())
-        return 1;
+    //if (! check_node_properties())
+    //    return 1;
     return 0;
 }
 

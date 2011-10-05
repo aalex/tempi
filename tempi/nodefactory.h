@@ -41,7 +41,6 @@ class AbstractNodeType
 {
     public:
         virtual Node *create() = 0;
-        virtual ~AbstractNodeType() {}
 };
 
 /**
