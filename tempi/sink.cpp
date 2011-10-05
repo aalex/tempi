@@ -33,24 +33,46 @@ bool Sink::connect(std::tr1::shared_ptr<Source>  source)
 {
     if (! hasSource(source.get()))
     {
-        sources_.push_back(source);
-        source.get()->on_triggered_signal_.connect(boost::bind(&Sink::trigger, this, _1));
+        sources_[source] = std::tr1::shared_ptr<boost::signals2::connection>(& source.get()->getOnTriggeredSignal().connect(boost::bind(&Sink::trigger, this, _1)));
         return true;
     }
     return false;
 }
 
+void Sink::disconnectAll()
+{
+    on_triggered_signal_.disconnect_all_slots();
+    sources_.clear();
+}
+
 bool Sink::hasSource(Source *source)
 {
-    std::vector<std::tr1::shared_ptr<Source> >::iterator iter;
+    SourceMap::iterator iter;
     for (iter = sources_.begin(); iter != sources_.end(); ++iter)
     {
-        if ((*iter).get() == source)
+        if ((*iter).first.get() == source)
         {
             return true;
         }
     }
     return false;
+}
+
+bool Sink::disconnect(std::tr1::shared_ptr<Source> source)
+{
+    if (isConnected(source))
+    {
+        sources_[source].get()->disconnect();
+        sources_.erase(sources_.find(source));
+        return true;
+    }
+    else
+        return false;
+}
+
+bool Sink::isConnected(std::tr1::shared_ptr<Source> source)
+{
+    return sources_.find(source) != sources_.end();
 }
 
 void Sink::trigger(const Message &message)

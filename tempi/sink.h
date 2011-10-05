@@ -25,7 +25,7 @@
 #define __TEMPI_SINK_H__
 
 #include <boost/signals2.hpp>
-#include <vector>
+#include <map>
 #include "tempi/sharedptr.h"
 #include "tempi/message.h"
 
@@ -40,15 +40,22 @@ class Source; // forward declaration
 class Sink
 {
     public:
+        typedef boost::signals2::signal<void (const Message&)> TriggeredSignal;
         Sink();
         bool connect(std::tr1::shared_ptr<Source> source);
-        //TODO: bool disconnect(std::tr1::shared_ptr<Source> source);
-        // TODO: return success?
+        bool disconnect(std::tr1::shared_ptr<Source> source);
+        bool isConnected(std::tr1::shared_ptr<Source> source);
         void trigger(const Message &message);
-        boost::signals2::signal<void (const Message&)> on_triggered_signal_;
+        TriggeredSignal &getOnTriggeredSignal()
+        {
+            return on_triggered_signal_;
+        }
+        void disconnectAll();
     private:
-        std::vector<std::tr1::shared_ptr<Source> > sources_;
+        typedef std::map<std::tr1::shared_ptr<Source>, std::tr1::shared_ptr<boost::signals2::connection> > SourceMap;
+        SourceMap sources_;
         bool hasSource(Source *source);
+        TriggeredSignal on_triggered_signal_;
 };
 
 } // end of namespace

@@ -98,6 +98,68 @@ bool Graph::connect(const char *from, unsigned int outlet, const char *to, unsig
     return true;
 }
 
+bool Graph::isConnected(const char *from, unsigned int outlet, const char *to, unsigned int inlet)
+{
+    Node *fromNode = getNode(from);
+    if (fromNode == 0)
+    {
+
+        std::cout << "Graph::" << __FUNCTION__ << ": Cannot find node " << from << "." << std::endl;
+        return false;
+    }
+    Node *toNode = getNode(to);
+    if (toNode == 0)
+    {
+        std::cout << "Graph::" << __FUNCTION__ << ": Cannot find node " << to << "." << std::endl;
+        return false;
+    }
+    if (outlet >= fromNode->getNumberOfOutlets())
+    {
+        std::cout << "Graph::" << __FUNCTION__ << ": Outlet " << outlet << "too big for node " << from << "." << std::endl;
+        return false;
+    }
+    if (inlet >= toNode->getNumberOfInlets())
+    {
+        std::cout << "Graph::" << __FUNCTION__ << ": Inlet " << inlet << "too big for node " << to << "." << std::endl;
+        return false;
+    }
+    // no need to catch BadIndexException sinze already tested it
+    std::tr1::shared_ptr<Source> source = fromNode->getOutletSharedPtr(outlet);
+    Sink *sink = toNode->getInlet(inlet);
+    return sink->isConnected(source);
+}
+
+bool Graph::disconnect(const char *from, unsigned int outlet, const char *to, unsigned int inlet)
+{
+    Node *fromNode = getNode(from);
+    if (fromNode == 0)
+    {
+
+        std::cout << "Graph::" << __FUNCTION__ << ": Cannot find node " << from << "." << std::endl;
+        return false;
+    }
+    Node *toNode = getNode(to);
+    if (toNode == 0)
+    {
+        std::cout << "Graph::" << __FUNCTION__ << ": Cannot find node " << to << "." << std::endl;
+        return false;
+    }
+    if (outlet >= fromNode->getNumberOfOutlets())
+    {
+        std::cout << "Graph::" << __FUNCTION__ << ": Outlet " << outlet << "too big for node " << from << "." << std::endl;
+        return false;
+    }
+    if (inlet >= toNode->getNumberOfInlets())
+    {
+        std::cout << "Graph::" << __FUNCTION__ << ": Inlet " << inlet << "too big for node " << to << "." << std::endl;
+        return false;
+    }
+    // no need to catch BadIndexException sinze already tested it
+    std::tr1::shared_ptr<Source> source = fromNode->getOutletSharedPtr(outlet);
+    Sink *sink = toNode->getInlet(inlet);
+    return sink->disconnect(source);
+}
+
 Node *Graph::getNode(const char *name) const
 {
     std::string nameString(name);
@@ -112,6 +174,7 @@ Node *Graph::getNode(const char *name) const
 
 void Graph::tick()
 {
+    // FIXME: nodes are ticked in a random order, pretty much
     std::map<std::string, std::tr1::shared_ptr<Node> >::iterator iter;
     for (iter = nodes_.begin(); iter != nodes_.end(); ++iter)
     {

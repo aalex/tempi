@@ -62,7 +62,7 @@ bool Node::addInlet(std::tr1::shared_ptr<Sink> sink)
     if (! hasInlet(sink.get()))
     {
         inlets_.push_back(sink);
-        sink.get()->on_triggered_signal_.connect(boost::bind(&Node::onInletTriggered, this, _1));
+        sink.get()->getOnTriggeredSignal().connect(boost::bind(&Node::onInletTriggered, this, _1));
         return true;
     }
     return false;
