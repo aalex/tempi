@@ -84,23 +84,39 @@ class Message
             appendStdString(std::string(value));
         }
 
-        bool getBoolean(unsigned int index) const throw(BadArgumentTypeException, BadIndexException);
-        char getChar(unsigned int index) const throw(BadArgumentTypeException, BadIndexException);
-        double getDouble(unsigned int index) const throw(BadArgumentTypeException, BadIndexException);
-        float getFloat(unsigned int index) const throw(BadArgumentTypeException, BadIndexException);
-        int getInt(unsigned int index) const throw(BadArgumentTypeException, BadIndexException);
-        long long int getLong(unsigned int index) const throw(BadArgumentTypeException, BadIndexException);
-        std::string getString(unsigned int index) const throw(BadArgumentTypeException, BadIndexException);
-        //void getString(unsigned int index, std::string &value) const throw(BadArgumentTypeException, BadIndexException);
+        bool getBoolean(unsigned int index) const
+            throw(BadArgumentTypeException, BadIndexException);
+        char getChar(unsigned int index) const
+            throw(BadArgumentTypeException, BadIndexException);
+        double getDouble(unsigned int index) const
+            throw(BadArgumentTypeException, BadIndexException);
+        float getFloat(unsigned int index) const
+            throw(BadArgumentTypeException, BadIndexException);
+        int getInt(unsigned int index) const
+            throw(BadArgumentTypeException, BadIndexException);
+        long long int getLong(unsigned int index) const
+            throw(BadArgumentTypeException, BadIndexException);
+        std::string getString(unsigned int index) const
+            throw(BadArgumentTypeException, BadIndexException);
+        //void getString(unsigned int index, std::string &value) const
+        //  throw(BadArgumentTypeException, BadIndexException);
 
-        void setBoolean(unsigned int index, bool value) throw(BadArgumentTypeException, BadIndexException);
-        void setChar(unsigned int index, char value) throw(BadArgumentTypeException, BadIndexException);
-        void setDouble(unsigned int index, double value) throw(BadArgumentTypeException, BadIndexException);
-        void setFloat(unsigned int index, float value) throw(BadArgumentTypeException, BadIndexException);
-        void setInt(unsigned int index, int value) throw(BadArgumentTypeException, BadIndexException);
-        void setLong(unsigned int index, long long int value) throw(BadArgumentTypeException, BadIndexException);
-        void setString(unsigned int index, std::string value) throw(BadArgumentTypeException, BadIndexException);
-        void setString(unsigned int index, const char *value) throw(BadArgumentTypeException, BadIndexException)
+        void setBoolean(unsigned int index, bool value)
+            throw(BadArgumentTypeException, BadIndexException);
+        void setChar(unsigned int index, char value)
+            throw(BadArgumentTypeException, BadIndexException);
+        void setDouble(unsigned int index, double value)
+            throw(BadArgumentTypeException, BadIndexException);
+        void setFloat(unsigned int index, float value)
+            throw(BadArgumentTypeException, BadIndexException);
+        void setInt(unsigned int index, int value)
+            throw(BadArgumentTypeException, BadIndexException);
+        void setLong(unsigned int index, long long int value)
+            throw(BadArgumentTypeException, BadIndexException);
+        void setString(unsigned int index, std::string value)
+            throw(BadArgumentTypeException, BadIndexException);
+        void setString(unsigned int index, const char *value)
+            throw(BadArgumentTypeException, BadIndexException)
         {
             setString(index, std::string(value));
         }
@@ -135,7 +151,8 @@ class Message
         bool append(boost::any value);
 
         template <typename T>
-        void get(unsigned int index, T &value) const throw(BadArgumentTypeException, BadIndexException)
+        void get(unsigned int index, T &value) const
+            throw(BadArgumentTypeException, BadIndexException)
         {
             const boost::any *tmp = getArgument(index);
             if (tmp)
@@ -158,7 +175,8 @@ class Message
         }
 
         template <typename T>
-        void set(unsigned int index, T value) throw(BadArgumentTypeException, BadIndexException)
+        void set(unsigned int index, T value)
+            throw(BadArgumentTypeException, BadIndexException)
         {
             if (index >= getSize())
             {
