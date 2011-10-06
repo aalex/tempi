@@ -33,7 +33,8 @@ bool Sink::connect(std::tr1::shared_ptr<Source>  source)
 {
     if (! hasSource(source.get()))
     {
-        sources_[source] = std::tr1::shared_ptr<boost::signals2::connection>(& source.get()->getOnTriggeredSignal().connect(boost::bind(&Sink::trigger, this, _1)));
+        sources_.push_back(source);
+        source.get()->getOnTriggeredSignal().connect(boost::bind(&Sink::trigger, this, _1));
         return true;
     }
     return false;
@@ -47,10 +48,11 @@ void Sink::disconnectAll()
 
 bool Sink::hasSource(Source *source)
 {
-    SourceMap::iterator iter;
+    // FIXME: isConnected is faster
+    SourcesVec::iterator iter;
     for (iter = sources_.begin(); iter != sources_.end(); ++iter)
     {
-        if ((*iter).first.get() == source)
+        if ((*iter).get() == source)
         {
             return true;
         }
@@ -62,8 +64,8 @@ bool Sink::disconnect(std::tr1::shared_ptr<Source> source)
 {
     if (isConnected(source))
     {
-        sources_[source].get()->disconnect();
-        sources_.erase(sources_.find(source));
+        source.get()->getOnTriggeredSignal().disconnect(boost::bind(&Sink::trigger, this, _1));
+        sources_.erase(std::find(sources_.begin(), sources_.end(), source));
         return true;
     }
     else
@@ -72,7 +74,7 @@ bool Sink::disconnect(std::tr1::shared_ptr<Source> source)
 
 bool Sink::isConnected(std::tr1::shared_ptr<Source> source)
 {
-    return sources_.find(source) != sources_.end();
+    return std::find(sources_.begin(), sources_.end(), source) != sources_.end();
 }
 
 void Sink::trigger(const Message &message)

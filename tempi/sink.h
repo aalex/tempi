@@ -41,6 +41,7 @@ class Sink
 {
     public:
         typedef boost::signals2::signal<void (const Message&)> TriggeredSignal;
+        typedef TriggeredSignal::slot_function_type TriggeredSlot;
         Sink();
         bool connect(std::tr1::shared_ptr<Source> source);
         bool disconnect(std::tr1::shared_ptr<Source> source);
@@ -52,8 +53,10 @@ class Sink
         }
         void disconnectAll();
     private:
-        typedef std::map<std::tr1::shared_ptr<Source>, std::tr1::shared_ptr<boost::signals2::connection> > SourceMap;
-        SourceMap sources_;
+        //typedef std::map<std::tr1::shared_ptr<Source>, std::tr1::shared_ptr<boost::signals2::scoped_connection> > SourceMap;
+        //SourceMap sources_;
+        typedef std::vector<std::tr1::shared_ptr<Source> > SourcesVec;
+        SourcesVec sources_;
         bool hasSource(Source *source);
         TriggeredSignal on_triggered_signal_;
 };

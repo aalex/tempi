@@ -120,6 +120,17 @@ bool check_simple()
         std::cout << "Last value was not what was expected." << std::endl;
         return false;
     }
+
+    if (! c.getInlet()->disconnect(b.getOutlets()[0]))
+    {
+        std::cout << "Could not disconnect b to c." << std::endl;
+        return false;
+    }
+    if (c.getInlet()->disconnect(b.getOutlets()[0]))
+    {
+        std::cout << "Could disconnect b to c twice." << std::endl;
+        return false;
+    }
     return true;
 }
 
