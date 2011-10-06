@@ -46,20 +46,6 @@ void Sink::disconnectAll()
     sources_.clear();
 }
 
-bool Sink::hasSource(Source *source)
-{
-    // FIXME: isConnected is faster
-    SourcesVec::iterator iter;
-    for (iter = sources_.begin(); iter != sources_.end(); ++iter)
-    {
-        if ((*iter).get() == source)
-        {
-            return true;
-        }
-    }
-    return false;
-}
-
 bool Sink::disconnect(std::tr1::shared_ptr<Source> source)
 {
     if (isConnected(source))

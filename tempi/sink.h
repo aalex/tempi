@@ -57,7 +57,6 @@ class Sink
         //SourceMap sources_;
         typedef std::vector<std::tr1::shared_ptr<Source> > SourcesVec;
         SourcesVec sources_;
-        bool hasSource(Source *source);
         TriggeredSignal on_triggered_signal_;
 };
 
