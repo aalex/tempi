@@ -218,7 +218,7 @@ void Node::setProperty(const char *name, const Message &value) throw(BadIndexExc
     {
         std::ostringstream os;
         os << "Node::" << __FUNCTION__ << ": Property " << name << ": Bad type " << value.getTypes() << " while expecting " << current.getTypes();
-        throw (BadIndexException(os.str().c_str()));
+        throw (BadArgumentTypeException(os.str().c_str()));
     }
 }
 

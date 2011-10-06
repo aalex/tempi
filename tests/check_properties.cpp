@@ -42,12 +42,31 @@ static bool check_properties()
     message_b.appendString("bar");
 
     n.setProperty("hello", message_b);
-
     if (! n.triggered_)
     {
         std::cout << "property not triggered" << std::endl;
         return false;
     }
+
+    try
+    {
+        Message message_c;
+        message_c.appendInt(3);
+        n.setProperty("hello", message_c);
+        std::cout << "Should not be able to set a property with a different type.\n";
+        return false;
+    }
+    catch (const BadArgumentTypeException &e)
+    {}
+
+    try
+    {
+        n.setProperty("invalid", message_b);
+        std::cout << "Should not be able to set a property that does not exist.\n";
+        return false;
+    }
+    catch (const BadIndexException &e)
+    {}
 
     return true;
 }
