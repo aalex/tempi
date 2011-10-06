@@ -31,7 +31,7 @@ Sink::Sink()
 
 bool Sink::connect(std::tr1::shared_ptr<Source>  source)
 {
-    if (! hasSource(source.get()))
+    if (! isConnected(source))
     {
         sources_.push_back(source);
         source.get()->getOnTriggeredSignal().connect(boost::bind(&Sink::trigger, this, _1));

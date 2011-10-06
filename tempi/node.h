@@ -28,7 +28,7 @@
 #include <vector>
 #include "tempi/exceptions.h"
 #include "tempi/message.h"
-#include "tempi/property.h"
+//#include "tempi/property.h"
 #include "tempi/sharedptr.h"
 #include "tempi/sink.h"
 #include "tempi/source.h"
@@ -82,22 +82,24 @@ class Node
         void tick();
         // TODO: properties:
         // std::map<std::string, Message> getProperties();
-        Property &getProperty(const char *name) throw(BadIndexException);;
-        void addProperty(std::tr1::shared_ptr<Property> property) throw(BadIndexException);
-        bool hasProperty(const char *name);
-        // bool setProperty(std::string name, Message &value);
-        // type_info *getPropertyType(std::string property);
+        const Message &getProperty(const char *name) const throw(BadIndexException);
+        void addProperty(const char *name, const Message &property) throw(BadIndexException);
+        bool hasProperty(const char *name) const;
+        void setProperty(const char *name, const Message &value) throw(BadIndexException, BadArgumentTypeException);
+        std::string getPropertyType(const char *name);
         //
         // TODO: signals:
         // typedef boost::signals2::signal<void(Message)> Signal;
         // std::map<std::string, Signal> getSignals();
         // type_info *getSignalType(std::string signal);
     private:
-        virtual void onPropertyChanged(Property &property) {}
+        virtual void onPropertyChanged(const char *name, const Message &value)
+        {}
         std::vector<std::tr1::shared_ptr<Source> > outlets_;
-        std::vector<std::tr1::shared_ptr<Property> > properties_;
+        std::map<std::string, Message> properties_;
         std::vector<std::tr1::shared_ptr<Sink> > inlets_;
         // TODO: return success
+        // TODO: add unsigned int inlet_number
         void onInletTriggered(const Message &message);
         virtual void processMessage(const Message &message) = 0;
         virtual void doTick();

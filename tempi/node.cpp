@@ -155,54 +155,56 @@ std::tr1::shared_ptr<Source> Node::getOutletSharedPtr(unsigned int number) const
     return outlets_[number];
 }
 
-Property &Node::getProperty(const char *name) throw(BadIndexException)
+const Message &Node::getProperty(const char *name) const throw(BadIndexException)
 {
-    std::ostringstream os;
-    os << "Node::" << __FUNCTION__ << ": Not implemented";
-    throw (BadIndexException(os.str().c_str()));
-
-    // std::vector<std::tr1::shared_ptr<Property> >::iterator iter;
-    // for (iter = properties_.begin(); iter != properties_.end(); ++iter)
-    // {
-    //     Property *property = (*iter).get();
-    //     if (property->getName() == name)
-    //     {
-    //         return (*property);
-    //     }
-    // }
-    // std::ostringstream os;
-    // os << "Node::" << __FUNCTION__ << ": No such property: " << name;
-    // throw (BadIndexException(os.str().c_str()));
+    std::map<std::string, Message>::const_iterator iter = properties_.find(std::string(name));
+    if (iter == properties_.end())
+    {
+        std::ostringstream os;
+        os << "Node::" << __FUNCTION__ << ": No such property: " << name;
+        throw (BadIndexException(os.str().c_str()));
+    }
+    else
+        return (*iter).second;
 }
 
-bool Node::hasProperty(const char *name)
+bool Node::hasProperty(const char *name) const
 {
-    try
-    {
-        getProperty(name);
-        return true;
-    }
-    catch (const BadIndexException &e)
-    {
-        return false;
-    }
+    return (properties_.find(std::string(name)) != properties_.end());
 }
 
-void Node::addProperty(std::tr1::shared_ptr<Property> property) throw(BadIndexException)
+void Node::addProperty(const char *name, const Message &property) throw(BadIndexException)
 {
-    std::ostringstream os;
-    os << "Node::" << __FUNCTION__ << ": Not implemented";
-    throw (BadIndexException(os.str().c_str()));
+    if (hasProperty(name))
+    {
+        std::ostringstream os;
+        os << "Node::" << __FUNCTION__ << ": Already has property: " << name;
+        throw (BadIndexException(os.str().c_str()));
+    }
+    properties_[std::string(name)] = property;
+}
 
-    // std::string name = property.get()->getName();
-    // if (hasProperty(name.c_str()))
-    // {
-    //     std::ostringstream os;
-    //     os << "Node::" << __FUNCTION__ << ": Already has property: " << name;
-    //     throw (BadIndexException(os.str().c_str()));
-    // }
-    // properties_.push_back(property);
-    // property.get()->getOnChangedSignal().connect(boost::bind(&Node::onPropertyChanged, this, _1));
+void Node::setProperty(const char *name, const Message &value) throw(BadIndexException, BadArgumentTypeException)
+{
+    Message current = getProperty(name);
+    if (current.getTypes() == value.getTypes())
+    {
+        if (value == current)
+        {
+            //std::cerr << "Node::" << __FUNCTION__ << ": Not changing value." << std::endl;
+        }
+        else
+        {
+            properties_[std::string(name)] = value;
+            onPropertyChanged(name, value);
+        }
+    }
+    else
+    {
+        std::ostringstream os;
+        os << "Node::" << __FUNCTION__ << ": Property " << name << ": Bad type " << value.getTypes() << " while expecting " << current.getTypes();
+        throw (BadIndexException(os.str().c_str()));
+    }
 }
 
 } // end of namespace
