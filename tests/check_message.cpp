@@ -23,6 +23,26 @@ bool check_message()
     return true;
 }
 
+bool check_clone()
+{
+    Message m;
+    m.appendFloat(3.14159);
+    m.appendString("hello");
+    m.appendInt(2);
+    Message x = m.cloneRange(1, 2);
+    if (x.getSize() != 2)
+    {
+        std::cout << "Expected message of size 2 but got something else\n";
+        return false;
+    }
+    if (x.getTypes() != "si")
+    {
+        std::cout << "Expected message with si types\n";
+        return false;
+    }
+    return true;
+}
+
 int main(int argc, char *argv[])
 {
     if (not check_message())

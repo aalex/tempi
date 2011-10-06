@@ -141,6 +141,16 @@ class Message
 
         bool operator==(const Message &other) const;
         bool operator!=(const Message &other) const;
+
+        Message cloneRange(unsigned int from_index, unsigned int to_index) const
+        {
+            Message ret;
+            for (unsigned int i = 0; i < getSize(); ++i)
+            {
+                if (i >= from_index && i <= to_index)
+                    ret.arguments_.push_back(arguments_[i]);
+            }
+        }
     private:
 
         void appendStdString(std::string value);
