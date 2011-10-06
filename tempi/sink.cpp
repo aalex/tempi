@@ -29,7 +29,7 @@ Sink::Sink()
     // pass
 }
 
-bool Sink::connect(std::tr1::shared_ptr<Source>  source)
+bool Sink::connect(std::tr1::shared_ptr<Source> source)
 {
     if (! isConnected(source))
     {
@@ -67,7 +67,7 @@ void Sink::trigger(const Message &message)
 {
     // TODO
     //std::cout << __FUNCTION__ << std::endl;
-    on_triggered_signal_(message);
+    on_triggered_signal_(this, message);
 }
 
 } // end of namespace

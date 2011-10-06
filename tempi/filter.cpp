@@ -40,7 +40,7 @@ Source *Filter::getOutlet()
     return getOutlets()[0].get();
 }
 
-void Filter::processMessage(const Message &message)
+void Filter::processMessage(unsigned int /* inlet */, const Message &message)
 {
     getOutlet()->trigger(filter(message));
 }

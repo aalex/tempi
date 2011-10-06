@@ -14,7 +14,7 @@ class FooNode: public Node
             addOutlet();
         }
     private:
-        virtual void processMessage(const Message &message) {}
+        virtual void processMessage(unsigned int inlet, const Message &message) {}
 };
 
 class BarNode: public Node
@@ -28,7 +28,7 @@ class BarNode: public Node
             std::cout << "Create a BarNode" << std::endl;
         }
     private:
-        virtual void processMessage(const Message &message) {}
+        virtual void processMessage(unsigned int inlet, const Message &message) {}
 };
 
 bool check_nodefactory()

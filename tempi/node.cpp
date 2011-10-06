@@ -35,11 +35,26 @@ std::vector<std::tr1::shared_ptr<Source> > Node::getOutlets()
     return outlets_;
 }
 
-void Node::onInletTriggered(const Message &message)
+void Node::onInletTriggered(Sink *sink, const Message &message)
 {
-    // TODO
     //std::cout << __FUNCTION__ << std::endl;
-    processMessage(message);
+    unsigned int index = getInletIndex(sink);
+    processMessage(index, message);
+}
+
+unsigned int Node::getInletIndex(Sink *sink) const throw(BadIndexException)
+{
+    unsigned int index = 0;
+    std::vector<std::tr1::shared_ptr<Sink> >::const_iterator iter;
+    for (iter = inlets_.begin(); iter != inlets_.end(); ++iter)
+    {
+        if ((*iter).get() == sink)
+            return index;
+        ++index;
+    }
+    std::ostringstream os;
+    os << "Node::" << __FUNCTION__ << ": No such inlet pointer";
+    throw BadIndexException(os.str().c_str());
 }
 
 std::vector<std::tr1::shared_ptr<Sink> > Node::getInlets()
@@ -62,7 +77,7 @@ bool Node::addInlet(std::tr1::shared_ptr<Sink> sink)
     if (! hasInlet(sink.get()))
     {
         inlets_.push_back(sink);
-        sink.get()->getOnTriggeredSignal().connect(boost::bind(&Node::onInletTriggered, this, _1));
+        sink.get()->getOnTriggeredSignal().connect(boost::bind(&Node::onInletTriggered, this, _1, _2));
         return true;
     }
     return false;
@@ -208,4 +223,5 @@ void Node::setProperty(const char *name, const Message &value) throw(BadIndexExc
 }
 
 } // end of namespace
+
 

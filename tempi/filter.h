@@ -45,7 +45,7 @@ class Filter : public Node
         Sink *getInlet();
     private:
         // Inherited from Node:
-        virtual void processMessage(const Message &message);
+        virtual void processMessage(unsigned int inlet, const Message &message);
         // New virtual method:
         virtual Message filter(const Message &message) = 0;
 };

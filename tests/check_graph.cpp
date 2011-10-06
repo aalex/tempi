@@ -9,23 +9,19 @@ using namespace tempi;
 class DummyNode: public Node
 {
     public:
-        DummyNode();
+        DummyNode() :
+            Node()
+        {
+            addInlet();
+            addOutlet();
+        }
     private:
-        virtual void processMessage(const Message &message);
+        virtual void processMessage(unsigned int inlet, const Message &message)
+        {
+            getOutlet(0)->trigger(message);
+            std::cout << "DummyNode::" << __FUNCTION__ << ": " << message << std::endl;
+        }
 };
-
-DummyNode::DummyNode() :
-    Node()
-{
-    addInlet();
-    addOutlet();
-}
-
-void DummyNode::processMessage(const Message &message)
-{
-    getOutlet(0)->trigger(message);
-    std::cout << "DummyNode::" << __FUNCTION__ << ": " << message << std::endl;
-}
 
 static std::tr1::shared_ptr<Node> makeDummyNode()
 {

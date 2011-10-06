@@ -98,10 +98,11 @@ class Node
         std::vector<std::tr1::shared_ptr<Source> > outlets_;
         std::map<std::string, Message> properties_;
         std::vector<std::tr1::shared_ptr<Sink> > inlets_;
+        unsigned int getInletIndex(Sink *sink) const throw(BadIndexException);
         // TODO: return success
         // TODO: add unsigned int inlet_number
-        void onInletTriggered(const Message &message);
-        virtual void processMessage(const Message &message) = 0;
+        void onInletTriggered(Sink *sink, const Message &message);
+        virtual void processMessage(unsigned int inlet, const Message &message) = 0;
         virtual void doTick();
         bool hasInlet(Sink *sink);
         bool hasOutlet(Source *source);

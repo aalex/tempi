@@ -15,13 +15,13 @@ using namespace tempi;
 class DummySourceNode: public SourceNode
 {
     public:
-        DummySourceNode();
+        DummySourceNode() :
+            SourceNode()
+        {}
     private:
-        virtual void processMessage(const Message &message);
+        virtual void processMessage(unsigned int inlet, const Message &message)
+        {}
 };
-
-DummySourceNode::DummySourceNode() : SourceNode() {}
-void DummySourceNode::processMessage(const Message &message) {}
 
 /**
  * Dummy filter node.
@@ -29,22 +29,20 @@ void DummySourceNode::processMessage(const Message &message) {}
 class DummyFilterNode: public Filter
 {
     public:
-        DummyFilterNode();
+        DummyFilterNode() :
+            Filter()
+        {}
     private:
         /**
          * Inverts the boolean value.
          */
-        virtual Message filter(const Message &message);
+        virtual Message filter(const Message &message)
+        {
+            Message ret = message;
+            ret.setBoolean(0, ! message.getBoolean(0));
+            return ret;
+        }
 };
-
-DummyFilterNode::DummyFilterNode() : Filter() {}
-
-Message DummyFilterNode::filter(const Message &message)
-{
-    Message ret = message;
-    ret.setBoolean(0, ! message.getBoolean(0));
-    return ret;
-}
 
 /**
  * Dummy sink node.
@@ -52,28 +50,24 @@ Message DummyFilterNode::filter(const Message &message)
 class DummySinkNode: public SinkNode
 {
     public:
-        DummySinkNode();
+        DummySinkNode() :
+            SinkNode()
+        {
+            triggered_ = false;
+            expected_ = false;
+            last_value_was_ok_ = false;
+        }
         bool triggered_;
         bool last_value_was_ok_;
         bool expected_;
     private:
-        virtual void processMessage(const Message &message);
+        virtual void processMessage(unsigned int inlet, const Message &message)
+        {
+            triggered_ = true;
+            bool value = message.getBoolean(0);
+            last_value_was_ok_ = value == expected_;
+        }
 };
-
-DummySinkNode::DummySinkNode() :
-    SinkNode()
-{
-    triggered_ = false;
-    expected_ = false;
-    last_value_was_ok_ = false;
-}
-
-void DummySinkNode::processMessage(const Message &message)
-{
-    triggered_ = true;
-    bool value = message.getBoolean(0);
-    last_value_was_ok_ = value == expected_;
-}
 
 bool check_simple()
 {

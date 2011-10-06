@@ -20,7 +20,7 @@ class DummyNode : public Node
         {
             triggered_ = true;
         }
-        virtual void processMessage(const Message &message)
+        virtual void processMessage(unsigned int, const Message &message)
         {
         }
 };

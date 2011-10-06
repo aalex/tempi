@@ -36,16 +36,20 @@ class Source; // forward declaration
 
 /**
  * A Sink is a pad to which we can connect Source pads.
+ * TODO: rename to Destination
  */
 class Sink
 {
     public:
-        typedef boost::signals2::signal<void (const Message&)> TriggeredSignal;
+        // TODO: rename to ReceiveSignal
+        typedef boost::signals2::signal<void (Sink *sink, const Message&)> TriggeredSignal;
+        // TODO: rename to ReceiveSlot
         typedef TriggeredSignal::slot_function_type TriggeredSlot;
         Sink();
         bool connect(std::tr1::shared_ptr<Source> source);
         bool disconnect(std::tr1::shared_ptr<Source> source);
         bool isConnected(std::tr1::shared_ptr<Source> source);
+        // TODO: rename to receive
         void trigger(const Message &message);
         TriggeredSignal &getOnTriggeredSignal()
         {
