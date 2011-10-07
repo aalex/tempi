@@ -1,30 +1,24 @@
 To do in Tempi
 ==============
 
-Urgent
-------
- * Update the tempi demo to optionally (boost::options) use a Wacom pen
- * fix packaging for liboscpack (make it optional)
- * Create a timeline viewing actor.
-
-Later
+Soon
 -----
- * Implement dynamic Node attributes. (Node::setIntAttribute(name, value), getAttributes(), etc.)
+ * Create a timeline viewing actor.
  * create a node type registrator and factory. (NodeFactory::create(string type))
  * Create the tempi-plugins-base library
  * Enclose signals as private data member. Provide accessors to it, or allow to add callbacks to it.
  * Create Node::onSchedulerTick()
- * Create a Graph class, with a tick() method, which calls each node's onSchedulerTick().
- * Create a OscReceiver, using a ConcurrentQueue<boost::tuple<std::string, Message> > (and a boost::signals2::signal?)
+ * Create a Graph class, with a tick() method, which calls each node's onSchedulerTick(). Use boost::adjacency_list
  * Create a OscSourceNode
+
+Later
+-----
  * Many sender/receiver with the same host+port should share the same OSC sender. Use a map of tuple<ip,port> to shared_ptr<OscSender>.
  * Get done with tempi/samplernode.cpp
- * Get done with prototypes/nodefactory.cpp
  * Get done with tempi/graph.cpp
  * Get done with tempi/noderegistry.h
  * Get done with tempi/tempi-signal.h
- * Get done with tempi/oscreceiver.cpp
- * Implement Sink::disconnect and the likes
+ * Create MIDI sink and sources nodes
 
 Refactoring
 -----------
