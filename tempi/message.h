@@ -150,6 +150,7 @@ class Message
                 if (i >= from_index && i <= to_index)
                     ret.arguments_.push_back(arguments_[i]);
             }
+            return ret;
         }
     private:
 

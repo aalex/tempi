@@ -163,6 +163,8 @@ namespace types
 bool getArgumentTypeForAny(const boost::any &value, ArgumentType &type)
 {
     const std::type_info &actual = value.type();
+    if (actual == typeid(void))
+        return false;
     if (actual == typeid(bool))
         type = BOOLEAN;
     else if (actual == typeid(char))

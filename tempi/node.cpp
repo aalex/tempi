@@ -38,8 +38,46 @@ std::vector<std::tr1::shared_ptr<Source> > Node::getOutlets()
 void Node::onInletTriggered(Sink *sink, const Message &message)
 {
     //std::cout << __FUNCTION__ << std::endl;
-    unsigned int index = getInletIndex(sink);
-    processMessage(index, message);
+    unsigned int inlet = getInletIndex(sink);
+    bool is_a_property = false;
+    if (inlet == 0 && message.getSize() >= 3)
+    {
+        // ArgumentType type0;
+        // ArgumentType type1;
+        // if (! message.getArgumentType(0, type0))
+        // {
+        //     std::cout << "could not get arg type for index " << 0 << std::endl;
+        //     // TODO: abort
+        // }
+        // if (! message.getArgumentType(1, type1))
+        // {
+        //     std::cout << "could not get arg type for index " << 1 << std::endl;
+        //     // TODO: abort
+        // }
+        //if (type0 == STRING && type1 == STRING && 
+        if (message.getTypes().compare(0, 2, "ss") == 0)
+        {
+            if (message.getString(0).compare("set") == 0)
+            {
+                try
+                {
+                    Message property = message.cloneRange(2, message.getSize() - 1);
+                    setProperty(message.getString(1).c_str(), property);
+                    is_a_property = true;
+                }
+                catch (const BadIndexException &e)
+                {
+                    std::cerr << e.what();
+                }
+                catch (const BadArgumentTypeException &e)
+                {
+                    std::cerr << e.what();
+                }
+            }
+        }
+    }
+    if (! is_a_property)
+        processMessage(inlet, message);
 }
 
 unsigned int Node::getInletIndex(Sink *sink) const throw(BadIndexException)
@@ -85,12 +123,12 @@ bool Node::addInlet(std::tr1::shared_ptr<Sink> sink)
 
 bool Node::addInlet()
 {
-    addInlet(std::tr1::shared_ptr<Sink>(new Sink()));
+    return addInlet(std::tr1::shared_ptr<Sink>(new Sink()));
 }
 
 bool Node::addOutlet()
 {
-    addOutlet(std::tr1::shared_ptr<Source>(new Source()));
+    return addOutlet(std::tr1::shared_ptr<Source>(new Source()));
 }
 
 bool Node::hasInlet(Sink *sink)
@@ -201,8 +239,8 @@ void Node::addProperty(const char *name, const Message &property) throw(BadIndex
 
 void Node::setProperty(const char *name, const Message &value) throw(BadIndexException, BadArgumentTypeException)
 {
-    Message current = getProperty(name);
-    if (current.getTypes() == value.getTypes())
+    Message current = getProperty(name); // might throw BadIndexException
+    if (current.getTypes().compare(value.getTypes()) == 0)
     {
         if (value == current)
         {
@@ -220,6 +258,17 @@ void Node::setProperty(const char *name, const Message &value) throw(BadIndexExc
         os << "Node::" << __FUNCTION__ << ": Property " << name << ": Bad type " << value.getTypes() << " while expecting " << current.getTypes();
         throw (BadArgumentTypeException(os.str().c_str()));
     }
+}
+
+std::vector<std::string> Node::getPropertiesNames() const
+{
+    std::vector<std::string> ret;
+    std::map<std::string, Message>::const_iterator iter;
+    for (iter = properties_.begin(); iter != properties_.end(); ++iter)
+    {
+        ret.push_back((*iter).first);
+    }
+    return ret;
 }
 
 } // end of namespace

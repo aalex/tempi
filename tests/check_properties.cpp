@@ -19,9 +19,16 @@ class DummyNode : public Node
         virtual void onPropertyChanged(const char *name, const Message &value)
         {
             triggered_ = true;
+            if (VERBOSE)
+            {
+                std::cout << "DummyNode::" << __FUNCTION__ << " " << name << "=" << value << std::endl;
+                std::cout << "DummyNode::triggered_ = " << triggered_ << std::endl;
+            }
         }
-        virtual void processMessage(unsigned int, const Message &message)
+        virtual void processMessage(unsigned int inlet, const Message &message)
         {
+            if (VERBOSE)
+                std::cout << __FUNCTION__ << " " << inlet << " " << message << std::endl;
         }
 };
 
@@ -30,14 +37,14 @@ static bool check_properties()
     DummyNode n;
 
     Message message_a;
-    message_a.appendInt(2);
+    message_a.appendInt(1);
     message_a.appendFloat(3.14159f);
     message_a.appendString("foo");
 
     n.addProperty("hello", message_a);
 
     Message message_b;
-    message_b.appendInt(3);
+    message_b.appendInt(2);
     message_b.appendFloat(6.819f);
     message_b.appendString("bar");
 
@@ -51,7 +58,7 @@ static bool check_properties()
     try
     {
         Message message_c;
-        message_c.appendInt(3);
+        message_c.appendInt(9);
         n.setProperty("hello", message_c);
         std::cout << "Should not be able to set a property with a different type.\n";
         return false;
@@ -68,6 +75,22 @@ static bool check_properties()
     catch (const BadIndexException &e)
     {}
 
+    n.addInlet(); // TODO: all node should have at least one inlet
+    Message set_message;
+    set_message.appendString("set");
+    set_message.appendString("hello");
+    set_message.appendInt(3);
+    set_message.appendFloat(8.124351);
+    set_message.appendString("qweoiquweioqu");
+    n.triggered_ = false;
+    n.getInlet(0)->trigger(set_message);
+    std::cout << n.triggered_ << std::endl;
+    std::cout << n.getProperty("hello") << std::endl;
+    if (! n.triggered_)
+    {
+        std::cout << "property not triggered (using a set message)" << std::endl;
+        return false;
+    }
     return true;
 }
 

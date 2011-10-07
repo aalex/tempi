@@ -85,8 +85,14 @@ class Node
         const Message &getProperty(const char *name) const throw(BadIndexException);
         void addProperty(const char *name, const Message &property) throw(BadIndexException);
         bool hasProperty(const char *name) const;
+        /**
+         * Sets a property value.
+         * You can also do this by sending a message in the form s:"set" s:name ...
+         * WARNING: if the value has not changed, it won't call onPropertyChanged.
+         */
         void setProperty(const char *name, const Message &value) throw(BadIndexException, BadArgumentTypeException);
         std::string getPropertyType(const char *name);
+        std::vector<std::string> getPropertiesNames() const;
         //
         // TODO: signals:
         // typedef boost::signals2::signal<void(Message)> Signal;
