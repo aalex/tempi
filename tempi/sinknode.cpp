@@ -26,7 +26,6 @@ namespace tempi
 SinkNode::SinkNode() :
     Node()
 {
-    addInlet(std::tr1::shared_ptr<Sink>(new Sink()));
 }
 
 Sink *SinkNode::getInlet()

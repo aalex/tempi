@@ -75,7 +75,6 @@ static bool check_properties()
     catch (const BadIndexException &e)
     {}
 
-    n.addInlet(); // TODO: all node should have at least one inlet
     Message set_message;
     set_message.appendString("set");
     set_message.appendString("hello");

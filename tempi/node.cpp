@@ -27,7 +27,7 @@ namespace tempi
 
 Node::Node()
 {
-    // pass
+    addInlet(); // all nodes have at least one inlet for properties
 }
 
 std::vector<std::tr1::shared_ptr<Source> > Node::getOutlets()

@@ -38,6 +38,7 @@ namespace tempi
 
 /**
  * A Node is something that element that can be connected to and from other elements.
+ * All nodes have at least one inlet for setting properties. (using ,ss... "set" "name" ...)
  */
 class Node
 {

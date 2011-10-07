@@ -26,8 +26,7 @@ namespace tempi
 Filter::Filter() :
     Node()
 {
-    addOutlet(std::tr1::shared_ptr<Source>(new Source()));
-    addInlet(std::tr1::shared_ptr<Sink>(new Sink()));
+    addOutlet();
 }
 
 Sink *Filter::getInlet()

@@ -26,7 +26,7 @@ namespace tempi
 SourceNode::SourceNode() :
     Node()
 {
-    addOutlet(std::tr1::shared_ptr<Source>(new Source()));
+    addOutlet();
 }
 
 Source *SourceNode::getOutlet()
