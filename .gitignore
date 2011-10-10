@@ -1,3 +1,4 @@
+!prototypes/kinect/Makefile
 *.cxx
 *.dia~
 *.la
@@ -41,6 +42,7 @@ m4/lt~obsolete.m4
 missing
 prototypes/any
 prototypes/fusion/vec
+prototypes/kinect/freedraw
 prototypes/nodefactory
 prototypes/phoenix/findif
 prototypes/tuples
