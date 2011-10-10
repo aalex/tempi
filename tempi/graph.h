@@ -38,7 +38,7 @@ class Graph
 {
     public:
         Graph();
-        std::map<std::string, std::tr1::shared_ptr<Node> > getNodes() const;
+        //std::map<std::string, std::tr1::shared_ptr<Node> > getNodes() const;
         bool addNode(const char *name, std::tr1::shared_ptr<Node> node);
         bool message(const char *node, unsigned int inlet, const Message &message);
         bool connect(const char *from, unsigned int outlet, const char *to, unsigned int inlet);

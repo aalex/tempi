@@ -27,10 +27,10 @@ Graph::Graph()
 {
 }
 
-std::map<std::string, std::tr1::shared_ptr<Node> > Graph::getNodes() const
-{
-    return nodes_;
-}
+// std::map<std::string, std::tr1::shared_ptr<Node> > Graph::getNodes() const
+// {
+//     return nodes_;
+// }
 
 bool Graph::addNode(const char *name, std::tr1::shared_ptr<Node> node)
 {
