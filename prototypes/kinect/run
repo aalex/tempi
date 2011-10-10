@@ -1,0 +1,2 @@
+#!/bin/bash
+sudo LD_LIBRARY_PATH=/usr/local/lib64 nice -n 1 ./freedraw
