@@ -51,14 +51,14 @@ Marker *Score::getMarker(Identifier identifier)
     return 0;
 }
 
-std::map<TimePosition, std::tr1::shared_ptr<Marker> > Score::getMarkers()
+std::map<TimePosition, Marker::ptr> Score::getMarkers()
 {
     return markers_; // FIXME: is this ok?
 }
 
 bool Score::removeMarker(Identifier identifier)
 {
-    std::map<TimePosition, std::tr1::shared_ptr<Marker> >::iterator iter;
+    std::map<TimePosition, Marker::ptr>::iterator iter;
     for (iter = markers_.begin(); iter != markers_.end(); ++iter)
     {
         Marker *current = iter->second.get();

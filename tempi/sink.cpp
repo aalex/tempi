@@ -29,7 +29,7 @@ Sink::Sink()
     // pass
 }
 
-bool Sink::connect(std::tr1::shared_ptr<Source> source)
+bool Sink::connect(Source::ptr source)
 {
     if (! isConnected(source))
     {
@@ -46,7 +46,7 @@ void Sink::disconnectAll()
     sources_.clear();
 }
 
-bool Sink::disconnect(std::tr1::shared_ptr<Source> source)
+bool Sink::disconnect(Source::ptr source)
 {
     if (isConnected(source))
     {
@@ -58,7 +58,7 @@ bool Sink::disconnect(std::tr1::shared_ptr<Source> source)
         return false;
 }
 
-bool Sink::isConnected(std::tr1::shared_ptr<Source> source)
+bool Sink::isConnected(Source::ptr source)
 {
     return std::find(sources_.begin(), sources_.end(), source) != sources_.end();
 }

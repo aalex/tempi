@@ -26,6 +26,7 @@
 
 #include <string>
 #include "tempi/identifier.h"
+#include "tempi/sharedptr.h"
 
 namespace tempi
 {
@@ -36,6 +37,7 @@ namespace tempi
 class Marker 
 {
     public:
+        typedef std::tr1::shared_ptr<Marker> ptr;
         Marker(Identifier id);
         Identifier getIdentifier() const;
         const std::string &getName() const;

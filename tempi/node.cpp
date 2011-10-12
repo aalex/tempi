@@ -30,7 +30,7 @@ Node::Node()
     addInlet(); // all nodes have at least one inlet for properties
 }
 
-std::vector<std::tr1::shared_ptr<Source> > Node::getOutlets()
+std::vector<Source::ptr> Node::getOutlets()
 {
     return outlets_;
 }
@@ -83,7 +83,7 @@ void Node::onInletTriggered(Sink *sink, const Message &message)
 unsigned int Node::getInletIndex(Sink *sink) const throw(BadIndexException)
 {
     unsigned int index = 0;
-    std::vector<std::tr1::shared_ptr<Sink> >::const_iterator iter;
+    std::vector<Sink::ptr>::const_iterator iter;
     for (iter = inlets_.begin(); iter != inlets_.end(); ++iter)
     {
         if ((*iter).get() == sink)
@@ -95,12 +95,12 @@ unsigned int Node::getInletIndex(Sink *sink) const throw(BadIndexException)
     throw BadIndexException(os.str().c_str());
 }
 
-std::vector<std::tr1::shared_ptr<Sink> > Node::getInlets()
+std::vector<Sink::ptr> Node::getInlets()
 {
     return inlets_;
 }
 
-bool Node::addOutlet(std::tr1::shared_ptr<Source> source)
+bool Node::addOutlet(Source::ptr source)
 {
     if (! hasOutlet(source.get()))
     {
@@ -110,7 +110,7 @@ bool Node::addOutlet(std::tr1::shared_ptr<Source> source)
     return false;
 }
 
-bool Node::addInlet(std::tr1::shared_ptr<Sink> sink)
+bool Node::addInlet(Sink::ptr sink)
 {
     if (! hasInlet(sink.get()))
     {
@@ -123,17 +123,17 @@ bool Node::addInlet(std::tr1::shared_ptr<Sink> sink)
 
 bool Node::addInlet()
 {
-    return addInlet(std::tr1::shared_ptr<Sink>(new Sink()));
+    return addInlet(Sink::ptr(new Sink()));
 }
 
 bool Node::addOutlet()
 {
-    return addOutlet(std::tr1::shared_ptr<Source>(new Source()));
+    return addOutlet(Source::ptr(new Source()));
 }
 
 bool Node::hasInlet(Sink *sink)
 {
-    std::vector<std::tr1::shared_ptr<Sink> >::iterator iter;
+    std::vector<Sink::ptr>::iterator iter;
     for (iter = inlets_.begin(); iter != inlets_.end(); ++iter)
     {
         if ((*iter).get() == sink)
@@ -146,7 +146,7 @@ bool Node::hasInlet(Sink *sink)
 
 bool Node::hasOutlet(Source *source)
 {
-    std::vector<std::tr1::shared_ptr<Source> >::iterator iter;
+    std::vector<Source::ptr>::iterator iter;
     for (iter = outlets_.begin(); iter != outlets_.end(); ++iter)
     {
         if ((*iter).get() == source)
@@ -197,7 +197,7 @@ Source *Node::getOutlet(unsigned int number) const
     return outlets_[number].get();
 }
 
-std::tr1::shared_ptr<Source> Node::getOutletSharedPtr(unsigned int number) const throw(BadIndexException)
+Source::ptr Node::getOutletSharedPtr(unsigned int number) const throw(BadIndexException)
 {
     if (number >= getNumberOfInlets())
     {
