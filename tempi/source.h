@@ -37,6 +37,7 @@ namespace tempi
 class Source
 {
     public:
+        typedef std::tr1::shared_ptr<Source> ptr;
         typedef boost::signals2::signal<void (const Message&)> TriggeredSignal;
         Source();
         // TODO: return success

@@ -41,6 +41,7 @@ class Source; // forward declaration
 class Sink
 {
     public:
+        typedef std::tr1::shared_ptr<Sink> ptr;
         // TODO: rename to ReceiveSignal
         typedef boost::signals2::signal<void (Sink *sink, const Message&)> TriggeredSignal;
         // TODO: rename to ReceiveSlot

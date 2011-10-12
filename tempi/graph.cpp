@@ -23,16 +23,36 @@
 namespace tempi
 {
 
+Graph::Graph(NodeFactory::ptr factory) :
+    factory_(factory_)
+{
+}
+
 Graph::Graph()
 {
 }
 
-// std::map<std::string, std::tr1::shared_ptr<Node> > Graph::getNodes() const
-// {
-//     return nodes_;
-// }
+bool Graph::addNode(const char *name, const char *type)
+{
+    if (factory_.get() == 0)
+    {
+        std::cerr << "NodeFactory is not valid." << std::endl;
+        return false;
+    }
+    if (factory_.get()->hasType(type))
+    {
+        return addNode(name, factory_.get()->create(type));
+    }
+    else
+    {
+        std::cerr << "NodeFactory has no type " << type << std::endl;
+        std::cerr << "Look:" << std::endl;
+        std::cerr << *factory_.get();
+        return false; // FIXME
+    }
+}
 
-bool Graph::addNode(const char *name, std::tr1::shared_ptr<Node> node)
+bool Graph::addNode(const char *name, Node::ptr node)
 {
     if (getNode(name) != 0)
     {
@@ -40,6 +60,7 @@ bool Graph::addNode(const char *name, std::tr1::shared_ptr<Node> node)
         return false;
     }
     nodes_[name] = node;
+    std::cout << "Graph::" << __FUNCTION__ << ": Added node " << name << std::endl;
     return true;
 }
 
@@ -124,7 +145,7 @@ bool Graph::isConnected(const char *from, unsigned int outlet, const char *to, u
         return false;
     }
     // no need to catch BadIndexException sinze already tested it
-    std::tr1::shared_ptr<Source> source = fromNode->getOutletSharedPtr(outlet);
+    Source::ptr source = fromNode->getOutletSharedPtr(outlet);
     Sink *sink = toNode->getInlet(inlet);
     return sink->isConnected(source);
 }
@@ -155,7 +176,7 @@ bool Graph::disconnect(const char *from, unsigned int outlet, const char *to, un
         return false;
     }
     // no need to catch BadIndexException sinze already tested it
-    std::tr1::shared_ptr<Source> source = fromNode->getOutletSharedPtr(outlet);
+    Source::ptr source = fromNode->getOutletSharedPtr(outlet);
     Sink *sink = toNode->getInlet(inlet);
     return sink->disconnect(source);
 }
@@ -163,7 +184,7 @@ bool Graph::disconnect(const char *from, unsigned int outlet, const char *to, un
 Node *Graph::getNode(const char *name) const
 {
     std::string nameString(name);
-    std::map<std::string, std::tr1::shared_ptr<Node> >::const_iterator iter = nodes_.find(nameString);
+    std::map<std::string, Node::ptr>::const_iterator iter = nodes_.find(nameString);
     if (iter == nodes_.end())
     {
         return 0;
@@ -175,7 +196,7 @@ Node *Graph::getNode(const char *name) const
 void Graph::tick()
 {
     // FIXME: nodes are ticked in a random order, pretty much
-    std::map<std::string, std::tr1::shared_ptr<Node> >::iterator iter;
+    std::map<std::string, Node::ptr>::iterator iter;
     for (iter = nodes_.begin(); iter != nodes_.end(); ++iter)
     {
         (*iter).second.get()->tick();

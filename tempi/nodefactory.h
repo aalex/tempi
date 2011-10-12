@@ -30,6 +30,7 @@
 #include <tr1/memory>
 #include "tempi/exceptions.h"
 #include "tempi/node.h"
+#include "tempi/sharedptr.h"
 
 namespace tempi
 {
@@ -40,6 +41,7 @@ namespace tempi
 class AbstractNodeType
 {
     public:
+        typedef std::tr1::shared_ptr<AbstractNodeType> ptr;
         virtual Node *create() = 0;
 };
 
@@ -63,6 +65,7 @@ class NodeType
 class NodeFactory
 {
     public:
+        typedef std::tr1::shared_ptr<NodeFactory> ptr;
         /**
          * Registers a node type.
          * Returns false if it failed.
@@ -72,14 +75,17 @@ class NodeFactory
          * Checks for a given node type.
          */
         bool hasType(const char *name);
-        std::tr1::shared_ptr<Node> create(const char *name) throw(BadNodeTypeException);
+        Node::ptr create(const char *name) throw(BadNodeTypeException);
         // TODO: std::map<std::string name, Property> getProperties();
         // TODO: std::map<std::string name, type_info> getPropertyTypes();
         // TODO: type_info getPropertyType(std::string &name);
 
-        std::map<std::string, std::tr1::shared_ptr<AbstractNodeType> > getEntries() const { return entries_; }
+        std::map<std::string, AbstractNodeType::ptr> getEntries() const
+        {
+            return entries_;
+        }
     private:
-        std::map<std::string, std::tr1::shared_ptr<AbstractNodeType> > entries_;
+        std::map<std::string, AbstractNodeType::ptr> entries_;
 };
 
 std::ostream &operator<<(std::ostream &os, const NodeFactory &nodeFactory);

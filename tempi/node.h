@@ -43,27 +43,28 @@ namespace tempi
 class Node
 {
     public:
+        typedef std::tr1::shared_ptr<Node> ptr;
         Node();
         virtual ~Node() {}
         /**
          * Returns all its outlets.
          */
-        std::vector<std::tr1::shared_ptr<Source> > getOutlets();
+        std::vector<Source::ptr> getOutlets();
         /**
          * Returns all its inlets.
          */
-        std::vector<std::tr1::shared_ptr<Sink> > getInlets();
+        std::vector<Sink::ptr> getInlets();
 
         unsigned int getNumberOfInlets() const;
         unsigned int getNumberOfOutlets() const;
         /**
          * Adds a outlet.
          */
-        bool addOutlet(std::tr1::shared_ptr<Source> source);
+        bool addOutlet(Source::ptr source);
         /**
          * Adds a inlet.
          */
-        bool addInlet(std::tr1::shared_ptr<Sink> sink);
+        bool addInlet(Sink::ptr sink);
         /**
          * Adds a outlet.
          */
@@ -72,7 +73,7 @@ class Node
         Sink *getInlet(unsigned int number) const;
         // TODO: deprecate getOutlet?
         Source *getOutlet(unsigned int number) const;
-        std::tr1::shared_ptr<Source> getOutletSharedPtr(unsigned int number) const throw(BadIndexException);
+        Source::ptr getOutletSharedPtr(unsigned int number) const throw(BadIndexException);
         /**
          * Adds a inlet.
          */
@@ -102,9 +103,9 @@ class Node
     private:
         virtual void onPropertyChanged(const char *name, const Message &value)
         {}
-        std::vector<std::tr1::shared_ptr<Source> > outlets_;
+        std::vector<Source::ptr> outlets_;
         std::map<std::string, Message> properties_;
-        std::vector<std::tr1::shared_ptr<Sink> > inlets_;
+        std::vector<Sink::ptr> inlets_;
         unsigned int getInletIndex(Sink *sink) const throw(BadIndexException);
         // TODO: return success
         // TODO: add unsigned int inlet_number

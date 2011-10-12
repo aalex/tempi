@@ -38,11 +38,11 @@ bool NodeFactory::registerType(const char *name, AbstractNodeType *entry)
         std::cerr << "NodeFactory::" << __FUNCTION__ << "Null pointer!" << std::endl;
         return false;
     }
-    entries_[std::string(name)] = std::tr1::shared_ptr<AbstractNodeType>(entry);
+    entries_[std::string(name)] = AbstractNodeType::ptr(entry);
     return true;
 }
 
-std::tr1::shared_ptr<Node> NodeFactory::create(const char *name) throw(BadNodeTypeException)
+Node::ptr NodeFactory::create(const char *name) throw(BadNodeTypeException)
 {
     // TODO: throw error if type not found
     if (! hasType(name))
@@ -54,7 +54,7 @@ std::tr1::shared_ptr<Node> NodeFactory::create(const char *name) throw(BadNodeTy
     //std::cout << "NodeFactory::" << __FUNCTION__ << "(" << name << ")" << std::endl;
     std::string nameString(name);
     AbstractNodeType *nodeType = entries_[nameString].get();
-    return std::tr1::shared_ptr<Node>(nodeType->create());
+    return Node::ptr(nodeType->create());
 }
 
 bool NodeFactory::hasType(const char *name)
@@ -67,8 +67,8 @@ bool NodeFactory::hasType(const char *name)
 std::ostream &operator<<(std::ostream &os, const NodeFactory &nodeFactory)
 {
     os << "NodeFactory:" << std::endl;
-    std::map<std::string, std::tr1::shared_ptr<AbstractNodeType> > entries = nodeFactory.getEntries();
-    std::map<std::string, std::tr1::shared_ptr<AbstractNodeType> >::iterator iter;
+    std::map<std::string, AbstractNodeType::ptr> entries = nodeFactory.getEntries();
+    std::map<std::string, AbstractNodeType::ptr>::iterator iter;
     for (iter = entries.begin(); iter != entries.end(); ++iter)
     {
         os << " * " << (*iter).first << ": " << (*iter).second.get() << std::endl;
