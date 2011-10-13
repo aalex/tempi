@@ -31,6 +31,11 @@ bool OscSender::sendMessage(const Message &message)
         std::cerr << "OscSender::" << __FUNCTION__ << ": First arg must be an OSC path";
         return false;
     }
+    if (! isValidPath(path))
+    {
+        std::cerr << "OscSender::" << __FUNCTION__ << ": Invalid OSC path";
+        return false;
+    }
 
     lo_message loMess = lo_message_new();
     for (unsigned int i = 1; i < message.getSize(); ++i)
@@ -73,6 +78,12 @@ bool OscSender::sendMessage(const Message &message)
     }
     lo_send_message(lo_address_, path.c_str(), loMess);
     lo_message_free(loMess);
+    return true;
+}
+
+bool OscSender::isValidPath(const std::string &path)
+{
+    //TODO
     return true;
 }
 

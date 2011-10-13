@@ -1,5 +1,4 @@
-
- /*
+/*
  * Copyright (C) 2011 Alexandre Quessy
  * 
  * This file is part of Tempi.
@@ -19,41 +18,32 @@
  */
 
 /**
- * @file 
- * The OscSender class.
+ * @file
+ * The OscSenderNode class.
  */
+#ifndef __TEMPI_OSC_OSCSENDERNODE_H__
+#define __TEMPI_OSC_OSCSENDERNODE_H__
 
-#ifndef __OSC_SENDER_H__
-#define __OSC_SENDER_H__
-
-#include <iostream>
-#include <string>
-#include <lo/lo.h>
-#include "tempi/message.h"
-#include "tempi/sharedptr.h"
+#include "tempi/osc/oscsender.h"
+#include "tempi/node.h"
 
 namespace tempi
 {
 
 /**
- * Sends OpenSoundControl messages.
+ * Node that sends OSC messages.
  */
-class OscSender
+class OscSenderNode : public Node
 {
     public:
-        typedef std::tr1::shared_ptr<OscSender> ptr;
-        OscSender(const char *host, unsigned int port);
-        virtual ~OscSender();
-        bool sendMessage(const Message &message);
-        //TODO
-        static bool isValidPath(const std::string &path);
+        OscSenderNode();
     private:
-        unsigned int port_;
-        std::string host_;
-        lo_address lo_address_;
+        virtual void processMessage(unsigned int inlet, const Message &message);
+        virtual void onPropertyChanged(const char *name, const Message &value);
+        OscSender::ptr osc_sender_;
 };
 
 } // end of namespace
 
-#endif // __OSC_SENDER_H__
+#endif // ifndef
 
