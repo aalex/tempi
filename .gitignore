@@ -10,6 +10,7 @@
 *~
 .deps/
 .libs/
+.dirstamp
 Makefile
 Makefile.in
 aclocal.m4
@@ -51,10 +52,6 @@ src/tempi
 tempi-*.tar.gz
 tempi/config.h
 tempi/config.h.in
-tempi/fsm/.dirstamp
-tempi/mapping/.dirstamp
-tempi/osc/.dirstamp
-tempi/sampler/.dirstamp
 tempi/stamp-h1
 tempi/table/.dirstamp
 tempi/tempi-version.h
