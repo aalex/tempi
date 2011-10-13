@@ -26,8 +26,8 @@
 
 #include "tempi/sharedptr.h"
 #include "tempi/timer.h"
-#include "tempi/track.h"
-#include "tempi/playback.h"
+#include "tempi/sampler/track.h"
+#include "tempi/sampler/playback.h"
 #include "tempi/message.h"
 #include "tempi/timeposition.h"
 

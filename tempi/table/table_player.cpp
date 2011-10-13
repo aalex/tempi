@@ -1,4 +1,4 @@
-#include "tempi/table_player.h"
+#include "tempi/table/table_player.h"
 #include <iostream>
 
 namespace tempi

@@ -1,5 +1,5 @@
 #include <iostream>
-#include "tempi/tempi.h"
+#include "tempi/table/table.h"
 
 using namespace tempi;
 
@@ -26,7 +26,7 @@ bool check_table()
 
 int main(int argc, char *argv[])
 {
-    if (not check_table())
+    if (! check_table())
         return 1;
     return 0;
 }

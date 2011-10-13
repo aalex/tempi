@@ -1,4 +1,4 @@
-#include "tempi/track.h"
+#include "tempi/sampler/track.h"
 #include <boost/tuple/tuple_io.hpp>
 #include <iostream>
 #include <cmath> // for std::abs

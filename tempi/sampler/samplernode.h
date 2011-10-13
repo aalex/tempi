@@ -26,14 +26,14 @@
 
 #include <boost/signals2.hpp>
 #include <tr1/memory>
-#include "tempi/score.h"
+#include "tempi/sampler/score.h"
 #include "tempi/timeposition.h"
 #include "tempi/identifier.h"
-#include "tempi/track.h"
-#include "tempi/recorder.h"
-#include "tempi/player.h"
+#include "tempi/sampler/track.h"
+#include "tempi/sampler/recorder.h"
+#include "tempi/sampler/player.h"
 #include "tempi/filter.h"
-//#include "tempi/marker.h"
+//#include "tempi/sampler/marker.h"
 
 namespace tempi
 {

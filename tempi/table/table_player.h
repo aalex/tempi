@@ -24,7 +24,7 @@
 #ifndef __TEMPI_TABLE_PLAYER_H__
 #define __TEMPI_TABLE_PLAYER_H__
 
-#include "tempi/table.h"
+#include "tempi/table/table.h"
 #include "tempi/message.h"
 
 namespace tempi

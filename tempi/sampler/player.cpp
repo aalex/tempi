@@ -1,7 +1,7 @@
-#include "tempi/player.h"
-#include "tempi/track.h"
+#include "tempi/sampler/player.h"
+#include "tempi/sampler/track.h"
 #include "tempi/timer.h"
-#include "tempi/loopingplayback.h"
+#include "tempi/sampler/loopingplayback.h"
 #include <iostream>
 
 namespace tempi

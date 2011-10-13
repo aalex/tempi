@@ -19,33 +19,38 @@
 
 /**
  * @file
- * The TableWriter class.
+ * The Recorder class.
  */
-#ifndef __TEMPI_TABLE_WRITER_H__
-#define __TEMPI_TABLE_WRITER_H__
+#ifndef __TEMPI_RECORDER_H__
+#define __TEMPI_RECORDER_H__
 
-#include "tempi/table.h"
-#include "tempi/message.h"
+#include <boost/any.hpp>
+#include "tempi/sampler/track.h"
 
 namespace tempi
 {
 
 /**
- * A TableWriter writes events to a Table.
+ * A Recorder records events to a Track.
  */
-class TableWriter
+class Recorder
 {
     public:
-        TableWriter(Table *track);
-        void setTable(Table *track);
-        Table *getTable();
+        Recorder(Track *track);
+        void setTrack(Track *track);
+        Track *getTrack();
         /**
-         * Adds an event to the table.
+         * Resets the internal timer of this Recorder.
          */
-        bool write(unsigned int index, const Message &message);
-        bool append(const Message &message);
+        void reset();
+        bool setPosition(TimePosition position);
+        /**
+         * Adds an event to the track now.
+         */
+        void add(Message value);
     private:
-        Table *table_;
+        Timer timer_;
+        Track *track_;
 };
 
 } // end of namespace

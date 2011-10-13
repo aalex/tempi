@@ -29,8 +29,8 @@
 #include <string>
 #include <tr1/memory>
 #include <vector>
-#include "tempi/state.h"
-#include "tempi/rule.h"
+#include "tempi/fsm/state.h"
+#include "tempi/fsm/rule.h"
 
 namespace tempi
 {

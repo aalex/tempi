@@ -17,16 +17,38 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "tempi/samplernode.h"
+/**
+ * @file
+ * The TableWriter class.
+ */
+#ifndef __TEMPI_TABLE_WRITER_H__
+#define __TEMPI_TABLE_WRITER_H__
+
+#include "tempi/table/table.h"
+#include "tempi/message.h"
 
 namespace tempi
 {
 
-SamplerNode::SamplerNode() :
-    Filter()
+/**
+ * A TableWriter writes events to a Table.
+ */
+class TableWriter
 {
-    // pass
-}
+    public:
+        TableWriter(Table *track);
+        void setTable(Table *track);
+        Table *getTable();
+        /**
+         * Adds an event to the table.
+         */
+        bool write(unsigned int index, const Message &message);
+        bool append(const Message &message);
+    private:
+        Table *table_;
+};
 
 } // end of namespace
+
+#endif // ifndef
 

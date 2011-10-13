@@ -18,7 +18,7 @@
  */
 
 #include <string>
-#include "tempi/rule.h"
+#include "tempi/fsm/rule.h"
 
 namespace tempi
 {

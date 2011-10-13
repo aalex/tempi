@@ -17,31 +17,15 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "tempi/marker.h"
+#include "tempi/sampler/samplernode.h"
 
 namespace tempi
 {
 
-Marker::Marker(Identifier id) :
-    id_(id)
+SamplerNode::SamplerNode() :
+    Filter()
 {
     // pass
-}
-
-Identifier Marker::getIdentifier() const
-{
-    return id_;
-}
-
-const std::string &Marker::getName() const
-{
-    return name_;
-}
-
-
-void Marker::setName(const std::string &name)
-{
-    name_ = name;
 }
 
 } // end of namespace

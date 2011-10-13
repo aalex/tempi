@@ -29,8 +29,8 @@
 #include <map>
 #include "tempi/timeposition.h"
 #include "tempi/identifier.h"
-#include "tempi/track.h"
-#include "tempi/marker.h"
+#include "tempi/sampler/track.h"
+#include "tempi/sampler/marker.h"
 
 namespace tempi
 {

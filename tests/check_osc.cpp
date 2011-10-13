@@ -3,8 +3,8 @@
 #include <vector>
 #include <unistd.h>
 #include "tempi/message.h"
-#include "tempi/oscsender.h"
-#include "tempi/oscreceiver.h"
+#include "tempi/osc/oscsender.h"
+#include "tempi/osc/oscreceiver.h"
 
 using namespace tempi;
 

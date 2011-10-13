@@ -17,19 +17,37 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "tempi/slide.h"
+#include <boost/any.hpp>
+#include "tempi/mapping/slidefilter.h"
+#include "tempi/sharedptr.h"
+#include <iostream>
 
 namespace tempi
 {
 
-Slide::Slide() :
+SlideFilter::SlideFilter() :
+    Filter(),
     slide_(1.0),
     last_out_(0.0),
     had_some_in_yet_(false)
 {
 }
 
-double Slide::slide(double value)
+Message SlideFilter::filter(const Message &message)
+{
+    if (message.typesMatch("d"))
+    {
+        Message ret = message;
+        double value = message.getDouble(0);
+        value = slide(value);
+        ret.setDouble(0, value);
+        return ret;
+    }
+    else
+        return message;
+}
+
+double SlideFilter::slide(double value)
 {
     if (! had_some_in_yet_)
     {
@@ -42,12 +60,7 @@ double Slide::slide(double value)
     return last_out_;
 }
 
-double Slide::getSlide()
-{
-    return slide_;
-}
-
-bool Slide::setSlide(double slide)
+bool SlideFilter::setSlide(double slide)
 {
     if (slide >= 0.0)
     {

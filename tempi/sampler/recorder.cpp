@@ -17,50 +17,43 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "table_writer.h"
+#include "tempi/sampler/recorder.h"
 #include <iostream>
 
 namespace tempi
 {
 
-TableWriter::TableWriter(Table *table)
+Recorder::Recorder(Track *track)
 {
-    table_ = table;
+    track_ = track;
 }
 
-void TableWriter::setTable(Table *table)
+void Recorder::setTrack(Track *track)
 {
-    table_ = table;
+    track_ = track;
 }
 
-Table *TableWriter::getTable()
+Track *Recorder::getTrack()
 {
-    return table_;
+    return track_;
 }
 
-bool TableWriter::write(unsigned int index, const Message &message)
+void Recorder::reset()
 {
-    if (table_)
-        return table_->set(index, message);
+    timer_.reset();
+}
+
+bool Recorder::setPosition(TimePosition position)
+{
+    return timer_.setPosition(position);
+}
+
+void Recorder::add(Message value)
+{
+    if (track_)
+        track_->add(timer_.elapsed(), value);
     else
-    {
-        std::cout << "This TableWriter has an invalid Table. Cannot add event." << std::endl;
-        return false;
-    }
-}
-
-bool TableWriter::append(const Message &message)
-{
-    if (table_)
-    {
-        table_->append(message);
-        return true;
-    }
-    else
-    {
-        std::cout << "This TableWriter has an invalid Table. Cannot append event." << std::endl;
-        return false;
-    }
+        std::cout << "This Recorder has an invalid Track. Cannot add event." << std::endl;
 }
 
 } // end of namespace

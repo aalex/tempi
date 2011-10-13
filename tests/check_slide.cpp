@@ -1,6 +1,5 @@
 #include <iostream>
-#include "tempi/tempi.h"
-#include "tempi/slide.h"
+#include "tempi/mapping/slide.h"
 
 static const bool VERBOSE = false;
 
@@ -23,7 +22,7 @@ bool check_slide()
 
 int main(int argc, char *argv[])
 {
-    if (not check_slide())
+    if (! check_slide())
         return 1;
     return 0;
 }

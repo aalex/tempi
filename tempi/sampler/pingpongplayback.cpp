@@ -1,6 +1,6 @@
-#include "tempi/pingpongplayback.h"
-#include "tempi/track.h"
-#include "tempi/player.h"
+#include "tempi/sampler/pingpongplayback.h"
+#include "tempi/sampler/track.h"
+#include "tempi/sampler/player.h"
 #include <iostream>
 
 namespace tempi

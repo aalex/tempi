@@ -17,31 +17,28 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "tempi/state.h"
+/**
+ * @file
+ * The LoopingPlayback class.
+ */
+#ifndef __TEMPI_LOOPINGPLAYBACK_H__
+#define __TEMPI_LOOPINGPLAYBACK_H__
+
+#include "tempi/sampler/playback.h"
 
 namespace tempi
 {
 
-namespace fsm
+/**
+ * A LoopingPlayback plays a Track from start to end, and goes back to its beginning once at its end.
+ */
+class LoopingPlayback : public Playback
 {
-
-State::State(const std::string &name) :
-    name_(name)
-{
-    // pass
-}
-
-const std::string &State::getName()
-{
-    return name_;
-}
-
-void State::setName(const std::string &name)
-{
-    name_ = name;
-}
+    public:
+        virtual Message *read(Player &player);
+};
 
 } // end of namespace
 
-} // end of namespace
+#endif // ifndef
 

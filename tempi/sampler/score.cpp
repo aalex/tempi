@@ -17,7 +17,7 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "tempi/score.h"
+#include "tempi/sampler/score.h"
 #include <iostream>
 
 namespace tempi

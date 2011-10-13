@@ -1,9 +1,9 @@
 #include <iostream>
-#include "tempi/tempi.h"
+#include "tempi/sampler/track.h"
 
 using namespace tempi;
 
-bool check_simple()
+bool check_track()
 {
     Track track;
     if (track.getDuration() != 0L)
@@ -38,7 +38,7 @@ bool check_simple()
 
 int main(int argc, char *argv[])
 {
-    if (not check_simple())
+    if (! check_track())
         return 1;
     return 0;
 }

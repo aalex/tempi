@@ -17,43 +17,31 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * @file
- * The Recorder class.
- */
-#ifndef __TEMPI_RECORDER_H__
-#define __TEMPI_RECORDER_H__
-
-#include <boost/any.hpp>
-#include "tempi/track.h"
+#include "tempi/fsm/state.h"
 
 namespace tempi
 {
 
-/**
- * A Recorder records events to a Track.
- */
-class Recorder
+namespace fsm
 {
-    public:
-        Recorder(Track *track);
-        void setTrack(Track *track);
-        Track *getTrack();
-        /**
-         * Resets the internal timer of this Recorder.
-         */
-        void reset();
-        bool setPosition(TimePosition position);
-        /**
-         * Adds an event to the track now.
-         */
-        void add(Message value);
-    private:
-        Timer timer_;
-        Track *track_;
-};
+
+State::State(const std::string &name) :
+    name_(name)
+{
+    // pass
+}
+
+const std::string &State::getName()
+{
+    return name_;
+}
+
+void State::setName(const std::string &name)
+{
+    name_ = name;
+}
 
 } // end of namespace
 
-#endif // ifndef
+} // end of namespace
 

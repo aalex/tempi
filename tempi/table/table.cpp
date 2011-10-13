@@ -1,4 +1,4 @@
-#include "tempi/table.h"
+#include "tempi/table/table.h"
 
 namespace tempi
 {

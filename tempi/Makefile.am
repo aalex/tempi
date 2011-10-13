@@ -30,72 +30,72 @@ libtempi_@TEMPI_API_VERSION@_la_includedir = $(includedir)/tempi-$(TEMPI_API_VER
 libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     filter.cpp \
     graph.cpp \
-    loopingplayback.cpp \
-    marker.cpp \
+    sampler/loopingplayback.cpp \
+    sampler/marker.cpp \
     message.cpp \
     node.cpp \
     nodefactory.cpp \
-    oscreceiver.cpp \
-    oscsender.cpp \
-    pingpongplayback.cpp \
-    player.cpp \
-    recorder.cpp \
-    rule.cpp \
-    samplernode.cpp \
-    score.cpp \
+    osc/oscreceiver.cpp \
+    osc/oscsender.cpp \
+    sampler/pingpongplayback.cpp \
+    sampler/player.cpp \
+    sampler/recorder.cpp \
+    fsm/rule.cpp \
+    sampler/samplernode.cpp \
+    sampler/score.cpp \
     sink.cpp \
     sinknode.cpp \
-    slide.cpp \
-    slidefilter.cpp \
+    mapping/slide.cpp \
+    mapping/slidefilter.cpp \
     source.cpp \
     sourcenode.cpp \
-    state.cpp \
-    statemachine.cpp \
-    table.cpp \
-    table_player.cpp \
-    table_writer.cpp \
+    fsm/state.cpp \
+    fsm/statemachine.cpp \
+    table/table.cpp \
+    table/table_player.cpp \
+    table/table_writer.cpp \
     tempi.cpp \
-    track.cpp \
+    sampler/track.cpp \
     timer.cpp
 
 ## PLEASE KEEP THEM IN ALPHABETICAL ORDER
 libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
-    average.h \
+    mapping/average.h \
     concurrentqueue.h \
     exceptions.h \
     filter.h \
     graph.h \
     identifier.h \
-    loopingplayback.h \
-    marker.h \
+    sampler/loopingplayback.h \
+    sampler/marker.h \
     message.h \
     node.h \
     nodefactory.h \
-    oscreceiver.h \
-    oscsender.h \
-    pingpongplayback.h \
-    playback.h \
-    player.h \
-    recorder.h \
-    rule.h \
-    samplernode.h \
-    score.h \
+    osc/oscreceiver.h \
+    osc/oscsender.h \
+    sampler/pingpongplayback.h \
+    sampler/playback.h \
+    sampler/player.h \
+    sampler/recorder.h \
+    fsm/rule.h \
+    sampler/samplernode.h \
+    sampler/score.h \
     sharedptr.h \
     sink.h \
     sinknode.h \
-    slide.h \
-    slidefilter.h \
+    mapping/slide.h \
+    mapping/slidefilter.h \
     source.h \
     sourcenode.h \
-    state.h \
-    statemachine.h \
-    table.h \
-    table_player.h \
-    table_writer.h \
+    fsm/state.h \
+    fsm/statemachine.h \
+    table/table.h \
+    table/table_player.h \
+    table/table_writer.h \
     tempi-version.h \
     tempi.h \
     timeposition.h \
     timer.h \
-    track.h \
+    sampler/track.h \
     types.h
 

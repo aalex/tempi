@@ -19,23 +19,26 @@
 
 /**
  * @file
- * The LoopingPlayback class.
+ * The PingPongPlayback class.
  */
-#ifndef __TEMPI_LOOPINGPLAYBACK_H__
-#define __TEMPI_LOOPINGPLAYBACK_H__
+#ifndef __TEMPI_PINGPONGPLAYBACK_H__
+#define __TEMPI_PINGPONGPLAYBACK_H__
 
-#include "tempi/playback.h"
+#include "tempi/sampler/playback.h"
 
 namespace tempi
 {
 
 /**
- * A LoopingPlayback plays a Track from start to end, and goes back to its beginning once at its end.
+ * A PingPongPlayback plays a Track from beginning to end, and then from the end to the beginning.
  */
-class LoopingPlayback : public Playback
+class PingPongPlayback : public Playback
 {
     public:
+        PingPongPlayback();
         virtual Message *read(Player &player);
+    private:
+        bool direction_is_forward_;
 };
 
 } // end of namespace
