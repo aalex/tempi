@@ -33,13 +33,19 @@ class BarNode: public Node
 
 bool check_nodefactory()
 {
+    std::cout << __FUNCTION__ << std::endl;
     NodeFactory factory;
-    if (! factory.registerType("foo", (AbstractNodeType*) (new NodeType<FooNode>())))
+    AbstractNodeType *tmp = (AbstractNodeType*) new NodeType<FooNode>();
+    AbstractNodeType::ptr fooType(tmp);
+    if (fooType.get() == 0)
+        std::cout << __FUNCTION__ << ": FooType is a null pointer!!!!!!" << std::endl;
+    if (! factory.registerType("foo", fooType))
     {
         std::cout << "Could not register type FooNode" << std::endl;
         return false;
     }
-    if (! factory.registerType("bar", (AbstractNodeType*)(new NodeType<BarNode>())))
+    AbstractNodeType::ptr barType((AbstractNodeType*) new NodeType<BarNode>);
+    if (! factory.registerType("bar",  barType))
     {
         std::cout << "Could not register type BarNode" << std::endl;
         return false;
@@ -49,7 +55,7 @@ bool check_nodefactory()
     //std::cout << factory << std::endl;
     try
     {
-        std::tr1::shared_ptr<Node> foo = factory.create("egg");
+        Node::ptr foo = factory.create("egg");
         return false;
     }
     catch (const BadNodeTypeException &e)
@@ -57,8 +63,8 @@ bool check_nodefactory()
         //std::cout << e.what() << std::endl;
         //std::cout << "Good it could not create a EggNode" << std::endl;
     }
-    std::tr1::shared_ptr<Node> foo = factory.create("foo");
-    std::tr1::shared_ptr<Node> bar = factory.create("bar");
+    Node::ptr foo = factory.create("foo");
+    Node::ptr bar = factory.create("bar");
 
     Message message;
     foo.get()->getInlet(0)->trigger(message);
@@ -67,9 +73,33 @@ bool check_nodefactory()
     return true;
 }
 
+bool check_many_instances()
+{
+    std::cout << __FUNCTION__ << std::endl;
+    NodeFactory factory;
+    AbstractNodeType *tmp = (AbstractNodeType*) new NodeType<FooNode>();
+    AbstractNodeType::ptr fooType(tmp);
+    if (! factory.registerType("foo", fooType))
+    {
+        std::cout << "Could not register type FooNode" << std::endl;
+        return false;
+    }
+    Node::ptr foo0 = factory.create("foo");
+    Node::ptr foo1 = factory.create("foo");
+    Node::ptr foo2 = factory.create("foo");
+    if (foo0.get() == 0 || foo0.get() == 0 || foo0.get() == 0)
+    {
+        std::cout << __FUNCTION__ << ": invalid pointer" << std::endl;
+        return false;
+    }
+    return true;
+}
+
 int main(int argc, char **argv)
 {
     if (! check_nodefactory())
+        return 1;
+    if (! check_many_instances())
         return 1;
     return 0;
 }

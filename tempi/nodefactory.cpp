@@ -25,7 +25,7 @@
 namespace tempi
 {
 
-bool NodeFactory::registerType(const char *name, AbstractNodeType *entry)
+bool NodeFactory::registerType(const char *name, AbstractNodeType::ptr entry)
 {
     //std::cout << "NodeFactory::" << __FUNCTION__ << "(" << name << ", " << entry << ")" << std::endl;
     if (hasType(name))
@@ -33,12 +33,12 @@ bool NodeFactory::registerType(const char *name, AbstractNodeType *entry)
         std::cerr << "NodeFactory::" << __FUNCTION__ << "Already got an entry named " << name << std::endl;
         return false;
     }
-    if (entry == 0)
+    if (entry.get() == 0)
     {
-        std::cerr << "NodeFactory::" << __FUNCTION__ << "Null pointer!" << std::endl;
+        std::cerr << "NodeFactory::" << __FUNCTION__ << ": " << name << " is a " << "null pointer!" << std::endl;
         return false;
     }
-    entries_[std::string(name)] = AbstractNodeType::ptr(entry);
+    entries_[std::string(name)] = entry;
     return true;
 }
 
@@ -59,9 +59,24 @@ Node::ptr NodeFactory::create(const char *name) throw(BadNodeTypeException)
 
 bool NodeFactory::hasType(const char *name)
 {
-    if (entries_.find(std::string(name)) == entries_.end())
-        return false;
-    return true;
+    bool ret = false;
+    std::string nameStr(name);
+    //if (entries_.find(nameStr) != entries_.end())
+    //    ret = true;
+    std::cout << "NodeFactory::" << __FUNCTION__ << "(" << name << ") ..." << std::endl;
+    std::map<std::string, AbstractNodeType::ptr>::iterator iter;
+    for (iter = entries_.begin(); iter != entries_.end(); ++iter)
+    {
+        std::cout << " * " << (*iter).first << ": " << (*iter).second.get() << std::endl;
+        if ((*iter).first == name)
+        {
+            std::cout << "   MATCHES!" << std::endl;
+            ret = true;
+            break;
+        }
+    }
+    std::cout << "   return " << (ret ? "true" : "false") << std::endl;
+    return ret;
 }
 
 std::ostream &operator<<(std::ostream &os, const NodeFactory &nodeFactory)

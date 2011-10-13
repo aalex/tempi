@@ -2,7 +2,7 @@
 #include "tempi/tempi.h"
 
 using namespace tempi;
-static const bool VERBOSE = true;
+static const bool VERBOSE = false;
 
 /**
  * Dummy node.
@@ -34,10 +34,10 @@ bool check_graph()
 {
     Graph graph;
 
-    graph.addNode("source0", makeDummyNode());
-    graph.addNode("filter0", makeDummyNode());
-    graph.addNode("sink0", makeDummyNode());
-    graph.addNode("sink1", makeDummyNode());
+    graph.addNode(makeDummyNode(), "source0");
+    graph.addNode(makeDummyNode(), "filter0");
+    graph.addNode(makeDummyNode(), "sink0");
+    graph.addNode(makeDummyNode(), "sink1");
 
     graph.connect("source0", 0, "filter0", 0);
     graph.connect("filter0", 0, "sink0", 0);
@@ -63,39 +63,40 @@ static bool fail(const char *message)
 bool check_node_factory()
 {
     NodeFactory::ptr factory(new NodeFactory);
-    factory->registerType("dummy", (AbstractNodeType *) new NodeType<DummyNode>);
+    AbstractNodeType::ptr dummy((AbstractNodeType*) (new NodeType<DummyNode>));
+    factory->registerType("dummy", dummy);
 
     Graph graph(factory);
     // --------------------------------
-    std::cout << *factory << std::endl;
-    if (! graph.addNode("dummy0", "dummy"))
+    //std::cout << *factory << std::endl;
+    if (! graph.addNode("dummy", "dummy0"))
         return fail("Failed to add dummy0");
-    else
-        std::cout << "created dummy0 ok" << std::endl;
+    //else
+    //    std::cout << "created dummy0 ok" << std::endl;
 
     // --------------------------------
     std::cout << *factory << std::endl;
-    if (! graph.addNode("dummy1", "dummy"))
+    if (! graph.addNode("dummy", "dummy1"))
         return fail("Failed to add dummy1");
-    else
-        std::cout << "created dummy1 ok" << std::endl;
+    //else
+    //    std::cout << "created dummy1 ok" << std::endl;
 
     // --------------------------------
     std::cout << *factory << std::endl;
-    if (! graph.addNode("dummy2", "dummy"))
+    if (! graph.addNode("dummy", "dummy2"))
         return fail("Failed to add dummy2");
-    else
-        std::cout << "created dummy2 ok" << std::endl;
+    //else
+    //    std::cout << "created dummy2 ok" << std::endl;
 
     // --------------------------------
     std::cout << *factory << std::endl;
-    if (! graph.addNode("dummy3", "dummy"))
+    if (! graph.addNode("dummy", "dummy3"))
         return fail("Failed to add dummy3");
-    else
-        std::cout << "created dummy3 ok" << std::endl;
+    //else
+    //    std::cout << "created dummy3 ok" << std::endl;
 
     // --------------------------------
-    if (! graph.addNode("dummy4", "dummy"))
+    if (! graph.addNode("dummy", "dummy4"))
         return fail("Failed to add dummy4");
 
     if (! graph.connect("dummy0", 0, "dummy1", 0))
@@ -123,9 +124,8 @@ int main(int argc, char *argv[])
 {
     if (! check_graph())
         return 1;
-//FIXME TODO:
-//    if (! check_node_factory())
-//        return 1;
+    if (! check_node_factory())
+        return 1;
     return 0;
 }
 

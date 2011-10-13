@@ -40,8 +40,9 @@ class Graph
     public:
         Graph(NodeFactory::ptr factory);
         Graph();
-        bool addNode(const char *name, Node::ptr node);
-        bool addNode(const char *name, const char *type);
+        bool addNode(Node::ptr node, const char *name);
+        bool addNode(const char *type, const char *name);
+        // TODO: bool addNode(const char *type);
         bool message(const char *node, unsigned int inlet, const Message &message);
         bool connect(const char *from, unsigned int outlet, const char *to, unsigned int inlet);
         bool disconnect(const char *from, unsigned int outlet, const char *to, unsigned int inlet);

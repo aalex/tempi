@@ -70,7 +70,7 @@ class NodeFactory
          * Registers a node type.
          * Returns false if it failed.
          */
-        bool registerType(const char *name, AbstractNodeType *entry);
+        bool registerType(const char *name, AbstractNodeType::ptr entry);
         /**
          * Checks for a given node type.
          */

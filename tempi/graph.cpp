@@ -24,7 +24,7 @@ namespace tempi
 {
 
 Graph::Graph(NodeFactory::ptr factory) :
-    factory_(factory_)
+    factory_(factory)
 {
 }
 
@@ -32,35 +32,41 @@ Graph::Graph()
 {
 }
 
-bool Graph::addNode(const char *name, const char *type)
+bool Graph::addNode(const char *type, const char *name)
 {
     if (factory_.get() == 0)
     {
-        std::cerr << "NodeFactory is not valid." << std::endl;
+        std::cerr << "Graph::" << __FUNCTION__ << ": this NodeFactory is an Invalid pointer." << std::endl;
         return false;
     }
-    if (factory_.get()->hasType(type))
+    if (factory_->hasType(type))
     {
-        return addNode(name, factory_.get()->create(type));
+        std::cerr << "Graph::" << __FUNCTION__ << ": NodeFactory does have type " << type << std::endl;
+        return addNode(factory_->create(type), name);
     }
     else
     {
-        std::cerr << "NodeFactory has no type " << type << std::endl;
-        std::cerr << "Look:" << std::endl;
-        std::cerr << *factory_.get();
+        std::cerr << "Graph::" << __FUNCTION__ << ": NodeFactory has no type " << type << std::endl;
+        std::cerr << "Graph::" << __FUNCTION__ << ": Look:" << std::endl;
+        std::cerr << "Graph::" << __FUNCTION__ << ": " << *factory_.get();
         return false; // FIXME
     }
 }
 
-bool Graph::addNode(const char *name, Node::ptr node)
+bool Graph::addNode(Node::ptr node, const char *name)
 {
     if (getNode(name) != 0)
     {
-        std::cout << "Graph::" << __FUNCTION__ << ": There is already a node with ID " << name << std::endl;
+        std::cerr << "Graph::" << __FUNCTION__ << ": There is already a node with ID " << name << std::endl;
+        return false;
+    }
+    if (node.get() == 0)
+    {
+        std::cerr << "Graph::" << __FUNCTION__ << ": Invalid pointer to Node." << std::endl;
         return false;
     }
     nodes_[name] = node;
-    std::cout << "Graph::" << __FUNCTION__ << ": Added node " << name << std::endl;
+    //std::cout << "Graph::" << __FUNCTION__ << ": Added node " << name << std::endl;
     return true;
 }
 
@@ -69,12 +75,12 @@ bool Graph::message(const char *node, unsigned int inlet, const Message &message
     Node *nodePtr = getNode(node);
     if (nodePtr == 0)
     {
-        std::cout << "Graph::" << __FUNCTION__ << ": No such node: " << node << std::endl;
+        std::cerr << "Graph::" << __FUNCTION__ << ": No such node: " << node << std::endl;
         return false;
     }
     if (inlet >= nodePtr->getNumberOfInlets())
     {
-        std::cout << "Graph::" << __FUNCTION__ << ": Inlet " << inlet << "too big for node " << node << "." << std::endl;
+        std::cerr << "Graph::" << __FUNCTION__ << ": Inlet " << inlet << "too big for node " << node << "." << std::endl;
         return false;
     }
     Sink *inletPtr = nodePtr->getInlet(inlet);
@@ -88,23 +94,23 @@ bool Graph::connect(const char *from, unsigned int outlet, const char *to, unsig
     if (fromNode == 0)
     {
 
-        std::cout << "Graph::" << __FUNCTION__ << ": Cannot find node " << from << "." << std::endl;
+        std::cerr << "Graph::" << __FUNCTION__ << ": Cannot find node " << from << "." << std::endl;
         return false;
     }
     Node *toNode = getNode(to);
     if (toNode == 0)
     {
-        std::cout << "Graph::" << __FUNCTION__ << ": Cannot find node " << to << "." << std::endl;
+        std::cerr << "Graph::" << __FUNCTION__ << ": Cannot find node " << to << "." << std::endl;
         return false;
     }
     if (outlet >= fromNode->getNumberOfOutlets())
     {
-        std::cout << "Graph::" << __FUNCTION__ << ": Outlet " << outlet << "too big for node " << from << "." << std::endl;
+        std::cerr << "Graph::" << __FUNCTION__ << ": Outlet " << outlet << "too big for node " << from << "." << std::endl;
         return false;
     }
     if (inlet >= toNode->getNumberOfInlets())
     {
-        std::cout << "Graph::" << __FUNCTION__ << ": Inlet " << inlet << "too big for node " << to << "." << std::endl;
+        std::cerr << "Graph::" << __FUNCTION__ << ": Inlet " << inlet << "too big for node " << to << "." << std::endl;
         return false;
     }
     try
@@ -113,7 +119,7 @@ bool Graph::connect(const char *from, unsigned int outlet, const char *to, unsig
     }
     catch (const BadIndexException &e)
     {
-        std::cout << e.what() << std::endl;
+        std::cerr << e.what() << std::endl;
         return false;
     }
     return true;
@@ -125,23 +131,23 @@ bool Graph::isConnected(const char *from, unsigned int outlet, const char *to, u
     if (fromNode == 0)
     {
 
-        std::cout << "Graph::" << __FUNCTION__ << ": Cannot find node " << from << "." << std::endl;
+        std::cerr << "Graph::" << __FUNCTION__ << ": Cannot find node " << from << "." << std::endl;
         return false;
     }
     Node *toNode = getNode(to);
     if (toNode == 0)
     {
-        std::cout << "Graph::" << __FUNCTION__ << ": Cannot find node " << to << "." << std::endl;
+        std::cerr << "Graph::" << __FUNCTION__ << ": Cannot find node " << to << "." << std::endl;
         return false;
     }
     if (outlet >= fromNode->getNumberOfOutlets())
     {
-        std::cout << "Graph::" << __FUNCTION__ << ": Outlet " << outlet << "too big for node " << from << "." << std::endl;
+        std::cerr << "Graph::" << __FUNCTION__ << ": Outlet " << outlet << "too big for node " << from << "." << std::endl;
         return false;
     }
     if (inlet >= toNode->getNumberOfInlets())
     {
-        std::cout << "Graph::" << __FUNCTION__ << ": Inlet " << inlet << "too big for node " << to << "." << std::endl;
+        std::cerr << "Graph::" << __FUNCTION__ << ": Inlet " << inlet << "too big for node " << to << "." << std::endl;
         return false;
     }
     // no need to catch BadIndexException sinze already tested it
@@ -156,23 +162,23 @@ bool Graph::disconnect(const char *from, unsigned int outlet, const char *to, un
     if (fromNode == 0)
     {
 
-        std::cout << "Graph::" << __FUNCTION__ << ": Cannot find node " << from << "." << std::endl;
+        std::cerr << "Graph::" << __FUNCTION__ << ": Cannot find node " << from << "." << std::endl;
         return false;
     }
     Node *toNode = getNode(to);
     if (toNode == 0)
     {
-        std::cout << "Graph::" << __FUNCTION__ << ": Cannot find node " << to << "." << std::endl;
+        std::cerr << "Graph::" << __FUNCTION__ << ": Cannot find node " << to << "." << std::endl;
         return false;
     }
     if (outlet >= fromNode->getNumberOfOutlets())
     {
-        std::cout << "Graph::" << __FUNCTION__ << ": Outlet " << outlet << "too big for node " << from << "." << std::endl;
+        std::cerr << "Graph::" << __FUNCTION__ << ": Outlet " << outlet << "too big for node " << from << "." << std::endl;
         return false;
     }
     if (inlet >= toNode->getNumberOfInlets())
     {
-        std::cout << "Graph::" << __FUNCTION__ << ": Inlet " << inlet << "too big for node " << to << "." << std::endl;
+        std::cerr << "Graph::" << __FUNCTION__ << ": Inlet " << inlet << "too big for node " << to << "." << std::endl;
         return false;
     }
     // no need to catch BadIndexException sinze already tested it
