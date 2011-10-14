@@ -32,6 +32,7 @@
 #include <string>
 #include <typeinfo>
 #include <vector>
+#include <cstdarg>
 #include "tempi/exceptions.h"
 
 namespace tempi
@@ -68,6 +69,9 @@ class Message
          * Constructor with no argument.
          */
         Message();
+
+        Message(const char* types, ...);
+        void append(const char* types, ...);
         //const std::type_info *getType(unsigned int index) const;
         bool getArgumentType(unsigned int index, ArgumentType &type) const;
         //bool setArgument(unsigned int index, boost::any &value);
@@ -153,7 +157,7 @@ class Message
             return ret;
         }
     private:
-
+        void appendVaList(const char* types, va_list arguments);
         void appendStdString(std::string value);
         // Message(std::vector<boost::any> arguments);
         // std::vector<boost::any> &getArguments();

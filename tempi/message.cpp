@@ -31,6 +31,86 @@ Message::Message()
     // pass
 }
 
+Message::Message(const char *types, ...)
+{
+    va_list arguments;
+    va_start(arguments, types);
+    appendVaList(types, arguments);
+    va_end(arguments);
+}
+
+void Message::append(const char *types, ...)
+{
+    va_list arguments;
+    va_start(arguments, types);
+    appendVaList(types, arguments);
+    va_end(arguments);
+}
+
+void Message::appendVaList(const char *types, va_list arguments)
+{
+    for (int i = 0; types[i] != '\0'; ++i)
+    {
+        switch (types[i])
+        {
+            case 'f':
+            {
+                float value = va_arg(arguments, double);
+                //std::cout << "Caught a float : " << value;
+                appendFloat(value);
+                break;
+            }
+            case 'i':
+            {
+                int value = va_arg(arguments, int);
+                //std::cout << "Caught an integer : " << value;
+                appendInt(value);
+                break;
+            }
+            case 'b':
+            {
+                bool value = (bool) va_arg(arguments, int);
+                //std::cout << "Caught a bool : " << value;
+                appendBoolean(value);
+                break;
+            }
+            case 's':
+            {
+                const char *value = va_arg(arguments, const char*);
+                // FIXME: does this memleak?
+                //std::cout << "Caught a string : " << value;
+                appendString(value);
+                break;
+            }
+            case 'd':
+            {
+                double value = va_arg(arguments, double);
+                std::cout << "Caught a double : " << value;
+                appendDouble(value);
+                break;
+            }
+            case 'c':
+            {
+                char value = (char) va_arg(arguments, int);
+                //std::cout << "Caught a char : " <<  value;
+                appendChar(value);
+                break;
+            }
+            case 'l':
+            {
+                long long int value = va_arg(arguments, long long int);
+                //std::cout << "Caught a long long :" << value;
+                appendLong(value);
+                break;
+            }
+            default:
+                std::cerr << "Message::" << __FUNCTION__ << ": Unsupported type tag: " << types[i];
+                break;
+        }
+        //std::cout << std::endl;
+    }
+}
+
 bool Message::append(boost::any value)
 {
     arguments_.push_back(value);

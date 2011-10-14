@@ -47,6 +47,7 @@ prototypes/kinect/freedraw
 prototypes/nodefactory
 prototypes/phoenix/findif
 prototypes/tuples
+prototypes/va_list/var_types
 prototypes/variant
 src/tempi
 tempi-*.tar.gz
