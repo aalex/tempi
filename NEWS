@@ -1,12 +1,29 @@
-Tempi 0.1.2 (2011-0?-??)
--------------------------
+Tempi 0.1.2 (2011-10-14)
+------------------------
 This release is a developer snapshot in the 0.1 series.
 
 New features:
-* (none)
+* The osc-forward command-lineutility.
+* OscReceiverNode and OscSenderNode
+* can instanciate Message with va_list
+* NopNode
+* Graph uses a NodeFactory
+* Add ::ptr typedef members to many classes
+* All nodes have at least one inlet
+* The set messages sets the properties. Add Node::getPropertiesNames
+* Add Message::cloneRange
+* Node::processMessage is called with inlet as arg
+* Implement properties with Message objects
+* Can now disconnect pads
+* Add more version macros
 
 Bugs fixed:
-* (none)
+* Tests are silent
+* Moved specific nodes to subdirectories
+* Fix bad exception type
+* Remove types.h. Compiling it used to take way too much CPU
+* Add virtual destructor to all abstract classes
+* Update README to be valid rst
 
 
 Tempi 0.1.0 (2011-09-02)
