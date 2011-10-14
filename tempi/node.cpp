@@ -283,6 +283,12 @@ bool Node::message(unsigned int inlet, const Message &message)
     return true;
 }
 
+void Node::output(unsigned int outlet, const Message &message) const throw(BadIndexException)
+{
+    Source::ptr source = getOutletSharedPtr(outlet);
+    source->trigger(message);
+}
+
 } // end of namespace
 
 

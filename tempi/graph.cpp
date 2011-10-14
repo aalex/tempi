@@ -41,14 +41,14 @@ bool Graph::addNode(const char *type, const char *name)
     }
     if (factory_->hasType(type))
     {
-        std::cerr << "Graph::" << __FUNCTION__ << ": NodeFactory does have type " << type << std::endl;
+        //std::cerr << "Graph::" << __FUNCTION__ << ": NodeFactory does have type " << type << std::endl;
         return addNode(factory_->create(type), name);
     }
     else
     {
-        std::cerr << "Graph::" << __FUNCTION__ << ": NodeFactory has no type " << type << std::endl;
-        std::cerr << "Graph::" << __FUNCTION__ << ": Look:" << std::endl;
-        std::cerr << "Graph::" << __FUNCTION__ << ": " << *factory_.get();
+        std::cerr << "Graph::" << __FUNCTION__ << ": This NodeFactory doesn't have type " << type << std::endl;
+        //std::cerr << "Graph::" << __FUNCTION__ << ": Look:" << std::endl;
+        //std::cerr << "Graph::" << __FUNCTION__ << ": " << *factory_.get();
         return false; // FIXME
     }
 }

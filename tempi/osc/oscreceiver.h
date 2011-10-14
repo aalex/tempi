@@ -36,6 +36,7 @@
 #include <strings.h>
 #include <unistd.h>
 #include <lo/lo.h>
+#include "tempi/sharedptr.h"
 
 /**
  * The OscReceiver class.
@@ -56,6 +57,7 @@ bool oscMessageMatches(const tempi::Message &message, const char *path, const ch
 class OscReceiver
 {
     public:
+        typedef std::tr1::shared_ptr<OscReceiver> ptr;
         /**
          * Use port 0 to disable OSC receiving.
          */

@@ -63,19 +63,19 @@ bool NodeFactory::hasType(const char *name)
     std::string nameStr(name);
     //if (entries_.find(nameStr) != entries_.end())
     //    ret = true;
-    std::cout << "NodeFactory::" << __FUNCTION__ << "(" << name << ") ..." << std::endl;
+    //std::cout << "NodeFactory::" << __FUNCTION__ << "(" << name << ") ..." << std::endl;
     std::map<std::string, AbstractNodeType::ptr>::iterator iter;
     for (iter = entries_.begin(); iter != entries_.end(); ++iter)
     {
-        std::cout << " * " << (*iter).first << ": " << (*iter).second.get() << std::endl;
+        //std::cout << " * " << (*iter).first << ": " << (*iter).second.get() << std::endl;
         if ((*iter).first == name)
         {
-            std::cout << "   MATCHES!" << std::endl;
+            //std::cout << "   MATCHES!" << std::endl;
             ret = true;
             break;
         }
     }
-    std::cout << "   return " << (ret ? "true" : "false") << std::endl;
+    //std::cout << "   return " << (ret ? "true" : "false") << std::endl;
     return ret;
 }
 

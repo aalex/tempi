@@ -40,6 +40,7 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     node.cpp \
     nodefactory.cpp \
     osc/oscreceiver.cpp \
+    osc/oscreceivernode.cpp \
     osc/oscsender.cpp \
     osc/oscsendernode.cpp \
     sampler/loopingplayback.cpp \
@@ -78,6 +79,7 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     node.h \
     nodefactory.h \
     osc/oscreceiver.h \
+    osc/oscreceivernode.h \
     osc/oscsender.h \
     osc/oscsendernode.h \
     sampler/loopingplayback.h \

@@ -4,7 +4,7 @@
 
 using namespace tempi;
 
-static const bool VERBOSE = true;
+static const bool VERBOSE = false;
 
 class DummyNode : public Node
 {
@@ -13,6 +13,8 @@ class DummyNode : public Node
             Node(),
             triggered_(false)
         {
+            Message message_a = Message("ifs", 1, 3.14159f, "foo");
+            addProperty("hello", message_a);
         }
         bool triggered_;
     private:
@@ -35,13 +37,6 @@ class DummyNode : public Node
 static bool check_properties()
 {
     DummyNode n;
-
-    Message message_a;
-    message_a.appendInt(1);
-    message_a.appendFloat(3.14159f);
-    message_a.appendString("foo");
-
-    n.addProperty("hello", message_a);
 
     Message message_b;
     message_b.appendInt(2);
@@ -75,16 +70,14 @@ static bool check_properties()
     catch (const BadIndexException &e)
     {}
 
-    Message set_message;
-    set_message.appendString("set");
-    set_message.appendString("hello");
-    set_message.appendInt(3);
-    set_message.appendFloat(8.124351);
-    set_message.appendString("qweoiquweioqu");
+    Message set_message = Message("ssifs", "set", "hello", 3, 9.124351f, "qweqweqweqw");
     n.triggered_ = false;
     n.getInlet(0)->trigger(set_message);
-    std::cout << n.triggered_ << std::endl;
-    std::cout << n.getProperty("hello") << std::endl;
+    if (VERBOSE)
+    {
+        std::cout << n.triggered_ << std::endl;
+        std::cout << n.getProperty("hello") << std::endl;
+    }
     if (! n.triggered_)
     {
         std::cout << "property not triggered (using a set message)" << std::endl;

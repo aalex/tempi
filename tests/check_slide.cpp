@@ -9,7 +9,8 @@ bool check_slide()
 {
     Slide slide = Slide();
     slide.setSlide(1.0);
-    std::cout << "slide = " << slide.getSlide() << std::endl;
+    if (VERBOSE)
+        std::cout << "slide = " << slide.getSlide() << std::endl;
     double factor = 1.0;
     for (int i = 0; i < 100; ++i)
     {

@@ -2,6 +2,7 @@
 #include <iostream>
 
 using namespace tempi;
+static const bool VERBOSE = false;
 
 class FooNode: public Node
 {
@@ -9,7 +10,8 @@ class FooNode: public Node
         FooNode() :
             Node()
         {
-            std::cout << "Create a FooNode" << std::endl;
+            if (VERBOSE)
+                std::cout << "Create a FooNode" << std::endl;
             addInlet();
             addOutlet();
         }
@@ -25,7 +27,8 @@ class BarNode: public Node
         {
             addInlet();
             addOutlet();
-            std::cout << "Create a BarNode" << std::endl;
+            if (VERBOSE)
+                std::cout << "Create a BarNode" << std::endl;
         }
     private:
         virtual void processMessage(unsigned int inlet, const Message &message) {}
@@ -33,7 +36,8 @@ class BarNode: public Node
 
 bool check_nodefactory()
 {
-    std::cout << __FUNCTION__ << std::endl;
+    if (VERBOSE)
+        std::cout << __FUNCTION__ << std::endl;
     NodeFactory factory;
     AbstractNodeType *tmp = (AbstractNodeType*) new NodeType<FooNode>();
     AbstractNodeType::ptr fooType(tmp);
@@ -69,13 +73,13 @@ bool check_nodefactory()
     Message message;
     foo.get()->getInlet(0)->trigger(message);
     bar.get()->getInlet(0)->trigger(message);
-
     return true;
 }
 
 bool check_many_instances()
 {
-    std::cout << __FUNCTION__ << std::endl;
+    if (VERBOSE)
+        std::cout << __FUNCTION__ << std::endl;
     NodeFactory factory;
     AbstractNodeType *tmp = (AbstractNodeType*) new NodeType<FooNode>();
     AbstractNodeType::ptr fooType(tmp);

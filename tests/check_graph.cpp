@@ -46,10 +46,7 @@ bool check_graph()
     for (int i = 0; i < 10; ++i)
         graph.tick();
 
-    Message message;
-    message.appendFloat(3.14159f);
-    message.appendInt(2);
-    message.appendString("hello");
+    Message message = Message("fis", 3.14159f, 2, "hello");
     graph.message("source0", 0, message);
     return true;
 }
@@ -111,10 +108,7 @@ bool check_node_factory()
     for (int i = 0; i < 10; ++i)
         graph.tick();
 
-    Message message;
-    message.appendFloat(3.14159f);
-    message.appendInt(2);
-    message.appendString("hello");
+    Message message = Message("fis", 3.14159f, 2, "hello");
     graph.message("dummy0", 0, message);
 
     return true;
