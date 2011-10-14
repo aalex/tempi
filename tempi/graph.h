@@ -27,6 +27,7 @@
 #include "tempi/sink.h"
 #include "tempi/node.h"
 #include "tempi/sharedptr.h"
+#include "tempi/nodefactory.h"
 
 namespace tempi
 {
@@ -37,20 +38,27 @@ namespace tempi
 class Graph
 {
     public:
+        typedef std::tr1::shared_ptr<Graph> ptr;
+        Graph(NodeFactory::ptr factory);
         Graph();
-        //std::map<std::string, std::tr1::shared_ptr<Node> > getNodes() const;
-        bool addNode(const char *name, std::tr1::shared_ptr<Node> node);
+        bool addNode(Node::ptr node, const char *name);
+        bool addNode(const char *type, const char *name);
+        // TODO: bool addNode(const char *type);
         bool message(const char *node, unsigned int inlet, const Message &message);
         bool connect(const char *from, unsigned int outlet, const char *to, unsigned int inlet);
         bool disconnect(const char *from, unsigned int outlet, const char *to, unsigned int inlet);
         bool isConnected(const char *from, unsigned int outlet, const char *to, unsigned int inlet);
-        //TODO: std::vector<boost::tuple<std::string, unsigned int, std::string, unsigned int> > getConnections();
         Node *getNode(const char *name) const;
         void tick();
     private:
-        std::map<std::string, std::tr1::shared_ptr<Node> > nodes_;
+        NodeFactory::ptr factory_;
+        std::map<std::string, Node::ptr> nodes_;
         //void onInletTriggered(Source *source, boost::any data);
 };
+
+// not a good idea:
+//std::vector<boost::tuple<std::string, unsigned int, std::string, unsigned int> > getConnections();
+//std::map<std::string, std::tr1::shared_ptr<Node> > getNodes() const;
 
 } // end of namespace
 

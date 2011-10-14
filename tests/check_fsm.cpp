@@ -1,10 +1,9 @@
 #include <iostream>
-#include "tempi/tempi.h"
-#include "tempi/statemachine.h"
+#include "tempi/fsm/statemachine.h"
 
 using namespace tempi::fsm;
 
-// static const bool VERBOSE = false;
+static const bool VERBOSE = false;
 
 bool check_fsm()
 {
@@ -49,7 +48,7 @@ bool check_fsm()
 
 int main(int argc, char *argv[])
 {
-    if (not check_fsm())
+    if (! check_fsm())
         return 1;
     return 0;
 }

@@ -4,7 +4,7 @@
 
 using namespace tempi;
 
-static const bool VERBOSE = true;
+static const bool VERBOSE = false;
 
 bool check_message()
 {
@@ -19,6 +19,30 @@ bool check_message()
         std::cout << "string: " << m.getString(1) << std::endl;
         std::cout << "int: " << m.getInt(2) << std::endl;
         std::cout << "Message: " << m << std::endl;
+    }
+    return true;
+}
+
+static bool fail(const char *message)
+{
+    std::cout << message << std::endl;
+    return false;
+}
+
+bool check_valist()
+{
+    Message m = Message("sif", "blah", 2, 3.14159f);
+    if (m.getString(0) != "blah")
+    {
+        return fail("expected blah");
+    }
+    if (m.getInt(1) != 2)
+    {
+        return fail("expected 2");
+    }
+    if (m.getFloat(2) != 3.14159f)
+    {
+        return fail("expected 3.14159f");
     }
     return true;
 }
@@ -45,7 +69,11 @@ bool check_clone()
 
 int main(int argc, char *argv[])
 {
-    if (not check_message())
+    if (! check_message())
+        return 1;
+    if (! check_clone())
+        return 1;
+    if (! check_valist())
         return 1;
     return 0;
 }

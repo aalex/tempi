@@ -23,23 +23,50 @@
 namespace tempi
 {
 
+Graph::Graph(NodeFactory::ptr factory) :
+    factory_(factory)
+{
+}
+
 Graph::Graph()
 {
 }
 
-// std::map<std::string, std::tr1::shared_ptr<Node> > Graph::getNodes() const
-// {
-//     return nodes_;
-// }
+bool Graph::addNode(const char *type, const char *name)
+{
+    if (factory_.get() == 0)
+    {
+        std::cerr << "Graph::" << __FUNCTION__ << ": this NodeFactory is an Invalid pointer." << std::endl;
+        return false;
+    }
+    if (factory_->hasType(type))
+    {
+        //std::cerr << "Graph::" << __FUNCTION__ << ": NodeFactory does have type " << type << std::endl;
+        return addNode(factory_->create(type), name);
+    }
+    else
+    {
+        std::cerr << "Graph::" << __FUNCTION__ << ": This NodeFactory doesn't have type " << type << std::endl;
+        //std::cerr << "Graph::" << __FUNCTION__ << ": Look:" << std::endl;
+        //std::cerr << "Graph::" << __FUNCTION__ << ": " << *factory_.get();
+        return false; // FIXME
+    }
+}
 
-bool Graph::addNode(const char *name, std::tr1::shared_ptr<Node> node)
+bool Graph::addNode(Node::ptr node, const char *name)
 {
     if (getNode(name) != 0)
     {
-        std::cout << "Graph::" << __FUNCTION__ << ": There is already a node with ID " << name << std::endl;
+        std::cerr << "Graph::" << __FUNCTION__ << ": There is already a node with ID " << name << std::endl;
+        return false;
+    }
+    if (node.get() == 0)
+    {
+        std::cerr << "Graph::" << __FUNCTION__ << ": Invalid pointer to Node." << std::endl;
         return false;
     }
     nodes_[name] = node;
+    //std::cout << "Graph::" << __FUNCTION__ << ": Added node " << name << std::endl;
     return true;
 }
 
@@ -48,17 +75,10 @@ bool Graph::message(const char *node, unsigned int inlet, const Message &message
     Node *nodePtr = getNode(node);
     if (nodePtr == 0)
     {
-        std::cout << "Graph::" << __FUNCTION__ << ": No such node: " << node << std::endl;
+        std::cerr << "Graph::" << __FUNCTION__ << ": No such node: " << node << std::endl;
         return false;
     }
-    if (inlet >= nodePtr->getNumberOfInlets())
-    {
-        std::cout << "Graph::" << __FUNCTION__ << ": Inlet " << inlet << "too big for node " << node << "." << std::endl;
-        return false;
-    }
-    Sink *inletPtr = nodePtr->getInlet(inlet);
-    inletPtr->trigger(message);
-    return true;
+    return nodePtr->message(inlet, message);
 }
 
 bool Graph::connect(const char *from, unsigned int outlet, const char *to, unsigned int inlet)
@@ -67,23 +87,23 @@ bool Graph::connect(const char *from, unsigned int outlet, const char *to, unsig
     if (fromNode == 0)
     {
 
-        std::cout << "Graph::" << __FUNCTION__ << ": Cannot find node " << from << "." << std::endl;
+        std::cerr << "Graph::" << __FUNCTION__ << ": Cannot find node " << from << "." << std::endl;
         return false;
     }
     Node *toNode = getNode(to);
     if (toNode == 0)
     {
-        std::cout << "Graph::" << __FUNCTION__ << ": Cannot find node " << to << "." << std::endl;
+        std::cerr << "Graph::" << __FUNCTION__ << ": Cannot find node " << to << "." << std::endl;
         return false;
     }
     if (outlet >= fromNode->getNumberOfOutlets())
     {
-        std::cout << "Graph::" << __FUNCTION__ << ": Outlet " << outlet << "too big for node " << from << "." << std::endl;
+        std::cerr << "Graph::" << __FUNCTION__ << ": Outlet " << outlet << "too big for node " << from << "." << std::endl;
         return false;
     }
     if (inlet >= toNode->getNumberOfInlets())
     {
-        std::cout << "Graph::" << __FUNCTION__ << ": Inlet " << inlet << "too big for node " << to << "." << std::endl;
+        std::cerr << "Graph::" << __FUNCTION__ << ": Inlet " << inlet << "too big for node " << to << "." << std::endl;
         return false;
     }
     try
@@ -92,7 +112,7 @@ bool Graph::connect(const char *from, unsigned int outlet, const char *to, unsig
     }
     catch (const BadIndexException &e)
     {
-        std::cout << e.what() << std::endl;
+        std::cerr << e.what() << std::endl;
         return false;
     }
     return true;
@@ -104,27 +124,27 @@ bool Graph::isConnected(const char *from, unsigned int outlet, const char *to, u
     if (fromNode == 0)
     {
 
-        std::cout << "Graph::" << __FUNCTION__ << ": Cannot find node " << from << "." << std::endl;
+        std::cerr << "Graph::" << __FUNCTION__ << ": Cannot find node " << from << "." << std::endl;
         return false;
     }
     Node *toNode = getNode(to);
     if (toNode == 0)
     {
-        std::cout << "Graph::" << __FUNCTION__ << ": Cannot find node " << to << "." << std::endl;
+        std::cerr << "Graph::" << __FUNCTION__ << ": Cannot find node " << to << "." << std::endl;
         return false;
     }
     if (outlet >= fromNode->getNumberOfOutlets())
     {
-        std::cout << "Graph::" << __FUNCTION__ << ": Outlet " << outlet << "too big for node " << from << "." << std::endl;
+        std::cerr << "Graph::" << __FUNCTION__ << ": Outlet " << outlet << "too big for node " << from << "." << std::endl;
         return false;
     }
     if (inlet >= toNode->getNumberOfInlets())
     {
-        std::cout << "Graph::" << __FUNCTION__ << ": Inlet " << inlet << "too big for node " << to << "." << std::endl;
+        std::cerr << "Graph::" << __FUNCTION__ << ": Inlet " << inlet << "too big for node " << to << "." << std::endl;
         return false;
     }
     // no need to catch BadIndexException sinze already tested it
-    std::tr1::shared_ptr<Source> source = fromNode->getOutletSharedPtr(outlet);
+    Source::ptr source = fromNode->getOutletSharedPtr(outlet);
     Sink *sink = toNode->getInlet(inlet);
     return sink->isConnected(source);
 }
@@ -135,27 +155,27 @@ bool Graph::disconnect(const char *from, unsigned int outlet, const char *to, un
     if (fromNode == 0)
     {
 
-        std::cout << "Graph::" << __FUNCTION__ << ": Cannot find node " << from << "." << std::endl;
+        std::cerr << "Graph::" << __FUNCTION__ << ": Cannot find node " << from << "." << std::endl;
         return false;
     }
     Node *toNode = getNode(to);
     if (toNode == 0)
     {
-        std::cout << "Graph::" << __FUNCTION__ << ": Cannot find node " << to << "." << std::endl;
+        std::cerr << "Graph::" << __FUNCTION__ << ": Cannot find node " << to << "." << std::endl;
         return false;
     }
     if (outlet >= fromNode->getNumberOfOutlets())
     {
-        std::cout << "Graph::" << __FUNCTION__ << ": Outlet " << outlet << "too big for node " << from << "." << std::endl;
+        std::cerr << "Graph::" << __FUNCTION__ << ": Outlet " << outlet << "too big for node " << from << "." << std::endl;
         return false;
     }
     if (inlet >= toNode->getNumberOfInlets())
     {
-        std::cout << "Graph::" << __FUNCTION__ << ": Inlet " << inlet << "too big for node " << to << "." << std::endl;
+        std::cerr << "Graph::" << __FUNCTION__ << ": Inlet " << inlet << "too big for node " << to << "." << std::endl;
         return false;
     }
     // no need to catch BadIndexException sinze already tested it
-    std::tr1::shared_ptr<Source> source = fromNode->getOutletSharedPtr(outlet);
+    Source::ptr source = fromNode->getOutletSharedPtr(outlet);
     Sink *sink = toNode->getInlet(inlet);
     return sink->disconnect(source);
 }
@@ -163,7 +183,7 @@ bool Graph::disconnect(const char *from, unsigned int outlet, const char *to, un
 Node *Graph::getNode(const char *name) const
 {
     std::string nameString(name);
-    std::map<std::string, std::tr1::shared_ptr<Node> >::const_iterator iter = nodes_.find(nameString);
+    std::map<std::string, Node::ptr>::const_iterator iter = nodes_.find(nameString);
     if (iter == nodes_.end())
     {
         return 0;
@@ -175,7 +195,7 @@ Node *Graph::getNode(const char *name) const
 void Graph::tick()
 {
     // FIXME: nodes are ticked in a random order, pretty much
-    std::map<std::string, std::tr1::shared_ptr<Node> >::iterator iter;
+    std::map<std::string, Node::ptr>::iterator iter;
     for (iter = nodes_.begin(); iter != nodes_.end(); ++iter)
     {
         (*iter).second.get()->tick();

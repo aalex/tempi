@@ -1,5 +1,5 @@
 #include <iostream>
-#include "tempi/average.h"
+#include "tempi/mapping/average.h"
 
 using namespace tempi;
 

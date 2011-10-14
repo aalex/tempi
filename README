@@ -12,7 +12,7 @@ About
 -----
 Tempi is a multimodal sampling library.
 
-It should supports OSC messaging soon, as well as finite state machines, timelines and flexible message routing.
+It supports OSC messaging, as well as finite state machines, timelines and flexible message routing.
 
 Tempi is a C++ library for multi-modal sampling. It allows recording and playback of flows of messages whose types can be arbitrary. We can then record series of events encoded as numbers, texts, 3D trajectories, list of images or sounds files. For example, one could use Tempi to store musical notes sequenced over time, to do rapid prototyping of motion, or any type of changes that are then easy to reproduce again.
 
@@ -23,7 +23,7 @@ History
 -------
 Tempi is inspired by the Toonloop application, developed since 2008 by the artist-developper Alexandre Quessy. Toonloop is an in situ frame by frame animation editor, whose clips are played back as we add frames to them. It eases spontaneous creation. Tempi expands this idea to apply it to any type of data that can be produced by sensors.
 
-The first prototypes have been done as of August 2011. It should soon support sending and receiving OSC messages.
+The first prototypes have been done as of August 2011. It now supports sending and receiving OSC messages. It provides a dataflow environment in which you can connect nodes in a graph.
 
 This library offers new possibilities for in situ data sampling. One can record trajectories, data from any kind of sensor, as well as image and sound files. These tracks could potentially be integrated to timeline-based graphical editors.
 

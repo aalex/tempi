@@ -28,11 +28,10 @@
 #include <map>
 #include "tempi/sharedptr.h"
 #include "tempi/message.h"
+#include "tempi/source.h"
 
 namespace tempi
 {
-
-class Source; // forward declaration
 
 /**
  * A Sink is a pad to which we can connect Source pads.
@@ -41,14 +40,15 @@ class Source; // forward declaration
 class Sink
 {
     public:
+        typedef std::tr1::shared_ptr<Sink> ptr;
         // TODO: rename to ReceiveSignal
         typedef boost::signals2::signal<void (Sink *sink, const Message&)> TriggeredSignal;
         // TODO: rename to ReceiveSlot
         typedef TriggeredSignal::slot_function_type TriggeredSlot;
         Sink();
-        bool connect(std::tr1::shared_ptr<Source> source);
-        bool disconnect(std::tr1::shared_ptr<Source> source);
-        bool isConnected(std::tr1::shared_ptr<Source> source);
+        bool connect(Source::ptr source);
+        bool disconnect(Source::ptr source);
+        bool isConnected(Source::ptr source);
         // TODO: rename to receive
         void trigger(const Message &message);
         TriggeredSignal &getOnTriggeredSignal()
@@ -57,9 +57,9 @@ class Sink
         }
         void disconnectAll();
     private:
-        //typedef std::map<std::tr1::shared_ptr<Source>, std::tr1::shared_ptr<boost::signals2::scoped_connection> > SourceMap;
+        //typedef std::map<Source::ptr, std::tr1::shared_ptr<boost::signals2::scoped_connection> > SourceMap;
         //SourceMap sources_;
-        typedef std::vector<std::tr1::shared_ptr<Source> > SourcesVec;
+        typedef std::vector<Source::ptr> SourcesVec;
         SourcesVec sources_;
         TriggeredSignal on_triggered_signal_;
 };

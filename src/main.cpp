@@ -25,7 +25,7 @@
 #include "particlegenerator.h"
 #include "sampler.h"
 #include "tempi/config.h"
-#include "tempi/oscreceiver.h"
+#include "tempi/osc/oscreceiver.h"
 #include "tempi/tempi.h"
 #include <boost/lexical_cast.hpp>
 #include <boost/program_options.hpp>

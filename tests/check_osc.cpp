@@ -3,12 +3,12 @@
 #include <vector>
 #include <unistd.h>
 #include "tempi/message.h"
-#include "tempi/oscsender.h"
-#include "tempi/oscreceiver.h"
+#include "tempi/osc/oscsender.h"
+#include "tempi/osc/oscreceiver.h"
 
 using namespace tempi;
 
-static const bool VERBOSE = true;
+static const bool VERBOSE = false;
 
 bool check_oscsender()
 {
@@ -30,16 +30,21 @@ bool check_oscsender()
 bool check_oscreceiver()
 {
     OscReceiver receiver(14444);
-    std::cout << receiver << std::endl;
+    if (VERBOSE)
+        std::cout << receiver << std::endl;
     for (int i = 0; i < 10; ++i)
     {
-        std::cout << "Please wait 1 second..." << std::endl;
-        sleep(1); // 1 second
+        if (VERBOSE)
+        {
+            std::cout << "Please wait 1 second..." << std::endl;
+            sleep(1); // 1 second
+        }
         std::vector<Message> messages = receiver.poll();
         std::vector<Message>::iterator iter;
         for (iter = messages.begin(); iter != messages.end(); ++iter)
         {
-            std::cout << "Got " << (*iter) << std::endl;
+            if (VERBOSE)
+                std::cout << "Got " << (*iter) << std::endl;
         }
     }
     return true;
@@ -62,7 +67,8 @@ bool sent_and_received_matches(OscSender &sender, OscReceiver &receiver, const M
     std::vector<Message>::iterator iter;
     for (iter = messages.begin(); iter != messages.end(); ++iter)
     {
-        std::cout << "Got " << (*iter) << std::endl;
+        if (VERBOSE)
+            std::cout << "Got " << (*iter) << std::endl;
         Message received = (*iter);
         if (message != received)
         {

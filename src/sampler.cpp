@@ -18,7 +18,7 @@
  */
 
 #include "sampler.h"
-#include "tempi/pingpongplayback.h"
+#include "tempi/sampler/pingpongplayback.h"
 
 Sampler::Sampler()
 {

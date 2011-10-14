@@ -28,74 +28,80 @@ libtempi_@TEMPI_API_VERSION@_la_includedir = $(includedir)/tempi-$(TEMPI_API_VER
 ## and the variable name derived from that.
 ## PLEASE KEEP THEM IN ALPHABETICAL ORDER
 libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
+    base/nop_node.cpp \
     filter.cpp \
+    fsm/rule.cpp \
+    fsm/state.cpp \
+    fsm/statemachine.cpp \
     graph.cpp \
-    loopingplayback.cpp \
-    marker.cpp \
+    mapping/slide.cpp \
+    mapping/slidefilter.cpp \
     message.cpp \
     node.cpp \
     nodefactory.cpp \
-    oscreceiver.cpp \
-    oscsender.cpp \
-    pingpongplayback.cpp \
-    player.cpp \
-    recorder.cpp \
-    rule.cpp \
-    samplernode.cpp \
-    score.cpp \
+    osc/oscreceiver.cpp \
+    osc/oscreceivernode.cpp \
+    osc/oscsender.cpp \
+    osc/oscsendernode.cpp \
+    sampler/loopingplayback.cpp \
+    sampler/marker.cpp \
+    sampler/pingpongplayback.cpp \
+    sampler/player.cpp \
+    sampler/recorder.cpp \
+    sampler/samplernode.cpp \
+    sampler/score.cpp \
+    sampler/track.cpp \
     sink.cpp \
     sinknode.cpp \
-    slide.cpp \
-    slidefilter.cpp \
     source.cpp \
     sourcenode.cpp \
-    state.cpp \
-    statemachine.cpp \
-    table.cpp \
-    table_player.cpp \
-    table_writer.cpp \
+    table/table.cpp \
+    table/table_player.cpp \
+    table/table_writer.cpp \
     tempi.cpp \
-    track.cpp \
     timer.cpp
 
 ## PLEASE KEEP THEM IN ALPHABETICAL ORDER
 libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
-    average.h \
+    base/nop_node.h \
     concurrentqueue.h \
     exceptions.h \
     filter.h \
+    fsm/rule.h \
+    fsm/state.h \
+    fsm/statemachine.h \
     graph.h \
     identifier.h \
-    loopingplayback.h \
-    marker.h \
+    mapping/average.h \
+    mapping/slide.h \
+    mapping/slidefilter.h \
     message.h \
     node.h \
     nodefactory.h \
-    oscreceiver.h \
-    oscsender.h \
-    pingpongplayback.h \
-    playback.h \
-    player.h \
-    recorder.h \
-    rule.h \
-    samplernode.h \
-    score.h \
+    osc/oscreceiver.h \
+    osc/oscreceivernode.h \
+    osc/oscsender.h \
+    osc/oscsendernode.h \
+    sampler/loopingplayback.h \
+    sampler/marker.h \
+    sampler/pingpongplayback.h \
+    sampler/playback.h \
+    sampler/player.h \
+    sampler/recorder.h \
+    sampler/samplernode.h \
+    sampler/score.h \
+    sampler/track.h \
     sharedptr.h \
     sink.h \
     sinknode.h \
-    slide.h \
-    slidefilter.h \
     source.h \
     sourcenode.h \
-    state.h \
-    statemachine.h \
-    table.h \
-    table_player.h \
-    table_writer.h \
+    table/table.h \
+    table/table_player.h \
+    table/table_writer.h \
     tempi-version.h \
     tempi.h \
     timeposition.h \
     timer.h \
-    track.h \
     types.h
 

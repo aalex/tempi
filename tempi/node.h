@@ -43,40 +43,24 @@ namespace tempi
 class Node
 {
     public:
+        typedef std::tr1::shared_ptr<Node> ptr;
         Node();
         virtual ~Node() {}
         /**
          * Returns all its outlets.
          */
-        std::vector<std::tr1::shared_ptr<Source> > getOutlets();
+        std::vector<Source::ptr> getOutlets();
         /**
          * Returns all its inlets.
          */
-        std::vector<std::tr1::shared_ptr<Sink> > getInlets();
-
+        std::vector<Sink::ptr> getInlets();
         unsigned int getNumberOfInlets() const;
         unsigned int getNumberOfOutlets() const;
-        /**
-         * Adds a outlet.
-         */
-        bool addOutlet(std::tr1::shared_ptr<Source> source);
-        /**
-         * Adds a inlet.
-         */
-        bool addInlet(std::tr1::shared_ptr<Sink> sink);
-        /**
-         * Adds a outlet.
-         */
-        bool addOutlet();
-
+        bool message(unsigned int inlet, const Message &message);
         Sink *getInlet(unsigned int number) const;
         // TODO: deprecate getOutlet?
         Source *getOutlet(unsigned int number) const;
-        std::tr1::shared_ptr<Source> getOutletSharedPtr(unsigned int number) const throw(BadIndexException);
-        /**
-         * Adds a inlet.
-         */
-        bool addInlet();
+        Source::ptr getOutletSharedPtr(unsigned int number) const throw(BadIndexException);
         /**
          * Triggers whatever time-dependent events. Calleds by the Graph.
          */
@@ -84,7 +68,6 @@ class Node
         // TODO: properties:
         // std::map<std::string, Message> getProperties();
         const Message &getProperty(const char *name) const throw(BadIndexException);
-        void addProperty(const char *name, const Message &property) throw(BadIndexException);
         bool hasProperty(const char *name) const;
         /**
          * Sets a property value.
@@ -99,20 +82,39 @@ class Node
         // typedef boost::signals2::signal<void(Message)> Signal;
         // std::map<std::string, Signal> getSignals();
         // type_info *getSignalType(std::string signal);
-    private:
+    protected:
+        /**
+         * Adds a outlet.
+         */
+        bool addOutlet();
+        /**
+         * Adds a inlet.
+         */
+        bool addInlet();
+        /**
+         * Adds a outlet.
+         */
+        bool addOutlet(Source::ptr source);
+        /**
+         * Adds a inlet.
+         */
+        bool addInlet(Sink::ptr sink);
+        void addProperty(const char *name, const Message &property) throw(BadIndexException);
+        void output(unsigned int outlet, const Message &message) const throw(BadIndexException);
         virtual void onPropertyChanged(const char *name, const Message &value)
         {}
-        std::vector<std::tr1::shared_ptr<Source> > outlets_;
-        std::map<std::string, Message> properties_;
-        std::vector<std::tr1::shared_ptr<Sink> > inlets_;
         unsigned int getInletIndex(Sink *sink) const throw(BadIndexException);
-        // TODO: return success
-        // TODO: add unsigned int inlet_number
         void onInletTriggered(Sink *sink, const Message &message);
         virtual void processMessage(unsigned int inlet, const Message &message) = 0;
         virtual void doTick();
         bool hasInlet(Sink *sink);
         bool hasOutlet(Source *source);
+    private:
+        std::vector<Source::ptr> outlets_;
+        std::map<std::string, Message> properties_;
+        std::vector<Sink::ptr> inlets_;
+        // TODO: return success
+        // TODO: add unsigned int inlet_number
 };
 
 } // end of namespace

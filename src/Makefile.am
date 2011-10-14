@@ -1,4 +1,4 @@
-bin_PROGRAMS = tempi
+bin_PROGRAMS = tempi osc-forward
 
 AM_CXXFLAGS = \
 	$(BOOST_CPPFLAGS) \
@@ -18,6 +18,9 @@ LDADD = \
 tempi_CXXFLAGS = $(AM_CXXFLAGS)
 tempi_LDADD = $(LDADD)
 
+osc_forward_CXXFLAGS = $(AM_CXXFLAGS)
+osc_forward_LDADD = $(LDADD)
+
 headers = \
     legacy.h \
 	sampler.h \
@@ -29,3 +32,5 @@ tempi_SOURCES = \
     particlegenerator.cpp \
 	$(headers)
 
+osc_forward_SOURCES = \
+	osc_forward/main.cpp
