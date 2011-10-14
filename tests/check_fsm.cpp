@@ -3,7 +3,7 @@
 
 using namespace tempi::fsm;
 
-// static const bool VERBOSE = false;
+static const bool VERBOSE = false;
 
 bool check_fsm()
 {

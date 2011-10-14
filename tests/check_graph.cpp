@@ -64,35 +64,14 @@ bool check_node_factory()
     factory->registerType("dummy", dummy);
 
     Graph graph(factory);
-    // --------------------------------
-    //std::cout << *factory << std::endl;
     if (! graph.addNode("dummy", "dummy0"))
         return fail("Failed to add dummy0");
-    //else
-    //    std::cout << "created dummy0 ok" << std::endl;
-
-    // --------------------------------
-    std::cout << *factory << std::endl;
     if (! graph.addNode("dummy", "dummy1"))
         return fail("Failed to add dummy1");
-    //else
-    //    std::cout << "created dummy1 ok" << std::endl;
-
-    // --------------------------------
-    std::cout << *factory << std::endl;
     if (! graph.addNode("dummy", "dummy2"))
         return fail("Failed to add dummy2");
-    //else
-    //    std::cout << "created dummy2 ok" << std::endl;
-
-    // --------------------------------
-    std::cout << *factory << std::endl;
     if (! graph.addNode("dummy", "dummy3"))
         return fail("Failed to add dummy3");
-    //else
-    //    std::cout << "created dummy3 ok" << std::endl;
-
-    // --------------------------------
     if (! graph.addNode("dummy", "dummy4"))
         return fail("Failed to add dummy4");
 
@@ -110,7 +89,6 @@ bool check_node_factory()
 
     Message message = Message("fis", 3.14159f, 2, "hello");
     graph.message("dummy0", 0, message);
-
     return true;
 }
 

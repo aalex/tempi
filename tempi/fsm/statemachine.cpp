@@ -48,8 +48,8 @@ bool StateMachine::addState(State *state)
         states_[state->getName()] = StatePtr(state);
     if (states_.size() == 1)
         setCurrentStateName(state->getName());
-    else
-        std::cout << "Have " << states_.size() << " states." << std::endl;
+    //else
+    //    std::cout << "Have " << states_.size() << " states." << std::endl;
     return true;
 }
 

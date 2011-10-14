@@ -8,7 +8,7 @@
 
 using namespace tempi;
 
-static const bool VERBOSE = true;
+static const bool VERBOSE = false;
 
 static bool fail(const char *message)
 {
@@ -53,18 +53,11 @@ static bool check_oscsender_node()
         return false;
     }
 
-    Message m;
-    m.appendString("/hello");
-    m.appendFloat(3.14159);
-    m.appendString("spam");
-    m.appendInt(2);
-
+    Message m = Message("sfsi", "/hello", 3.14159f, "spam", 2);
     if (! graph.message("sender0", 0, m))
         return fail("Failed to message sender0");
-
     if (VERBOSE)
         std::cout << "Sent " << m << std::endl;
-
     return true;
 }
 
