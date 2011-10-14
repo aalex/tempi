@@ -271,6 +271,18 @@ std::vector<std::string> Node::getPropertiesNames() const
     return ret;
 }
 
+bool Node::message(unsigned int inlet, const Message &message)
+{
+    if (inlet >= getNumberOfInlets())
+    {
+        std::cerr << "Node::" << __FUNCTION__ << ": Inlet " << inlet << "too big for node." << std::endl;
+        return false;
+    }
+    Sink *inletPtr = getInlet(inlet);
+    inletPtr->trigger(message);
+    return true;
+}
+
 } // end of namespace
 
 

@@ -78,14 +78,7 @@ bool Graph::message(const char *node, unsigned int inlet, const Message &message
         std::cerr << "Graph::" << __FUNCTION__ << ": No such node: " << node << std::endl;
         return false;
     }
-    if (inlet >= nodePtr->getNumberOfInlets())
-    {
-        std::cerr << "Graph::" << __FUNCTION__ << ": Inlet " << inlet << "too big for node " << node << "." << std::endl;
-        return false;
-    }
-    Sink *inletPtr = nodePtr->getInlet(inlet);
-    inletPtr->trigger(message);
-    return true;
+    return nodePtr->message(inlet, message);
 }
 
 bool Graph::connect(const char *from, unsigned int outlet, const char *to, unsigned int inlet)

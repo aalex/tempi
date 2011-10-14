@@ -9,6 +9,7 @@ check_PROGRAMS = \
     check_node \
     check_nodefactory \
     check_osc \
+    check_osc_nodes \
     check_properties \
     check_slide \
     check_table \
@@ -25,6 +26,7 @@ check_message_SOURCES = check_message.cpp
 check_node_SOURCES = check_node.cpp
 check_nodefactory_SOURCES = check_nodefactory.cpp
 check_osc_SOURCES = check_osc.cpp
+check_osc_nodes_SOURCES = check_osc_nodes.cpp
 check_properties_SOURCES = check_properties.cpp
 check_slide_SOURCES = check_slide.cpp
 check_table_SOURCES = check_table.cpp

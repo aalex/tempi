@@ -57,6 +57,7 @@ class Node
 
         unsigned int getNumberOfInlets() const;
         unsigned int getNumberOfOutlets() const;
+        bool message(unsigned int inlet, const Message &message);
         /**
          * Adds a outlet.
          */

@@ -62,6 +62,7 @@ tests/check_message
 tests/check_node
 tests/check_nodefactory
 tests/check_osc
+tests/check_osc_nodes
 tests/check_properties
 tests/check_slide
 tests/check_table
