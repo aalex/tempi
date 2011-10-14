@@ -62,22 +62,26 @@ void Node::onInletTriggered(Sink *sink, const Message &message)
                 try
                 {
                     Message property = message.cloneRange(2, message.getSize() - 1);
-                    setProperty(message.getString(1).c_str(), property);
+                    std::string name = message.getString(1);
+                    setProperty(name.c_str(), property);
+                    // std::cout << "Node::" << __FUNCTION__ << ": set property " << name << ": " << property << std::endl;
                     is_a_property = true;
                 }
                 catch (const BadIndexException &e)
                 {
-                    std::cerr << e.what();
+                    std::cerr << "Node::" << __FUNCTION__ << ": " << e.what();
                 }
                 catch (const BadArgumentTypeException &e)
                 {
-                    std::cerr << e.what();
+                    std::cerr << "Node::" << __FUNCTION__ << ": " << e.what();
                 }
             }
         }
     }
     if (! is_a_property)
+    {
         processMessage(inlet, message);
+    }
 }
 
 unsigned int Node::getInletIndex(Sink *sink) const throw(BadIndexException)
@@ -240,17 +244,19 @@ void Node::addProperty(const char *name, const Message &property) throw(BadIndex
 void Node::setProperty(const char *name, const Message &value) throw(BadIndexException, BadArgumentTypeException)
 {
     Message current = getProperty(name); // might throw BadIndexException
+    //std::cout << "Node::" << __FUNCTION__ << ": " << name << " = " << value << std::endl;
     if (current.getTypes().compare(value.getTypes()) == 0)
     {
-        if (value == current)
-        {
-            //std::cerr << "Node::" << __FUNCTION__ << ": Not changing value." << std::endl;
-        }
-        else
-        {
-            properties_[std::string(name)] = value;
-            onPropertyChanged(name, value);
-        }
+        // TODO: checking if changed did not work.
+        // if (value == current)
+        // {
+        //     std::cerr << "Node::" << __FUNCTION__ << ": Not changing value." << std::endl;
+        // }
+        // else
+        // {
+        properties_[std::string(name)] = value;
+        onPropertyChanged(name, value);
+        // }
     }
     else
     {

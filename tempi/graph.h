@@ -38,6 +38,7 @@ namespace tempi
 class Graph
 {
     public:
+        typedef std::tr1::shared_ptr<Graph> ptr;
         Graph(NodeFactory::ptr factory);
         Graph();
         bool addNode(Node::ptr node, const char *name);

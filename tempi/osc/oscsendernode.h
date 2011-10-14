@@ -37,9 +37,10 @@ class OscSenderNode : public Node
 {
     public:
         OscSenderNode();
-    private:
+    protected:
         virtual void processMessage(unsigned int inlet, const Message &message);
         virtual void onPropertyChanged(const char *name, const Message &value);
+    private:
         OscSender::ptr osc_sender_;
 };
 

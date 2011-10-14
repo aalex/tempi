@@ -21,16 +21,22 @@
  * @file A OSC forwarder.
  */
 
+#include "tempi/base/nop_node.h"
 #include "tempi/config.h"
+#include "tempi/graph.h"
+#include "tempi/message.h"
+#include "tempi/node.h"
 #include "tempi/osc/oscreceivernode.h"
 #include "tempi/osc/oscsendernode.h"
+#include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/program_options.hpp>
-#include <boost/algorithm/string.hpp>
 #include <glib.h>
 #include <iostream>
+#include <sstream>
 
 namespace po = boost::program_options;
+using namespace tempi;
 
 static const char *PROGRAM_NAME = "osc-forward";
 
@@ -44,21 +50,39 @@ class App
          */
         int parse_options(int argc, char **argv);
         bool launch();
-    private:
+        void poll();
+    protected:
         bool addSender(const char *host, unsigned int port);
         bool addReceiver(unsigned int port);
-        bool verbose_;
         bool parseHostPort(const std::string &hostPort, std::string &host, unsigned int &port) const;
         bool isValidHost(const std::string &host) const;
+        void setupGraph();
+    private:
+        bool verbose_;
+        int num_senders_;
+        int num_receivers_;;
+        tempi::Graph::ptr graph_;
 };
 
 App::App() :
-    verbose_(false)
-{}
+    verbose_(false),
+    num_senders_(0),
+    num_receivers_(0)
+{
+    setupGraph();
+}
+
+void App::poll()
+{
+    graph_->tick();
+    g_usleep(300); // microseconds
+    //if (verbose_)
+    //    std::cout << ".";
+}
 
 bool App::parseHostPort(const std::string &hostPort, std::string &host, unsigned int &port) const
 {
-    std::cout << "App::" << __FUNCTION__ << std::endl;
+    //std::cout << "App::" << __FUNCTION__ << std::endl;
     std::vector<std::string> tokens;
     boost::split(tokens, hostPort, boost::is_any_of(":"));
     if (tokens.size() != 2)
@@ -92,22 +116,67 @@ bool App::isValidHost(const std::string &host) const
     return true;
 }
 
+void App::setupGraph()
+{
+    NodeFactory::ptr factory(new NodeFactory);
+    AbstractNodeType::ptr senderType((AbstractNodeType *) new NodeType<OscSenderNode>);
+    factory->registerType("osc.send", senderType);
+    AbstractNodeType::ptr receiverType((AbstractNodeType *) new NodeType<OscReceiverNode>);
+    factory->registerType("osc.receive", receiverType);
+    AbstractNodeType::ptr nopType((AbstractNodeType *) new NodeType<NopNode>);
+    factory->registerType("nop", nopType);
+    graph_.reset(new tempi::Graph(factory));
+    
+    graph_->addNode("nop", "nop0");
+}
+
+static gboolean on_idle(gpointer data)
+{
+    App *context = static_cast<App*>(data);
+    context->poll();
+    return TRUE;
+}
+
 bool App::launch()
 {
     if (verbose_)
         std::cout << "Running... Press ctrl-C to quit." << std::endl;
+
+    g_idle_add(on_idle, (gpointer) this);
     return true;
 }
 bool App::addSender(const char *host, unsigned int port)
 {
     if (verbose_)
         std::cout << "App::" << __FUNCTION__ << "(" << host << ", " << port << ")" << std::endl;
+    std::ostringstream os;
+    os << "send" << num_senders_;
+    ++num_senders_;
+    std::string name = os.str();
+
+    graph_->addNode("osc.send", name.c_str());
+    Node *node = graph_->getNode(name.c_str());
+    Message mess = Message("si", host, port);
+    node->setProperty("host_port", mess);
+
+    graph_->connect("nop0", 0, name.c_str(), 0);
     return true;
 }
 bool App::addReceiver(unsigned int port)
 {
     if (verbose_)
         std::cout << "App::" << __FUNCTION__ << "(" << port << ")" << std::endl;
+    std::ostringstream os;
+    os << "recv" << num_receivers_;
+    ++num_receivers_;
+    std::string name = os.str();
+
+    graph_->addNode("osc.receive", name.c_str());
+    Node *node = graph_->getNode(name.c_str());
+    Message mess = Message("i", port);
+    node->setProperty("port", mess);
+
+    graph_->connect(name.c_str(), 0, "nop0", 0);
     return true;
 }
 

@@ -38,10 +38,10 @@ class OscReceiverNode : public Node
     public:
         OscReceiverNode();
     protected:
+        virtual void doTick();
         virtual void processMessage(unsigned int inlet, const Message &message)
         {}
         virtual void onPropertyChanged(const char *name, const Message &value);
-        virtual void doTick();
     private:
         OscReceiver::ptr osc_receiver_;
 };
