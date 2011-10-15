@@ -3,20 +3,16 @@ To do in Tempi
 
 Soon
 -----
- * Create a timeline viewing actor.
- * create a node type registrator and factory. (NodeFactory::create(string type))
+ * Create a NodeLibrary class with a load() static template method
+ * Prevent from recursion by throwing a RecursionException upon output triggered twice. No?
  * Create the tempi-plugins-base library
  * Enclose signals as private data member. Provide accessors to it, or allow to add callbacks to it.
- * Create Node::onSchedulerTick()
- * Create a Graph class, with a tick() method, which calls each node's onSchedulerTick(). Use boost::adjacency_list
- * Create a OscSourceNode
 
 Later
 -----
  * Many sender/receiver with the same host+port should share the same OSC sender. Use a map of tuple<ip,port> to shared_ptr<OscSender>.
  * Get done with tempi/samplernode.cpp
- * Get done with tempi/graph.cpp
- * Get done with tempi/noderegistry.h
  * Get done with tempi/tempi-signal.h
  * Create MIDI sink and sources nodes
+ * Create a timeline viewing Clutter actor.
 
