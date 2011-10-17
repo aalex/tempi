@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tempi_work name="default" api="0.2">
+    <statemachines>
+        <fsm src="fsm-example-character.xml" />
+    </statemachines>
+    <graphs>
+        <graph src="graph-example-routing.xml" />
+    </graphs>
+    <assets>
+        <type name="image/jpeg">
+            <asset name="20110825T211143.571910.jpg"/>
+            <asset name="20110825T211143.763730.jpg"/>
+            <asset name="20110825T211143.923059.jpg"/>
+        </type>
+    </assets>
+</tempi_work>
+

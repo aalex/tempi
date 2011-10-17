@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tempi_graph name="osc-transmit" api="0.2">
+    <requirements>
+        <library name="tempi::base" />
+        <library name="tempi::osc" prefix="osc." />
+    </requirements>
+    <graph>
+        <nodes>
+            <node type="fsm.watch-event" name="watch0">
+                <property name="event-name" value="attack::onEnter" />
+                <property name="action" value="bang" />
+            </node>
+            <node type="message" name="message0" />
+                <tokens>
+                    <token type="s">listen</token>
+                    <token type="b">true</token>
+                </tokens>
+            </message>
+            <node type="osc.receive" name="receive0">
+                <property name="port" value="14444" />
+            </node>
+            <node type="fsm.multiplex" name="mux0">
+                <!-- Gives the fsm.multiplex node N outlets (number of states): -->
+                <property name="parent-state" value="fsm::character0" />
+                <property name="recursive" value="false" />
+            </node>
+            <node type="nop" name="nop0" />
+            <node type="osc.send" name="send0">
+                <property name="host" value="localhost" />
+                <property name="port" value="14444" />
+            </node>
+        </nodes>
+        <connections>
+            <connect from="watch0" outlet="0" to="message0" inlet="0" />
+            <connect from="message0" outlet="0" to="receive0" inlet="0" />
+            <connect from="receive0" outlet="0" to="nop0" inlet="0" />
+            <connect from="nop0" outlet="0" to="send0" inlet="0" />
+        </connections>
+    </graph>
+</tempi_graph>
+

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tempi_fsm name="example-character" api="0.2">
+    <states default="walking">
+        <state name="walking">
+            <rules>
+                <rule event="scared" action="goto" arg="running" />
+            </rules>
+        </state>
+        <state name="running">
+            <rules>
+                <rule event="attacked" action="goto" arg="fighting" />
+            </rules>
+        </state>
+        <state name="fighting">
+            <rules>
+                <rule event="onLeave" action="goto" arg="walking" />
+                <rule event="attacked" action="goto" arg="fight" />
+            </rules>
+            <states>
+                <state name="attacking">
+                    <rules>
+                        <rule event="hit" action="goto" arg="deflecting" />
+                        <rule event="onLeave" action="goto" arg="walking" />
+                        <rule event="enemy killed" action="pop" />
+                    </rules>
+                </state>
+                <state name="deflecting">
+                    <rules>
+                        <rule event="fail" action="goto" arg="fight" />
+                    </rules>
+                </state>
+            </states>
+        </state>
+    </states>
+</tempi>
+
