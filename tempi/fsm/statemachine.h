@@ -38,15 +38,13 @@ namespace tempi
 namespace fsm
 {
 
-typedef std::tr1::shared_ptr<State> StatePtr;
-typedef std::tr1::shared_ptr<Rule> RulePtr;
-
 /**
  * Finite state machine.
  */
 class StateMachine 
 {
     public:
+        typedef std::tr1::shared_ptr<StateMachine> ptr;
         boost::signals2::signal<void (std::string)> on_state_changed_signal_;
         StateMachine();
         bool addRule(Rule *rule);
@@ -57,8 +55,8 @@ class StateMachine
         bool triggerEvent(const std::string &event);
         bool hasStateName(const std::string &name);
     private:
-        std::map<std::string, StatePtr> states_;
-        std::vector<RulePtr> rules_;
+        std::map<std::string, State::ptr> states_;
+        std::vector<Rule::ptr> rules_;
         std::string current_state_;
 };
 

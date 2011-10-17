@@ -25,6 +25,7 @@
 #define __TEMPI_STATE_H__
 
 #include <boost/signals2.hpp>
+#include <tr1/memory>
 #include <string>
 
 namespace tempi
@@ -39,6 +40,7 @@ namespace fsm
 class State 
 {
     public:
+        typedef std::tr1::shared_ptr<State> ptr;
         boost::signals2::signal<void ()> on_entered_signal_;
         boost::signals2::signal<void ()> on_leaved_signal_;
         State(const std::string &name);

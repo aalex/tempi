@@ -34,7 +34,7 @@ StateMachine::StateMachine()
 bool StateMachine::addRule(Rule *rule)
 {
     // TODO: check if already got such a rule
-    rules_.push_back(RulePtr(rule));
+    rules_.push_back(Rule::ptr(rule));
 }
 
 bool StateMachine::addState(State *state)
@@ -45,7 +45,7 @@ bool StateMachine::addState(State *state)
         return false;
     }
     else
-        states_[state->getName()] = StatePtr(state);
+        states_[state->getName()] = State::ptr(state);
     if (states_.size() == 1)
         setCurrentStateName(state->getName());
     //else
@@ -94,7 +94,7 @@ bool StateMachine::triggerEvent(const std::string &event)
 {
     bool ret = false;
     std::string current = getCurrentStateName();
-    std::vector<RulePtr>::iterator iter;
+    std::vector<Rule::ptr>::iterator iter;
     for (iter = rules_.begin(); iter < rules_.end(); ++iter)
     {
         Rule *rule = (*iter).get();

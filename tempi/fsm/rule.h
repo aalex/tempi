@@ -25,6 +25,7 @@
 #define __TEMPI_RULE_H__
 
 #include <string>
+#include <tr1/memory>
 
 namespace tempi
 {
@@ -38,6 +39,7 @@ namespace fsm
 class Rule 
 {
     public:
+        typedef std::tr1::shared_ptr<Rule> ptr;
         Rule(const std::string &eventName, const std::string &stateFrom, const std::string &stateTo);
         const std::string &getEventName();
         void setEventName(const std::string &name);
