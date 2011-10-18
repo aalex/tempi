@@ -81,6 +81,7 @@ bool check_many_instances()
     if (VERBOSE)
         std::cout << __FUNCTION__ << std::endl;
     NodeFactory factory;
+    factory.loadInternals();
     if (factory.registerTypeT<FooNode>("foo").get() == 0)
     {
         std::cout << "Could not register type FooNode" << std::endl;
@@ -88,7 +89,7 @@ bool check_many_instances()
     }
     Node::ptr foo0 = factory.create("foo");
     Node::ptr foo1 = factory.create("foo");
-    Node::ptr foo2 = factory.create("foo");
+    Node::ptr foo2 = factory.create("nop");
     if (foo0.get() == 0 || foo0.get() == 0 || foo0.get() == 0)
     {
         std::cout << __FUNCTION__ << ": invalid pointer" << std::endl;

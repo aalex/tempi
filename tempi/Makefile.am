@@ -28,6 +28,7 @@ libtempi_@TEMPI_API_VERSION@_la_includedir = $(includedir)/tempi-$(TEMPI_API_VER
 ## and the variable name derived from that.
 ## PLEASE KEEP THEM IN ALPHABETICAL ORDER
 libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
+    base/load.cpp \
     base/nop_node.cpp \
     filter.cpp \
     fsm/rule.cpp \
@@ -64,6 +65,7 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
 ## PLEASE KEEP THEM IN ALPHABETICAL ORDER
 libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     base/nop_node.h \
+    base/load.h \
     concurrentqueue.h \
     exceptions.h \
     filter.h \
