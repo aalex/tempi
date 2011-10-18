@@ -81,9 +81,7 @@ bool check_many_instances()
     if (VERBOSE)
         std::cout << __FUNCTION__ << std::endl;
     NodeFactory factory;
-    AbstractNodeType *tmp = (AbstractNodeType*) new NodeType<FooNode>();
-    AbstractNodeType::ptr fooType(tmp);
-    if (! factory.registerType("foo", fooType))
+    if (factory.registerTypeT<FooNode>("foo").get() == 0)
     {
         std::cout << "Could not register type FooNode" << std::endl;
         return false;

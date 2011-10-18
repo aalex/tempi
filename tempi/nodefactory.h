@@ -71,6 +71,19 @@ class NodeFactory
          * Returns false if it failed.
          */
         bool registerType(const char *name, AbstractNodeType::ptr entry);
+        template <class T>
+        AbstractNodeType::ptr registerTypeT(const char *name)
+        {
+            AbstractNodeType *tmp = (AbstractNodeType*) new NodeType<T>();
+            AbstractNodeType::ptr ret(tmp);
+            if (! registerType(name, ret))
+            {
+                std::cerr << "Could not register type FooNode" << std::endl;
+                // FIXME: throw exception?
+                // return false;
+            }
+            return ret;
+        }
         /**
          * Checks for a given node type.
          */
