@@ -91,7 +91,7 @@ bool check_many_instances()
     Node::ptr foo0 = factory.create("foo");
     Node::ptr foo1 = factory.create("foo");
     Node::ptr foo2 = factory.create("nop");
-    if (foo0.get() == 0 || foo0.get() == 0 || foo0.get() == 0)
+    if (foo0.get() == 0 || foo1.get() == 0 || foo2.get() == 0)
     {
         std::cout << __FUNCTION__ << ": invalid pointer" << std::endl;
         return false;
@@ -122,7 +122,10 @@ bool check_print()
     // disable print
     Message disable_message = Message("ssb", "set", "enabled", false);
     graph.message("print0", 0, disable_message);
-    // print something
+    // change prefix
+    Message prefix_message = Message("sss", "set", "prefix", "hello: ");
+    graph.message("print0", 0, prefix_message);
+    // print something (or not is disabled)
     Message fis_message = Message("fis", 3.14159f, 2, "hello");
     graph.message("nop0", 0, fis_message);
 
