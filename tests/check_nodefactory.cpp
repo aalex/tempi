@@ -1,4 +1,5 @@
 #include "tempi/tempi.h"
+#include "tempi/graph.h"
 #include <iostream>
 
 using namespace tempi;
@@ -98,11 +99,39 @@ bool check_many_instances()
     return true;
 }
 
+bool check_print()
+{
+    if (VERBOSE)
+        std::cout << __FUNCTION__ << std::endl;
+    NodeFactory factory;
+    factory.loadInternals();
+    Node::ptr nop0 = factory.create("nop");
+    Node::ptr nop1 = factory.create("nop");
+    Node::ptr print0 = factory.create("print");
+    if (nop0.get() == 0 || nop1.get() == 0 || print0.get() == 0)
+    {
+        std::cout << __FUNCTION__ << ": invalid pointer" << std::endl;
+        return false;
+    }
+    Graph graph;
+    graph.addNode(nop0, "nop0");
+    graph.addNode(nop1, "nop1");
+    graph.addNode(print0, "print0");
+    graph.connect("nop0", 0, "nop1", 0);
+    graph.connect("nop1", 0, "print0", 0);
+    Message message = Message("fis", 3.14159f, 2, "hello");
+    graph.message("nop0", 0, message);
+
+    return true;
+}
+
 int main(int argc, char **argv)
 {
     if (! check_nodefactory())
         return 1;
     if (! check_many_instances())
+        return 1;
+    if (! check_print())
         return 1;
     return 0;
 }

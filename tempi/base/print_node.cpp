@@ -17,19 +17,30 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "tempi/base/load.h"
-#include "tempi/nodefactory.h"
-#include "tempi/base/nop_node.h"
+#include <iostream>
 #include "tempi/base/print_node.h"
 
-using namespace tempi;
-
-void tempi_base_load(void *nodeFactory)
+namespace tempi
 {
-    // TODO: const char *prefix, 
-    // TODO: use the base namespace
-    NodeFactory *factory = (NodeFactory *) nodeFactory;
-    factory->registerTypeT<NopNode>("nop");
-    factory->registerTypeT<PrintNode>("print");
+
+PrintNode::PrintNode() :
+    Node()
+{
+    addOutlet();
+    // add the "prefix" string property
+    Message value = Message("s", "print: ");
+    addProperty("prefix", value);
 }
+
+void PrintNode::processMessage(unsigned int inlet, const Message &message)
+{
+    std::cout << getProperty("prefix").getString(0) << message << std::endl;
+}
+
+// void PrintNode::onPropertyChanged(const char *name, const Message &value)
+// {
+//     const static name_key("");
+// }
+
+} // end of namespace
 
