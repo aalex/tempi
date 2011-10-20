@@ -40,6 +40,7 @@ namespace tempi
 class Player
 {
     public:
+        typedef std::tr1::shared_ptr<Player> ptr;
         Player(Track *track);
         void setTrack(Track *track);
         /**
@@ -77,6 +78,7 @@ class Player
         void setPlaybackMode(Playback *playback);
 
         Playback *getPlaybackMode();
+        // TODO: add start stop
     private:
         Timer timer_;
         Track *track_;

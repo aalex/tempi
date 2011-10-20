@@ -108,7 +108,10 @@ bool check_print()
     Node::ptr nop0 = factory.create("nop");
     Node::ptr nop1 = factory.create("nop");
     Node::ptr print0 = factory.create("print");
-    if (nop0.get() == 0 || nop1.get() == 0 || print0.get() == 0)
+    Node::ptr sampler0 = factory.create("sampler");
+    Node::ptr print1 = factory.create("print");
+
+    if (nop0.get() == 0 || print0.get() == 0 || sampler0.get() == 0)
     {
         std::cout << __FUNCTION__ << ": invalid pointer" << std::endl;
         return false;
@@ -117,17 +120,50 @@ bool check_print()
     graph.addNode(nop0, "nop0");
     graph.addNode(nop1, "nop1");
     graph.addNode(print0, "print0");
+    graph.addNode(sampler0, "sampler0");
+    graph.addNode(print1, "print1");
+
     graph.connect("nop0", 0, "nop1", 0);
     graph.connect("nop1", 0, "print0", 0);
+    graph.connect("nop1", 0, "sampler0", 0);
+    graph.connect("sampler0", 0, "print1", 0);
+
     // disable print
     Message disable_message = Message("ssb", "set", "enabled", false);
-    graph.message("print0", 0, disable_message);
+    //graph.message("print0", 0, disable_message);
     // change prefix
-    Message prefix_message = Message("sss", "set", "prefix", "hello: ");
-    graph.message("print0", 0, prefix_message);
+    //FIXME: both [print] objects have same value for prefix property.
+    Message prefix0_message = Message("sss", "set", "prefix", "recording: ");
+    graph.message("print0", 0, prefix0_message);
+    Message prefix1_message = Message("sss", "set", "prefix", "playback: ");
+    graph.message("print1", 0, prefix1_message);
+    //std::cout << "sampler0 has n inlets: " << graph.getNode("sampler0")->getNumberOfInlets() << std::endl;
+    // enables the sampler
+    // FIXME: property inlet in hard-coded to 0 in Node
+    Message playing = Message("ssb", "set", "playing", true);
+    graph.message("sampler0", 0, playing);
+    Message recording = Message("ssb", "set", "recording", true);
+    graph.message("sampler0", 0, recording);
     // print something (or not is disabled)
     Message fis_message = Message("fis", 3.14159f, 2, "hello");
     graph.message("nop0", 0, fis_message);
+    graph.tick();
+    graph.message("nop0", 0, fis_message);
+    graph.tick();
+
+    recording.setBoolean(2, false);
+    graph.message("sampler0", 0, recording);
+    playing.setBoolean(2, false);
+    graph.message("sampler0", 0, playing);
+    playing.setBoolean(2, true);
+    graph.message("sampler0", 0, playing);
+    recording = Message("ssb", "set", "recording", true);
+    graph.message("sampler0", 0, recording);
+
+    for (int i = 0; i < 10; ++i)
+    {
+        graph.tick();
+    }
 
     return true;
 }

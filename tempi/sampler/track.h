@@ -28,6 +28,7 @@
 #include <vector>
 #include "tempi/timer.h"
 #include "tempi/message.h"
+#include "tempi/sharedptr.h"
 
 namespace tempi
 {
@@ -38,7 +39,7 @@ namespace tempi
 class Track
 {
     public:
-
+        typedef std::tr1::shared_ptr<Track> ptr;
         Track();
         /**
          * Clears this Track.

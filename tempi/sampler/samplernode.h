@@ -32,7 +32,7 @@
 #include "tempi/sampler/track.h"
 #include "tempi/sampler/recorder.h"
 #include "tempi/sampler/player.h"
-#include "tempi/filter.h"
+#include "tempi/node.h"
 //#include "tempi/sampler/marker.h"
 
 namespace tempi
@@ -42,7 +42,7 @@ namespace tempi
  * A SamplerNode is a node with a Score in it.
  * TODO
  */
-class SamplerNode : public Filter
+class SamplerNode : public Node
 {
     public:
         SamplerNode();
@@ -55,16 +55,23 @@ class SamplerNode : public Filter
         // bool write(boost::any data);
         // boost::any data read();
         // TimePosition getDuration ();
+    protected:
+        virtual void processMessage(unsigned int inlet, const Message &message);
+        virtual void onPropertyChanged(const char *name, const Message &value);
     private:
-        tempi::Track track_;
-        std::tr1::shared_ptr<tempi::Recorder> recorder_;
-        std::tr1::shared_ptr<tempi::Player> player_;
-        bool recording_;
+//        bool recording_;
+//        bool playing_;
+        Track::ptr track_;
+        Recorder::ptr recorder_;
+        Player::ptr player_;
+
+        void play(bool enabled);
+        void record(bool enabled);
+        virtual void doTick();
+
         // TODO:
         //std::map<Identifier, TrackPtr> tracks_;
         //std::map<TimePosition, MarkerPtr> markers_;
-        // TODO
-        virtual Message filter(const Message &message) = 0;
 };
 
 } // end of namespace

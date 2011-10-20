@@ -70,7 +70,15 @@ class Message
          */
         Message();
 
+        /**
+         * TODO: avoid segfault if length does not match
+         * TODO: avoid segfault if types do not match
+         */
         Message(const char* types, ...);
+        /**
+         * TODO: avoid segfault if length does not match
+         * TODO: avoid segfault if types do not match
+         */
         void append(const char* types, ...);
         //const std::type_info *getType(unsigned int index) const;
         bool getArgumentType(unsigned int index, ArgumentType &type) const;

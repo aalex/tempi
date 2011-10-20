@@ -28,10 +28,11 @@ PrintNode::PrintNode() :
     prefix_("print: "),
     enabled_(true)
 {
-    addOutlet();
-    // add the "prefix" string property
+    //addOutlet();
+
     Message prefix_prop = Message("s", prefix_.c_str());
     addProperty("prefix", prefix_prop);
+
     Message enabled_prop = Message("b", enabled_);
     addProperty("enabled", enabled_prop);
 }

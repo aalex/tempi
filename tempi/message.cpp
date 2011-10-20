@@ -49,6 +49,8 @@ void Message::append(const char *types, ...)
 
 void Message::appendVaList(const char *types, va_list arguments)
 {
+    // TODO: avoid segfault if length does not match
+    // TODO: avoid segfault if types do not match
     for (int i = 0; types[i] != '\0'; ++i)
     {
         switch (types[i])

@@ -19,43 +19,20 @@
 
 /**
  * @file
- * The Recorder class.
+ * The tempi_sampler_load function.
  */
-#ifndef __TEMPI_RECORDER_H__
-#define __TEMPI_RECORDER_H__
+#ifndef __TEMPI_SAMPLER_LOAD_H__
+#define __TEMPI_SAMPLER_LOAD_H__
 
-#include <boost/any.hpp>
-#include "tempi/sharedptr.h"
-#include "tempi/sampler/track.h"
-
-namespace tempi
-{
+#include "tempi/nodefactory.h"
 
 /**
- * A Recorder records events to a Track.
+ * Loads node types for a library.
  */
-class Recorder
-{
-    public:
-        typedef std::tr1::shared_ptr<Recorder> ptr;
-        Recorder(Track *track);
-        void setTrack(Track *track);
-        Track *getTrack();
-        /**
-         * Resets the internal timer of this Recorder.
-         */
-        void reset();
-        bool setPosition(TimePosition position);
-        /**
-         * Adds an event to the track now.
-         */
-        void add(Message value);
-    private:
-        Timer timer_;
-        Track *track_;
-};
-
-} // end of namespace
+#ifdef __cplusplus
+extern "C" 
+#endif
+void tempi_sampler_load(void *nodeFactory);
 
 #endif // ifndef
 

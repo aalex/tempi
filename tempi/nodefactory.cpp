@@ -20,6 +20,7 @@
 #include "tempi/nodefactory.h"
 #include "tempi/node.h"
 #include "tempi/base/load.h"
+#include "tempi/sampler/load.h"
 #include <iostream>
 #include <sstream>
 
@@ -85,6 +86,7 @@ void NodeFactory::loadInternals()
     // TODO: move this to some other class
     void *self = (void *) this;
     tempi_base_load(self);
+    tempi_sampler_load(self);
 }
 
 std::ostream &operator<<(std::ostream &os, const NodeFactory &nodeFactory)

@@ -23,9 +23,70 @@ namespace tempi
 {
 
 SamplerNode::SamplerNode() :
-    Filter()
+    Node(),
+    track_(new Track()),
+    recorder_(new Recorder(track_.get())),
+    player_(new Player(track_.get()))
 {
-    // pass
+    Message recording = Message("b", false);
+    addProperty("recording", recording);
+
+    Message playing = Message("b", false);
+    addProperty("playing", playing);
+
+    addInlet(); // messages to record
+    addOutlet(); // played back messages messages
+}
+
+void SamplerNode::onPropertyChanged(const char *name, const Message &value)
+{
+    const static std::string playing("playing");
+    const static std::string recording("recording");
+
+    std::cout << "SamplerNode::" << __FUNCTION__ << ": " << name << " = " << value << std::endl;
+
+    if (playing == name)
+        play(value.getBoolean(0));
+    else if (recording == name)
+        record(value.getBoolean(0));
+}
+
+void SamplerNode::play(bool enabled)
+{
+    if (enabled)
+    {
+        player_->reset();
+    }
+}
+
+void SamplerNode::doTick()
+{
+    if (getProperty("playing").getBoolean(0))
+    {
+        Message *message = player_->read();
+        if (message != 0)
+        {
+            output(0, *message);
+        }
+    }
+}
+
+void SamplerNode::record(bool enabled)
+{
+    recorder_->reset();
+}
+
+void SamplerNode::processMessage(unsigned int inlet, const Message &message)
+{
+    bool rec = getProperty("recording").getBoolean(0);
+    static unsigned int record_inlet = 0;
+    if (inlet == record_inlet)
+    {
+        if (rec)
+        {
+            recorder_->add(message);
+        }
+    }
 }
 
 } // end of namespace
