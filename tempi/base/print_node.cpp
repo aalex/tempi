@@ -24,23 +24,33 @@ namespace tempi
 {
 
 PrintNode::PrintNode() :
-    Node()
+    Node(),
+    prefix_("print: "),
+    enabled_(true)
 {
     addOutlet();
     // add the "prefix" string property
-    Message value = Message("s", "print: ");
-    addProperty("prefix", value);
+    Message prefix_prop = Message("s", prefix_.c_str());
+    addProperty("prefix", prefix_prop);
+    Message enabled_prop = Message("b", enabled_);
+    addProperty("enabled", enabled_prop);
 }
 
 void PrintNode::processMessage(unsigned int inlet, const Message &message)
 {
-    std::cout << getProperty("prefix").getString(0) << message << std::endl;
+    if (enabled_)
+        std::cout << prefix_ << message << std::endl;
 }
 
-// void PrintNode::onPropertyChanged(const char *name, const Message &value)
-// {
-//     const static name_key("");
-// }
+void PrintNode::onPropertyChanged(const char *name, const Message &value)
+{
+    const static std::string prefix_key("prefix");
+    const static std::string enabled_key("enabled");
+    if (prefix_key == name)
+        prefix_ = value.getString(0);
+    else if (enabled_key == name)
+        enabled_ = value.getBoolean(0);
+}
 
 } // end of namespace
 

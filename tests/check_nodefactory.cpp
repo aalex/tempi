@@ -119,8 +119,12 @@ bool check_print()
     graph.addNode(print0, "print0");
     graph.connect("nop0", 0, "nop1", 0);
     graph.connect("nop1", 0, "print0", 0);
-    Message message = Message("fis", 3.14159f, 2, "hello");
-    graph.message("nop0", 0, message);
+    // disable print
+    Message disable_message = Message("ssb", "set", "enabled", false);
+    graph.message("print0", 0, disable_message);
+    // print something
+    Message fis_message = Message("fis", 3.14159f, 2, "hello");
+    graph.message("nop0", 0, fis_message);
 
     return true;
 }
