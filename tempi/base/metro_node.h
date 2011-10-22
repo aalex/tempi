@@ -18,31 +18,38 @@
  */
 
 /**
- * @file
- * The TimePosition typedef.
+ * The MetroNode class.
  */
-#ifndef __TEMPI_TIMEPOSITION_H__
-#define __TEMPI_TIMEPOSITION_H__
+
+#ifndef __TEMPI_METRONODE_H__
+#define __TEMPI_METRONODE_H__
+
+#include "tempi/timer.h"
+#include "tempi/timeposition.h"
+#include "tempi/node.h"
 
 namespace tempi
 {
 
 /**
- * Time in nanoseconds.
- * There are one billion (1000000000) nanoseconds in a second.
+ * A MetroNode is a Node that ticks every interval ms.
  */
-typedef unsigned long long TimePosition;
-
-namespace timeposition
+class MetroNode : public Node
 {
+    public:
+        MetroNode();
+    protected:
+        virtual void processMessage(unsigned int inlet, const Message &message) {}
+        virtual void onPropertyChanged(const char *name, const Message &value);
+    private:
+        Timer timer_;
+        TimePosition interval_;
 
-TimePosition from_ms(unsigned long long ms);
-unsigned long long to_ms(TimePosition time_pos);
-
-} // end of namespace
+        virtual void doTick();
+        void startMetro();
+};
 
 } // end of namespace
 
 #endif // ifndef
-
 

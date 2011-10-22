@@ -21,6 +21,7 @@
 #include "tempi/nodefactory.h"
 #include "tempi/base/nop_node.h"
 #include "tempi/base/print_node.h"
+#include "tempi/base/metro_node.h"
 
 using namespace tempi;
 
@@ -31,5 +32,6 @@ void tempi_base_load(void *nodeFactory)
     NodeFactory *factory = (NodeFactory *) nodeFactory;
     factory->registerTypeT<NopNode>("nop");
     factory->registerTypeT<PrintNode>("print");
+    factory->registerTypeT<MetroNode>("metro");
 }
 

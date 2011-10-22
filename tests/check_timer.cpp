@@ -10,8 +10,8 @@ bool check_simple()
 {
     Timer timer;
     // TODO: make it faster than 1 second
-    if (VERBOSE)
-        std::cout << "Please wait 1 second..." << std::endl;
+    //if (VERBOSE)
+    std::cout << "Please wait while testing tempi::Timer..." << std::endl;
     sleep(1); // 1 second
 
     TimePosition elapsed = timer.elapsed();

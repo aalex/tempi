@@ -130,7 +130,12 @@ bool check_print()
 
     // disable print
     Message disable_message = Message("ssb", "set", "enabled", false);
-    //graph.message("print0", 0, disable_message);
+    bool quiet = ! VERBOSE;
+    if (quiet)
+    {
+        graph.message("print0", 0, disable_message);
+        graph.message("print1", 0, disable_message);
+    }
     // change prefix
     //FIXME: both [print] objects have same value for prefix property.
     Message prefix0_message = Message("sss", "set", "prefix", "recording: ");

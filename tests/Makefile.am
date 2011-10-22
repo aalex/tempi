@@ -3,6 +3,7 @@ LDADD = $(top_builddir)/tempi/libtempi-@TEMPI_API_VERSION@.la
 
 check_PROGRAMS = \
     check_average \
+    check_base \
     check_fsm \
     check_graph \
     check_message \
@@ -20,6 +21,7 @@ check_PROGRAMS = \
 TESTS = $(check_PROGRAMS)
 
 check_average_SOURCES = check_average.cpp
+check_base_SOURCES = check_base.cpp
 check_fsm_SOURCES = check_fsm.cpp
 check_graph_SOURCES = check_graph.cpp
 check_message_SOURCES = check_message.cpp

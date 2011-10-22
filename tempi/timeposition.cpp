@@ -17,32 +17,25 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * @file
- * The TimePosition typedef.
- */
-#ifndef __TEMPI_TIMEPOSITION_H__
-#define __TEMPI_TIMEPOSITION_H__
+#include "tempi/timeposition.h"
 
 namespace tempi
 {
 
-/**
- * Time in nanoseconds.
- * There are one billion (1000000000) nanoseconds in a second.
- */
-typedef unsigned long long TimePosition;
-
 namespace timeposition
 {
 
-TimePosition from_ms(unsigned long long ms);
-unsigned long long to_ms(TimePosition time_pos);
+TimePosition from_ms(unsigned long long ms)
+{
+    return ms * 1000L;
+}
+
+unsigned long long to_ms(TimePosition time_pos)
+{
+    return time_pos / 1000L;
+}
 
 } // end of namespace
 
 } // end of namespace
-
-#endif // ifndef
-
 

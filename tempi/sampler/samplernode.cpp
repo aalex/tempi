@@ -43,7 +43,7 @@ void SamplerNode::onPropertyChanged(const char *name, const Message &value)
     const static std::string playing("playing");
     const static std::string recording("recording");
 
-    std::cout << "SamplerNode::" << __FUNCTION__ << ": " << name << " = " << value << std::endl;
+    //std::cout << "SamplerNode::" << __FUNCTION__ << ": " << name << " = " << value << std::endl;
 
     if (playing == name)
         play(value.getBoolean(0));

@@ -29,6 +29,7 @@ libtempi_@TEMPI_API_VERSION@_la_includedir = $(includedir)/tempi-$(TEMPI_API_VER
 ## PLEASE KEEP THEM IN ALPHABETICAL ORDER
 libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     base/load.cpp \
+    base/metro_node.cpp \
     base/nop_node.cpp \
     base/print_node.cpp \
     filter.cpp \
@@ -62,10 +63,12 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     table/table_player.cpp \
     table/table_writer.cpp \
     tempi.cpp \
+    timeposition.cpp \
     timer.cpp
 
 ## PLEASE KEEP THEM IN ALPHABETICAL ORDER
 libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
+    base/metro_node.h \
     base/nop_node.h \
     base/print_node.h \
     base/load.h \
