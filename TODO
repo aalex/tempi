@@ -7,6 +7,8 @@ Soon
  * Prevent from recursion by throwing a RecursionException upon output triggered twice. No?
  * Create the tempi-plugins-base library
  * Enclose signals as private data member. Provide accessors to it, or allow to add callbacks to it.
+ * Fix test for MetroNode
+ * move CounterNode to base.
 
 Later
 -----
