@@ -17,8 +17,8 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "sink.h"
-#include "source.h"
+#include "tempi/sink.h"
+#include "tempi/source.h"
 #include <iostream>
 
 namespace tempi

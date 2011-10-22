@@ -17,22 +17,24 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "tempi/source.h"
-#include <iostream>
+/**
+ * @file
+ * Functions in the tempi::utils namespace.
+ */
+#ifndef __TEMPI_UTILS_H__
+#define __TEMPI_UTILS_H__
 
 namespace tempi
 {
 
-Source::Source()
+namespace utils
 {
-    // pass
-}
 
-void Source::trigger(const Message &message)
-{
-    //std::cout << __FUNCTION__ << std::endl;
-    on_triggered_signal_(message);
-}
+bool stringsMatch(const char *a, const char *b);
 
 } // end of namespace
+
+} // end of namespace
+
+#endif // ifndef
 

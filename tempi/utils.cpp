@@ -17,22 +17,30 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "tempi/source.h"
+#include "tempi/utils.h"
 #include <iostream>
+#include <string.h>
 
 namespace tempi
 {
 
-Source::Source()
+namespace utils
 {
-    // pass
+
+bool stringsMatch(const char *a, const char *b)
+{
+    if (! a && ! b)
+        return true;
+    else if (! a)
+        return false;
+    else if (! b)
+        return false;
+    else
+        return strcmp(a, b) == 0;
+    // FIXME: would be safer to use strncmp
 }
 
-void Source::trigger(const Message &message)
-{
-    //std::cout << __FUNCTION__ << std::endl;
-    on_triggered_signal_(message);
-}
+} // end of namespace
 
 } // end of namespace
 

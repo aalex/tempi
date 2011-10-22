@@ -19,6 +19,7 @@
 
 #include <iostream>
 #include "tempi/base/print_node.h"
+#include "tempi/utils.h"
 
 namespace tempi
 {
@@ -45,11 +46,9 @@ void PrintNode::processMessage(unsigned int inlet, const Message &message)
 
 void PrintNode::onPropertyChanged(const char *name, const Message &value)
 {
-    const static std::string prefix_key("prefix");
-    const static std::string enabled_key("enabled");
-    if (prefix_key == name)
+    if (utils::stringsMatch(name, "prefix"))
         prefix_ = value.getString(0);
-    else if (enabled_key == name)
+    else if (utils::stringsMatch(name, "enabled"))
         enabled_ = value.getBoolean(0);
 }
 

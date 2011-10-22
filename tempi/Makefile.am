@@ -64,7 +64,8 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     table/table_writer.cpp \
     tempi.cpp \
     timeposition.cpp \
-    timer.cpp
+    timer.cpp \
+	utils.cpp
 
 ## PLEASE KEEP THEM IN ALPHABETICAL ORDER
 libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
@@ -112,5 +113,5 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     tempi.h \
     timeposition.h \
     timer.h \
-    types.h
+    utils.h
 
