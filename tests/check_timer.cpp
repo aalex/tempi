@@ -6,43 +6,43 @@ using namespace tempi;
 
 static const bool VERBOSE = false;
 
-bool check_simple()
+bool check_timer()
 {
     Timer timer;
     // TODO: make it faster than 1 second
     //if (VERBOSE)
-    std::cout << "Please wait while testing tempi::Timer..." << std::endl;
-    sleep(1); // 1 second
+    //std::cout << "Please wait while testing tempi::Timer..." << std::endl;
+    usleep(1000); // 1 ms
 
     TimePosition elapsed = timer.elapsed();
     if (VERBOSE)
         std::cout << "Elapsed: " << elapsed << std::endl;
-    if (elapsed < 1000000000L || elapsed > 1100000000L )
+    if (elapsed < 1000000L || elapsed > 1300000L )
     {
-        std::cout << "About 1 second should have gone away. But it's " << elapsed << std::endl;
+        std::cout << "About 1 ms should have gone away. But it's " << elapsed << std::endl;
         return false;
     }
 
-    timer.setPosition(2000000000L);
+    timer.setPosition(2000000L);
     elapsed = timer.elapsed();
     if (VERBOSE)
         std::cout << "Elapsed: " << elapsed << std::endl;
-    if (elapsed < 2000000000L || elapsed > 2100000000L )
+    if (elapsed < 2000000L || elapsed > 2300000L )
     {
-        std::cout << "About 2 second should have gone away. But it's " << elapsed << std::endl;
+        std::cout << "About 2 ms should have gone away. But it's " << elapsed << std::endl;
         return false;
     }
 
     if (VERBOSE)
-        std::cout << "Please wait 1 more second..." << std::endl;
-    sleep(1); // 1 second
+        std::cout << "Please wait 1 more ms..." << std::endl;
+    usleep(1000); // 1 ms
 
     elapsed = timer.elapsed();
     if (VERBOSE)
         std::cout << "Elapsed: " << elapsed << std::endl;
-    if (elapsed < 3000000000L || elapsed > 3100000000L )
+    if (elapsed < 3000000L || elapsed > 3900000L )
     {
-        std::cout << "About 3 second should have gone away. But it's " << elapsed << std::endl;
+        std::cout << "About 3 ms should have gone away. But it's " << elapsed << std::endl;
         return false;
     }
     return true;
@@ -50,7 +50,7 @@ bool check_simple()
 
 int main(int argc, char *argv[])
 {
-    if (not check_simple())
+    if (! check_timer())
         return 1;
     return 0;
 }
