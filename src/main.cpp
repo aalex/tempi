@@ -37,6 +37,9 @@
 
 namespace po = boost::program_options;
 
+/**
+ * GUI to draw trajectories and play them back in loop.
+ */
 class App
 {
     public:

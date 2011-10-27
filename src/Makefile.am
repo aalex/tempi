@@ -1,4 +1,4 @@
-bin_PROGRAMS = tempi osc-forward
+bin_PROGRAMS = tempi-draw osc-forward
 
 AM_CXXFLAGS = \
 	$(BOOST_CPPFLAGS) \
@@ -15,8 +15,8 @@ LDADD = \
 	$(LIBLO_LIBS) \
 	$(top_builddir)/tempi/libtempi-@TEMPI_API_VERSION@.la
 
-tempi_CXXFLAGS = $(AM_CXXFLAGS)
-tempi_LDADD = $(LDADD)
+tempi_draw_CXXFLAGS = $(AM_CXXFLAGS)
+tempi_draw_LDADD = $(LDADD)
 
 osc_forward_CXXFLAGS = $(AM_CXXFLAGS)
 osc_forward_LDADD = $(LDADD)
@@ -26,7 +26,7 @@ headers = \
 	sampler.h \
     particlegenerator.h
 
-tempi_SOURCES = \
+tempi_draw_SOURCES = \
 	main.cpp \
 	sampler.cpp \
     particlegenerator.cpp \
@@ -34,3 +34,4 @@ tempi_SOURCES = \
 
 osc_forward_SOURCES = \
 	osc_forward/main.cpp
+
