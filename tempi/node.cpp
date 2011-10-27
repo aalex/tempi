@@ -225,6 +225,15 @@ const Message &Node::getProperty(const char *name) const throw(BadIndexException
         return (*iter).second;
 }
 
+const Message &Node::getArguments() const
+{
+    return arguments_;
+}
+void Node::setArguments(const Message &message)
+{
+    arguments_ = message;
+}
+
 bool Node::hasProperty(const char *name) const
 {
     return (properties_.find(std::string(name)) != properties_.end());
