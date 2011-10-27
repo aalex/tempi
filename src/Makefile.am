@@ -1,4 +1,7 @@
-bin_PROGRAMS = tempi-draw osc-forward
+bin_PROGRAMS = \
+	midi-print \
+	osc-forward \
+	tempi-draw
 
 AM_CXXFLAGS = \
 	$(BOOST_CPPFLAGS) \
@@ -21,6 +24,9 @@ tempi_draw_LDADD = $(LDADD)
 osc_forward_CXXFLAGS = $(AM_CXXFLAGS)
 osc_forward_LDADD = $(LDADD)
 
+midi_print_CXXFLAGS = $(AM_CXXFLAGS)
+midi_print_LDADD = $(LDADD)
+
 headers = \
     legacy.h \
 	sampler.h \
@@ -34,4 +40,7 @@ tempi_draw_SOURCES = \
 
 osc_forward_SOURCES = \
 	osc_forward/main.cpp
+
+midi_print_SOURCES = \
+	midi_print/main.cpp
 
