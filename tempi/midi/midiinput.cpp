@@ -192,16 +192,19 @@ MidiInput::MidiInput() :
         opened_(false),
         port_(0),
         ports_count_(0),
+        client_name_("tempi.midi.in"),
         messaging_queue_()
 {
     // RtMidiIn constructor
+    // TODO:allow to change client name using a property
     try
     {
-        midi_in_ = new RtMidiIn;
+        midi_in_ = new RtMidiIn(client_name_);
     }
-    catch (RtError &error) {
+    catch (RtError &error)
+    {
         error.printMessage();
-        exit(EXIT_FAILURE);
+        exit(EXIT_FAILURE); // FIXME: should not exit!!!
     }
     // Check available ports vs. specified.
     ports_count_ = midi_in_->getPortCount();
