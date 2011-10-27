@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+A Tempi project can contain state machines, scores, tables and patches. 
+The patches are named graphs. A graph contains nodes and connections between those nodes.
+Nodes can have properties. 
+
+Data, algorithms and state machines can be stored in the same XML file.
+One can also use include statements in their main XML file in order to split the data from the business logic and the GUI.
+-->
+<tempi api="0.2">
+    <!-- A state machine contains states. Each state has rules connected to some signals. -->
+    <statemachine name="foo">
+        <state name="walking">
+            <rule signal="scared" action="goto" />
+                <!-- rules can have arguments -->
+                <string>running</string>
+            </rule>
+        </state>
+        <state name="running">
+            <rule event="attacked" action="goto">
+                <string>fighting</string>
+            </rule>
+            <rule event="onLeave" action="goto">
+                <string>walking</string>
+            </rule>
+            <rule event="onEnter" action="send">
+                <string>walking</string>
+                <int>2</int>
+            </rule>
+        </state>
+        <state name="fighting">
+            <rule event="onEnter" action="pop" arg="punching" />
+            <state name="punching">
+                <rule signal="fantom" action="pop" />
+                    <int>2</int>
+                </rule>
+            </state>
+            <state name="kick">
+            </state>
+        </state>
+    </statemachine>
+    <graph name="bacon">
+        <node type="fsm.watch-event" name="watch0">
+            <property name="event-name">
+                <!-- properties have a value as a list of any type atoms -->
+                <string>attack::onEnter</string>
+            </property>
+            <property name="action">
+                <string>bang</string>
+            </property>
+        </node>
+        <node type="message" name="message0" />
+            <tokens>
+                <string>listen</string>
+                <boolean>true</boolean>
+            </tokens>
+        </message>
+        <node type="osc.receive" name="receive0">
+            <property name="port">
+                <int>14444</int>
+            </property>
+        </node>
+        <node type="fsm.multiplex" name="mux0">
+            <!-- Gives the fsm.multiplex node N outlets (number of states): -->
+            <property name="parent-state">
+                <string>fsm::character</string>
+            </property>
+            <property name="recursive">
+                <boolean>false</boolean>
+            </property>
+        </node>
+        <node type="nop" name="nop0" />
+        <node type="osc.send" name="send0">
+            <property name="host">
+                <string>localhost</string>
+            </property>
+            <property name="port">
+                <int>14444</int>
+            </property>
+        </node>
+        <connect from="message0" outlet="0" to="receive0" inlet="0" />
+        <connect from="nop0" outlet="0" to="send0" inlet="0" />
+        <connect from="receive0" outlet="0" to="nop0" inlet="0" />
+        <connect from="watch0" outlet="0" to="message0" inlet="0" />
+    </graph>
+    <score name="ham">
+        <track name="baz">
+            <message time="2000000" /> <!-- An empty message is like a bang in Pure Data -->
+            <message time="3087000">
+                <float>3.14159</float>
+                <string>hello</string>
+                <int>32</int>
+            </message>
+            <message time="4086000">
+                <float>3.0</float>
+                <string>bye</string>
+                <int>33</int>
+            </message>
+        </track>
+        <track name="toto">
+            <message time="0">
+                <float>0.0</float>
+            </message>
+            <message time="10000">
+                <float>0.1</float>
+            </message>
+            <message time="20000">
+                <float>0.15</float>
+            </message>
+            <message time="30000">
+                <float>0.30</float>
+            </message>
+        </track>
+    </score>
+</tempi>
+
