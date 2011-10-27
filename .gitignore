@@ -9,8 +9,8 @@
 *.swp
 *~
 .deps/
-.libs/
 .dirstamp
+.libs/
 Makefile
 Makefile.in
 aclocal.m4
@@ -51,13 +51,16 @@ prototypes/va_list/var_types
 prototypes/variant
 src/osc-forward
 src/tempi
+src/tempi-draw
 tempi-*.tar.gz
 tempi/config.h
 tempi/config.h.in
 tempi/stamp-h1
 tempi/table/.dirstamp
 tempi/tempi-version.h
+tempi/tempi.pyste
 tests/check_average
+tests/check_base
 tests/check_fsm
 tests/check_graph
 tests/check_message
