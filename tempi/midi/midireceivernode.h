@@ -19,20 +19,35 @@
 
 /**
  * @file
- * Functions in the tempi::utils namespace.
+ * The MidiReceiverNode class.
  */
-#ifndef __TEMPI_UTILS_H__
-#define __TEMPI_UTILS_H__
+#ifndef __TEMPI_MIDI_MIDIRECEIVERNODE_H__
+#define __TEMPI_MIDI_MIDIRECEIVERNODE_H__
+
+#include "tempi/midi/midiinput.h"
+#include "tempi/node.h"
 
 namespace tempi
 {
 
-namespace utils
+namespace midi
 {
 
-bool stringsMatch(const char *a, const char *b);
-int map_int(int value, int istart, int istop, int ostart, int ostop);
-float map_float(float value, float istart, float istop, float ostart, float ostop);
+/**
+ * Node that receives MIDI messages.
+ */
+class MidiReceiverNode : public Node
+{
+    public:
+        MidiReceiverNode();
+    protected:
+        virtual void doTick();
+        virtual void processMessage(unsigned int inlet, const Message &message)
+        {}
+        virtual void onPropertyChanged(const char *name, const Message &value);
+    private:
+        MidiInput::ptr midi_input_;
+};
 
 } // end of namespace
 

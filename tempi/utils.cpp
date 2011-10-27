@@ -18,6 +18,7 @@
  */
 
 #include "tempi/utils.h"
+#include <algorithm> // min, max
 #include <iostream>
 #include <string.h>
 
@@ -38,6 +39,32 @@ bool stringsMatch(const char *a, const char *b)
     else
         return strcmp(a, b) == 0;
     // FIXME: would be safer to use strncmp
+}
+
+/**
+ * Convenience function to map a variable from one coordinate space
+ * to another.
+ * The result is clipped in the range [ostart, ostop]
+ * Make sure ostop is bigger than ostart.
+ *
+ * To map a MIDI control value into the [0,1] range:
+ * map(value, 0.0, 1.0, 0. 127.);
+ *
+ * Depends on: #include <algorithm>
+ */
+float map_float(float value, float istart, float istop, float ostart, float ostop)
+{
+    float ret = ostart + (ostop - ostart) * ((value - istart) / (istop - istart));
+    // In Processing, they don't do the following: (clipping)
+    return std::max(std::min(ret, ostop), ostart);
+}
+
+int map_int(int value, int istart, int istop, int ostart, int ostop)
+{
+    float ret = ostart + (ostop - ostart) * ((value - istart) / float(istop - istart));
+    //g_print("%f = %d + (%d-%d) * ((%d-%d) / (%d-%d))", ret, ostart, ostop, ostart, value, istart, istop, istart);
+    // In Processing, they don't do the following: (clipping)
+    return std::max(std::min(int(ret), ostop), ostart);
 }
 
 } // end of namespace

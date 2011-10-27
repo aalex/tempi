@@ -1,12 +1,17 @@
 AM_CXXFLAGS = \
-    $(LIBXML_CFLAGS) \
+    $(BOOST_CPPFLAGS) \
     $(LIBLO_CFLAGS) \
+    $(LIBXML_CFLAGS) \
+    $(STK_CXXFLAGS) \
     -I$(top_srcdir) \
     -I$(top_srcdir)/tempi
 
 AM_LIBS = \
+    $(BOOST_LDFLAGS) \
+    $(BOOST_THREAD_LIB) \
     $(LIBLO_LIBS) \
-    $(LIBXML_LIBS)
+    $(LIBXML_LIBS) \
+    $(STK_LIBS)
 
 # this file is not installed, just included by .cpp files at compile time.
 EXTRA_DIST = config.h
@@ -40,6 +45,8 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     mapping/slide.cpp \
     mapping/slidefilter.cpp \
     message.cpp \
+    midi/midireceivernode.cpp \
+    midi/midiinput.cpp \
     node.cpp \
     nodefactory.cpp \
     osc/oscreceiver.cpp \
@@ -85,6 +92,8 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     mapping/slide.h \
     mapping/slidefilter.h \
     message.h \
+    midi/midireceivernode.h \
+    midi/midiinput.h \
     node.h \
     nodefactory.h \
     osc/oscreceiver.h \

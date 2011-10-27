@@ -107,6 +107,21 @@ AC_CHECK_FUNCS([gettimeofday memmove mkdir setenv sqrt strchr strpbrk uname])
 
 AX_PTHREAD
 
+# STK
+# TODO: print some message when configuring STK is OK
+AC_LANG_PUSH(C++)
+# save original flags
+SAVED_LIBS=$LIBS
+LIBS="$LIBS -lstk"
+AC_LINK_IFELSE(
+        [AC_LANG_PROGRAM([ #include <stk/RtMidi.h> ],
+        [RtMidiIn input])],
+        [AC_SUBST(STK_LIBS," -lstk -lrt -lm")],
+        [AC_MSG_ERROR([libstk is not installed: alsa])])
+LIBS=$SAVED_LIBS # restore them
+AC_SUBST(STK_CXXFLAGS, "-D__LINUX_ALSA__ -D__UNIX_JACK__ -D__LITTLE_ENDIAN__")
+AC_LANG_POP(C++)
+
 # Glib
 PKG_CHECK_MODULES([GLIB], [glib-2.0 >= 2.10.2], have_glib=true, have_glib=false)
 if test "x${have_glib}" = "xfalse" ; then
@@ -154,12 +169,12 @@ dnl AX_BOOST_FILESYSTEM
 dnl if test "x${ax_cv_boost_filesystem}" = "xno" ; then
 dnl 	AC_MSG_ERROR([missing package: libboost-filesystem-dev])
 dnl fi
-dnl 
-dnl AX_BOOST_THREAD
-dnl if test "x${ax_cv_boost_thread}" = "xno" ; then
-dnl     AC_MSG_ERROR([missing package: libboost-thread-dev])
-dnl fi
-dnl 
+
+AX_BOOST_THREAD
+if test "x${ax_cv_boost_thread}" = "xno" ; then
+    AC_MSG_ERROR([missing package: libboost-thread-dev])
+fi
+
 dnl AX_BOOST_DATE_TIME
 dnl if test "x${ax_cv_boost_date_time}" = "xno" ; then
 dnl 	AC_MSG_ERROR([missing package: libboost-date-time-dev])
