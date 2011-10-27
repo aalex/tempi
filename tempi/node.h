@@ -68,6 +68,8 @@ class Node
         // TODO: properties:
         // std::map<std::string, Message> getProperties();
         const Message &getProperty(const char *name) const throw(BadIndexException);
+        const Message &getArguments() const;
+        void setArguments(const Message &message);
         bool hasProperty(const char *name) const;
         /**
          * Sets a property value.
@@ -113,6 +115,7 @@ class Node
         std::vector<Source::ptr> outlets_;
         std::map<std::string, Message> properties_;
         std::vector<Sink::ptr> inlets_;
+        Message arguments_;
         // TODO: return success
         // TODO: add unsigned int inlet_number
 };
