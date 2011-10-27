@@ -45,6 +45,7 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     mapping/slide.cpp \
     mapping/slidefilter.cpp \
     message.cpp \
+    midi/midireceivernode.cpp \
     midi/midiinput.cpp \
     node.cpp \
     nodefactory.cpp \
@@ -91,6 +92,7 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     mapping/slide.h \
     mapping/slidefilter.h \
     message.h \
+    midi/midireceivernode.h \
     midi/midiinput.h \
     node.h \
     nodefactory.h \
