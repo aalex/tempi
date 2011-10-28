@@ -48,6 +48,7 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     midi/midireceivernode.cpp \
     midi/midiinput.cpp \
     midi/midioutput.cpp \
+    midi/midisendernode.cpp \
     node.cpp \
     nodefactory.cpp \
     osc/oscreceiver.cpp \
@@ -96,6 +97,7 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     midi/midireceivernode.h \
     midi/midiinput.h \
     midi/midioutput.h \
+    midi/midisendernode.h \
     node.h \
     nodefactory.h \
     osc/oscreceiver.h \

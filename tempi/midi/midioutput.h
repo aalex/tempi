@@ -50,6 +50,7 @@ class MidiOutput
         unsigned int getPort() const;
         /** Prints the list of MIDI sink devices. */
         void enumerateDevices();
+        // TODO: std::vector<boost::tuple<unsigned int, std::string> > enumerateDevices();
         bool isOpen() const;
         bool isVerbose() const;
         /** Sets it verbose or not. */

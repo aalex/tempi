@@ -56,15 +56,20 @@ bool MidiOutput::sendMessage(const Message &message) const
 {
     if (verbose_)
         std::cout << __FUNCTION__ << "(" << message << ")" << std::endl;
-    //messaging_queue_.push(message);
     if (isOpen())
     {
         std::vector<unsigned char> event;
+        for (unsigned int i = 0; i < message.getSize(); ++i)
+        {
+            ArgumentType type;
+            message.getArgumentType(i, type);
+            if (type == 'c')
+                event.push_back((unsigned char) message.getChar(i));
+        }
         // TODO: build event
         try
         {
-            std::cout << "TODO: send the list of char to MIDI output: " << message << std::endl;
-            // TODO midi_out_->sendMessage(&event);
+            midi_out_->sendMessage(&event);
             return true;
         }
         catch (RtError &error)
