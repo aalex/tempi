@@ -9,6 +9,7 @@ SUBDIRS = \
     src \
     tests \
     data \
+    man \
     doc
 
 EXTRA_DIST = \

@@ -1,0 +1,25 @@
+[DESCRIPTION]
+Prints MIDI events.
+
+[SYNOPSIS]
+midi-print [options]
+
+[EXAMPLES]
+To print MIDI events from device 1:
+
+ midi-print -p 1 -v
+
+[AUTHOR]
+Alexandre Quessy
+
+[HISTORY]
+2011 - Written by Alexandre Quessy
+
+[REPORTING BUGS]
+See http://tempi.toonloop.com
+
+[COPYRIGHT]
+Copyright (c) 2011 Alexandre Quessy <alexandre@quessy.net>
+
+[SEE ALSO]
+osc-forward(1), tempi-draw(1)
