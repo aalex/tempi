@@ -49,6 +49,7 @@ prototypes/phoenix/findif
 prototypes/tuples
 prototypes/va_list/var_types
 prototypes/variant
+src/midi-print
 src/osc-forward
 src/tempi
 src/tempi-draw
