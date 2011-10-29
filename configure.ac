@@ -214,6 +214,7 @@ AC_CONFIG_FILES([
         doxyfile 
         data/Makefile
         doc/Makefile
+        man/Makefile
         tempi-${TEMPI_API_VERSION}.pc:tempi.pc.in
         ])
 

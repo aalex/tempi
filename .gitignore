@@ -1,4 +1,5 @@
 !prototypes/kinect/Makefile
+*.1
 *.cxx
 *.dia~
 *.la
