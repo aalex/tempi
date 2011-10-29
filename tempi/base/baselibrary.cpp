@@ -17,17 +17,21 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "tempi/midi/midilibrary.h"
-#include "tempi/midi/midireceivernode.h"
+#include "tempi/base/baselibrary.h"
+#include "tempi/base/nop_node.h"
+#include "tempi/base/print_node.h"
+#include "tempi/base/metro_node.h"
 #include "tempi/utils.h"
-#include "tempi/nodefactory.h"
 
-namespace tempi { namespace midi {
+namespace tempi {
+namespace base {
 
-void MidiLibrary::load(NodeFactory &factory, const char *prefix) const
+void BaseLibrary::load(NodeFactory &factory, const char *prefix) const
 {
     using utils::concatenate;
-    factory.registerTypeT<MidiReceiverNode>(concatenate(prefix, "receive").c_str());
+    factory.registerTypeT<PrintNode>(concatenate(prefix, "print").c_str());
+    factory.registerTypeT<NopNode>(concatenate(prefix, "nop").c_str());
+    factory.registerTypeT<MetroNode>(concatenate(prefix, "metro").c_str());
 }
 
 } // end of namespace

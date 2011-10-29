@@ -17,17 +17,17 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "tempi/midi/midilibrary.h"
-#include "tempi/midi/midireceivernode.h"
+#include "tempi/sampler/samplerlibrary.h"
+#include "tempi/sampler/samplernode.h"
 #include "tempi/utils.h"
-#include "tempi/nodefactory.h"
 
-namespace tempi { namespace midi {
+namespace tempi {
+namespace sampler {
 
-void MidiLibrary::load(NodeFactory &factory, const char *prefix) const
+void SamplerLibrary::load(NodeFactory &factory, const char *prefix) const
 {
     using utils::concatenate;
-    factory.registerTypeT<MidiReceiverNode>(concatenate(prefix, "receive").c_str());
+    factory.registerTypeT<SamplerNode>(concatenate(prefix, "sampler").c_str());
 }
 
 } // end of namespace

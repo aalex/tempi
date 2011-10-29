@@ -17,19 +17,25 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "tempi/midi/midilibrary.h"
-#include "tempi/midi/midireceivernode.h"
-#include "tempi/utils.h"
-#include "tempi/nodefactory.h"
+/**
+ * @file
+ * The OscLibrary class.
+ */
+#ifndef __TEMPI_OSCLIBRARY_H__
+#define __TEMPI_OSCLIBRARY_H__
 
-namespace tempi { namespace midi {
+#include "tempi/library.h"
 
-void MidiLibrary::load(NodeFactory &factory, const char *prefix) const
+namespace tempi { namespace osc {
+
+class OscLibrary : public Library
 {
-    using utils::concatenate;
-    factory.registerTypeT<MidiReceiverNode>(concatenate(prefix, "receive").c_str());
-}
+    public:
+        virtual void load(NodeFactory &factory, const char *prefix) const;
+};
 
 } // end of namespace
 } // end of namespace
+
+#endif // ifndef
 

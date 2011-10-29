@@ -33,6 +33,7 @@ libtempi_@TEMPI_API_VERSION@_la_includedir = $(includedir)/tempi-$(TEMPI_API_VER
 ## and the variable name derived from that.
 ## PLEASE KEEP THEM IN ALPHABETICAL ORDER
 libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
+    base/baselibrary.cpp \
     base/load.cpp \
     base/metro_node.cpp \
     base/nop_node.cpp \
@@ -42,6 +43,7 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     fsm/state.cpp \
     fsm/statemachine.cpp \
     graph.cpp \
+    internals.cpp \
     mapping/slide.cpp \
     mapping/slidefilter.cpp \
     message.cpp \
@@ -50,11 +52,13 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     midi/midireceivernode.cpp \
     node.cpp \
     nodefactory.cpp \
+    osc/osclibrary.cpp \
     osc/oscreceiver.cpp \
     osc/oscreceivernode.cpp \
     osc/oscsender.cpp \
     osc/oscsendernode.cpp \
     sampler/load.cpp \
+    sampler/samplerlibrary.cpp \
     sampler/loopingplayback.cpp \
     sampler/marker.cpp \
     sampler/pingpongplayback.cpp \
@@ -78,6 +82,7 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     base/metro_node.h \
     base/nop_node.h \
     base/print_node.h \
+    base/baselibrary.h \
     base/load.h \
     concurrentqueue.h \
     exceptions.h \
@@ -87,6 +92,7 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     fsm/statemachine.h \
     graph.h \
     identifier.h \
+    internals.h \
     mapping/average.h \
     mapping/slide.h \
     mapping/slidefilter.h \
@@ -97,11 +103,13 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     node.h \
     nodefactory.h \
     nodetype.h \
+    osc/osclibrary.h \
     osc/oscreceiver.h \
     osc/oscreceivernode.h \
     osc/oscsender.h \
     osc/oscsendernode.h \
     sampler/load.h \
+    sampler/samplerlibrary.h \
     sampler/loopingplayback.h \
     sampler/marker.h \
     sampler/pingpongplayback.h \

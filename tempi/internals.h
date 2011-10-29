@@ -17,19 +17,22 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "tempi/midi/midilibrary.h"
-#include "tempi/midi/midireceivernode.h"
-#include "tempi/utils.h"
+/**
+ * @file
+ * The tempi::internals namespace.
+ */
+#ifndef __TEMPI_INTERNALS_H__
+#define __TEMPI_INTERNALS_H__
+
 #include "tempi/nodefactory.h"
 
-namespace tempi { namespace midi {
+namespace tempi {
+namespace internals {
 
-void MidiLibrary::load(NodeFactory &factory, const char *prefix) const
-{
-    using utils::concatenate;
-    factory.registerTypeT<MidiReceiverNode>(concatenate(prefix, "receive").c_str());
-}
+bool loadInternals(NodeFactory &factory);
 
 } // end of namespace
 } // end of namespace
+
+#endif // ifndef
 
