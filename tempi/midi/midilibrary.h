@@ -19,26 +19,25 @@
 
 /**
  * @file
- * Functions in the tempi::utils namespace.
+ * The MidiLibrary class.
  */
-#ifndef __TEMPI_UTILS_H__
-#define __TEMPI_UTILS_H__
+#ifndef __TEMPI_MIDI_LIBRARY_H__
+#define __TEMPI_MIDI_LIBRARY_H__
 
-#include <string>
+#include "tempi/library.h"
 
-namespace tempi
+namespace tempi { namespace midi {
+
+/**
+ * A Library is a collection of Node types.
+ */
+class MidiLibrary : public Library
 {
-
-namespace utils
-{
-
-bool stringsMatch(const char *a, const char *b);
-int map_int(int value, int istart, int istop, int ostart, int ostop);
-float map_float(float value, float istart, float istop, float ostart, float ostop);
-std::string concatenate(const char *a, const char *b);
+    public:
+        virtual void load(NodeFactory &factory, const char *prefix) const;
+};
 
 } // end of namespace
-
 } // end of namespace
 
 #endif // ifndef

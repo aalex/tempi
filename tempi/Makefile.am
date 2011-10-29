@@ -45,8 +45,9 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     mapping/slide.cpp \
     mapping/slidefilter.cpp \
     message.cpp \
-    midi/midireceivernode.cpp \
     midi/midiinput.cpp \
+    midi/midilibrary.cpp \
+    midi/midireceivernode.cpp \
     node.cpp \
     nodefactory.cpp \
     osc/oscreceiver.cpp \
@@ -92,8 +93,9 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     mapping/slide.h \
     mapping/slidefilter.h \
     message.h \
-    midi/midireceivernode.h \
     midi/midiinput.h \
+    midi/midilibrary.h \
+    midi/midireceivernode.h \
     node.h \
     nodefactory.h \
     osc/oscreceiver.h \

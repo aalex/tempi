@@ -19,25 +19,27 @@
 
 /**
  * @file
- * Functions in the tempi::utils namespace.
+ * The Library class.
  */
-#ifndef __TEMPI_UTILS_H__
-#define __TEMPI_UTILS_H__
+#ifndef __TEMPI_LIBRARY_H__
+#define __TEMPI_LIBRARY_H__
 
-#include <string>
+#include "tempi/nodefactory.h"
 
 namespace tempi
 {
 
-namespace utils
+/**
+ * A Library is a collection of Node types.
+ */
+class Library
 {
-
-bool stringsMatch(const char *a, const char *b);
-int map_int(int value, int istart, int istop, int ostart, int ostop);
-float map_float(float value, float istart, float istop, float ostart, float ostop);
-std::string concatenate(const char *a, const char *b);
-
-} // end of namespace
+    public:
+        /**
+         * Loads node types for a library.
+         */
+        virtual void load(NodeFactory &factory, const char *prefix) const = 0;
+};
 
 } // end of namespace
 

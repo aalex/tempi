@@ -67,6 +67,13 @@ int map_int(int value, int istart, int istop, int ostart, int ostop)
     return std::max(std::min(int(ret), ostop), ostart);
 }
 
+std::string concatenate(const char *a, const char *b)
+{
+    std::string ret(a);
+    ret += b;
+    return ret;
+}
+
 } // end of namespace
 
 } // end of namespace

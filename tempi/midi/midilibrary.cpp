@@ -17,29 +17,19 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * @file
- * Functions in the tempi::utils namespace.
- */
-#ifndef __TEMPI_UTILS_H__
-#define __TEMPI_UTILS_H__
+#include "tempi/midi/midilibrary.h"
+#include "tempi/midi/midireceivernode.h"
+#include "tempi/utils.h"
 
-#include <string>
+namespace tempi { namespace midi {
 
-namespace tempi
+void MidiLibrary::load(NodeFactory &factory, const char *prefix) const
 {
-
-namespace utils
-{
-
-bool stringsMatch(const char *a, const char *b);
-int map_int(int value, int istart, int istop, int ostart, int ostop);
-float map_float(float value, float istart, float istop, float ostart, float ostop);
-std::string concatenate(const char *a, const char *b);
+    // TODO: const char *prefix, 
+    // TODO: use the base namespace
+    using utils::concatenate;
+    factory.registerTypeT<MidiReceiverNode>(concatenate(prefix, "midiin").c_str());
+}
 
 } // end of namespace
-
 } // end of namespace
-
-#endif // ifndef
-
