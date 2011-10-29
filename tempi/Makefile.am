@@ -64,9 +64,7 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     sampler/score.cpp \
     sampler/track.cpp \
     sink.cpp \
-    sinknode.cpp \
     source.cpp \
-    sourcenode.cpp \
     table/table.cpp \
     table/table_player.cpp \
     table/table_writer.cpp \
@@ -115,9 +113,7 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     sampler/track.h \
     sharedptr.h \
     sink.h \
-    sinknode.h \
     source.h \
-    sourcenode.h \
     table/table.h \
     table/table_player.h \
     table/table_writer.h \
