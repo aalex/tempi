@@ -2,6 +2,8 @@
 
 namespace tempi
 {
+namespace table
+{
 
 Table::Table()
 {
@@ -45,5 +47,6 @@ void Table::setSize(unsigned int size)
     messages_.resize(size);
 }
 
+} // end of namespace
 } // end of namespace
 

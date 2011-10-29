@@ -5,8 +5,8 @@ using namespace tempi;
 
 bool check_table()
 {
-    Table table;
-    if (table.getSize() != 0)
+    table::Table table0;
+    if (table0.getSize() != 0)
     {
         std::cout << "Size should be 0." << std::endl;
         return false;
@@ -14,8 +14,8 @@ bool check_table()
 
     Message m;
     m.appendFloat(0.0f);
-    table.append(m);
-    if (table.getSize() != 1)
+    table0.append(m);
+    if (table0.getSize() != 1)
     {
         std::cout << "Size should be 1." << std::endl;
         return false;
