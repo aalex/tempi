@@ -207,6 +207,9 @@ AC_CONFIG_FILES([
         tempi/tempi-version.h
         tempi/Makefile 
         src/Makefile
+        src/midi-print/Makefile
+        src/osc-forward/Makefile
+        src/tempi-draw/Makefile
         tests/Makefile
         doxyfile 
         data/Makefile

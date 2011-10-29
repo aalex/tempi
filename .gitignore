@@ -49,10 +49,9 @@ prototypes/phoenix/findif
 prototypes/tuples
 prototypes/va_list/var_types
 prototypes/variant
-src/midi-print
-src/osc-forward
-src/tempi
-src/tempi-draw
+src/midi-print/midi-print
+src/osc-forward/osc-forward
+src/tempi-draw/tempi-draw
 tempi-*.tar.gz
 tempi/config.h
 tempi/config.h.in
