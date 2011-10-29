@@ -30,8 +30,8 @@ void tempi_base_load(void *nodeFactory)
     // TODO: const char *prefix, 
     // TODO: use the base namespace
     NodeFactory *factory = (NodeFactory *) nodeFactory;
-    factory->registerTypeT<NopNode>("nop");
-    factory->registerTypeT<PrintNode>("print");
-    factory->registerTypeT<MetroNode>("metro");
+    factory->registerTypeT<base::NopNode>("nop");
+    factory->registerTypeT<base::PrintNode>("print");
+    factory->registerTypeT<base::MetroNode>("metro");
 }
 

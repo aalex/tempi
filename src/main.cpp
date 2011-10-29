@@ -71,7 +71,7 @@ class App
         ClutterActor *stage_;
         ClutterActor *selection_rect_;
         std::vector<std::tr1::shared_ptr<Sampler> > samplers_;
-        std::tr1::shared_ptr<tempi::OscReceiver> osc_receiver_;
+        std::tr1::shared_ptr<tempi::osc::OscReceiver> osc_receiver_;
         void pollOSC();
         bool startOSC();
         void drawSamplers();
@@ -536,7 +536,7 @@ bool App::startOSC()
     }
     else
     {
-        osc_receiver_.reset(new tempi::OscReceiver(osc_recv_port_));
+        osc_receiver_.reset(new tempi::osc::OscReceiver(osc_recv_port_));
         std::cout << "Receive OSC from " << (*osc_receiver_.get()) << std::endl;
     }
     return true;

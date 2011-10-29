@@ -20,8 +20,8 @@
 #include "tempi/osc/oscsendernode.h"
 #include <iostream>
 
-namespace tempi
-{
+namespace tempi {
+namespace osc {
 
 OscSenderNode::OscSenderNode() :
     Node()
@@ -51,5 +51,6 @@ void OscSenderNode::onPropertyChanged(const char *name, const Message &value)
     }
 }
 
+} // end of namespace
 } // end of namespace
 

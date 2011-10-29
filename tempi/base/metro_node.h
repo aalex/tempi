@@ -28,8 +28,7 @@
 #include "tempi/timeposition.h"
 #include "tempi/node.h"
 
-namespace tempi
-{
+namespace tempi { namespace base {
 
 /**
  * A MetroNode is a Node that ticks every interval ms.
@@ -49,6 +48,7 @@ class MetroNode : public Node
         void startMetro();
 };
 
+} // end of namespace
 } // end of namespace
 
 #endif // ifndef

@@ -20,8 +20,8 @@
 #include "tempi/osc/oscreceivernode.h"
 #include <iostream>
 
-namespace tempi
-{
+namespace tempi {
+namespace osc {
 
 OscReceiverNode::OscReceiverNode() :
     Node()
@@ -57,5 +57,6 @@ void OscReceiverNode::doTick()
     }
 }
 
+} // end of namespace
 } // end of namespace
 

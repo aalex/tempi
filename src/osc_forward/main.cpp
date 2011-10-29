@@ -119,12 +119,11 @@ bool App::isValidHost(const std::string &host) const
 void App::setupGraph()
 {
     NodeFactory::ptr factory(new NodeFactory);
-    AbstractNodeType::ptr senderType((AbstractNodeType *) new NodeType<OscSenderNode>);
-    factory->registerType("osc.send", senderType);
-    AbstractNodeType::ptr receiverType((AbstractNodeType *) new NodeType<OscReceiverNode>);
-    factory->registerType("osc.receive", receiverType);
-    AbstractNodeType::ptr nopType((AbstractNodeType *) new NodeType<NopNode>);
-    factory->registerType("nop", nopType);
+
+    factory->registerTypeT<osc::OscSenderNode>("osc.send");
+    factory->registerTypeT<osc::OscReceiverNode>("osc.receive");
+    factory->registerTypeT<base::NopNode>("nop");
+
     graph_.reset(new tempi::Graph(factory));
     
     graph_->addNode("nop", "nop0");

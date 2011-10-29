@@ -20,8 +20,7 @@
 #include <iostream>
 #include "tempi/base/nop_node.h"
 
-namespace tempi
-{
+namespace tempi { namespace base {
 
 NopNode::NopNode() :
     Filter()
@@ -33,5 +32,6 @@ Message NopNode::filter(const Message &message)
     return message;
 }
 
+} // end of namespace
 } // end of namespace
 

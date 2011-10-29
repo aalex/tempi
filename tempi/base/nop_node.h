@@ -26,8 +26,7 @@
 
 #include "tempi/filter.h"
 
-namespace tempi
-{
+namespace tempi { namespace base {
 
 /**
  * The NopNode does no operation on a message, and just passes it to its outlet.
@@ -41,6 +40,7 @@ class NopNode : public Filter
         virtual Message filter(const Message &message);
 };
 
+} // end of namespace
 } // end of namespace
 
 #endif // ifndef

@@ -28,9 +28,6 @@
 
 namespace tempi { namespace midi {
 
-/**
- * A Library is a collection of Node types.
- */
 class MidiLibrary : public Library
 {
     public:

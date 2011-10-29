@@ -21,8 +21,7 @@
 #include "tempi/base/print_node.h"
 #include "tempi/utils.h"
 
-namespace tempi
-{
+namespace tempi { namespace base {
 
 PrintNode::PrintNode() :
     Node(),
@@ -52,5 +51,6 @@ void PrintNode::onPropertyChanged(const char *name, const Message &value)
         enabled_ = value.getBoolean(0);
 }
 
+} // end of namespace
 } // end of namespace
 
