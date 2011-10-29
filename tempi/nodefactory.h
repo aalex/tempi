@@ -73,7 +73,6 @@ class NodeFactory
         {
             return entries_;
         }
-        void loadInternals();
     private:
         std::map<std::string, AbstractNodeType::ptr> entries_;
 };
