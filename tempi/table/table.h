@@ -29,6 +29,8 @@
 
 namespace tempi
 {
+namespace table
+{
 
 /**
  * A Table contains indexed Message objects. 
@@ -60,6 +62,7 @@ class Table
         std::vector<Message> messages_;
 };
 
+} // end of namespace
 } // end of namespace
 
 #endif // ifndef

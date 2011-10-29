@@ -17,21 +17,45 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "tempi/base/load.h"
+/**
+ * @file
+ * The Library class.
+ */
+#ifndef __TEMPI_LIBRARY_H__
+#define __TEMPI_LIBRARY_H__
+
 #include "tempi/nodefactory.h"
-#include "tempi/base/nop_node.h"
-#include "tempi/base/print_node.h"
-#include "tempi/base/metro_node.h"
+#include "tempi/sharedptr.h"
 
-using namespace tempi;
-
-void tempi_base_load(void *nodeFactory)
+namespace tempi
 {
-    // TODO: const char *prefix, 
-    // TODO: use the base namespace
-    NodeFactory *factory = (NodeFactory *) nodeFactory;
-    factory->registerTypeT<NopNode>("nop");
-    factory->registerTypeT<PrintNode>("print");
-    factory->registerTypeT<MetroNode>("metro");
+
+/**
+ * A Library is a collection of Node types.
+ */
+class Library
+{
+    public:
+        typedef std::tr1::shared_ptr<Library> ptr;
+        /**
+         * Loads node types for a library.
+         */
+        virtual void load(NodeFactory &factory, const char *prefix) const = 0;
+};
+
+namespace librarytools
+{
+
+template <class T>
+void loadLibrary(NodeFactory &factory, const char *prefix)
+{
+    Library::ptr library(new T);
+    library->load(factory, prefix);
 }
+
+} // end of namespace
+
+} // end of namespace
+
+#endif // ifndef
 

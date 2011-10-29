@@ -7,11 +7,11 @@ using namespace tempi;
 /**
  * Dummy sink node.
  */
-class DummySinkNode: public NopNode
+class DummySinkNode: public base::NopNode
 {
     public:
         DummySinkNode() :
-            NopNode()
+            base::NopNode()
         {
             triggered_ = false;
             expected_ = false;
@@ -31,8 +31,8 @@ class DummySinkNode: public NopNode
 
 bool check_simple()
 {
-    NopNode a;
-    NopNode b;
+    base::NopNode a;
+    base::NopNode b;
     DummySinkNode c;
     if (! b.getInlets()[0].get()->connect(a.getOutlets()[0]))
     {
@@ -79,7 +79,7 @@ bool check_simple()
 
 bool check_args()
 {
-    NopNode a;
+    base::NopNode a;
     // test arguments
     Message args;
     args.appendString("foo");

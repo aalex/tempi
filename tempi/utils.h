@@ -24,6 +24,8 @@
 #ifndef __TEMPI_UTILS_H__
 #define __TEMPI_UTILS_H__
 
+#include <string>
+
 namespace tempi
 {
 
@@ -33,6 +35,7 @@ namespace utils
 bool stringsMatch(const char *a, const char *b);
 int map_int(int value, int istart, int istop, int ostart, int ostop);
 float map_float(float value, float istart, float istop, float ostart, float ostop);
+std::string concatenate(const char *a, const char *b);
 
 } // end of namespace
 

@@ -18,34 +18,20 @@
  */
 
 /**
- * The MetroNode class.
+ * @file
+ * The OscLibrary class.
  */
+#ifndef __TEMPI_OSCLIBRARY_H__
+#define __TEMPI_OSCLIBRARY_H__
 
-#ifndef __TEMPI_METRONODE_H__
-#define __TEMPI_METRONODE_H__
+#include "tempi/library.h"
 
-#include "tempi/timer.h"
-#include "tempi/timeposition.h"
-#include "tempi/node.h"
+namespace tempi { namespace osc {
 
-namespace tempi { namespace base {
-
-/**
- * A MetroNode is a Node that ticks every interval ms.
- */
-class MetroNode : public Node
+class OscLibrary : public Library
 {
     public:
-        MetroNode();
-    protected:
-        virtual void processMessage(unsigned int inlet, const Message &message) {}
-        virtual void onPropertyChanged(const char *name, const Message &value);
-    private:
-        Timer timer_;
-        TimePosition interval_;
-
-        virtual void doTick();
-        void startMetro();
+        virtual void load(NodeFactory &factory, const char *prefix) const;
 };
 
 } // end of namespace

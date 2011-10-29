@@ -17,22 +17,25 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * @file
- * The tempi_sampler_load function.
- */
-#ifndef __TEMPI_SAMPLER_LOAD_H__
-#define __TEMPI_SAMPLER_LOAD_H__
-
+#include "tempi/internals.h"
 #include "tempi/nodefactory.h"
+#include "tempi/library.h"
+#include "tempi/osc/osclibrary.h"
+#include "tempi/base/baselibrary.h"
+#include "tempi/midi/midilibrary.h"
+#include "tempi/sampler/samplerlibrary.h"
 
-/**
- * Loads node types for a library.
- */
-#ifdef __cplusplus
-extern "C" 
-#endif
-void tempi_sampler_load(void *nodeFactory);
+namespace tempi {
+namespace internals {
 
-#endif // ifndef
+bool loadInternals(NodeFactory &factory)
+{
+    librarytools::loadLibrary<midi::MidiLibrary>(factory, "midi.");
+    librarytools::loadLibrary<osc::OscLibrary>(factory, "osc.");
+    librarytools::loadLibrary<sampler::SamplerLibrary>(factory, "sampler.");
+    librarytools::loadLibrary<base::BaseLibrary>(factory, "base.");
+}
+
+} // end of namespace
+} // end of namespace
 

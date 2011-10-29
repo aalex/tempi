@@ -27,8 +27,8 @@
 #include "tempi/table/table.h"
 #include "tempi/message.h"
 
-namespace tempi
-{
+namespace tempi {
+namespace table {
 
 /**
  * A TableWriter writes events to a Table.
@@ -48,6 +48,7 @@ class TableWriter
         Table *table_;
 };
 
+} // end of namespace
 } // end of namespace
 
 #endif // ifndef

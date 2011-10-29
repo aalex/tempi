@@ -17,22 +17,25 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "tempi/sourcenode.h"
-#include "tempi/sharedptr.h"
+/**
+ * @file
+ * The MidiLibrary class.
+ */
+#ifndef __TEMPI_MIDI_LIBRARY_H__
+#define __TEMPI_MIDI_LIBRARY_H__
 
-namespace tempi
-{
+#include "tempi/library.h"
 
-SourceNode::SourceNode() :
-    Node()
-{
-    addOutlet();
-}
+namespace tempi { namespace midi {
 
-Source *SourceNode::getOutlet()
+class MidiLibrary : public Library
 {
-    return getOutlets()[0].get();
-}
+    public:
+        virtual void load(NodeFactory &factory, const char *prefix) const;
+};
 
 } // end of namespace
+} // end of namespace
+
+#endif // ifndef
 

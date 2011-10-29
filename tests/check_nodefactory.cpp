@@ -1,5 +1,6 @@
 #include "tempi/tempi.h"
 #include "tempi/graph.h"
+#include "tempi/internals.h"
 #include <iostream>
 
 using namespace tempi;
@@ -82,7 +83,7 @@ bool check_many_instances()
     if (VERBOSE)
         std::cout << __FUNCTION__ << std::endl;
     NodeFactory factory;
-    factory.loadInternals();
+    internals::loadInternals(factory);
     if (factory.registerTypeT<FooNode>("foo").get() == 0)
     {
         std::cout << "Could not register type FooNode" << std::endl;
@@ -90,7 +91,7 @@ bool check_many_instances()
     }
     Node::ptr foo0 = factory.create("foo");
     Node::ptr foo1 = factory.create("foo");
-    Node::ptr foo2 = factory.create("nop");
+    Node::ptr foo2 = factory.create("base.nop");
     if (foo0.get() == 0 || foo1.get() == 0 || foo2.get() == 0)
     {
         std::cout << __FUNCTION__ << ": invalid pointer" << std::endl;
@@ -104,12 +105,12 @@ bool check_print()
     if (VERBOSE)
         std::cout << __FUNCTION__ << std::endl;
     NodeFactory factory;
-    factory.loadInternals();
-    Node::ptr nop0 = factory.create("nop");
-    Node::ptr nop1 = factory.create("nop");
-    Node::ptr print0 = factory.create("print");
-    Node::ptr sampler0 = factory.create("sampler");
-    Node::ptr print1 = factory.create("print");
+    internals::loadInternals(factory);
+    Node::ptr nop0 = factory.create("base.nop");
+    Node::ptr nop1 = factory.create("base.nop");
+    Node::ptr print0 = factory.create("base.print");
+    Node::ptr sampler0 = factory.create("sampler.sampler");
+    Node::ptr print1 = factory.create("base.print");
 
     if (nop0.get() == 0 || print0.get() == 0 || sampler0.get() == 0)
     {

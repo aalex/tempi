@@ -20,8 +20,8 @@
 #include "tempi/table/table_writer.h"
 #include <iostream>
 
-namespace tempi
-{
+namespace tempi {
+namespace table {
 
 TableWriter::TableWriter(Table *table)
 {
@@ -63,5 +63,6 @@ bool TableWriter::append(const Message &message)
     }
 }
 
+} // end of namespace
 } // end of namespace
 

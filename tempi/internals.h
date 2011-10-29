@@ -19,20 +19,20 @@
 
 /**
  * @file
- * The tempi_base_load function.
+ * The tempi::internals namespace.
  */
-#ifndef __TEMPI_BASE_LOAD_H__
-#define __TEMPI_BASE_LOAD_H__
+#ifndef __TEMPI_INTERNALS_H__
+#define __TEMPI_INTERNALS_H__
 
 #include "tempi/nodefactory.h"
 
-/**
- * Loads node types for a library.
- */
-#ifdef __cplusplus
-extern "C" 
-#endif
-void tempi_base_load(void *nodeFactory);
+namespace tempi {
+namespace internals {
+
+bool loadInternals(NodeFactory &factory);
+
+} // end of namespace
+} // end of namespace
 
 #endif // ifndef
 

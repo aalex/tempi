@@ -1,5 +1,6 @@
 #include "tempi/tempi.h"
 #include "tempi/graph.h"
+#include "tempi/internals.h"
 #include <unistd.h>
 #include <iostream>
 
@@ -39,10 +40,10 @@ bool check_metro()
     if (VERBOSE)
         std::cout << __FUNCTION__ << std::endl;
     NodeFactory factory;
-    factory.loadInternals();
+    internals::loadInternals(factory);
     factory.registerTypeT<CounterNode>("counter");
-    Node::ptr metro0 = factory.create("metro");
-    Node::ptr print0 = factory.create("print");
+    Node::ptr metro0 = factory.create("base.metro");
+    Node::ptr print0 = factory.create("base.print");
     Node::ptr counter0 = factory.create("counter");
 
     if (metro0.get() == 0 || print0.get() == 0 || counter0.get() == 0)

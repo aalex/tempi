@@ -28,8 +28,7 @@
 #include "tempi/message.h"
 #include <iostream>
 
-namespace tempi
-{
+namespace tempi { namespace base {
 
 /**
  * The PrintNode prints the contents of a Message.
@@ -46,6 +45,7 @@ class PrintNode : public Node
         bool enabled_;
 };
 
+} // end of namespace
 } // end of namespace
 
 #endif // ifndef

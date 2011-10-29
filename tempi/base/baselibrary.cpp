@@ -17,39 +17,23 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * The MetroNode class.
- */
+#include "tempi/base/baselibrary.h"
+#include "tempi/base/nop_node.h"
+#include "tempi/base/print_node.h"
+#include "tempi/base/metro_node.h"
+#include "tempi/utils.h"
 
-#ifndef __TEMPI_METRONODE_H__
-#define __TEMPI_METRONODE_H__
+namespace tempi {
+namespace base {
 
-#include "tempi/timer.h"
-#include "tempi/timeposition.h"
-#include "tempi/node.h"
-
-namespace tempi { namespace base {
-
-/**
- * A MetroNode is a Node that ticks every interval ms.
- */
-class MetroNode : public Node
+void BaseLibrary::load(NodeFactory &factory, const char *prefix) const
 {
-    public:
-        MetroNode();
-    protected:
-        virtual void processMessage(unsigned int inlet, const Message &message) {}
-        virtual void onPropertyChanged(const char *name, const Message &value);
-    private:
-        Timer timer_;
-        TimePosition interval_;
-
-        virtual void doTick();
-        void startMetro();
-};
+    using utils::concatenate;
+    factory.registerTypeT<PrintNode>(concatenate(prefix, "print").c_str());
+    factory.registerTypeT<NopNode>(concatenate(prefix, "nop").c_str());
+    factory.registerTypeT<MetroNode>(concatenate(prefix, "metro").c_str());
+}
 
 } // end of namespace
 } // end of namespace
-
-#endif // ifndef
 

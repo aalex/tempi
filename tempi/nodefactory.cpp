@@ -19,8 +19,6 @@
 
 #include "tempi/nodefactory.h"
 #include "tempi/node.h"
-#include "tempi/base/load.h"
-#include "tempi/sampler/load.h"
 #include <iostream>
 #include <sstream>
 
@@ -79,14 +77,6 @@ bool NodeFactory::hasType(const char *name)
     }
     //std::cout << "   return " << (ret ? "true" : "false") << std::endl;
     return ret;
-}
-
-void NodeFactory::loadInternals()
-{
-    // TODO: move this to some other class
-    void *self = (void *) this;
-    tempi_base_load(self);
-    tempi_sampler_load(self);
 }
 
 std::ostream &operator<<(std::ostream &os, const NodeFactory &nodeFactory)

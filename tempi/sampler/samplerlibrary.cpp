@@ -17,30 +17,19 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * @file
- * The SinkNode class.
- */
-#ifndef __TEMPI_SINKNODE_H__
-#define __TEMPI_SINKNODE_H__
+#include "tempi/sampler/samplerlibrary.h"
+#include "tempi/sampler/samplernode.h"
+#include "tempi/utils.h"
 
-#include "tempi/node.h"
-#include "tempi/sink.h"
+namespace tempi {
+namespace sampler {
 
-namespace tempi
+void SamplerLibrary::load(NodeFactory &factory, const char *prefix) const
 {
-
-/**
- * A SinkNode is Node who has only an inlet.
- */
-class SinkNode : public Node
-{
-    public:
-        SinkNode();
-        Sink *getInlet();
-};
+    using utils::concatenate;
+    factory.registerTypeT<SamplerNode>(concatenate(prefix, "sampler").c_str());
+}
 
 } // end of namespace
-
-#endif // ifndef
+} // end of namespace
 

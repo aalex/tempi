@@ -17,16 +17,25 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "tempi/sampler/load.h"
-#include "tempi/nodefactory.h"
-#include "tempi/sampler/samplernode.h"
+/**
+ * @file
+ * The BaseLibrary class.
+ */
+#ifndef __TEMPI_BASELIBRARY_H__
+#define __TEMPI_BASELIBRARY_H__
 
-void tempi_sampler_load(void *nodeFactory)
+#include "tempi/library.h"
+
+namespace tempi { namespace base {
+
+class BaseLibrary : public Library
 {
-    using namespace tempi;
-    // TODO: const char *prefix, 
-    // TODO: use the base namespace
-    NodeFactory *factory = (NodeFactory *) nodeFactory;
-    factory->registerTypeT<SamplerNode>("sampler");
-}
+    public:
+        virtual void load(NodeFactory &factory, const char *prefix) const;
+};
+
+} // end of namespace
+} // end of namespace
+
+#endif // ifndef
 

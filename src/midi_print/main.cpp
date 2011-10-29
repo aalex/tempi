@@ -76,8 +76,10 @@ void App::poll()
 void App::setupGraph()
 {
     NodeFactory::ptr factory(new NodeFactory);
+
     factory->registerTypeT<midi::MidiReceiverNode>("midi.recv");
-    factory->registerTypeT<PrintNode>("print");
+    factory->registerTypeT<base::PrintNode>("print");
+
     graph_.reset(new tempi::Graph(factory));
     
     graph_->addNode("midi.recv", "midi.recv0");

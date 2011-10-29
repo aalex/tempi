@@ -22,14 +22,14 @@ bool check_oscsender()
     {
         std::cout << m << std::endl;
     }
-    OscSender sender("localhost", 17666);
+    osc::OscSender sender("localhost", 17666);
     sender.sendMessage(m);
     return true;
 }
 
 bool check_oscreceiver()
 {
-    OscReceiver receiver(14444);
+    osc::OscReceiver receiver(14444);
     if (VERBOSE)
         std::cout << receiver << std::endl;
     for (int i = 0; i < 10; ++i)
@@ -50,7 +50,7 @@ bool check_oscreceiver()
     return true;
 }
 
-bool sent_and_received_matches(OscSender &sender, OscReceiver &receiver, const Message &message)
+bool sent_and_received_matches(osc::OscSender &sender, osc::OscReceiver &receiver, const Message &message)
 {
     sender.sendMessage(message);
     std::vector<Message> messages = receiver.poll();
@@ -82,8 +82,8 @@ bool sent_and_received_matches(OscSender &sender, OscReceiver &receiver, const M
 bool check_send_and_receive()
 {
     unsigned int port = 15555;
-    OscSender sender("localhost", port);
-    OscReceiver receiver(port);
+    osc::OscSender sender("localhost", port);
+    osc::OscReceiver receiver(port);
 
     Message m;
     m.appendString("/foo/bar");

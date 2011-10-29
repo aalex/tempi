@@ -18,37 +18,41 @@
  */
 
 /**
- * The MetroNode class.
+ * The NodeType and AbstractNodeType classes.
  */
 
-#ifndef __TEMPI_METRONODE_H__
-#define __TEMPI_METRONODE_H__
+#ifndef __TEMPI_NODETYPE_H__
+#define __TEMPI_NODETYPE_H__
 
-#include "tempi/timer.h"
-#include "tempi/timeposition.h"
 #include "tempi/node.h"
+#include "tempi/sharedptr.h"
 
-namespace tempi { namespace base {
+namespace tempi
+{
 
 /**
- * A MetroNode is a Node that ticks every interval ms.
+ * An entry in the NodeFactory.
  */
-class MetroNode : public Node
+class AbstractNodeType
 {
     public:
-        MetroNode();
-    protected:
-        virtual void processMessage(unsigned int inlet, const Message &message) {}
-        virtual void onPropertyChanged(const char *name, const Message &value);
-    private:
-        Timer timer_;
-        TimePosition interval_;
-
-        virtual void doTick();
-        void startMetro();
+        typedef std::tr1::shared_ptr<AbstractNodeType> ptr;
+        virtual Node *create() = 0;
 };
 
-} // end of namespace
+/**
+ * An entry in the NodeFactory, specific to a single Node type.
+ */
+template <class T>
+class NodeType
+{
+    public:
+        virtual Node *create()
+        {
+            return new T();
+        }
+};
+
 } // end of namespace
 
 #endif // ifndef

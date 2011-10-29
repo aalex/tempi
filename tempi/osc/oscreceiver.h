@@ -22,34 +22,31 @@
  * The OscReceiver class
  */
 
-#ifndef __OSC_RECEIVER_H__
-#define __OSC_RECEIVER_H__
+#ifndef __TEMPI_OSCRECEIVER_H__
+#define __TEMPI_OSCRECEIVER_H__
 
 #include "tempi/message.h"
+#include "tempi/sharedptr.h"
 #include <boost/tuple/tuple.hpp>
 #include <iostream>
-#include <string>
+#include <lo/lo.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string>
+#include <strings.h>
 #include <sys/time.h>
 #include <sys/types.h>
-#include <strings.h>
 #include <unistd.h>
-#include <lo/lo.h>
-#include "tempi/sharedptr.h"
 
 /**
  * The OscReceiver class.
  */
 
-namespace tempi
-{
+namespace tempi {
+namespace osc {
 
-namespace osc
-{
 std::string removeFirstChar(const std::string &from);
 bool oscMessageMatches(const tempi::Message &message, const char *path, const char *types);
-}
 
 /**
  * OpenSoundControl receiver.
@@ -85,6 +82,7 @@ class OscReceiver
 
 std::ostream &operator<<(std::ostream &os, const OscReceiver &osc_receiver);
 
+} // end of namespace
 } // end of namespace
 
 #endif // include guard

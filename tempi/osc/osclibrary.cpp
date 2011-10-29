@@ -17,21 +17,21 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "tempi/sinknode.h"
-#include "tempi/sharedptr.h"
+#include "tempi/osc/osclibrary.h"
+#include "tempi/osc/oscreceivernode.h"
+#include "tempi/osc/oscsendernode.h"
+#include "tempi/utils.h"
 
-namespace tempi
-{
+namespace tempi { namespace osc {
 
-SinkNode::SinkNode() :
-    Node()
+void OscLibrary::load(NodeFactory &factory, const char *prefix) const
 {
+    using utils::concatenate;
+    factory.registerTypeT<OscReceiverNode>(concatenate(prefix, "receive").c_str());
+    factory.registerTypeT<OscReceiverNode>(concatenate(prefix, "send").c_str());
 }
 
-Sink *SinkNode::getInlet()
-{
-    return getInlets()[0].get();
-}
+} // end of namespace
 
 } // end of namespace
 

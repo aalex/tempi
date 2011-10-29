@@ -33,7 +33,7 @@ libtempi_@TEMPI_API_VERSION@_la_includedir = $(includedir)/tempi-$(TEMPI_API_VER
 ## and the variable name derived from that.
 ## PLEASE KEEP THEM IN ALPHABETICAL ORDER
 libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
-    base/load.cpp \
+    base/baselibrary.cpp \
     base/metro_node.cpp \
     base/nop_node.cpp \
     base/print_node.cpp \
@@ -42,18 +42,21 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     fsm/state.cpp \
     fsm/statemachine.cpp \
     graph.cpp \
+    internals.cpp \
     mapping/slide.cpp \
     mapping/slidefilter.cpp \
     message.cpp \
-    midi/midireceivernode.cpp \
     midi/midiinput.cpp \
+    midi/midilibrary.cpp \
+    midi/midireceivernode.cpp \
     node.cpp \
     nodefactory.cpp \
+    osc/osclibrary.cpp \
     osc/oscreceiver.cpp \
     osc/oscreceivernode.cpp \
     osc/oscsender.cpp \
     osc/oscsendernode.cpp \
-    sampler/load.cpp \
+    sampler/samplerlibrary.cpp \
     sampler/loopingplayback.cpp \
     sampler/marker.cpp \
     sampler/pingpongplayback.cpp \
@@ -63,9 +66,7 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     sampler/score.cpp \
     sampler/track.cpp \
     sink.cpp \
-    sinknode.cpp \
     source.cpp \
-    sourcenode.cpp \
     table/table.cpp \
     table/table_player.cpp \
     table/table_writer.cpp \
@@ -79,7 +80,7 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     base/metro_node.h \
     base/nop_node.h \
     base/print_node.h \
-    base/load.h \
+    base/baselibrary.h \
     concurrentqueue.h \
     exceptions.h \
     filter.h \
@@ -88,19 +89,23 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     fsm/statemachine.h \
     graph.h \
     identifier.h \
+    internals.h \
     mapping/average.h \
     mapping/slide.h \
     mapping/slidefilter.h \
     message.h \
-    midi/midireceivernode.h \
     midi/midiinput.h \
+    midi/midilibrary.h \
+    midi/midireceivernode.h \
     node.h \
     nodefactory.h \
+    nodetype.h \
+    osc/osclibrary.h \
     osc/oscreceiver.h \
     osc/oscreceivernode.h \
     osc/oscsender.h \
     osc/oscsendernode.h \
-    sampler/load.h \
+    sampler/samplerlibrary.h \
     sampler/loopingplayback.h \
     sampler/marker.h \
     sampler/pingpongplayback.h \
@@ -112,9 +117,7 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     sampler/track.h \
     sharedptr.h \
     sink.h \
-    sinknode.h \
     source.h \
-    sourcenode.h \
     table/table.h \
     table/table_player.h \
     table/table_writer.h \

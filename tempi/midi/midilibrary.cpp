@@ -17,31 +17,19 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * @file
- * The SourceNode class.
- */
-#ifndef __TEMPI_SOURCENODE_H__
-#define __TEMPI_SOURCENODE_H__
+#include "tempi/midi/midilibrary.h"
+#include "tempi/midi/midireceivernode.h"
+#include "tempi/utils.h"
+#include "tempi/nodefactory.h"
 
-#include "tempi/node.h"
-#include "tempi/source.h"
+namespace tempi { namespace midi {
 
-namespace tempi
+void MidiLibrary::load(NodeFactory &factory, const char *prefix) const
 {
-
-/**
- * A SourceNode is Node who only has an outlet.
- */
-class SourceNode : public Node
-{
-    public:
-        SourceNode();
-        Source *getOutlet();
-    private:
-};
+    using utils::concatenate;
+    factory.registerTypeT<MidiReceiverNode>(concatenate(prefix, "receive").c_str());
+}
 
 } // end of namespace
-
-#endif // ifndef
+} // end of namespace
 

@@ -27,8 +27,8 @@
 #include "tempi/osc/oscreceiver.h"
 #include "tempi/node.h"
 
-namespace tempi
-{
+namespace tempi {
+namespace osc {
 
 /**
  * Node that receives OSC messages.
@@ -46,6 +46,7 @@ class OscReceiverNode : public Node
         OscReceiver::ptr osc_receiver_;
 };
 
+} // end of namespace
 } // end of namespace
 
 #endif // ifndef

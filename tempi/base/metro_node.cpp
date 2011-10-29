@@ -19,8 +19,7 @@
 
 #include "tempi/base/metro_node.h"
 
-namespace tempi
-{
+namespace tempi { namespace base {
 
 MetroNode::MetroNode() :
     Node()
@@ -66,5 +65,6 @@ void MetroNode::doTick()
     }
 }
 
+} // end of namespace
 } // end of namespace
 
