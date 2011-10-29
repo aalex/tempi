@@ -18,42 +18,40 @@
  */
 
 /**
- * @file
- * The Library class.
+ * The NodeType and AbstractNodeType classes.
  */
-#ifndef __TEMPI_LIBRARY_H__
-#define __TEMPI_LIBRARY_H__
 
-#include "tempi/nodefactory.h"
+#ifndef __TEMPI_NODETYPE_H__
+#define __TEMPI_NODETYPE_H__
+
+#include "tempi/node.h"
 #include "tempi/sharedptr.h"
 
 namespace tempi
 {
 
 /**
- * A Library is a collection of Node types.
+ * An entry in the NodeFactory.
  */
-class Library
+class AbstractNodeType
 {
     public:
-        typedef std::tr1::shared_ptr<Library> ptr;
-        /**
-         * Loads node types for a library.
-         */
-        virtual void load(NodeFactory &factory, const char *prefix) const = 0;
+        typedef std::tr1::shared_ptr<AbstractNodeType> ptr;
+        virtual Node *create() = 0;
 };
 
-namespace librarytools
-{
-
+/**
+ * An entry in the NodeFactory, specific to a single Node type.
+ */
 template <class T>
-void loadLibrary(NodeFactory &factory, const char *prefix)
+class NodeType
 {
-    Library::ptr library(new T);
-    library->load(factory, prefix);
-}
-
-} // end of namespace
+    public:
+        virtual Node *create()
+        {
+            return new T();
+        }
+};
 
 } // end of namespace
 

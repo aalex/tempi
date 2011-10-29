@@ -27,36 +27,12 @@
 #include <map>
 #include <string>
 #include <sstream>
-#include <tr1/memory>
 #include "tempi/exceptions.h"
-#include "tempi/node.h"
+#include "tempi/nodetype.h"
 #include "tempi/sharedptr.h"
 
 namespace tempi
 {
-
-/**
- * An entry in the registry.
- */
-class AbstractNodeType
-{
-    public:
-        typedef std::tr1::shared_ptr<AbstractNodeType> ptr;
-        virtual Node *create() = 0;
-};
-
-/**
- * An entry in the registry, specific to a single Node type.
- */
-template <class T>
-class NodeType
-{
-    public:
-        virtual Node *create()
-        {
-            return new T();
-        }
-};
 
 /**
  * A NodeFactory stores stores factories for Node types.

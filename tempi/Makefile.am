@@ -98,6 +98,7 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     midi/midireceivernode.h \
     node.h \
     nodefactory.h \
+    nodetype.h \
     osc/oscreceiver.h \
     osc/oscreceivernode.h \
     osc/oscsender.h \

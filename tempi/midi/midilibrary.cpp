@@ -20,6 +20,7 @@
 #include "tempi/midi/midilibrary.h"
 #include "tempi/midi/midireceivernode.h"
 #include "tempi/utils.h"
+#include "tempi/nodefactory.h"
 
 namespace tempi { namespace midi {
 
