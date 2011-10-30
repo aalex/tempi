@@ -22,4 +22,4 @@ See http://tempi.toonloop.com
 Copyright (c) 2011 Alexandre Quessy <alexandre@quessy.net>
 
 [SEE ALSO]
-midi-print(1), tempi-draw(1)
+midilooper(1), tempi-draw(1)

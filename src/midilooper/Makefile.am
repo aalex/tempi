@@ -1,5 +1,5 @@
 bin_PROGRAMS = \
-	midi-print
+	midilooper
 
 AM_CXXFLAGS = \
 	$(BOOST_CPPFLAGS) \
@@ -13,9 +13,9 @@ LDADD = \
 	$(GLIB_LIBS) \
 	$(top_builddir)/tempi/libtempi-@TEMPI_API_VERSION@.la
 
-midi_print_CXXFLAGS = $(AM_CXXFLAGS)
-midi_print_LDADD = $(LDADD)
+midilooper_CXXFLAGS = $(AM_CXXFLAGS)
+midilooper_LDADD = $(LDADD)
 
-midi_print_SOURCES = \
+midilooper_SOURCES = \
 	main.cpp
 

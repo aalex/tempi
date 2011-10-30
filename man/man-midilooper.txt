@@ -1,13 +1,13 @@
 [DESCRIPTION]
-Prints MIDI events.
+Loops MIDI events.
 
 [SYNOPSIS]
-midi-print [options]
+midilooper [options]
 
 [EXAMPLES]
 To print MIDI events from device 1:
 
- midi-print -p 1 -v
+ midilooper -p 1 -v
 
 [AUTHOR]
 Alexandre Quessy
