@@ -1,6 +1,6 @@
-man_MANS = tempi-draw.1 osc-forward.1 midi-print.1 
+man_MANS = tempi-draw.1 osc-forward.1 midilooper.1 
 EXTRA_DIST = $(man_MANS) \
-   man-midi-print.txt \
+   man-midilooper.txt \
    man-osc-forward.txt \
    man-tempi-draw.txt
 
@@ -13,8 +13,8 @@ common_mandeps = $(top_srcdir)/configure.ac
 # binary when any source file changes, only the main one.
 # Use -o so that the `missing' program can infer the output file.
 
-midi-print.1: $(top_srcdir)/src/midi-print/main.cpp $(common_mandeps) $(top_srcdir)/man/man-midi-print.txt
-	$(HELP2MAN) --include=man-midi-print.txt --name="midi-print" --no-info $(top_builddir)/src/midi-print/midi-print -o $@
+midilooper.1: $(top_srcdir)/src/midilooper/main.cpp $(common_mandeps) $(top_srcdir)/man/man-midilooper.txt
+	$(HELP2MAN) --include=man-midilooper.txt --name="midilooper" --no-info $(top_builddir)/src/midilooper/midilooper -o $@
 
 osc-forward.1: $(top_srcdir)/src/osc-forward/main.cpp $(common_mandeps) $(top_srcdir)/man/man-osc-forward.txt
 	$(HELP2MAN) --include=man-osc-forward.txt --name="osc-forward" --no-info $(top_builddir)/src/osc-forward/osc-forward -o $@

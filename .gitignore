@@ -50,7 +50,7 @@ prototypes/phoenix/findif
 prototypes/tuples
 prototypes/va_list/var_types
 prototypes/variant
-src/midi-print/midi-print
+src/midilooper/midilooper
 src/osc-forward/osc-forward
 src/tempi-draw/tempi-draw
 tempi-*.tar.gz

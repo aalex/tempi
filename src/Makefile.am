@@ -1,5 +1,5 @@
 SUBDIRS = \
-    midi-print \
+    midilooper \
     osc-forward \
     tempi-draw
 
