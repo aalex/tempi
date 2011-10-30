@@ -19,11 +19,11 @@
 
 /**
  * @file
- * The MidiInput class
+ * The MidiOutput class
  */
 
-#ifndef __TEMPI_MIDI_MIDIINPUT_H__
-#define __TEMPI_MIDI_MIDIINPUT_H__
+#ifndef __TEMPI_MIDI_MIDIOUTPUT_H__
+#define __TEMPI_MIDI_MIDIOUTPUT_H__
 
 #include "tempi/concurrentqueue.h"
 #include "tempi/sharedptr.h"
@@ -37,38 +37,33 @@ namespace midi
 {
 
 /** 
- * MIDI input using RtMidi.
+ * MIDI output using RtMidi.
  */
-class MidiInput
+class MidiOutput
 {
     public:
-        typedef std::tr1::shared_ptr<MidiInput> ptr;
-        MidiInput();
-        ~MidiInput();
+        typedef std::tr1::shared_ptr<MidiOutput> ptr;
+        MidiOutput();
+        ~MidiOutput();
         /** Opens a MIDI source device. */
         bool open(unsigned int port);
         unsigned int getPort() const;
-        /** Prints the list of MIDI source devices. */
-        void enumerateDevices() const;
+        /** Prints the list of MIDI sink devices. */
+        void enumerateDevices();
         // TODO: std::vector<boost::tuple<unsigned int, std::string> > enumerateDevices();
         bool isOpen() const;
         bool isVerbose() const;
         /** Sets it verbose or not. */
         void setVerbose(bool verbose);
-        /** Flushes the messages from the asynchronous messaging queue. */
-        std::vector<Message> poll();
+        bool sendMessage(const Message &message) const;
     private:
         bool verbose_;
         bool opened_;
         unsigned int port_;
         unsigned int ports_count_;
         std::string client_name_;
-        ConcurrentQueue<Message> messaging_queue_;
-        RtMidiIn *midi_in_;
-        // methods:
-        void pushMessage(const Message &message);
-        static void input_message_cb(double delta_time,
-            std::vector<unsigned char> *message, void *user_data);
+        //ConcurrentQueue<Message> messaging_queue_;
+        RtMidiOut *midi_out_;
 };
 
 } // end of namespace

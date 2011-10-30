@@ -75,7 +75,7 @@ bool MidiInput::isOpen() const
  *  - CONTROL_OFF_RULE [s:action s:args]
  *  - MIDIPROGRAMCHANGE [s:action i:number]
  */
-void MidiInput::input_message_cb(double /* delta_time */, std::vector< unsigned char > *message, void *user_data )
+void MidiInput::input_message_cb(double /* delta_time */, std::vector<unsigned char> *message, void *user_data)
 {
     MidiInput* context = static_cast<MidiInput*>(user_data);
     if (context->verbose_)
@@ -85,62 +85,69 @@ void MidiInput::input_message_cb(double /* delta_time */, std::vector< unsigned 
             std::cout << (int)message->at(i) << " ";
         std::cout << ")" << std::endl;
     }
-    if (message->size() <= 1)
-        return; // Don't support messages with only one byte or less.
-    unsigned char midi_event_type = getMidiEventType(message->at(0));
+
     Message result;
-    result.appendChar(midi_event_type);
-    switch (midi_event_type)
-    {
-        case MIDINOTEON:
-        {
-            if (context->verbose_)
-                std::cout << "MIDINOTEON" << std::endl;
-            if (message->size() < 3)
-            {
-                std::cerr << "Note on message should have 4 params" << std::endl;
-                return;
-            }
-            int note_pitch = int(message->at(1));
-            int velocity = int(message->at(2));
-            result.appendInt(note_pitch);
-            result.appendInt(velocity);
-            break;
-        }
-        case MIDINOTEOFF:
-        {
-            if (context->verbose_)
-                std::cout << "MIDINOTEOFF" << std::endl;
-            int note_pitch = int(message->at(1));
-            result.appendInt(note_pitch);
-            //result.appendInt(0); // velocity
-            break;
-        }
-        case MIDICONTROLCHANGE:
-        {
-            int controller_number = int(message->at(1));
-            int control_value = int(message->at(2));
-            result.appendInt(controller_number);
-            result.appendInt(control_value);
-            break;
-        }
-        case MIDIPROGRAMCHANGE:
-        {
-            int program_number = int(message->at(0) & 0x0f);
-            result.appendInt(program_number);
-            break;
-        }
-        case MIDIPITCHBEND:
-        {
-            int val(message->at(2));
-            result.appendInt(val);
-            break;
-        }
-        default:
-            return;
-            break;
-    }
+    std::vector<unsigned char>::iterator iter;
+    for (iter = message->begin(); iter != message->end(); ++iter)
+        result.appendChar((char) *iter);
     context->pushMessage(result);
+
+    // if (message->size() <= 1)
+    //     return; // Don't support messages with only one byte or less.
+    // unsigned char midi_event_type = getMidiEventType(message->at(0));
+    // Message result;
+    // result.appendChar(midi_event_type);
+    // switch (midi_event_type)
+    // {
+    //     case MIDINOTEON:
+    //     {
+    //         if (context->verbose_)
+    //             std::cout << "MIDINOTEON" << std::endl;
+    //         if (message->size() < 3)
+    //         {
+    //             std::cerr << "Note on message should have 4 params" << std::endl;
+    //             return;
+    //         }
+    //         int note_pitch = int(message->at(1));
+    //         int velocity = int(message->at(2));
+    //         result.appendInt(note_pitch);
+    //         result.appendInt(velocity);
+    //         break;
+    //     }
+    //     case MIDINOTEOFF:
+    //     {
+    //         if (context->verbose_)
+    //             std::cout << "MIDINOTEOFF" << std::endl;
+    //         int note_pitch = int(message->at(1));
+    //         result.appendInt(note_pitch);
+    //         //result.appendInt(0); // velocity
+    //         break;
+    //     }
+    //     case MIDICONTROLCHANGE:
+    //     {
+    //         int controller_number = int(message->at(1));
+    //         int control_value = int(message->at(2));
+    //         result.appendInt(controller_number);
+    //         result.appendInt(control_value);
+    //         break;
+    //     }
+    //     case MIDIPROGRAMCHANGE:
+    //     {
+    //         int program_number = int(message->at(0) & 0x0f);
+    //         result.appendInt(program_number);
+    //         break;
+    //     }
+    //     case MIDIPITCHBEND:
+    //     {
+    //         int val(message->at(2));
+    //         result.appendInt(val);
+    //         break;
+    //     }
+    //     default:
+    //         return;
+    //         break;
+    // }
+    // context->pushMessage(result);
 }
 
 void MidiInput::enumerateDevices() const
@@ -192,16 +199,19 @@ MidiInput::MidiInput() :
         opened_(false),
         port_(0),
         ports_count_(0),
+        client_name_("tempi.midi.in"),
         messaging_queue_()
 {
     // RtMidiIn constructor
+    // TODO:allow to change client name using a property
     try
     {
-        midi_in_ = new RtMidiIn;
+        midi_in_ = new RtMidiIn(client_name_);
     }
-    catch (RtError &error) {
+    catch (RtError &error)
+    {
         error.printMessage();
-        exit(EXIT_FAILURE);
+        exit(EXIT_FAILURE); // FIXME: should not exit!!!
     }
     // Check available ports vs. specified.
     ports_count_ = midi_in_->getPortCount();

@@ -25,8 +25,11 @@
 #include "tempi/config.h"
 #include "tempi/graph.h"
 #include "tempi/message.h"
-#include "tempi/node.h"
+#include "tempi/midi/midiinput.h"
+#include "tempi/midi/midioutput.h"
 #include "tempi/midi/midireceivernode.h"
+#include "tempi/midi/midisendernode.h"
+#include "tempi/node.h"
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/program_options.hpp>
@@ -55,12 +58,14 @@ class App
     private:
         bool verbose_;
         unsigned int midi_input_port_;
+        unsigned int midi_output_port_;
         tempi::Graph::ptr graph_;
 };
 
 App::App() :
     verbose_(false),
-    midi_input_port_(0)
+    midi_input_port_(0),
+    midi_output_port_(0)
 {
     setupGraph();
 }
@@ -75,19 +80,31 @@ void App::poll()
 
 void App::setupGraph()
 {
+    // Register node types
     NodeFactory::ptr factory(new NodeFactory);
-
     factory->registerTypeT<midi::MidiReceiverNode>("midi.recv");
+    factory->registerTypeT<midi::MidiSenderNode>("midi.send");
     factory->registerTypeT<base::PrintNode>("print");
 
+    // Create graph
     graph_.reset(new tempi::Graph(factory));
     
+    // MIDI nodes
     graph_->addNode("midi.recv", "midi.recv0");
-    graph_->addNode("print", "print0");
-    graph_->connect("midi.recv0", 0, "print0", 0);
+    graph_->addNode("midi.send", "midi.send0");
+    graph_->connect("midi.recv0", 0, "midi.send0", 0);
 
-    Message mess("ssi", "set", "port", 0);
-    graph_->message("midi.recv0", 0, mess);
+    // Print stuff
+    if (verbose_)
+    {
+        graph_->addNode("print", "print0");
+        graph_->connect("midi.recv0", 0, "print0", 0);
+    }
+
+    Message inputMessage("ssi", "set", "port", midi_input_port_);
+    graph_->message("midi.recv0", 0, inputMessage);
+    Message outputMessage("ssi", "set", "port", midi_output_port_);
+    graph_->message("midi.send0", 0, outputMessage);
 }
 
 static gboolean on_idle(gpointer data)
@@ -106,13 +123,25 @@ bool App::launch()
     return true;
 }
 
+static void list_midi_devices()
+{
+    std::cout << "MIDI inputs you can listen to:" << std::endl;
+    midi::MidiInput input;
+    input.enumerateDevices();
+    std::cout << "MIDI outputs you can send to:" << std::endl;
+    midi::MidiOutput output;
+    output.enumerateDevices();
+}
+
 int App::parse_options(int argc, char **argv)
 {
     po::options_description desc("Options");
     desc.add_options()
         ("help,h", "Show this help message and exit")
         ("version", "Show program's version number and exit")
-        ("midi-input-port,p", po::value<unsigned int>()->default_value(0), "Sets the MIDI input port to listen to")
+        ("list-midi-ports,l", "Lists the MIDI ports")
+        ("midi-input-port,i", po::value<unsigned int>()->default_value(0), "Sets the MIDI input port to listen to")
+        ("midi-output-port,o", po::value<unsigned int>()->default_value(0), "Sets the MIDI output port to send to")
         ("verbose,v", po::bool_switch(), "Enables a verbose output")
         ;
     po::variables_map options;
@@ -121,6 +150,7 @@ int App::parse_options(int argc, char **argv)
     
     verbose_ = options["verbose"].as<bool>();
     midi_input_port_ = options["midi-input-port"].as<unsigned int>();
+    midi_output_port_ = options["midi-output-port"].as<unsigned int>();
     if (verbose_)
         std::cout << "MIDI input port: " << midi_input_port_ << std::endl;
     // Options that makes the program exit:
@@ -132,6 +162,11 @@ int App::parse_options(int argc, char **argv)
     if (options.count("version"))
     {
         std::cout << PROGRAM_NAME << " " << PACKAGE_VERSION << std::endl;
+        return 0; 
+    }
+    if (options.count("list-midi-ports"))
+    {
+        list_midi_devices();
         return 0; 
     }
     return -1;
