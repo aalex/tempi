@@ -29,11 +29,13 @@
 #include <iostream>
 #include <boost/thread.hpp>
 
+using namespace tempi;
+
 class Scheduler
 {
     public:
         virtual bool isRunning() const = 0;
-        virtual void pushMessage(const tempi::Message &message) = 0;
+        virtual void pushMessage(const Message &message) = 0;
 };
 
 class ThreadedScheduler : public Scheduler
@@ -41,12 +43,16 @@ class ThreadedScheduler : public Scheduler
     public:
         ThreadedScheduler() :
             is_running_(false),
-            should_be_running_(false)
+            should_be_running_(false),
+            max_messages_per_tick_(50)
         {
             // the thread is not-a-thread until we call start()
         }
-        virtual void pushMessage(const tempi::Message &message)
-        {}
+
+        virtual void pushMessage(const Message &message)
+        {
+            queue_.push(message);
+        }
 
         void start(unsigned int sleep_interval_ms)
         {
@@ -60,18 +66,25 @@ class ThreadedScheduler : public Scheduler
             return is_running_;
         }
 
-        void join()
-        {
-            thread_.join();
-            is_running_ = false;
-        }
-
         void stop()
         {
             should_be_running_ = false;
             join();
         }
         
+    private:
+        bool is_running_;
+        bool should_be_running_;
+        unsigned int max_messages_per_tick_;
+        boost::thread thread_;
+        ConcurrentQueue<Message> queue_;
+
+        void join()
+        {
+            thread_.join();
+            is_running_ = false;
+        }
+
         void processQueue(unsigned int sleep_interval_ms)
         {
             float ms = sleep_interval_ms;
@@ -82,21 +95,35 @@ class ThreadedScheduler : public Scheduler
             // We're busy, honest!
             while (should_be_running_)
             {
-                doStuff();
+                tick();
                 boost::this_thread::sleep(sleepTime);
             }
             std::cout << "ThreadedScheduler: completed" << std::endl;
         }
 
-        virtual void doStuff()
+        virtual void handlePoppedMessage(const Message &message)
         {
-            std::cout << __FUNCTION__ << std::endl;
-
+            std::cout << "TODO: handle " << message << std::endl;
         }
-    private:
-        bool is_running_;
-        bool should_be_running_;
-        boost::thread thread_;
+
+        void tick()
+        {
+            unsigned int num_popped = 0;
+            bool some_todo = true;
+            while (some_todo)
+            {
+                Message message;
+                some_todo = queue_.try_pop(message);
+                if (some_todo)
+                {
+                    handlePoppedMessage(message);
+                }
+                ++ num_popped;
+                if (num_popped >= max_messages_per_tick_)
+                    some_todo = false;
+            }
+            std::cout << __FUNCTION__ << std::endl;
+        }
 };
 
 #ifdef WITH_MAIN
@@ -106,6 +133,7 @@ int main(int argc, char* argv[])
     std::cout << "main: startup" << std::endl;
     ThreadedScheduler worker;
     worker.start(5); // ms
+    worker.pushMessage(Message("sif", "hello", 2, 3.14159f));
     std::cout << "main: waiting for thread" << std::endl;
     std::cout << "main: sleep." << std::endl;
     boost::posix_time::milliseconds sleepTime(25.0f);
