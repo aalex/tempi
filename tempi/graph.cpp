@@ -42,7 +42,7 @@ bool Graph::addNode(const char *type, const char *name)
     if (factory_->hasType(type))
     {
         //std::cerr << "Graph::" << __FUNCTION__ << ": NodeFactory does have type " << type << std::endl;
-        return addNode(factory_->create(type), name);
+        return addNode(factory_->create(type), type, name);
     }
     else
     {
@@ -53,7 +53,7 @@ bool Graph::addNode(const char *type, const char *name)
     }
 }
 
-bool Graph::addNode(Node::ptr node, const char *name)
+bool Graph::addNode(Node::ptr node, const char *type, const char *name)
 {
     if (getNode(name) != 0)
     {
@@ -65,7 +65,7 @@ bool Graph::addNode(Node::ptr node, const char *name)
         std::cerr << "Graph::" << __FUNCTION__ << ": Invalid pointer to Node." << std::endl;
         return false;
     }
-    nodes_[name] = node;
+    nodes_[name] = boost::tuple<std::string, Node::ptr>(std::string(type), node);
     //std::cout << "Graph::" << __FUNCTION__ << ": Added node " << name << std::endl;
     return true;
 }
@@ -183,22 +183,155 @@ bool Graph::disconnect(const char *from, unsigned int outlet, const char *to, un
 Node *Graph::getNode(const char *name) const
 {
     std::string nameString(name);
-    std::map<std::string, Node::ptr>::const_iterator iter = nodes_.find(nameString);
+    NodesMapType::const_iterator iter = nodes_.find(nameString);
     if (iter == nodes_.end())
     {
         return 0;
     }
     else
-        return (*iter).second.get();
+        return (*iter).second.get<1>().get();
 }
 
 void Graph::tick()
 {
     // FIXME: nodes are ticked in a random order, pretty much
-    std::map<std::string, Node::ptr>::iterator iter;
+    NodesMapType::const_iterator iter;
     for (iter = nodes_.begin(); iter != nodes_.end(); ++iter)
     {
-        (*iter).second.get()->tick();
+        (*iter).second.get<1>().get()->tick();
+    }
+}
+
+std::vector<Graph::Connection> Graph::getAllConnectedTo(const char *name, unsigned int inlet)
+{
+    std::vector<Connection> ret;
+    NodesMapType::const_iterator iter;
+    for (iter = nodes_.begin(); iter != nodes_.end(); ++iter)
+    {
+        Node *node = (*iter).second.get<1>().get();
+        std::string fromName((*iter).first);
+        for (unsigned int outlet = 0; outlet < node->getNumberOfOutlets(); ++outlet)
+        {
+            if (isConnected(fromName.c_str(), outlet, name, inlet))
+            {
+                ret.push_back(Connection(fromName, outlet, name, inlet));
+            }
+        }
+    }
+    return ret;
+}
+
+std::vector<Graph::Connection> Graph::getAllConnectedFrom(const char *name, unsigned int inlet)
+{
+    std::vector<Connection> ret;
+    NodesMapType::const_iterator iter;
+    for (iter = nodes_.begin(); iter != nodes_.end(); ++iter)
+    {
+        Node *node = (*iter).second.get<1>().get();
+        std::string toName((*iter).first);
+        for (unsigned int outlet = 0; outlet < node->getNumberOfOutlets(); ++outlet)
+        {
+            if (isConnected(name, outlet, toName.c_str(), inlet))
+            {
+                ret.push_back(Connection(toName, outlet));
+            }
+        }
+    }
+    return ret;
+}
+
+std::vector<Graph::Connection> Graph::getAllConnectedTo(const char *name)
+{
+    Node *node = getNode(name);
+    ConnectionVec ret;
+    for (unsigned int inlet = 0; inlet < node->getNumberOfInlets(); ++inlet)
+    {
+        ConnectionVec connections = getAllConnectedTo(name, inlet);
+        ConnectionVec::const_iterator iter;
+        for (iter = connections.begin(); iter != connections.end(); ++iter)
+        {
+            ret.push_back(*iter);
+        }
+    }
+    return ret;
+}
+
+std::vector<Graph::Connection> Graph::getAllConnectedFrom(const char *name)
+{
+    Node *node = getNode(name);
+    ConnectionVec ret;
+    for (unsigned int outlet = 0; outlet < node->getNumberOfOutlets(); ++outlet)
+    {
+        ConnectionVec connections = getAllConnectedFrom(name, outlet);
+        ConnectionVec::const_iterator iter;
+        for (iter = connections.begin(); iter != connections.end(); ++iter)
+        {
+            ret.push_back(*iter);
+        }
+    }
+    return ret;
+}
+
+void Graph::disconnectAllConnectedTo(const char *name)
+{
+    // FIXME: O(n!)
+    Node *node = getNode(name);
+    ConnectionVec connections = getAllConnectedTo(name);
+    ConnectionVec::const_iterator iter;
+    for (iter = connections.begin(); iter != connections.end(); ++iter)
+    {
+        Connection conn = (*iter);
+        disconnect(conn.get<0>().c_str(), conn.get<1>(), conn.get<2>().c_str(), conn.get<3>());
+    }
+}
+
+void Graph::disconnectAllConnectedFrom(const char *name)
+{
+    // FIXME: O(n!)
+    Node *node = getNode(name);
+    ConnectionVec connections = getAllConnectedFrom(name);
+    ConnectionVec::const_iterator iter;
+    for (iter = connections.begin(); iter != connections.end(); ++iter)
+    {
+        Connection conn = (*iter);
+        disconnect(conn.get<0>().c_str(), conn.get<1>(), conn.get<2>().c_str(), conn.get<3>());
+    }
+}
+
+std::vector<Graph::Connection> Graph::getAllConnections()
+{
+    // FIXME: O(n!)
+    std::vector<Connection> ret;
+    NodesMapType::const_iterator iter;
+    for (iter = nodes_.begin(); iter != nodes_.end(); ++iter)
+    {
+        std::string nodeName = (*iter).first;
+        ConnectionVec connections = getAllConnectedFrom(nodeName.c_str());
+        ConnectionVec::const_iterator iter2;
+        for (iter2 = connections.begin(); iter2 != connections.end(); ++iter2)
+        {
+            ret.push_back(*iter2);
+        }
+    }
+    return ret;
+}
+
+bool Graph::deleteNode(const char *name)
+{
+    Node *node = getNode(name);
+    if (node == 0)
+    {
+        std::cerr << "Graph::" << __FUNCTION__ << ": Cannot find node " << name << "." << std::endl;
+        return false;
+    }
+    else
+    {
+        disconnectAllConnectedTo(name);
+        disconnectAllConnectedFrom(name);
+        std::string nameString(name);
+        NodesMapType::iterator iter = nodes_.find(nameString);
+        nodes_.erase(iter);
+        return true;
     }
 }
 
