@@ -335,5 +335,12 @@ bool Graph::deleteNode(const char *name)
     }
 }
 
+std::ostream &operator<<(std::ostream &os, const Graph &graph)
+{
+    os << "Graph: " << std::endl;
+    os << " TODO " << std::endl;
+    return os;
+}
+
 } // end of namespace
 

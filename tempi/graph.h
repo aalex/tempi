@@ -22,6 +22,7 @@
 
 #include <boost/any.hpp>
 #include <boost/tuple/tuple.hpp>
+#include <iostream>
 #include <vector>
 #include "tempi/source.h"
 #include "tempi/message.h"
@@ -81,6 +82,8 @@ class Graph
 // not a good idea:
 //std::vector<boost::tuple<std::string, unsigned int, std::string, unsigned int> > getConnections();
 //std::map<std::string, std::tr1::shared_ptr<Node> > getNodes() const;
+
+std::ostream &operator<<(std::ostream &os, const Graph &graph);
 
 } // end of namespace
 
