@@ -51,6 +51,7 @@ prototypes/tuples
 prototypes/va_list/var_types
 prototypes/variant
 src/midilooper/midilooper
+src/midilooper/threadedscheduler
 src/osc-forward/osc-forward
 src/tempi-draw/tempi-draw
 tempi-*.tar.gz
