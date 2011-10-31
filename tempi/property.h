@@ -26,8 +26,8 @@
 #define __TEMPI_PROPERTY_H__
 
 #include <boost/bind.hpp>
-#include <boost/tuple/tuple.hpp>
-#include <boost/tuple/tuple_io.hpp>
+//#include <boost/tuple/tuple.hpp>
+//#include <boost/tuple/tuple_io.hpp>
 #include <boost/signals2.hpp>
 #include <boost/any.hpp>
 #include <string>
@@ -146,3 +146,4 @@ class Property
 } // end of namespace
 
 #endif
+
