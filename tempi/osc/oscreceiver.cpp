@@ -22,8 +22,7 @@
 #include <stdio.h>
 #include <string>
 
-namespace tempi {
-namespace osc {
+namespace tempi { namespace osc {
 
 std::string removeFirstChar(const std::string &from)
 {
@@ -158,7 +157,6 @@ int OscReceiver::generic_handler(const char *path, const char *types, lo_arg **a
     return 1;
 }
 
-
 std::vector<Message> OscReceiver::poll()
 {
     if (running_)
@@ -197,6 +195,6 @@ std::ostream &operator<<(std::ostream &os, const OscReceiver &osc_receiver)
     return os;
 }
 
-} // end of namespace temp
-} // end of namespace temp
+} // end of namespace
+} // end of namespace
 
