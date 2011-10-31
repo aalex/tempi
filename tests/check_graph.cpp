@@ -48,6 +48,12 @@ bool check_graph()
 
     Message message = Message("fis", 3.14159f, 2, "hello");
     graph.message("source0", 0, message);
+
+    if (graph.getAllConnections().size() != 3)
+    {
+        std::cout << "Expected 3 connections, got " << graph.getAllConnections().size() << std::endl;
+        return false;
+    }
     return true;
 }
 
