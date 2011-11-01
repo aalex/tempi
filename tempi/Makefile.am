@@ -34,6 +34,7 @@ libtempi_@TEMPI_API_VERSION@_la_includedir = $(includedir)/tempi-$(TEMPI_API_VER
 ## PLEASE KEEP THEM IN ALPHABETICAL ORDER
 libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     base/baselibrary.cpp \
+    base/counternode.cpp \
     base/metro_node.cpp \
     base/nop_node.cpp \
     base/print_node.cpp \
@@ -83,6 +84,7 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     base/nop_node.h \
     base/print_node.h \
     base/baselibrary.h \
+    base/counternode.h \
     concurrentqueue.h \
     exceptions.h \
     filter.h \
