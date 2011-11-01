@@ -105,6 +105,8 @@ class Node
         void output(unsigned int outlet, const Message &message) const throw(BadIndexException);
         virtual void onPropertyChanged(const char *name, const Message &value)
         {}
+        virtual void onSetArguments(const Message &message)
+        {}
         unsigned int getInletIndex(Sink *sink) const throw(BadIndexException);
         void onInletTriggered(Sink *sink, const Message &message);
         virtual void processMessage(unsigned int inlet, const Message &message) = 0;

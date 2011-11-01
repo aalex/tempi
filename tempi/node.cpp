@@ -232,6 +232,7 @@ const Message &Node::getArguments() const
 void Node::setArguments(const Message &message)
 {
     arguments_ = message;
+    onSetArguments(message);
 }
 
 bool Node::hasProperty(const char *name) const
