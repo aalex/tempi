@@ -202,5 +202,10 @@ void Graph::tick()
     }
 }
 
+bool Graph:: hasNode(const char *name) const
+{
+    return getNode(name) != 0;
+}
+
 } // end of namespace
 

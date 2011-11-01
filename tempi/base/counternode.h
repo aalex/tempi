@@ -34,6 +34,8 @@ namespace tempi { namespace base {
 class CounterNode : public Node
 {
     public:
+        static const char * const PROP_INCREMENT;
+        static const char * const PROP_COUNT;
         CounterNode();
     protected:
         virtual void processMessage(unsigned int inlet, const Message &message);

@@ -19,30 +19,43 @@
 
 #include "tempi/base/counternode.h"
 #include "tempi/utils.h"
+#include <iostream>
 
 namespace tempi { namespace base {
 
+const char * const CounterNode::PROP_INCREMENT = "increment";
+const char * const CounterNode::PROP_COUNT = "count";
+
 CounterNode::CounterNode() :
     Node(),
-    count_(0),
     increment_(1)
 {
     addOutlet();
     Message increment = Message("i", 1);
-    addProperty("increment", increment);
+    addProperty(PROP_INCREMENT, increment);
+    Message count = Message("i", 0);
+    addProperty(PROP_COUNT, count);
 }
 void CounterNode::processMessage(unsigned int inlet, const Message &message)
 {
-    if (message.getTypes() == "i")
+    // bang outputs
+    if (message.getTypes() == "")
+    {
+        int count = getProperty(PROP_COUNT).getInt(0);
+        int increment = getProperty(PROP_INCREMENT).getInt(0);
+        output(0, getProperty(PROP_COUNT));
+        count += increment;
+        setProperty(PROP_COUNT, Message("i", count));
+    }
+    else if (message.getTypes() == "i")
     {
         count_ = message.getInt(0);
+        setProperty(PROP_COUNT, message);
         output(0, message);
     }
     else
     {
-        Message result = Message("i", count_);
-        output(0, result);
-        count_ += increment_;
+        std::cerr << "CounterNode::" << __FUNCTION__ << ": No method for " << message << std::endl;
     }
 }
 
