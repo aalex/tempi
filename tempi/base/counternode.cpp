@@ -38,7 +38,7 @@ CounterNode::CounterNode() :
 }
 void CounterNode::processMessage(unsigned int inlet, const Message &message)
 {
-    // bang outputs
+    // bang outputs and increments
     if (message.getTypes() == "")
     {
         int count = getProperty(PROP_COUNT).getInt(0);
@@ -47,11 +47,12 @@ void CounterNode::processMessage(unsigned int inlet, const Message &message)
         count += increment;
         setProperty(PROP_COUNT, Message("i", count));
     }
+    // int replaces the value and outputs
     else if (message.getTypes() == "i")
     {
         count_ = message.getInt(0);
         setProperty(PROP_COUNT, message);
-        output(0, message);
+        output(0, getProperty(PROP_COUNT));
     }
     else
     {

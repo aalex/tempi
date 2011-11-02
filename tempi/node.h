@@ -84,6 +84,10 @@ class Node
         // typedef boost::signals2::signal<void(Message)> Signal;
         // std::map<std::string, Signal> getSignals();
         // type_info *getSignalType(std::string signal);
+        void setTypeName(const char *typeName);
+        const std::string &getTypeName() const;
+        void setInstanceName(const char *instanceName);
+        const std::string &getInstanceName() const;
     protected:
         /**
          * Adds a outlet.
@@ -118,6 +122,8 @@ class Node
         std::map<std::string, Message> properties_;
         std::vector<Sink::ptr> inlets_;
         Message arguments_;
+        std::string typeName_;
+        std::string instanceName_;
         // TODO: return success
         // TODO: add unsigned int inlet_number
 };

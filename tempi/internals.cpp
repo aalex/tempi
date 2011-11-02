@@ -43,7 +43,7 @@ bool loadInternals(NodeFactory::ptr factory)
     NodeFactory *ptr = factory.get();
     if (ptr == 0)
     {
-        std::cerr << __FUNCTION__ << ": invalid factory" << std::endl;
+        std::cerr << "tempi::internals::" << __FUNCTION__ << ": factory is a null pointer" << std::endl;
         return false;
     }
     return loadInternals(*ptr);
