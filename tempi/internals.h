@@ -30,6 +30,7 @@ namespace tempi {
 namespace internals {
 
 bool loadInternals(NodeFactory &factory);
+bool loadInternals(NodeFactory::ptr factory);
 
 } // end of namespace
 } // end of namespace

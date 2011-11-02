@@ -42,7 +42,9 @@ bool Graph::addNode(const char *type, const char *name)
     if (factory_->hasType(type))
     {
         //std::cerr << "Graph::" << __FUNCTION__ << ": NodeFactory does have type " << type << std::endl;
-        return addNode(factory_->create(type), name);
+        Node::ptr node = factory_->create(type);
+        node->setTypeName(type);
+        return addNode(node, name);
     }
     else
     {
@@ -66,6 +68,7 @@ bool Graph::addNode(Node::ptr node, const char *name)
         return false;
     }
     nodes_[name] = node;
+    node->setInstanceName(name);
     //std::cout << "Graph::" << __FUNCTION__ << ": Added node " << name << std::endl;
     return true;
 }
@@ -200,6 +203,11 @@ void Graph::tick()
     {
         (*iter).second.get()->tick();
     }
+}
+
+bool Graph:: hasNode(const char *name) const
+{
+    return getNode(name) != 0;
 }
 
 } // end of namespace

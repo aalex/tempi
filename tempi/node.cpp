@@ -69,11 +69,11 @@ void Node::onInletTriggered(Sink *sink, const Message &message)
                 }
                 catch (const BadIndexException &e)
                 {
-                    std::cerr << "Node::" << __FUNCTION__ << ": " << e.what();
+                    std::cerr << "Node(" << getTypeName() << ":" << getInstanceName() << ")::" << __FUNCTION__ << ": " << e.what();
                 }
                 catch (const BadArgumentTypeException &e)
                 {
-                    std::cerr << "Node::" << __FUNCTION__ << ": " << e.what();
+                    std::cerr << "Node(" << getTypeName() << ":" << getInstanceName() << ")::" << __FUNCTION__ << ": " << e.what();
                 }
             }
         }
@@ -95,7 +95,7 @@ unsigned int Node::getInletIndex(Sink *sink) const throw(BadIndexException)
         ++index;
     }
     std::ostringstream os;
-    os << "Node::" << __FUNCTION__ << ": No such inlet pointer";
+    os << "Node(" << getTypeName() << ":" << getInstanceName() << ")::" << __FUNCTION__ << ": " << ": No such inlet pointer";
     throw BadIndexException(os.str().c_str());
 }
 
@@ -206,7 +206,7 @@ Source::ptr Node::getOutletSharedPtr(unsigned int number) const throw(BadIndexEx
     if (number >= getNumberOfInlets())
     {
         std::ostringstream os;
-        os << "Node::" << __FUNCTION__ << ": Bad outlet index: " << number;
+        os << "Node(" << getTypeName() << ":" << getInstanceName() << ")::" << __FUNCTION__ << ": " << ": Bad outlet index: " << number;
         throw BadIndexException(os.str().c_str());
     }
     return outlets_[number];
@@ -218,7 +218,7 @@ const Message &Node::getProperty(const char *name) const throw(BadIndexException
     if (iter == properties_.end())
     {
         std::ostringstream os;
-        os << "Node::" << __FUNCTION__ << ": No such property: " << name;
+        os << "Node(" << getTypeName() << ":" << getInstanceName() << ")::" << __FUNCTION__ << ": " << ": No such property: " << name;
         throw (BadIndexException(os.str().c_str()));
     }
     else
@@ -232,6 +232,7 @@ const Message &Node::getArguments() const
 void Node::setArguments(const Message &message)
 {
     arguments_ = message;
+    onSetArguments(message);
 }
 
 bool Node::hasProperty(const char *name) const
@@ -302,6 +303,26 @@ void Node::output(unsigned int outlet, const Message &message) const throw(BadIn
 {
     Source::ptr source = getOutletSharedPtr(outlet);
     source->trigger(message);
+}
+
+void Node::setTypeName(const char *typeName)
+{
+    typeName_ = std::string(typeName);
+}
+
+const std::string &Node::getTypeName() const
+{
+    return typeName_;
+}
+
+void Node::setInstanceName(const char *instanceName)
+{
+    instanceName_ = std::string(instanceName);
+}
+
+const std::string &Node::getInstanceName() const
+{
+    return instanceName_;
 }
 
 } // end of namespace

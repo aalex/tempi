@@ -49,6 +49,7 @@ class Graph
         bool disconnect(const char *from, unsigned int outlet, const char *to, unsigned int inlet);
         bool isConnected(const char *from, unsigned int outlet, const char *to, unsigned int inlet);
         Node *getNode(const char *name) const;
+        bool hasNode(const char *name) const;
         void tick();
     private:
         NodeFactory::ptr factory_;

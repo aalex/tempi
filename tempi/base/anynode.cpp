@@ -17,24 +17,42 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "tempi/base/baselibrary.h"
-#include "tempi/base/counternode.h"
-#include "tempi/base/nop_node.h"
-#include "tempi/base/print_node.h"
-#include "tempi/base/metro_node.h"
 #include "tempi/base/anynode.h"
-#include "tempi/utils.h"
 
 namespace tempi { namespace base {
 
-void BaseLibrary::load(NodeFactory &factory, const char *prefix) const
+AnyNode::AnyNode() :
+    Node(),
+    value_("")
 {
-    using utils::concatenate;
-    factory.registerTypeT<PrintNode>(concatenate(prefix, "print").c_str());
-    factory.registerTypeT<NopNode>(concatenate(prefix, "nop").c_str());
-    factory.registerTypeT<MetroNode>(concatenate(prefix, "metro").c_str());
-    factory.registerTypeT<AnyNode>(concatenate(prefix, "any").c_str());
-    factory.registerTypeT<CounterNode>(concatenate(prefix, "counter").c_str());
+//    Message value = Message();
+//    addProperty("value", value);
+    addOutlet();
+}
+
+void AnyNode::onSetArguments(const Message &message)
+{
+//    setProperty("value", message);
+//    std::cout << "AnyNode::" << __FUNCTION__ << std::endl;
+    Message v = message;
+    value_ = v;
+//    std::cout << "done" << std::endl;
+}
+
+void AnyNode::processMessage(unsigned int inlet, const Message &message)
+{
+//    std::cout << "AnyNode::" << __FUNCTION__ << std::endl;
+    // bang outputs the value.
+    // A new message replaces the value and 
+    if (message.getTypes() != "")
+    {
+        Message v = message;
+        value_ = v;
+    }
+        //setProperty("value", message);
+    if (inlet == 0)
+        output(0, value_);
+//    std::cout << "done" << std::endl;
 }
 
 } // end of namespace
