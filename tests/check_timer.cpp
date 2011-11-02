@@ -17,7 +17,7 @@ bool check_timer()
     TimePosition elapsed = timer.elapsed();
     if (VERBOSE)
         std::cout << "Elapsed: " << elapsed << std::endl;
-    if (elapsed < 1000000L || elapsed > 1300000L )
+    if (elapsed < 1000000L || elapsed > 1400000L )
     {
         std::cout << "About 1 ms should have gone away. But it's " << elapsed << std::endl;
         return false;

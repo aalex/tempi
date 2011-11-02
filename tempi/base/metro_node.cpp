@@ -39,7 +39,12 @@ void MetroNode::onPropertyChanged(const char *name, const Message &value)
 //  const static std::string interval("interval");
 //    std::cout << "MetroNode::" << __FUNCTION__ << ": " << name << " = " << value << std::endl;
     if (running == name)
-        startMetro();
+    {
+        if (value.getBoolean(0))
+            startMetro();
+        else
+            startMetro(); // we restart it anyways
+    }
 }
 
 
@@ -58,7 +63,7 @@ void MetroNode::doTick()
         //std::cout << "MetroNode::" << __FUNCTION__ << " interval:" << interval << " elapsed:" << elapsed << std::endl;
         if (elapsed >= interval)
         {
-            Message message = Message("s", "bang"); // FIXME
+            Message message = Message(""); // bang
             output(0, message);
             timer_.reset();
         }

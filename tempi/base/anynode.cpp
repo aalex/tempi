@@ -22,25 +22,37 @@
 namespace tempi { namespace base {
 
 AnyNode::AnyNode() :
-    Node()
+    Node(),
+    value_("")
 {
-    Message value = Message();
-    addProperty("value", value);
+//    Message value = Message();
+//    addProperty("value", value);
+    addOutlet();
 }
 
 void AnyNode::onSetArguments(const Message &message)
 {
-    setProperty("value", message);
+//    setProperty("value", message);
+//    std::cout << "AnyNode::" << __FUNCTION__ << std::endl;
+    Message v = message;
+    value_ = v;
+//    std::cout << "done" << std::endl;
 }
 
 void AnyNode::processMessage(unsigned int inlet, const Message &message)
 {
+//    std::cout << "AnyNode::" << __FUNCTION__ << std::endl;
     // bang outputs the value.
     // A new message replaces the value and 
     if (message.getTypes() != "")
-        setProperty("value", message);
+    {
+        Message v = message;
+        value_ = v;
+    }
+        //setProperty("value", message);
     if (inlet == 0)
-        output(0, getProperty("value"));
+        output(0, value_);
+//    std::cout << "done" << std::endl;
 }
 
 } // end of namespace
