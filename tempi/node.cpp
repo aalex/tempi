@@ -325,6 +325,16 @@ const std::string &Node::getInstanceName() const
     return instanceName_;
 }
 
+void Node::enableHandlingReceiveSymbol(const char *selector)
+{
+    handledReceiveSymbol_ = selector;
+}
+
+bool Node::handlesReceiveSymbol(const char *selector) const
+{
+    return handledReceiveSymbol_ == selector;
+}
+
 } // end of namespace
 
 

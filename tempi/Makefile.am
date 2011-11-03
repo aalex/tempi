@@ -39,6 +39,7 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     base/metro_node.cpp \
     base/nop_node.cpp \
     base/print_node.cpp \
+    base/receivenode.h \
     filter.cpp \
     fsm/rule.cpp \
     fsm/state.cpp \
@@ -69,6 +70,7 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     sampler/samplernode.cpp \
     sampler/score.cpp \
     sampler/track.cpp \
+    scheduler.cpp \
     sink.cpp \
     source.cpp \
     table/table.cpp \
@@ -77,16 +79,18 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     tempi.cpp \
     timeposition.cpp \
     timer.cpp \
+    threadedscheduler.cpp \
 	utils.cpp
 
 ## PLEASE KEEP THEM IN ALPHABETICAL ORDER
 libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     base/anynode.h \
+    base/baselibrary.h \
+    base/counternode.h \
     base/metro_node.h \
     base/nop_node.h \
     base/print_node.h \
-    base/baselibrary.h \
-    base/counternode.h \
+    base/receivenode.h \
     concurrentqueue.h \
     exceptions.h \
     filter.h \
@@ -123,6 +127,7 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     sampler/samplernode.h \
     sampler/score.h \
     sampler/track.h \
+    scheduler.h \
     sharedptr.h \
     sink.h \
     source.h \
@@ -133,5 +138,6 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     tempi.h \
     timeposition.h \
     timer.h \
+    threadedscheduler.h \
     utils.h
 

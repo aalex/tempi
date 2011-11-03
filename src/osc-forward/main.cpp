@@ -256,6 +256,8 @@ int App::parse_options(int argc, char **argv)
                 addSender(host.c_str(), port);
         }
     }
+    if (verbose_)
+        std::cout << graph_ << std::endl;
     return -1;
 }
 

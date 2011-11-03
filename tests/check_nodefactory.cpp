@@ -104,25 +104,25 @@ bool check_print()
 {
     if (VERBOSE)
         std::cout << __FUNCTION__ << std::endl;
-    NodeFactory factory;
-    internals::loadInternals(factory);
-    Node::ptr nop0 = factory.create("base.nop");
-    Node::ptr nop1 = factory.create("base.nop");
-    Node::ptr print0 = factory.create("base.print");
-    Node::ptr sampler0 = factory.create("sampler.sampler");
-    Node::ptr print1 = factory.create("base.print");
+    NodeFactory::ptr factory(new NodeFactory);
+    internals::loadInternals(*(factory.get()));
+    Node::ptr nop0 = factory->create("base.nop");
+    Node::ptr nop1 = factory->create("base.nop");
+    Node::ptr print0 = factory->create("base.print");
+    Node::ptr sampler0 = factory->create("sampler.sampler");
+    Node::ptr print1 = factory->create("base.print");
 
     if (nop0.get() == 0 || print0.get() == 0 || sampler0.get() == 0)
     {
         std::cout << __FUNCTION__ << ": invalid pointer" << std::endl;
         return false;
     }
-    Graph graph;
-    graph.addNode(nop0, "nop0");
-    graph.addNode(nop1, "nop1");
-    graph.addNode(print0, "print0");
-    graph.addNode(sampler0, "sampler0");
-    graph.addNode(print1, "print1");
+    Graph graph(factory);
+    graph.addNode("base.nop", "nop0");
+    graph.addNode("base.nop", "nop1");
+    graph.addNode("base.print", "print0");
+    graph.addNode("sampler.sampler", "sampler0");
+    graph.addNode("base.print", "print1");
 
     graph.connect("nop0", 0, "nop1", 0);
     graph.connect("nop1", 0, "print0", 0);

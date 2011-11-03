@@ -19,27 +19,29 @@
 
 /**
  * @file
- * Functions in the tempi::utils namespace.
+ * The Node class.
  */
-#ifndef __TEMPI_UTILS_H__
-#define __TEMPI_UTILS_H__
+#ifndef __TEMPI_BASE_RECEIVENODE_H__
+#define __TEMPI_BASE_RECEIVENODE_H__
 
-#include <string>
+#include "tempi/node.h"
 
-namespace tempi
+namespace tempi { namespace base {
+
+/**
+ * The ReceiveNode receives messages.
+ */
+class ReceiveNode : public Node
 {
-
-namespace utils
-{
-
-bool stringBeginsWith(const char *text, const char *pattern);
-bool stringsMatch(const char *a, const char *b);
-int map_int(int value, int istart, int istop, int ostart, int ostop);
-float map_float(float value, float istart, float istop, float ostart, float ostop);
-std::string concatenate(const char *a, const char *b);
+    public:
+        ReceiveNode();
+    protected:
+        virtual void processMessage(unsigned int inlet, const Message &message);
+    private:
+        std::string getReceiveSymbol() const;
+};
 
 } // end of namespace
-
 } // end of namespace
 
 #endif // ifndef

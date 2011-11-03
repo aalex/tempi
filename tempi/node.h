@@ -88,7 +88,18 @@ class Node
         const std::string &getTypeName() const;
         void setInstanceName(const char *instanceName);
         const std::string &getInstanceName() const;
+        bool handlesReceiveSymbol(const char *selector) const;
+        bool handleReceive(const char *selector, const Message &message)
+        {
+            if (! handlesReceiveSymbol(selector))
+                return false;
+            onHandleReceive(selector, message);
+            return true;
+        }
     protected:
+        void enableHandlingReceiveSymbol(const char *selector);
+        virtual void onHandleReceive(const char *selector, const Message &message)
+        {}
         /**
          * Adds a outlet.
          */
@@ -124,6 +135,7 @@ class Node
         Message arguments_;
         std::string typeName_;
         std::string instanceName_;
+        std::string handledReceiveSymbol_;
         // TODO: return success
         // TODO: add unsigned int inlet_number
 };

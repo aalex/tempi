@@ -21,6 +21,8 @@
 #define __TEMPI_GRAPH_H__
 
 #include <boost/any.hpp>
+#include <boost/tuple/tuple.hpp>
+#include <iostream>
 #include <vector>
 #include "tempi/source.h"
 #include "tempi/message.h"
@@ -39,27 +41,52 @@ class Graph
 {
     public:
         typedef std::tr1::shared_ptr<Graph> ptr;
+        /**
+         * Tuple containing the name of the source node, outlet number, name of sink node, inlet number.
+         */
+        typedef boost::tuple<std::string, unsigned int, std::string, unsigned int> Connection;
         Graph(NodeFactory::ptr factory);
         Graph();
-        bool addNode(Node::ptr node, const char *name);
         bool addNode(const char *type, const char *name);
-        // TODO: bool addNode(const char *type);
         bool message(const char *node, unsigned int inlet, const Message &message);
+        bool handleMessage(const Message &message);
         bool connect(const char *from, unsigned int outlet, const char *to, unsigned int inlet);
         bool disconnect(const char *from, unsigned int outlet, const char *to, unsigned int inlet);
         bool isConnected(const char *from, unsigned int outlet, const char *to, unsigned int inlet);
         Node *getNode(const char *name) const;
         bool hasNode(const char *name) const;
         void tick();
+        /**
+         * Deletes a node after disconnecting all its outlets and inlets.
+         */
+        bool deleteNode(const char *name);
+        /**
+         * Returns all connections in this graph.
+         */
+        std::vector<Connection> getAllConnections(); // TODO: const
+        // TODO: store all connections in a vector
     private:
+        typedef std::map<std::string, Node::ptr> NodesMapType;
+        typedef std::vector<Connection> ConnectionVec;
         NodeFactory::ptr factory_;
-        std::map<std::string, Node::ptr> nodes_;
+        NodesMapType nodes_;
+        void disconnectAllConnectedTo(const char *name);
+        void disconnectAllConnectedFrom(const char *name);
+        std::vector<Connection> getAllConnectedTo(const char *name, unsigned int inlet); // TODO: const
+        std::vector<Connection> getAllConnectedFrom(const char *name, unsigned int inlet); // TODO: const
+        std::vector<Connection> getAllConnectedTo(const char *name); // TODO: const
+        std::vector<Connection> getAllConnectedFrom(const char *name); // TODO: const
         //void onInletTriggered(Source *source, boost::any data);
+        // TODO: store connections to decrease complexity
+        bool handleTempiMessage(const Message &message);
+        bool setNodeProperty(const char *nodeName, const char *propertyName, const Message &value);
 };
 
 // not a good idea:
 //std::vector<boost::tuple<std::string, unsigned int, std::string, unsigned int> > getConnections();
 //std::map<std::string, std::tr1::shared_ptr<Node> > getNodes() const;
+
+std::ostream &operator<<(std::ostream &os, const Graph &graph);
 
 } // end of namespace
 

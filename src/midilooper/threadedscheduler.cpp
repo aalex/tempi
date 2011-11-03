@@ -18,99 +18,34 @@
  */
 
 /**
- * @file The ThreadedScheduler class.
+ * @file Some prototype of using the ThreadedScheduler.
  */
+
+#include "tempi/message.h"
+#include "tempi/threadedscheduler.h"
+#include <iostream>
 
 #define WITH_MAIN 1
 
-#include "tempi/concurrentqueue.h"
-#include "tempi/graph.h"
-#include "tempi/message.h"
-#include <iostream>
-#include <boost/thread.hpp>
-
-class Scheduler
-{
-    public:
-        virtual bool isRunning() const = 0;
-        virtual void pushMessage(const tempi::Message &message) = 0;
-};
-
-class ThreadedScheduler : public Scheduler
-{
-    public:
-        ThreadedScheduler() :
-            is_running_(false),
-            should_be_running_(false)
-        {
-            // the thread is not-a-thread until we call start()
-        }
-        virtual void pushMessage(const tempi::Message &message)
-        {}
-
-        void start(unsigned int sleep_interval_ms)
-        {
-            thread_ = boost::thread(&ThreadedScheduler::processQueue, this, sleep_interval_ms);
-            is_running_ = true;
-            should_be_running_ = true;
-        }
-
-        virtual bool isRunning() const
-        {
-            return is_running_;
-        }
-
-        void join()
-        {
-            thread_.join();
-            is_running_ = false;
-        }
-
-        void stop()
-        {
-            should_be_running_ = false;
-            join();
-        }
-        
-        void processQueue(unsigned int sleep_interval_ms)
-        {
-            float ms = sleep_interval_ms;
-            boost::posix_time::milliseconds sleepTime(ms);
-            std::cout << "ThreadedScheduler: started, will work every "
-                      << ms << "ms"
-                      << std::endl;
-            // We're busy, honest!
-            while (should_be_running_)
-            {
-                doStuff();
-                boost::this_thread::sleep(sleepTime);
-            }
-            std::cout << "ThreadedScheduler: completed" << std::endl;
-        }
-
-        virtual void doStuff()
-        {
-            std::cout << __FUNCTION__ << std::endl;
-
-        }
-    private:
-        bool is_running_;
-        bool should_be_running_;
-        boost::thread thread_;
-};
+using namespace tempi;
 
 #ifdef WITH_MAIN
 
 int main(int argc, char* argv[])
 {
+    float sleepTime = 25.0f;
     std::cout << "main: startup" << std::endl;
-    ThreadedScheduler worker;
-    worker.start(5); // ms
+    ThreadedScheduler scheduler;
+    scheduler.createGraph("graph0");
+    scheduler.start(5); // ms
+    scheduler.sleepMilliseconds(sleepTime);
+    //scheduler.sendMessage(Message("sif", "hello", 2, 3.14159f));
+    scheduler.sendMessage(Message("ssss", "__tempi__", "addNode", "base.receive", "receive0"));
+    scheduler.sleepMilliseconds(sleepTime);
+    scheduler.sendMessage(Message("ssss", "__tempi__", "addNode", "base.print", "print0"));
+    scheduler.sleepMilliseconds(sleepTime);
     std::cout << "main: waiting for thread" << std::endl;
-    std::cout << "main: sleep." << std::endl;
-    boost::posix_time::milliseconds sleepTime(25.0f);
-    boost::this_thread::sleep(sleepTime);
-    worker.stop();
+    scheduler.stop();
     std::cout << "main: done" << std::endl;
     return 0;
 }

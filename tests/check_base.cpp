@@ -7,6 +7,21 @@
 using namespace tempi;
 static const bool VERBOSE = false;
 
+bool check_create()
+{
+    NodeFactory factory;
+    internals::loadInternals(factory);
+    Node::ptr metro0 = factory.create("base.metro");
+    Node::ptr print0 = factory.create("base.print");
+    Node::ptr counter0 = factory.create("base.counter");
+    if (metro0.get() == 0)
+    {
+        std::cout << "Metro ptr is null" << std::endl;
+        return false;
+    }
+    return true;
+}
+
 bool checkMetro()
 {
     if (VERBOSE)
@@ -108,6 +123,8 @@ bool checkMetro()
 int main(int argc, char **argv)
 {
     if (! checkMetro())
+        return 1;
+    if (! check_create())
         return 1;
     return 0;
 }

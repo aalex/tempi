@@ -17,30 +17,30 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * @file
- * Functions in the tempi::utils namespace.
- */
-#ifndef __TEMPI_UTILS_H__
-#define __TEMPI_UTILS_H__
+#include <iostream>
+#include "tempi/base/receivenode.h"
 
-#include <string>
+namespace tempi { namespace base {
 
-namespace tempi
+ReceiveNode::ReceiveNode() :
+    Node()
 {
+    Message receiveSymbol;
+    receiveSymbol.appendString("");
+    addProperty("symbol", receiveSymbol);
+}
 
-namespace utils
+void ReceiveNode::processMessage(unsigned int inlet, const Message &message)
 {
+    // if (inlet == 0)
+    //    output(message);
+}
 
-bool stringBeginsWith(const char *text, const char *pattern);
-bool stringsMatch(const char *a, const char *b);
-int map_int(int value, int istart, int istop, int ostart, int ostop);
-float map_float(float value, float istart, float istop, float ostart, float ostop);
-std::string concatenate(const char *a, const char *b);
+std::string ReceiverNode::getReceiveSymbol() const
+{
+    return getProperty("symbol").getString(0);
+}
 
 } // end of namespace
-
 } // end of namespace
-
-#endif // ifndef
 
