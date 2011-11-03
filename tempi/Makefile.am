@@ -70,6 +70,7 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     sampler/samplernode.cpp \
     sampler/score.cpp \
     sampler/track.cpp \
+    scheduler.cpp \
     sink.cpp \
     source.cpp \
     table/table.cpp \
@@ -78,6 +79,7 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     tempi.cpp \
     timeposition.cpp \
     timer.cpp \
+    threadedscheduler.cpp \
 	utils.cpp
 
 ## PLEASE KEEP THEM IN ALPHABETICAL ORDER
@@ -125,6 +127,7 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     sampler/samplernode.h \
     sampler/score.h \
     sampler/track.h \
+    scheduler.h \
     sharedptr.h \
     sink.h \
     source.h \
@@ -135,5 +138,6 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     tempi.h \
     timeposition.h \
     timer.h \
+    threadedscheduler.h \
     utils.h
 
