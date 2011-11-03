@@ -118,11 +118,11 @@ bool check_print()
         return false;
     }
     Graph graph;
-    graph.addNode(nop0, "nop0");
-    graph.addNode(nop1, "nop1");
-    graph.addNode(print0, "print0");
-    graph.addNode(sampler0, "sampler0");
-    graph.addNode(print1, "print1");
+    graph.addNode(nop0, "nop", "nop0");
+    graph.addNode(nop1, "nop", "nop1");
+    graph.addNode(print0, "print", "print0");
+    graph.addNode(sampler0, "sampler", "sampler0");
+    graph.addNode(print1, "print", "print1");
 
     graph.connect("nop0", 0, "nop1", 0);
     graph.connect("nop1", 0, "print0", 0);

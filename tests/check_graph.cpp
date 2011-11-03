@@ -34,10 +34,10 @@ bool check_graph()
 {
     Graph graph;
 
-    graph.addNode(makeDummyNode(), "source0");
-    graph.addNode(makeDummyNode(), "filter0");
-    graph.addNode(makeDummyNode(), "sink0");
-    graph.addNode(makeDummyNode(), "sink1");
+    graph.addNode(makeDummyNode(), "dummy", "source0");
+    graph.addNode(makeDummyNode(), "dummy", "filter0");
+    graph.addNode(makeDummyNode(), "dummy", "sink0");
+    graph.addNode(makeDummyNode(), "dummy", "sink1");
 
     graph.connect("source0", 0, "filter0", 0);
     graph.connect("filter0", 0, "sink0", 0);

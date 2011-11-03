@@ -48,6 +48,7 @@ class Graph
         Graph(NodeFactory::ptr factory);
         Graph();
         bool addNode(const char *type, const char *name);
+        bool addNode(Node::ptr node, const char *type, const char *name);
         // TODO: bool addNode(const char *type);
         bool message(const char *node, unsigned int inlet, const Message &message);
         bool connect(const char *from, unsigned int outlet, const char *to, unsigned int inlet);
@@ -63,12 +64,12 @@ class Graph
          * Returns all connections in this graph.
          */
         std::vector<Connection> getAllConnections(); // TODO: const
+        // TODO: store all connections in a vector
     private:
         typedef std::map<std::string, boost::tuple<std::string, Node::ptr> > NodesMapType;
         typedef std::vector<Connection> ConnectionVec;
         NodeFactory::ptr factory_;
         NodesMapType nodes_;
-        bool addNode(Node::ptr node, const char *type, const char *name);
         void disconnectAllConnectedTo(const char *name);
         void disconnectAllConnectedFrom(const char *name);
         std::vector<Connection> getAllConnectedTo(const char *name, unsigned int inlet); // TODO: const

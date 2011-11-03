@@ -35,8 +35,17 @@ class Scheduler
 {
     public:
         virtual bool isRunning() const = 0;
-        virtual void pushMessage(const Message &message) = 0;
+        virtual void sendMessage(const Message &message) = 0;
 };
+
+class SynchronousScheduler : public Scheduler
+{
+    public:
+        virtual bool isRunning() const;
+        virtual void sendMessage(const Message &message);
+};
+
+// TODO write Message::prepend(types, ...);
 
 class ThreadedScheduler : public Scheduler
 {
@@ -49,7 +58,7 @@ class ThreadedScheduler : public Scheduler
             // the thread is not-a-thread until we call start()
         }
 
-        virtual void pushMessage(const Message &message)
+        virtual void sendMessage(const Message &message)
         {
             queue_.push(message);
         }
@@ -133,7 +142,7 @@ int main(int argc, char* argv[])
     std::cout << "main: startup" << std::endl;
     ThreadedScheduler worker;
     worker.start(5); // ms
-    worker.pushMessage(Message("sif", "hello", 2, 3.14159f));
+    worker.sendMessage(Message("sif", "hello", 2, 3.14159f));
     std::cout << "main: waiting for thread" << std::endl;
     std::cout << "main: sleep." << std::endl;
     boost::posix_time::milliseconds sleepTime(25.0f);
