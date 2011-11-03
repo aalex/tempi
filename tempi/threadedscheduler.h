@@ -72,7 +72,8 @@ class ThreadedScheduler : public Scheduler
         ConcurrentQueue<Message> queue_;
 
         void join();
-        void processQueue(unsigned int sleep_interval_ms);
+        // TODO: replace sleep_interval by dynamically-specified microseconds, sleeping waiting until it's elapsed on each iteration, instead of just sleeping a fixed duration.
+        void run(unsigned int sleep_interval_ms);
         virtual void handlePoppedMessage(const Message &message);
         void tick();
 };

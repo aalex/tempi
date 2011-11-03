@@ -38,9 +38,7 @@ void ThreadedScheduler::sendMessage(const Message &message)
 
 void ThreadedScheduler::start(unsigned int sleep_interval_ms)
 {
-    thread_ = boost::thread(
-        &ThreadedScheduler::processQueue, this, 
-        sleep_interval_ms);
+    thread_ = boost::thread(&ThreadedScheduler::run, this, sleep_interval_ms);
     is_running_ = true;
     should_be_running_ = true;
 }
@@ -62,7 +60,7 @@ void ThreadedScheduler::join()
     is_running_ = false;
 }
 
-void ThreadedScheduler::processQueue(unsigned int sleep_interval_ms)
+void ThreadedScheduler::run(unsigned int sleep_interval_ms)
 {
     float ms = sleep_interval_ms;
     boost::posix_time::milliseconds sleepTime(ms);
