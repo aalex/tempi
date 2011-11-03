@@ -17,26 +17,36 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "tempi/base/baselibrary.h"
-#include "tempi/base/counternode.h"
-#include "tempi/base/nop_node.h"
-#include "tempi/base/print_node.h"
-#include "tempi/base/metro_node.h"
-#include "tempi/base/anynode.h"
-#include "tempi/utils.h"
+/**
+ * The CounterNode class.
+ */
+
+#ifndef __TEMPI_COUNTERNODE_H__
+#define __TEMPI_COUNTERNODE_H__
+
+#include "tempi/node.h"
 
 namespace tempi { namespace base {
 
-void BaseLibrary::load(NodeFactory &factory, const char *prefix) const
+/**
+ * A CounterNode is a Node that counts.
+ */
+class CounterNode : public Node
 {
-    using utils::concatenate;
-    factory.registerTypeT<PrintNode>(concatenate(prefix, "print").c_str());
-    factory.registerTypeT<NopNode>(concatenate(prefix, "nop").c_str());
-    factory.registerTypeT<MetroNode>(concatenate(prefix, "metro").c_str());
-    factory.registerTypeT<AnyNode>(concatenate(prefix, "any").c_str());
-    factory.registerTypeT<CounterNode>(concatenate(prefix, "counter").c_str());
-}
+    public:
+        static const char * const PROP_INCREMENT;
+        static const char * const PROP_COUNT;
+        CounterNode();
+    protected:
+        virtual void processMessage(unsigned int inlet, const Message &message);
+        virtual void onPropertyChanged(const char *name, const Message &value);
+    private:
+        int count_;
+        int increment_;
+};
 
 } // end of namespace
 } // end of namespace
+
+#endif // ifndef
 

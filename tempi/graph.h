@@ -48,13 +48,12 @@ class Graph
         Graph(NodeFactory::ptr factory);
         Graph();
         bool addNode(const char *type, const char *name);
-        bool addNode(Node::ptr node, const char *type, const char *name);
-        // TODO: bool addNode(const char *type);
         bool message(const char *node, unsigned int inlet, const Message &message);
         bool connect(const char *from, unsigned int outlet, const char *to, unsigned int inlet);
         bool disconnect(const char *from, unsigned int outlet, const char *to, unsigned int inlet);
         bool isConnected(const char *from, unsigned int outlet, const char *to, unsigned int inlet);
         Node *getNode(const char *name) const;
+        bool hasNode(const char *name) const;
         void tick();
         /**
          * Deletes a node after disconnecting all its outlets and inlets.
@@ -66,7 +65,7 @@ class Graph
         std::vector<Connection> getAllConnections(); // TODO: const
         // TODO: store all connections in a vector
     private:
-        typedef std::map<std::string, boost::tuple<std::string, Node::ptr> > NodesMapType;
+        typedef std::map<std::string, Node::ptr> NodesMapType;
         typedef std::vector<Connection> ConnectionVec;
         NodeFactory::ptr factory_;
         NodesMapType nodes_;

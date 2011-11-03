@@ -42,7 +42,21 @@ bool Graph::addNode(const char *type, const char *name)
     if (factory_->hasType(type))
     {
         //std::cerr << "Graph::" << __FUNCTION__ << ": NodeFactory does have type " << type << std::endl;
-        return addNode(factory_->create(type), type, name);
+        if (getNode(name) != 0)
+        {
+            std::cerr << "Graph::" << __FUNCTION__ << ": There is already a node with ID " << name << std::endl;
+            return false;
+        }
+        Node::ptr node = factory_->create(type);
+        if (node.get() == 0)
+        {
+            std::cerr << "Graph::" << __FUNCTION__ << ": Invalid pointer to Node." << std::endl;
+            return false;
+        }
+        node->setTypeName(type);
+        node->setInstanceName(name);
+        nodes_[name] = node;
+        return true;
     }
     else
     {
@@ -51,23 +65,6 @@ bool Graph::addNode(const char *type, const char *name)
         //std::cerr << "Graph::" << __FUNCTION__ << ": " << *factory_.get();
         return false; // FIXME
     }
-}
-
-bool Graph::addNode(Node::ptr node, const char *type, const char *name)
-{
-    if (getNode(name) != 0)
-    {
-        std::cerr << "Graph::" << __FUNCTION__ << ": There is already a node with ID " << name << std::endl;
-        return false;
-    }
-    if (node.get() == 0)
-    {
-        std::cerr << "Graph::" << __FUNCTION__ << ": Invalid pointer to Node." << std::endl;
-        return false;
-    }
-    nodes_[name] = boost::tuple<std::string, Node::ptr>(std::string(type), node);
-    //std::cout << "Graph::" << __FUNCTION__ << ": Added node " << name << std::endl;
-    return true;
 }
 
 bool Graph::message(const char *node, unsigned int inlet, const Message &message)
@@ -189,7 +186,7 @@ Node *Graph::getNode(const char *name) const
         return 0;
     }
     else
-        return (*iter).second.get<1>().get();
+        return (*iter).second.get();
 }
 
 void Graph::tick()
@@ -198,7 +195,7 @@ void Graph::tick()
     NodesMapType::const_iterator iter;
     for (iter = nodes_.begin(); iter != nodes_.end(); ++iter)
     {
-        (*iter).second.get<1>().get()->tick();
+        (*iter).second.get()->tick();
     }
 }
 
@@ -208,7 +205,7 @@ std::vector<Graph::Connection> Graph::getAllConnectedTo(const char *name, unsign
     NodesMapType::const_iterator iter;
     for (iter = nodes_.begin(); iter != nodes_.end(); ++iter)
     {
-        Node *node = (*iter).second.get<1>().get();
+        Node *node = (*iter).second.get();
         std::string fromName((*iter).first);
         for (unsigned int outlet = 0; outlet < node->getNumberOfOutlets(); ++outlet)
         {
@@ -227,7 +224,7 @@ std::vector<Graph::Connection> Graph::getAllConnectedFrom(const char *name, unsi
     NodesMapType::const_iterator iter;
     for (iter = nodes_.begin(); iter != nodes_.end(); ++iter)
     {
-        Node *node = (*iter).second.get<1>().get();
+        Node *node = (*iter).second.get();
         std::string toName((*iter).first);
         for (unsigned int outlet = 0; outlet < node->getNumberOfOutlets(); ++outlet)
         {
@@ -333,6 +330,11 @@ bool Graph::deleteNode(const char *name)
         nodes_.erase(iter);
         return true;
     }
+}
+
+bool Graph:: hasNode(const char *name) const
+{
+    return getNode(name) != 0;
 }
 
 std::ostream &operator<<(std::ostream &os, const Graph &graph)

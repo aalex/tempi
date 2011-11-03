@@ -17,26 +17,33 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "tempi/base/baselibrary.h"
-#include "tempi/base/counternode.h"
-#include "tempi/base/nop_node.h"
-#include "tempi/base/print_node.h"
-#include "tempi/base/metro_node.h"
-#include "tempi/base/anynode.h"
-#include "tempi/utils.h"
+/**
+ * @file
+ * The NopNode class.
+ */
+#ifndef __TEMPI_BASE_ANYNODE_H__
+#define __TEMPI_BASE_ANYNODE_H__
+
+#include "tempi/node.h"
 
 namespace tempi { namespace base {
 
-void BaseLibrary::load(NodeFactory &factory, const char *prefix) const
+/**
+ * The AnyNode stores message and outputs them when it receives an empty message. (bang)
+ */
+class AnyNode : public Node
 {
-    using utils::concatenate;
-    factory.registerTypeT<PrintNode>(concatenate(prefix, "print").c_str());
-    factory.registerTypeT<NopNode>(concatenate(prefix, "nop").c_str());
-    factory.registerTypeT<MetroNode>(concatenate(prefix, "metro").c_str());
-    factory.registerTypeT<AnyNode>(concatenate(prefix, "any").c_str());
-    factory.registerTypeT<CounterNode>(concatenate(prefix, "counter").c_str());
-}
+    public:
+        AnyNode();
+    protected:
+        virtual void processMessage(unsigned int inlet, const Message &message);
+        virtual void onSetArguments(const Message &message);
+    private:
+        Message value_;
+};
 
 } // end of namespace
 } // end of namespace
+
+#endif // ifndef
 

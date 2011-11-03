@@ -19,43 +19,12 @@ class DummyNode: public Node
     private:
         virtual void processMessage(unsigned int inlet, const Message &message)
         {
-            getOutlet(0)->trigger(message);
             if (VERBOSE)
                 std::cout << "DummyNode::" << __FUNCTION__ << ": " << message << std::endl;
+            Message out = message;
+            getOutlet(0)->trigger(out);
         }
 };
-
-static Node::ptr makeDummyNode()
-{
-    return Node::ptr(new DummyNode);
-}
-
-bool check_graph()
-{
-    Graph graph;
-
-    graph.addNode(makeDummyNode(), "dummy", "source0");
-    graph.addNode(makeDummyNode(), "dummy", "filter0");
-    graph.addNode(makeDummyNode(), "dummy", "sink0");
-    graph.addNode(makeDummyNode(), "dummy", "sink1");
-
-    graph.connect("source0", 0, "filter0", 0);
-    graph.connect("filter0", 0, "sink0", 0);
-    graph.connect("filter0", 0, "sink1", 0);
-
-    for (int i = 0; i < 10; ++i)
-        graph.tick();
-
-    Message message = Message("fis", 3.14159f, 2, "hello");
-    graph.message("source0", 0, message);
-
-    if (graph.getAllConnections().size() != 3)
-    {
-        std::cout << "Expected 3 connections, got " << graph.getAllConnections().size() << std::endl;
-        return false;
-    }
-    return true;
-}
 
 static bool fail(const char *message)
 {
@@ -66,8 +35,7 @@ static bool fail(const char *message)
 bool check_node_factory()
 {
     NodeFactory::ptr factory(new NodeFactory);
-    AbstractNodeType::ptr dummy((AbstractNodeType*) (new NodeType<DummyNode>));
-    factory->registerType("dummy", dummy);
+    factory->registerTypeT<DummyNode>("dummy");
 
     Graph graph(factory);
     if (! graph.addNode("dummy", "dummy0"))
@@ -93,6 +61,12 @@ bool check_node_factory()
     for (int i = 0; i < 10; ++i)
         graph.tick();
 
+//     if (graph.getAllConnections().size() != 4)
+//     {
+//         std::cout << "Expected 4 connections, got " << graph.getAllConnections().size() << std::endl;
+//         return false;
+//     }
+
     Message message = Message("fis", 3.14159f, 2, "hello");
     graph.message("dummy0", 0, message);
     return true;
@@ -100,8 +74,6 @@ bool check_node_factory()
 
 int main(int argc, char *argv[])
 {
-    if (! check_graph())
-        return 1;
     if (! check_node_factory())
         return 1;
     return 0;

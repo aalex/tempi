@@ -33,7 +33,9 @@ libtempi_@TEMPI_API_VERSION@_la_includedir = $(includedir)/tempi-$(TEMPI_API_VER
 ## and the variable name derived from that.
 ## PLEASE KEEP THEM IN ALPHABETICAL ORDER
 libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
+    base/anynode.cpp \
     base/baselibrary.cpp \
+    base/counternode.cpp \
     base/metro_node.cpp \
     base/nop_node.cpp \
     base/print_node.cpp \
@@ -80,7 +82,9 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
 
 ## PLEASE KEEP THEM IN ALPHABETICAL ORDER
 libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
+    base/anynode.h \
     base/baselibrary.h \
+    base/counternode.h \
     base/metro_node.h \
     base/nop_node.h \
     base/print_node.h \

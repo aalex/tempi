@@ -84,6 +84,10 @@ class Node
         // typedef boost::signals2::signal<void(Message)> Signal;
         // std::map<std::string, Signal> getSignals();
         // type_info *getSignalType(std::string signal);
+        void setTypeName(const char *typeName);
+        const std::string &getTypeName() const;
+        void setInstanceName(const char *instanceName);
+        const std::string &getInstanceName() const;
     protected:
         /**
          * Adds a outlet.
@@ -105,6 +109,8 @@ class Node
         void output(unsigned int outlet, const Message &message) const throw(BadIndexException);
         virtual void onPropertyChanged(const char *name, const Message &value)
         {}
+        virtual void onSetArguments(const Message &message)
+        {}
         unsigned int getInletIndex(Sink *sink) const throw(BadIndexException);
         void onInletTriggered(Sink *sink, const Message &message);
         virtual void processMessage(unsigned int inlet, const Message &message) = 0;
@@ -116,6 +122,8 @@ class Node
         std::map<std::string, Message> properties_;
         std::vector<Sink::ptr> inlets_;
         Message arguments_;
+        std::string typeName_;
+        std::string instanceName_;
         // TODO: return success
         // TODO: add unsigned int inlet_number
 };

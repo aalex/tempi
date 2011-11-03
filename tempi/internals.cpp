@@ -30,10 +30,23 @@ namespace internals {
 
 bool loadInternals(NodeFactory &factory)
 {
-    librarytools::loadLibrary<midi::MidiLibrary>(factory, "midi.");
-    librarytools::loadLibrary<osc::OscLibrary>(factory, "osc.");
-    librarytools::loadLibrary<sampler::SamplerLibrary>(factory, "sampler.");
-    librarytools::loadLibrary<base::BaseLibrary>(factory, "base.");
+    using librarytools::loadLibrary;
+    loadLibrary<base::BaseLibrary>(factory, "base.");
+    loadLibrary<midi::MidiLibrary>(factory, "midi.");
+    loadLibrary<osc::OscLibrary>(factory, "osc.");
+    loadLibrary<sampler::SamplerLibrary>(factory, "sampler.");
+    return true;
+}
+
+bool loadInternals(NodeFactory::ptr factory)
+{
+    NodeFactory *ptr = factory.get();
+    if (ptr == 0)
+    {
+        std::cerr << "tempi::internals::" << __FUNCTION__ << ": factory is a null pointer" << std::endl;
+        return false;
+    }
+    return loadInternals(*ptr);
 }
 
 } // end of namespace
