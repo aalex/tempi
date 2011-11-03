@@ -18,7 +18,7 @@
  */
 
 #include <iostream>
-#include "tempi/base/nop_node.h"
+#include "tempi/base/receivenode.h"
 
 namespace tempi { namespace base {
 
@@ -26,14 +26,14 @@ ReceiveNode::ReceiveNode() :
     Node()
 {
     Message receiveSymbol;
-    receiveSymbol.appendString("default");
+    receiveSymbol.appendString("");
     addProperty("symbol", receiveSymbol);
 }
 
 void ReceiveNode::processMessage(unsigned int inlet, const Message &message)
 {
-    if (inlet == 0)
-        output(message);
+    // if (inlet == 0)
+    //    output(message);
 }
 
 std::string ReceiverNode::getReceiveSymbol() const

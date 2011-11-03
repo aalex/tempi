@@ -28,6 +28,15 @@ namespace tempi
 namespace utils
 {
 
+bool stringBeginsWith(const char *text, const char *pattern)
+{
+    size_t length = strlen(pattern);
+    if (strlen(text) < length)
+        return false;
+    if (strncmp(text, pattern, length))
+        return true;
+}
+
 bool stringsMatch(const char *a, const char *b)
 {
     if (! a && ! b)

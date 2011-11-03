@@ -24,20 +24,92 @@
 #define WITH_MAIN 1
 
 #include "tempi/concurrentqueue.h"
+#include "tempi/internals.h"
+#include "tempi/nodefactory.h"
 #include "tempi/graph.h"
 #include "tempi/message.h"
 #include <iostream>
 #include <boost/thread.hpp>
 
 using namespace tempi;
-
+/**
+ * A Scheduler holds graphs and one can send messages to them, synchronously or asynchronously.
+ */
 class Scheduler
 {
     public:
+        Scheduler()
+        {
+            factory_.reset(new NodeFactory);
+            // TODO: do not load internals by default?
+            internals::loadInternals(*(factory_.get()));
+        }
         virtual bool isRunning() const = 0;
         virtual void sendMessage(const Message &message) = 0;
+        bool createGraph(const char *name)
+        {
+            if (hasGraph(name))
+            {
+                std::cout << "Already has a Graph named "
+                    << name << std::endl;
+                return false;
+            }
+            else
+            {
+                Graph::ptr graph(new Graph(factory_));
+                graphs_[name] = graph;
+                return true;
+            }
+        }
+    protected:
+        bool sendToAllGraphs(const Message &message)
+        {
+            bool ret = false;
+            std::cout << __FUNCTION__ << std::endl;
+            std::map<std::string, Graph::ptr>::const_iterator iter;
+            for (iter = graphs_.begin(); iter != graphs_.end(); ++iter)
+            {
+                if ((*iter).second.get()->handleMessage(message))
+                    ret = true;
+            }
+            return ret;
+        }
+        Graph::ptr getGraph(const char *name)
+        {
+            if (! hasGraph(name))
+            {
+                std::cout << "No Graph named "
+                    << name << std::endl;
+                return Graph::ptr(); // NULL pointer!!
+            }
+            return (* (graphs_.find(std::string(name)))).second;
+
+        }
+        bool hasGraph(const char *name)
+        {
+            return graphs_.find(std::string(name)) != graphs_.end();
+        }
+        NodeFactory::ptr getFactory() const
+        {
+            return factory_;
+        }
+        bool tickGraphs()
+        {
+            if (! isRunning())
+                return false;
+            std::map<std::string, Graph::ptr>::const_iterator iter;
+            for (iter = graphs_.begin(); iter != graphs_.end(); ++iter)
+            {
+                (*iter).second.get()->tick();
+            }
+            return true;
+        }
+    private:
+        std::map<std::string, Graph::ptr> graphs_;
+        NodeFactory::ptr factory_;
 };
 
+// TODO:
 class SynchronousScheduler : public Scheduler
 {
     public:
@@ -46,11 +118,11 @@ class SynchronousScheduler : public Scheduler
 };
 
 // TODO write Message::prepend(types, ...);
-
 class ThreadedScheduler : public Scheduler
 {
     public:
         ThreadedScheduler() :
+            Scheduler(),
             is_running_(false),
             should_be_running_(false),
             max_messages_per_tick_(50)
@@ -65,7 +137,9 @@ class ThreadedScheduler : public Scheduler
 
         void start(unsigned int sleep_interval_ms)
         {
-            thread_ = boost::thread(&ThreadedScheduler::processQueue, this, sleep_interval_ms);
+            thread_ = boost::thread(
+                &ThreadedScheduler::processQueue, this, 
+                sleep_interval_ms);
             is_running_ = true;
             should_be_running_ = true;
         }
@@ -99,8 +173,8 @@ class ThreadedScheduler : public Scheduler
             float ms = sleep_interval_ms;
             boost::posix_time::milliseconds sleepTime(ms);
             std::cout << "ThreadedScheduler: started, will work every "
-                      << ms << "ms"
-                      << std::endl;
+                << ms << "ms"
+                << std::endl;
             // We're busy, honest!
             while (should_be_running_)
             {
@@ -113,6 +187,7 @@ class ThreadedScheduler : public Scheduler
         virtual void handlePoppedMessage(const Message &message)
         {
             std::cout << "TODO: handle " << message << std::endl;
+            sendToAllGraphs(message);
         }
 
         void tick()
@@ -131,7 +206,8 @@ class ThreadedScheduler : public Scheduler
                 if (num_popped >= max_messages_per_tick_)
                     some_todo = false;
             }
-            std::cout << __FUNCTION__ << std::endl;
+            tickGraphs();
+            //std::cout << "ThreadedScheduler" << __FUNCTION__ << std::endl;
         }
 };
 
@@ -139,13 +215,18 @@ class ThreadedScheduler : public Scheduler
 
 int main(int argc, char* argv[])
 {
+    boost::posix_time::milliseconds sleepTime(25.0f);
     std::cout << "main: startup" << std::endl;
     ThreadedScheduler worker;
+    worker.createGraph("graph0");
     worker.start(5); // ms
-    worker.sendMessage(Message("sif", "hello", 2, 3.14159f));
+    boost::this_thread::sleep(sleepTime);
+    //worker.sendMessage(Message("sif", "hello", 2, 3.14159f));
+    worker.sendMessage(Message("ssss", "__tempi__", "addNode", "base.receive", "receive0"));
+    boost::this_thread::sleep(sleepTime);
+    worker.sendMessage(Message("ssss", "__tempi__", "addNode", "base.print", "print0"));
     std::cout << "main: waiting for thread" << std::endl;
     std::cout << "main: sleep." << std::endl;
-    boost::posix_time::milliseconds sleepTime(25.0f);
     boost::this_thread::sleep(sleepTime);
     worker.stop();
     std::cout << "main: done" << std::endl;

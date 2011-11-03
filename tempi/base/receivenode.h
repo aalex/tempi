@@ -35,9 +35,10 @@ class ReceiveNode : public Node
 {
     public:
         ReceiveNode();
-        std::string getReceiveSymbol() const;
     protected:
         virtual void processMessage(unsigned int inlet, const Message &message);
+    private:
+        std::string getReceiveSymbol() const;
 };
 
 } // end of namespace

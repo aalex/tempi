@@ -49,6 +49,7 @@ class Graph
         Graph();
         bool addNode(const char *type, const char *name);
         bool message(const char *node, unsigned int inlet, const Message &message);
+        bool handleMessage(const Message &message);
         bool connect(const char *from, unsigned int outlet, const char *to, unsigned int inlet);
         bool disconnect(const char *from, unsigned int outlet, const char *to, unsigned int inlet);
         bool isConnected(const char *from, unsigned int outlet, const char *to, unsigned int inlet);
@@ -77,6 +78,8 @@ class Graph
         std::vector<Connection> getAllConnectedFrom(const char *name); // TODO: const
         //void onInletTriggered(Source *source, boost::any data);
         // TODO: store connections to decrease complexity
+        bool handleTempiMessage(const Message &message);
+        bool setNodeProperty(const char *nodeName, const char *propertyName, const Message &value);
 };
 
 // not a good idea:
