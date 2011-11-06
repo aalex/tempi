@@ -10,11 +10,10 @@
 
 About
 -----
-Tempi is a multimodal sampling library.
+Tempi dataflow programming C++ library aimed at multimodal sampling.
 
-It supports OSC messaging, as well as finite state machines, timelines and flexible message routing.
 
-Tempi is a C++ library for multi-modal sampling. It allows recording and playback of flows of messages whose types can be arbitrary. We can then record series of events encoded as numbers, texts, 3D trajectories, list of images or sounds files. For example, one could use Tempi to store musical notes sequenced over time, to do rapid prototyping of motion, or any type of changes that are then easy to reproduce again.
+Tempi is a C++ library for multi-modal sampling. It allows recording and playback of flows of messages whose types can be arbitrary. We can then record series of events encoded as numbers, texts, 3D trajectories, list of images or sounds files. For example, one could use Tempi to store musical notes sequenced over time, to do rapid prototyping of motion, or any type of changes that are then easy to reproduce again. It supports OSC messaging, as well as finite state machines, timelines and flexible message routing.
 
 Tempi also eases routing data. It is possible to apply filters on those streams of data, to detect thresholds, to change their scale or to script finite state machines according to what happens in the streams. For each state, one could play different tracks, or choose different filters to apply on the transmitted data. Tempi is a temporal editor, as opposed to the SPIN Framework, which is a spatial editor.
 
@@ -48,7 +47,7 @@ The source code is currently managed at http://github.com/aalex/tempi
 
 Sponsors
 --------
-This project is made possible thanks to the Society for Arts and Technologies. (SAT) http://www.sat.qc.ca/
+This project is made possible thanks to the Society for Arts and Technologies. [SAT] http://www.sat.qc.ca/
 Thanks to the Ministère du Développement économique, de l'Innovation et de l'Exportation du Québec (MDEIE).
 
 

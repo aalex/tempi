@@ -49,6 +49,16 @@ class Graph
         Graph();
         bool addNode(const char *type, const char *name);
         bool message(const char *node, unsigned int inlet, const Message &message);
+        /**
+         * This method allows dynamic patching of a Graph.
+         * Message not start with "__tempi__" are sent to receive symbols in the Graph. See the tempi::base::ReceiveNode class which allows to receive messages starting by a receive symbol. (selector)
+         * 
+         * Message starting by the "__tempi__" string are dynamic patching commands. Here is a list of message the Graph can handle.
+         * - ,ssisi: connect [from] [outlet] [to] [inlet]
+         * - ,sss: addNode [type] [name]
+         * - ,ss: deleteNode [name]
+         * - ,ss...: setNodeProperty [nodeName] [prop] ...
+         */
         bool handleMessage(const Message &message);
         bool connect(const char *from, unsigned int outlet, const char *to, unsigned int inlet);
         bool disconnect(const char *from, unsigned int outlet, const char *to, unsigned int inlet);
