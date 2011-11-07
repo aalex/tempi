@@ -123,8 +123,11 @@ class Node
         virtual void onSetArguments(const Message &message)
         {}
         unsigned int getInletIndex(Sink *sink) const throw(BadIndexException);
+        // TODO: make private:
         void onInletTriggered(Sink *sink, const Message &message);
+        // TODO: make private:
         virtual void processMessage(unsigned int inlet, const Message &message) = 0;
+        // TODO: make private:
         virtual void doTick();
         bool hasInlet(Sink *sink);
         bool hasOutlet(Source *source);

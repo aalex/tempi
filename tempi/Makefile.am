@@ -40,7 +40,7 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     base/nop_node.cpp \
     base/print_node.cpp \
     base/receivenode.h \
-    filter.cpp \
+    mapping/filter.cpp \
     fsm/rule.cpp \
     fsm/state.cpp \
     fsm/statemachine.cpp \
@@ -93,7 +93,7 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     base/receivenode.h \
     concurrentqueue.h \
     exceptions.h \
-    filter.h \
+    mapping/filter.h \
     fsm/rule.h \
     fsm/state.h \
     fsm/statemachine.h \

@@ -17,32 +17,40 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "tempi/filter.h"
-#include <iostream>
+/**
+ * @file
+ * The Filter class.
+ */
 
-namespace tempi
-{
+#ifndef __TEMPI_MAPPING_FILTER_H__
+#define __TEMPI_MAPPING_FILTER_H__
 
-Filter::Filter() :
-    Node()
-{
-    addOutlet();
-}
+#include "tempi/node.h"
+#include "tempi/sharedptr.h"
+#include "tempi/source.h"
+#include "tempi/sink.h"
 
-Sink *Filter::getInlet()
-{
-    return getInlets()[0].get();
-}
+namespace tempi { namespace mapping {
 
-Source *Filter::getOutlet()
+/**
+ * A Filter is Node who has a sink and source and usually filters data.
+ */
+class Filter : public Node
 {
-    return getOutlets()[0].get();
-}
-
-void Filter::processMessage(unsigned int /* inlet */, const Message &message)
-{
-    getOutlet()->trigger(filter(message));
-}
+    public:
+        Filter();
+        virtual ~Filter() {}
+        Source *getOutlet();
+        Sink *getInlet();
+    private:
+        // Inherited from Node:
+        virtual void processMessage(unsigned int inlet, const Message &message);
+        // New virtual method:
+        virtual Message filter(const Message &message) = 0;
+};
 
 } // end of namespace
+} // end of namespace
+
+#endif // ifndef
 

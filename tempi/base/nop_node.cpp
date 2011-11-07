@@ -23,13 +23,14 @@
 namespace tempi { namespace base {
 
 NopNode::NopNode() :
-    Filter()
+    Node()
 {
+    addOutlet();
 }
 
-Message NopNode::filter(const Message &message)
+void NopNode::processMessage(unsigned int inlet, const Message &message)
 {
-    return message;
+    output(0, message);
 }
 
 } // end of namespace

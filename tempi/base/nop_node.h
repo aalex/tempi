@@ -24,20 +24,19 @@
 #ifndef __TEMPI_BASE_NOPNODE_H__
 #define __TEMPI_BASE_NOPNODE_H__
 
-#include "tempi/filter.h"
+#include "tempi/node.h"
 
 namespace tempi { namespace base {
 
 /**
  * The NopNode does no operation on a message, and just passes it to its outlet.
  */
-class NopNode : public Filter
+class NopNode : public Node
 {
     public:
         NopNode();
     private:
-        // Inherited from Filter:
-        virtual Message filter(const Message &message);
+        virtual void processMessage(unsigned int inlet, const Message &message);
 };
 
 } // end of namespace
