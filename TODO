@@ -3,49 +3,66 @@ To do in Tempi
 
 To do for 0.2
 -------------
- * Implement Scehduler::deleteGraph
- * Fix test for MetroNode
- * Get done with tempi/samplernode.cpp
- * Get done with tempi/tempi-signal.h
- * Get done with [table.*]
- * Get done with [sampler.*]
- * Get done with [mapping.*]
+ * Implement Message.prepend*()
+ * Implement [route] and [prepend]
+ * Rename Filter to FilterNode.
+ * FilterNode.filter should return a const&
+ * Decide on the messages that Scheduler sends and receives.
+ * Split SamplerNode into ReaderNode and WriterNode.
  * Have a complete scheduler in a thread.
+ * Get done with [midi.*] (make sure it works)
+ * Get done with [sampler.*]
  * Get done with nodes' arguments.
+ * Implement [spigot]
+ * Implement Scheduler::deleteGraph
+ * Fix test for MetroNode
+ * Get done with tempi/tempi-signal.h (or delete it)
+ * [mapping.*] should be provided a typetag argument. (and support fdi)
+ * Create a pointer atom type.
+ * Create a matrix atom type.
+ * Get done with [mapping.*]
  * Provide complete introspection for nodes' attributes.
  * Provide complete introspection for nodes' methods.
  * Tracks and state machines must be multithread-safe
  * Each scheduler should access some tracks
  * Each scheduler should access some state machines
- * Save graph to XML
- * Load graph from XML
  * Implement Score, Track, Region, Trajectory (which have a ReadType). Score has Markers.
- * Regions have speed and mapping modifiers. 
- * Regions have follow actions. (nothing, stop, play again, previous, next, first, last, any, other)
+ * Save graphs to XML
+ * Load graphs from XML
+ * Save scores to XML
+ * Load scores from XML
+ * Regions have speed. 
 
 To do for 0.4
 -------------
+ * Regions have mapping modifiers. (range, clip, etc.)
+ * Regions have follow actions. (nothing, stop, play again, previous, next, first, last, any, other)
+ * Get done with [table.*]
  * Create libraries of nodes (tempi-plugins-base)
  * Enclose signals as private data member. Provide accessors to it, or allow to add callbacks to it.
- * Feature: Many sender/receiver with the same host+port should share the same OSC sender. Use a map of tuple<ip,port> to shared_ptr<OscSender>.
- * Bugfix: Prevent from recursion by throwing a RecursionException upon output triggered twice. No?
- * Implement [route], [trigger], [passiftypematches], [spigot], [converttype]
+ * Implement [trigger], [passiftypematches], [converttype]
  * Implement [math.>], [math.<], [math.==], [math.-], [math.+], [math.*], [math./], [math.clip], [sqrt], [rsqrt]
- * Implement [mtof], [ftom], [dbtorms], [rmstodb], [dbtopow], [powtodb], [exp], [log], [abs]
- * Implement [wrap] ?
  * Implement [delay]
- * Implement [textfile]
- * Implement [pdsend], [pdreceive]
- * Support loading extensions and finding files from a list of paths
- * Implement [regex]
  * Improve FilterNode to explode arrays and make sure they are doubles, not floats.
- * All nodes should have an enabled attribute
  * Feature: allow to configure externals with an XML config file. (system-wide, then user-specific)
  * Application: Write a basic trajectories editor, for 3D coordinates with 3D and 2D views. (like Hole-edit)
  * Application: Write a basic node editor.
+ * Implement [osc.push] and [osc.pop]
+
+To do for 0.6
+-------------
+ * Implement [wrap] ?
+ * Implement [rtpsend], [rtpreceive]
  * Implement [spatosc]
  * Implement [freenect.pointscloud]
- * Implement [rtpsend], [rtpreceive]
+ * Implement [textfile]
+ * Implement [pdsend], [pdreceive]
+ * Implement [mtof], [ftom], [dbtorms], [rmstodb], [dbtopow], [powtodb], [exp], [log], [abs]
+ * Support loading extensions and finding files from a list of paths
+ * Implement [regex]
+ * All nodes should have an enabled attribute
+ * Feature: Many OSC sender/receiver with the same host+port should share the same OSC sender. Use a map of tuple<ip,port> to shared_ptr<OscSender>.
+ * Bugfix: Prevent from recursion by throwing a RecursionException upon output triggered twice. No?
 
 Later
 -----
