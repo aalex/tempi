@@ -3,19 +3,22 @@ To do in Tempi
 
 To do for 0.2
 -------------
- * implement Scehduler::deleteGraph
+ * Implement Scehduler::deleteGraph
  * Fix test for MetroNode
  * Get done with tempi/samplernode.cpp
  * Get done with tempi/tempi-signal.h
+ * Get done with [table.*]
+ * Get done with [sampler.*]
+ * Get done with [mapping.*]
  * Have a complete scheduler in a thread.
  * Get done with nodes' arguments.
  * Provide complete introspection for nodes' attributes.
  * Provide complete introspection for nodes' methods.
- * tracks and state machines must be multithread-safe
- * each scheduler should access some tracks
- * each scheduler should access some state machines
- * save graph to XML
- * load graph from XML
+ * Tracks and state machines must be multithread-safe
+ * Each scheduler should access some tracks
+ * Each scheduler should access some state machines
+ * Save graph to XML
+ * Load graph from XML
 
 To do for 0.4
 -------------
@@ -23,8 +26,17 @@ To do for 0.4
  * Enclose signals as private data member. Provide accessors to it, or allow to add callbacks to it.
  * Feature: Many sender/receiver with the same host+port should share the same OSC sender. Use a map of tuple<ip,port> to shared_ptr<OscSender>.
  * Bugfix: Prevent from recursion by throwing a RecursionException upon output triggered twice. No?
- * implement [route], [trigger], [passiftypematches], [spigot], [converttype]
- * all nodes should have an enabled attribute
+ * Implement [route], [trigger], [passiftypematches], [spigot], [converttype]
+ * Implement [math.>], [math.<], [math.==], [math.-], [math.+], [math.*], [math./], [math.clip], [sqrt], [rsqrt]
+ * Implement [mtof], [ftom], [dbtorms], [rmstodb], [dbtopow], [powtodb], [exp], [log], [abs]
+ * Implement [wrap] ?
+ * Implement [delay]
+ * Implement [textfile]
+ * Implement [pdsend], [pdreceive]
+ * Support loading extensions and finding files from a list of paths
+ * Implement [regex]
+ * Improve FilterNode to explode arrays and make sure they are doubles, not floats.
+ * All nodes should have an enabled attribute
  * Feature: allow to configure externals with an XML config file. (system-wide, then user-specific)
 
 Later
