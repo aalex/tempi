@@ -23,7 +23,7 @@ To do for 0.4
  * Enclose signals as private data member. Provide accessors to it, or allow to add callbacks to it.
  * Feature: Many sender/receiver with the same host+port should share the same OSC sender. Use a map of tuple<ip,port> to shared_ptr<OscSender>.
  * Bugfix: Prevent from recursion by throwing a RecursionException upon output triggered twice. No?
- * implement [route], [trigger], [passiftypematches], [spigot]
+ * implement [route], [trigger], [passiftypematches], [spigot], [converttype]
  * all nodes should have an enabled attribute
  * Feature: allow to configure externals with an XML config file. (system-wide, then user-specific)
 
