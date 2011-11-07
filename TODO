@@ -19,6 +19,9 @@ To do for 0.2
  * Each scheduler should access some state machines
  * Save graph to XML
  * Load graph from XML
+ * Implement Score, Track, Region, Trajectory (which have a ReadType). Score has Markers.
+ * Regions have speed and mapping modifiers. 
+ * Regions have follow actions. (nothing, stop, play again, previous, next, first, last, any, other)
 
 To do for 0.4
 -------------
@@ -38,6 +41,11 @@ To do for 0.4
  * Improve FilterNode to explode arrays and make sure they are doubles, not floats.
  * All nodes should have an enabled attribute
  * Feature: allow to configure externals with an XML config file. (system-wide, then user-specific)
+ * Application: Write a basic trajectories editor, for 3D coordinates with 3D and 2D views. (like Hole-edit)
+ * Application: Write a basic node editor.
+ * Implement [spatosc]
+ * Implement [freenect.pointscloud]
+ * Implement [rtpsend], [rtpreceive]
 
 Later
 -----
