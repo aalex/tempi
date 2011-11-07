@@ -3,6 +3,8 @@ To do in Tempi
 
 To do for 0.2
 -------------
+ * Bugfix: Message.*(...): avoid segfault if length does not match
+ * Bugfix: Message.*(...): avoid segfault if types do not match
  * Implement Message.prepend*()
  * Implement [route] and [prepend]
  * Rename Filter to FilterNode.
