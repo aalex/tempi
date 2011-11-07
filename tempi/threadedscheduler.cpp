@@ -31,7 +31,7 @@ ThreadedScheduler::ThreadedScheduler() :
     // the thread is not-a-thread until we call start()
 }
 
-void ThreadedScheduler::sendMessage(const Message &message)
+void ThreadedScheduler::doSendMessage(const Message &message)
 {
     queue_.push(message);
 }

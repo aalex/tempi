@@ -48,6 +48,11 @@ bool Scheduler::createGraph(const char *name)
     }
 }
 
+void Scheduler::sendMessage(const Message &message)
+{
+    doSendMessage(message);
+}
+
 bool Scheduler::sendToAllGraphs(const Message &message)
 {
     bool ret = false;

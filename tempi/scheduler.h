@@ -44,9 +44,14 @@ class Scheduler
         virtual bool isRunning() const = 0;
         /**
          * Sends a message to all its graphs.
+         * See tempi::Graph::handleMessage for handled messages.
          */
-        virtual void sendMessage(const Message &message) = 0;
+        void sendMessage(const Message &message);
+        /**
+         * Create a Graph identified by a name.
+         */
         bool createGraph(const char *name);
+        // TODO: bool remoteGraph(const char *name);
     protected:
         bool sendToAllGraphs(const Message &message);
         Graph::ptr getGraph(const char *name);
@@ -54,6 +59,8 @@ class Scheduler
         NodeFactory::ptr getFactory() const;
         bool tickGraphs();
     private:
+        // TODO: rename this
+        virtual void doSendMessage(const Message &message) = 0;
         std::map<std::string, Graph::ptr> graphs_;
         NodeFactory::ptr factory_;
 };

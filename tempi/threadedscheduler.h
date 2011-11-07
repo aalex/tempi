@@ -46,10 +46,6 @@ class ThreadedScheduler : public Scheduler
     public:
         ThreadedScheduler();
         /**
-         * Sends a message to all its graphs.
-         */
-        virtual void sendMessage(const Message &message);
-        /**
          * Starts the thread.
          */
         void start(unsigned int sleep_interval_ms);
@@ -76,6 +72,7 @@ class ThreadedScheduler : public Scheduler
         void run(unsigned int sleep_interval_ms);
         virtual void handlePoppedMessage(const Message &message);
         void tick();
+        virtual void doSendMessage(const Message &message);
 };
 
 } // end of namespace
