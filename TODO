@@ -63,6 +63,9 @@ To do for 0.6
  * Support loading extensions and finding files from a list of paths
  * Implement [regex]
  * All nodes should have an enabled attribute
+ * All nodes should have a verbose attribute
+ * Decide on how many inlet/outlet a Node minimally has.
+ * Implement Node::error, which triggers a signal that the Graph catches.
  * Feature: Many OSC sender/receiver with the same host+port should share the same OSC sender. Use a map of tuple<ip,port> to shared_ptr<OscSender>.
  * Bugfix: Prevent from recursion by throwing a RecursionException upon output triggered twice. No?
 
