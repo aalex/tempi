@@ -1,18 +1,34 @@
 To do in Tempi
 ==============
 
-Soon
------
- * Prevent from recursion by throwing a RecursionException upon output triggered twice. No?
- * Create the tempi-plugins-base library
- * Enclose signals as private data member. Provide accessors to it, or allow to add callbacks to it.
+To do for 0.2
+-------------
+ * implement Scehduler::deleteGraph
  * Fix test for MetroNode
- * move CounterNode to base.
+ * Get done with tempi/samplernode.cpp
+ * Get done with tempi/tempi-signal.h
+ * Have a complete scheduler in a thread.
+ * Get done with nodes' arguments.
+ * Provide complete introspection for nodes' attributes.
+ * Provide complete introspection for nodes' methods.
+ * tracks and state machines must be multithread-safe
+ * each scheduler should access some tracks
+ * each scheduler should access some state machines
+ * save graph to XML
+ * load graph from XML
+
+To do for 0.4
+-------------
+ * Create libraries of nodes (tempi-plugins-base)
+ * Enclose signals as private data member. Provide accessors to it, or allow to add callbacks to it.
+ * Feature: Many sender/receiver with the same host+port should share the same OSC sender. Use a map of tuple<ip,port> to shared_ptr<OscSender>.
+ * Bugfix: Prevent from recursion by throwing a RecursionException upon output triggered twice. No?
+ * implement [route], [trigger], [passiftypematches], [spigot]
+ * all nodes should have an enabled attribute
+ * Feature: allow to configure externals with an XML config file. (system-wide, then user-specific)
 
 Later
 -----
- * Many sender/receiver with the same host+port should share the same OSC sender. Use a map of tuple<ip,port> to shared_ptr<OscSender>.
- * Get done with tempi/samplernode.cpp
- * Get done with tempi/tempi-signal.h
- * Create a timeline viewing Clutter actor.
+ * Create a timeline Clutter actor.
+ * Create a graph editor Clutter actor.
 
