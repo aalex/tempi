@@ -9,6 +9,10 @@ To do for 0.2
  * Implement [route] and [prepend]
  * Rename Filter to FilterNode.
  * FilterNode.filter should return a const&
+ * Node.addOutlet: document outlets with i18n
+ * Node.addInlet: document inlets with i18n
+ * Node.addProperty: document properties with i18n
+ * Write Node.addMethod, and document them with i18n (?)
  * Decide on the messages that Scheduler sends and receives.
  * Split SamplerNode into ReaderNode and WriterNode.
  * Have a complete scheduler in a thread.
