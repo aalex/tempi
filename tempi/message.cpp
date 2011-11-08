@@ -116,6 +116,13 @@ void Message::appendVaList(const char *types, va_list arguments)
 bool Message::append(boost::any value)
 {
     arguments_.push_back(value);
+    return true;
+}
+
+bool Message::prepend(boost::any value)
+{
+    arguments_.insert(arguments_.begin(), value);
+    return true;
 }
 
 unsigned int Message::getSize() const
@@ -136,6 +143,35 @@ const boost::any *Message::getArgument(unsigned int index) const // throw(BadInd
     {
         return &arguments_[index];
     }
+}
+
+void Message::prependFloat(float value)
+{
+    prepend(boost::any(value));
+}
+void Message::prependInt(int value)
+{
+    prepend(boost::any(value));
+}
+void Message::prependLong(long long int value)
+{
+    prepend(boost::any(value));
+}
+void Message::prependStdString(std::string value)
+{
+    prepend(boost::any(value));
+}
+void Message::prependBoolean(bool value)
+{
+    prepend(boost::any(value));
+}
+void Message::prependChar(char value)
+{
+    prepend(boost::any(value));
+}
+void Message::prependDouble(double value)
+{
+    prepend(boost::any(value));
 }
 
 void Message::appendFloat(float value)

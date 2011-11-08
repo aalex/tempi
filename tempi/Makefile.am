@@ -38,6 +38,7 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     base/counternode.cpp \
     base/metro_node.cpp \
     base/nop_node.cpp \
+    base/prependnode.cpp \
     base/print_node.cpp \
     base/receivenode.h \
     mapping/filter.cpp \
@@ -89,6 +90,7 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     base/counternode.h \
     base/metro_node.h \
     base/nop_node.h \
+    base/prependnode.h \
     base/print_node.h \
     base/receivenode.h \
     concurrentqueue.h \

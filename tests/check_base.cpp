@@ -22,6 +22,25 @@ bool check_create()
     return true;
 }
 
+bool checkPrepend()
+{
+    if (VERBOSE)
+        std::cout << __FUNCTION__ << std::endl;
+    NodeFactory::ptr factory(new NodeFactory);
+    if (VERBOSE)
+        std::cout << "loadInternals:" << std::endl;
+    internals::loadInternals(factory);
+
+    if (VERBOSE)
+        std::cout << "create Graph:" << std::endl;
+    Graph graph(factory); // FIXME: smart ptr or not for factory?
+    if (VERBOSE)
+        std::cout << "add nodes:" << std::endl;
+    graph.addNode("base.prepend", "prepend0");
+    // TODO: setNodeArguments
+    return true;
+}
+
 bool checkMetro()
 {
     if (VERBOSE)
@@ -125,6 +144,8 @@ int main(int argc, char **argv)
     if (! checkMetro())
         return 1;
     if (! check_create())
+        return 1;
+    if (! checkPrepend())
         return 1;
     return 0;
 }

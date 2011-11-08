@@ -96,6 +96,17 @@ class Message
             appendStdString(std::string(value));
         }
 
+        void prependBoolean(bool value);
+        void prependChar(char value);
+        void prependDouble(double value);
+        void prependFloat(float value);
+        void prependInt(int value);
+        void prependLong(long long int value);
+        void prependString(const char *value)
+        {
+            prependStdString(std::string(value));
+        }
+
         bool getBoolean(unsigned int index) const
             throw(BadArgumentTypeException, BadIndexException);
         char getChar(unsigned int index) const
@@ -167,11 +178,13 @@ class Message
     private:
         void appendVaList(const char* types, va_list arguments);
         void appendStdString(std::string value);
+        void prependStdString(std::string value);
         // Message(std::vector<boost::any> arguments);
         // std::vector<boost::any> &getArguments();
         const boost::any *getArgument(unsigned int index) const; // throw(BadIndexException);
         std::vector<boost::any> arguments_;
         bool append(boost::any value);
+        bool prepend(boost::any value);
 
         template <typename T>
         void get(unsigned int index, T &value) const
