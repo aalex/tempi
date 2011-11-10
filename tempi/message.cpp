@@ -55,28 +55,28 @@ void Message::appendVaList(const char *types, va_list arguments)
     {
         switch (types[i])
         {
-            case 'f':
+            case FLOAT:
             {
                 float value = va_arg(arguments, double);
                 //std::cout << "Caught a float : " << value;
                 appendFloat(value);
                 break;
             }
-            case 'i':
+            case INT:
             {
                 int value = va_arg(arguments, int);
                 //std::cout << "Caught an integer : " << value;
                 appendInt(value);
                 break;
             }
-            case 'b':
+            case BOOLEAN:
             {
                 bool value = (bool) va_arg(arguments, int);
                 //std::cout << "Caught a bool : " << value;
                 appendBoolean(value);
                 break;
             }
-            case 's':
+            case STRING:
             {
                 const char *value = va_arg(arguments, const char*);
                 // FIXME: does this memleak?
@@ -84,25 +84,32 @@ void Message::appendVaList(const char *types, va_list arguments)
                 appendString(value);
                 break;
             }
-            case 'd':
+            case DOUBLE:
             {
                 double value = va_arg(arguments, double);
                 std::cout << "Caught a double : " << value;
                 appendDouble(value);
                 break;
             }
-            case 'c':
+            case CHAR:
             {
                 char value = (char) va_arg(arguments, int);
                 //std::cout << "Caught a char : " <<  value;
                 appendChar(value);
                 break;
             }
-            case 'l':
+            case LONG:
             {
                 long long int value = va_arg(arguments, long long int);
                 //std::cout << "Caught a long long :" << value;
                 appendLong(value);
+                break;
+            }
+            case POINTER:
+            {
+                void *value = va_arg(arguments, void *);
+                //std::cout << "Caught a pointer :" << value;
+                appendPointer(value);
                 break;
             }
             default:
@@ -174,6 +181,12 @@ void Message::prependDouble(double value)
     prepend(boost::any(value));
 }
 
+void Message::prependPointer(void *value)
+{
+    prepend(boost::any(value));
+}
+
+
 void Message::appendFloat(float value)
 {
     append(boost::any(value));
@@ -199,6 +212,11 @@ void Message::appendChar(char value)
     append(boost::any(value));
 }
 void Message::appendDouble(double value)
+{
+    append(boost::any(value));
+}
+
+void Message::appendPointer(void *value)
 {
     append(boost::any(value));
 }
@@ -246,6 +264,13 @@ bool Message::getBoolean(unsigned int index) const throw(BadArgumentTypeExceptio
     return value;
 }
 
+void *Message::getPointer(unsigned int index) const throw(BadArgumentTypeException, BadIndexException)
+{
+    void *value;
+    get<void *>(index, value);
+    return value;
+}
+
 void Message::setBoolean(unsigned int index, bool value) throw(BadArgumentTypeException, BadIndexException)
 {
     set<bool>(index, value);
@@ -275,6 +300,11 @@ void Message::setString(unsigned int index, std::string value) throw(BadArgument
     set<std::string>(index, value);
 }
 
+void Message::setPointer(unsigned int index, void *value) throw(BadArgumentTypeException, BadIndexException)
+{
+    set<void *>(index, value);
+}
+
 namespace types
 {
 
@@ -297,6 +327,8 @@ bool getArgumentTypeForAny(const boost::any &value, ArgumentType &type)
         type = LONG;
     else if (actual == typeid(std::string))
         type = STRING;
+    else if (actual == typeid(void *))
+        type = POINTER;
     else
     {
         std::cerr << __FUNCTION__ << ": Could not figure out type of value. It's " << actual.name() << std::endl;
@@ -398,6 +430,10 @@ bool Message::operator==(const Message &other) const
                 break;
             case STRING:
                 if (getString(i) != other.getString(i))
+                    return false;
+                break;
+            case POINTER:
+                if (getPointer(i) != other.getPointer(i))
                     return false;
                 break;
             defaut:

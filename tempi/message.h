@@ -49,8 +49,9 @@ typedef enum
     FLOAT = 'f',
     INT = 'i',
     LONG = 'l',
-    STRING = 's'
-    //TODO: POINTER = 'p'
+    STRING = 's',
+    // TODO: UNICODE = 'u',
+    POINTER = 'p'
 } ArgumentType;
 
 namespace types
@@ -95,6 +96,7 @@ class Message
         {
             appendStdString(std::string(value));
         }
+        void appendPointer(void *value);
 
         void prependBoolean(bool value);
         void prependChar(char value);
@@ -106,6 +108,7 @@ class Message
         {
             prependStdString(std::string(value));
         }
+        void prependPointer(void *value);
 
         bool getBoolean(unsigned int index) const
             throw(BadArgumentTypeException, BadIndexException);
@@ -123,6 +126,8 @@ class Message
             throw(BadArgumentTypeException, BadIndexException);
         //void getString(unsigned int index, std::string &value) const
         //  throw(BadArgumentTypeException, BadIndexException);
+        void *getPointer(unsigned int index) const
+            throw(BadArgumentTypeException, BadIndexException);
 
         void setBoolean(unsigned int index, bool value)
             throw(BadArgumentTypeException, BadIndexException);
@@ -143,6 +148,8 @@ class Message
         {
             setString(index, std::string(value));
         }
+        void setPointer(unsigned int index, void *value)
+            throw(BadArgumentTypeException, BadIndexException);
 
         // TODO: deprecate the string version
         bool typesMatch(std::string &types) const;
@@ -162,6 +169,9 @@ class Message
         //     return append(boost::any(value));
         // }
 
+        /**
+         * FIXME: seems it's broken.
+         */
         bool operator==(const Message &other) const;
         bool operator!=(const Message &other) const;
 
