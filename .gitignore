@@ -1,4 +1,3 @@
-!prototypes/kinect/Makefile
 *.1
 *.cxx
 *.dia~
@@ -45,6 +44,8 @@ missing
 prototypes/any
 prototypes/fusion/vec
 prototypes/kinect/freedraw
+prototypes/modules/hello
+prototypes/modules/main
 prototypes/nodefactory
 prototypes/phoenix/findif
 prototypes/tuples
@@ -77,3 +78,9 @@ tests/check_table
 tests/check_timer
 tests/check_track
 tests/check_version
+
+# -------------------------
+# negations:
+!prototypes/kinect/Makefile
+!prototypes/modules/Makefile
+
