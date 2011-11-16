@@ -89,7 +89,13 @@ class App
          * Call this begore launching the app.
          */
         int parse_options(int argc, char **argv);
+        /**
+         * Creates the tempi::Graph, and the ClutterStage
+         */
         bool launch();
+        /**
+         * Polls the tempi::Graph.
+         */
         bool poll();
         void playFaster() {} // Not implemented
         void playSlower() {} // Not implemented
@@ -104,9 +110,6 @@ class App
          */
         bool toggleRecord();
         void clearScore();
-        ClutterActor *playback_button_;
-        ClutterActor *record_button_;
-        ClutterActor *stage_;
     protected:
         bool setupGraph();
         bool createGUI();
@@ -118,6 +121,9 @@ class App
         unsigned int midi_output_port_;
         bool graph_ok_;
         tempi::Graph::ptr graph_;
+        ClutterActor *playback_button_;
+        ClutterActor *record_button_;
+        ClutterActor *stage_;
 };
 
 App::App() :
@@ -158,10 +164,13 @@ static gboolean playback_button_press_cb(ClutterActor *actor, ClutterEvent *even
 static void key_event_cb(ClutterActor *actor, ClutterKeyEvent *event, gpointer user_data)
 {
     App *app = (App *) user_data;
+    ClutterModifierType state = clutter_event_get_state((ClutterEvent*) event);
+    bool ctrl_pressed = (state & CLUTTER_CONTROL_MASK ? true : false);
     switch (event->keyval)
     {
         case CLUTTER_KEY_q:
-            clutter_main_quit();
+            if (ctrl_pressed)
+                clutter_main_quit();
             break;
         case CLUTTER_KEY_BackSpace:
             app->clearScore();
@@ -171,6 +180,9 @@ static void key_event_cb(ClutterActor *actor, ClutterKeyEvent *event, gpointer u
             break;
         case CLUTTER_KEY_Down:
             app->playSlower();
+            break;
+        case CLUTTER_KEY_space:
+            app->toggleRecord();
             break;
     }
 }
@@ -364,8 +376,17 @@ int App::parse_options(int argc, char **argv)
         ("verbose,v", po::bool_switch(), "Enables a verbose output")
         ;
     po::variables_map options;
-    po::store(po::parse_command_line(argc, argv, desc), options);
-    po::notify(options);
+    try
+    {
+        po::store(po::parse_command_line(argc, argv, desc), options);
+        po::notify(options);
+    }
+    catch (const po::error &e)
+    {
+        std::cerr << e.what() << std::endl;
+        std::cout << desc << std::endl;
+        return 1;
+    }
 
     verbose_ = options["verbose"].as<bool>();
     midi_input_port_ = options["input"].as<unsigned int>();
