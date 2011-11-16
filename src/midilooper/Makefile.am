@@ -4,6 +4,7 @@ bin_PROGRAMS = \
 
 AM_CXXFLAGS = \
 	$(BOOST_CPPFLAGS) \
+	$(CLUTTER_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	-I$(top_srcdir)
 

@@ -33,15 +33,53 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/program_options.hpp>
+#include <clutter/clutter.h>
 #include <glib.h>
 #include <iostream>
 #include <sstream>
 
+// namespaces:
 namespace po = boost::program_options;
 using namespace tempi;
 
+// String constants:
 static const char *PROGRAM_NAME = "midi-print";
 
+// Color constants:
+static ClutterColor black = { 0x00, 0x00, 0x00, 0xff };
+static ClutterColor red = { 0xcc, 0x33, 0x33, 0xff };
+static ClutterColor green = { 0x33, 0xcc, 0x33, 0xff };
+static ClutterColor gray = { 0x99, 0x99, 0x99, 0xff };
+static ClutterColor white = { 0xcc, 0xcc, 0xcc, 0xff };
+
+// Static functions:
+static gboolean record_button_press_cb(ClutterActor *actor, ClutterEvent *event, gpointer user_data);
+static gboolean playback_button_press_cb(ClutterActor *actor, ClutterEvent *event, gpointer user_data);
+static void key_event_cb(ClutterActor *actor, ClutterKeyEvent *event, gpointer user_data);
+static void on_frame_cb(ClutterTimeline *timeline, guint *ms, gpointer user_data);
+static void list_input_midi_devices();
+static void list_output_midi_devices();
+
+// Clutter legacy macro aliases:
+#if CLUTTER_CHECK_VERSION(1,4,0)
+#else
+#define CLUTTER_KEY_Down CLUTTER_Down
+#define CLUTTER_KEY_Escape CLUTTER_Escape
+#define CLUTTER_KEY_F1 CLUTTER_F1
+#define CLUTTER_KEY_Left CLUTTER_Left
+#define CLUTTER_KEY_Return CLUTTER_Return
+#define CLUTTER_KEY_Right CLUTTER_Right
+#define CLUTTER_KEY_Tab CLUTTER_Tab
+#define CLUTTER_KEY_Up CLUTTER_Up
+#define CLUTTER_KEY_q CLUTTER_q
+#define CLUTTER_KEY_space CLUTTER_space
+#define CLUTTER_KEY_Delete CLUTTER_Delete
+#define CLUTTER_KEY_BackSpace CLUTTER_BackSpace
+#endif
+
+/**
+ * The App class manages the tempi::Graph and the Clutter GUI.
+ */
 class App
 {
     public:
@@ -53,10 +91,29 @@ class App
         int parse_options(int argc, char **argv);
         bool launch();
         bool poll();
+        void playFaster() {} // Not implemented
+        void playSlower() {} // Not implemented
+        bool isRecording();
+        bool isPlaying();
+        /**
+         * Toggles playback and returns its new state.
+         */
+        bool togglePlayback();
+        /**
+         * Toggles recording and returns its new state.
+         */
+        bool toggleRecord();
+        void clearScore();
+        ClutterActor *playback_button_;
+        ClutterActor *record_button_;
+        ClutterActor *stage_;
     protected:
         bool setupGraph();
+        bool createGUI();
     private:
         bool verbose_;
+        bool recording_;
+        bool playing_;
         unsigned int midi_input_port_;
         unsigned int midi_output_port_;
         bool graph_ok_;
@@ -65,30 +122,111 @@ class App
 
 App::App() :
     verbose_(false),
+    recording_(false),
+    playing_(false),
     midi_input_port_(0),
     midi_output_port_(0),
     graph_ok_(false)
 {
+    stage_ = NULL;
+}
+
+bool App::isRecording()
+{
+    return recording_;
+}
+
+bool App::isPlaying()
+{
+    return playing_;
+}
+
+static gboolean record_button_press_cb(ClutterActor *actor, ClutterEvent *event, gpointer user_data)
+{
+    App *app = (App *) user_data;
+    app->toggleRecord();
+    return TRUE;
+}
+
+static gboolean playback_button_press_cb(ClutterActor *actor, ClutterEvent *event, gpointer user_data)
+{
+    App *app = (App *) user_data;
+    app->togglePlayback();
+    return TRUE;
+}
+
+static void key_event_cb(ClutterActor *actor, ClutterKeyEvent *event, gpointer user_data)
+{
+    App *app = (App *) user_data;
+    switch (event->keyval)
+    {
+        case CLUTTER_KEY_q:
+            clutter_main_quit();
+            break;
+        case CLUTTER_KEY_BackSpace:
+            app->clearScore();
+            break;
+        case CLUTTER_KEY_Up:
+            app->playFaster();
+            break;
+        case CLUTTER_KEY_Down:
+            app->playSlower();
+            break;
+    }
+}
+
+bool App::togglePlayback()
+{
+    bool state = isPlaying();
+    std::cout << "TODO: " << __FUNCTION__ << std::endl;
+    playing_ = ! state;
+
+    if (isPlaying())
+        clutter_rectangle_set_color(CLUTTER_RECTANGLE(playback_button_), &green);
+    else
+        clutter_rectangle_set_color(CLUTTER_RECTANGLE(playback_button_), &gray);
+    return isPlaying();
+}
+
+bool App::toggleRecord()
+{
+    bool state = isRecording();
+    std::cout << "TODO: " << __FUNCTION__ << std::endl;
+    recording_ = ! state;
+
+    if (isRecording())
+        clutter_rectangle_set_color(CLUTTER_RECTANGLE(record_button_), &red);
+    else
+        clutter_rectangle_set_color(CLUTTER_RECTANGLE(record_button_), &gray);
+    return isRecording();
+}
+
+void App::clearScore()
+{
+    std::cout << "TODO: " << __FUNCTION__ << std::endl;
 }
 
 bool App::poll()
 {
-    if (! graph_ok_)
+    if (graph_ok_)
     {
-        std::cerr << "Error: must call launch() first.\n";
+        graph_->tick();
+        return true;
+    }
+    else
+    {
+        std::cerr << "App::" << __FUNCTION__ << "(): Error: must call launch() first.\n";
         return false;
     }
-    graph_->tick();
-    g_usleep(300); // microseconds
-    //if (verbose_)
-    //    std::cout << ".";
-    return true;
 }
 
 bool App::setupGraph()
 {
     if (graph_ok_)
+    {
+        std::cerr << "App::" << __FUNCTION__ << ": already called.\n";
         return false;
+    }
     // Register node types
     NodeFactory::ptr factory(new NodeFactory);
     factory->registerTypeT<midi::MidiReceiverNode>("midi.recv");
@@ -115,28 +253,87 @@ bool App::setupGraph()
     graph_->message("midi.recv0", 0, inputMessage);
     Message outputMessage("ssi", "set", "port", midi_output_port_);
     graph_->message("midi.send0", 0, outputMessage);
-}
 
-static gboolean on_idle(gpointer data)
-{
-    App *context = static_cast<App*>(data);
-    context->poll();
-    return TRUE;
+    graph_ok_ = true;
 }
 
 bool App::launch()
 {
-    if (! graph_ok_)
+    if (graph_ok_)
     {
-        setupGraph();
+        std::cerr << "App::" << __FUNCTION__ << "(): Already called\n";
+        return false;
     }
     else
+    {
+        setupGraph();
+        createGUI();
+        if (verbose_)
+            std::cout << "Running... Press ctrl-C in the terminal to quit. (or ctrl-Q in the GUI)" << std::endl;
+        return true;
+    }
+}
+
+static void on_frame_cb(ClutterTimeline * /*timeline*/, guint * /*ms*/, gpointer user_data)
+{
+    App *context = static_cast<App*>(user_data);
+    context->poll();
+}
+
+bool App::createGUI()
+{
+    if (stage_ != 0)
+    {
+        std::cerr << "App::" << __FUNCTION__ << ": Stage already created.\n"; 
         return false;
+    }
+    else
+        std::cout << "Creating GUI.\n";
+    stage_ = clutter_stage_get_default();
+    clutter_actor_set_size(stage_, 300, 200);
+    clutter_stage_set_color(CLUTTER_STAGE(stage_), &black);
+    g_signal_connect(stage_, "destroy", G_CALLBACK(clutter_main_quit), NULL);
+    
+    // Record button:
+    record_button_ = clutter_rectangle_new_with_color(&gray);
+    clutter_actor_set_size(record_button_, 50.0f, 50.0f);
+    clutter_actor_set_anchor_point_from_gravity(record_button_, CLUTTER_GRAVITY_CENTER);
+    clutter_actor_set_position(record_button_, 100.0f, 100.0f);
+    clutter_container_add_actor(CLUTTER_CONTAINER(stage_), record_button_);
+    clutter_actor_set_reactive(record_button_, TRUE);
+    g_signal_connect(record_button_, "button-press-event", G_CALLBACK(record_button_press_cb), this);
+    // TODO g_signal_connect(stage_, "button-release-event", G_CALLBACK(record_button_released_cb), this);
 
-    if (verbose_)
-        std::cout << "Running... Press ctrl-C to quit." << std::endl;
+    ClutterActor *record_label = clutter_text_new_full("Sans semibold 12px", "Record", &white);
+    clutter_actor_set_position(record_label, 100.0f, 150.0f);
+    clutter_actor_set_anchor_point_from_gravity(record_label, CLUTTER_GRAVITY_CENTER);
+    clutter_container_add_actor(CLUTTER_CONTAINER(stage_), record_label);
 
-    g_idle_add(on_idle, (gpointer) this);
+    // Playback button:
+    playback_button_ = clutter_rectangle_new_with_color(&gray);
+    clutter_actor_set_size(playback_button_, 50.0f, 50.0f);
+    clutter_actor_set_anchor_point_from_gravity(playback_button_, CLUTTER_GRAVITY_CENTER);
+    clutter_actor_set_position(playback_button_, 200.0f, 100.0f);
+    clutter_container_add_actor(CLUTTER_CONTAINER(stage_), playback_button_);
+    clutter_actor_set_reactive(playback_button_, TRUE);
+    g_signal_connect(playback_button_, "button-press-event", G_CALLBACK(playback_button_press_cb), this);
+    // TODO g_signal_connect(stage_, "button-release-event", G_CALLBACK(playback_button_released_cb), this);
+
+    ClutterActor *playback_label = clutter_text_new_full("Sans semibold 12px", "Playback", &white);
+    clutter_actor_set_position(playback_label, 200.0f, 150.0f);
+    clutter_actor_set_anchor_point_from_gravity(playback_label, CLUTTER_GRAVITY_CENTER);
+    clutter_container_add_actor(CLUTTER_CONTAINER(stage_), playback_label);
+
+    // timeline to attach a callback for each frame that is rendered
+    ClutterTimeline *timeline;
+    timeline = clutter_timeline_new(60); // ms
+    clutter_timeline_set_loop(timeline, TRUE);
+    clutter_timeline_start(timeline);
+
+    g_signal_connect(timeline, "new-frame", G_CALLBACK(on_frame_cb), this);
+    g_signal_connect(stage_, "key-press-event", G_CALLBACK(key_event_cb), this);
+
+    clutter_actor_show(stage_);
     return true;
 }
 
@@ -216,9 +413,11 @@ int main(int argc, char *argv[])
     if (ret != -1)
         return ret;
 
-    GMainLoop *loop = g_main_loop_new(NULL, FALSE);
+    if (clutter_init(&argc, &argv) != CLUTTER_INIT_SUCCESS)
+        return 1;
+
     app.launch();
-    g_main_loop_run(loop);
+    clutter_main();
     return 0;
 }
 
