@@ -1,18 +1,18 @@
 /*
  * Copyright (C) 2011 Alexandre Quessy
- * 
+ *
  * This file is part of Tempi.
- * 
+ *
  * Tempi is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * Tempi is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -52,34 +52,43 @@ class App
          */
         int parse_options(int argc, char **argv);
         bool launch();
-        void poll();
+        bool poll();
     protected:
-        void setupGraph();
+        bool setupGraph();
     private:
         bool verbose_;
         unsigned int midi_input_port_;
         unsigned int midi_output_port_;
+        bool graph_ok_;
         tempi::Graph::ptr graph_;
 };
 
 App::App() :
     verbose_(false),
     midi_input_port_(0),
-    midi_output_port_(0)
+    midi_output_port_(0),
+    graph_ok_(false)
 {
-    setupGraph();
 }
 
-void App::poll()
+bool App::poll()
 {
+    if (! graph_ok_)
+    {
+        std::cerr << "Error: must call launch() first.\n";
+        return false;
+    }
     graph_->tick();
     g_usleep(300); // microseconds
     //if (verbose_)
     //    std::cout << ".";
+    return true;
 }
 
-void App::setupGraph()
+bool App::setupGraph()
 {
+    if (graph_ok_)
+        return false;
     // Register node types
     NodeFactory::ptr factory(new NodeFactory);
     factory->registerTypeT<midi::MidiReceiverNode>("midi.recv");
@@ -88,19 +97,20 @@ void App::setupGraph()
 
     // Create graph
     graph_.reset(new tempi::Graph(factory));
-    
+
     // MIDI nodes
     graph_->addNode("midi.recv", "midi.recv0");
     graph_->addNode("midi.send", "midi.send0");
     graph_->connect("midi.recv0", 0, "midi.send0", 0);
 
-    // Print stuff
+    // Print stuff:
     if (verbose_)
     {
         graph_->addNode("print", "print0");
         graph_->connect("midi.recv0", 0, "print0", 0);
     }
 
+    // Set input and output ports:
     Message inputMessage("ssi", "set", "port", midi_input_port_);
     graph_->message("midi.recv0", 0, inputMessage);
     Message outputMessage("ssi", "set", "port", midi_output_port_);
@@ -116,6 +126,13 @@ static gboolean on_idle(gpointer data)
 
 bool App::launch()
 {
+    if (! graph_ok_)
+    {
+        setupGraph();
+    }
+    else
+        return false;
+
     if (verbose_)
         std::cout << "Running... Press ctrl-C to quit." << std::endl;
 
@@ -123,11 +140,15 @@ bool App::launch()
     return true;
 }
 
-static void list_midi_devices()
+static void list_input_midi_devices()
 {
     std::cout << "MIDI inputs you can listen to:" << std::endl;
     midi::MidiInput input;
     input.enumerateDevices();
+}
+
+static void list_output_midi_devices()
+{
     std::cout << "MIDI outputs you can send to:" << std::endl;
     midi::MidiOutput output;
     output.enumerateDevices();
@@ -139,18 +160,19 @@ int App::parse_options(int argc, char **argv)
     desc.add_options()
         ("help,h", "Show this help message and exit")
         ("version", "Show program's version number and exit")
-        ("list-midi-ports,l", "Lists the MIDI ports")
-        ("midi-input-port,i", po::value<unsigned int>()->default_value(0), "Sets the MIDI input port to listen to")
-        ("midi-output-port,o", po::value<unsigned int>()->default_value(0), "Sets the MIDI output port to send to")
+        ("list-inputs,l", "Lists the input MIDI ports we can listen to")
+        ("list-outputs,L", "Lists the output MIDI ports we can send to")
+        ("input,i", po::value<unsigned int>()->default_value(0), "Sets the MIDI input port to listen to")
+        ("output,o", po::value<unsigned int>()->default_value(0), "Sets the MIDI output port to send to")
         ("verbose,v", po::bool_switch(), "Enables a verbose output")
         ;
     po::variables_map options;
     po::store(po::parse_command_line(argc, argv, desc), options);
     po::notify(options);
-    
+
     verbose_ = options["verbose"].as<bool>();
-    midi_input_port_ = options["midi-input-port"].as<unsigned int>();
-    midi_output_port_ = options["midi-output-port"].as<unsigned int>();
+    midi_input_port_ = options["input"].as<unsigned int>();
+    midi_output_port_ = options["output"].as<unsigned int>();
     if (verbose_)
         std::cout << "MIDI input port: " << midi_input_port_ << std::endl;
     // Options that makes the program exit:
@@ -162,20 +184,25 @@ int App::parse_options(int argc, char **argv)
     if (options.count("version"))
     {
         std::cout << PROGRAM_NAME << " " << PACKAGE_VERSION << std::endl;
-        return 0; 
+        return 0;
     }
-    if (options.count("list-midi-ports"))
+    if (options.count("list-inputs"))
     {
-        list_midi_devices();
-        return 0; 
+        list_input_midi_devices();
+        return 0;
+    }
+    if (options.count("list-outputs"))
+    {
+        list_output_midi_devices();
+        return 0;
     }
     return -1;
 }
 
 int main(int argc, char *argv[])
 {
-    App app;
     int ret;
+    App app;
     try
     {
         ret = app.parse_options(argc, argv);
