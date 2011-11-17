@@ -17,26 +17,34 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "tempi/base/anynode.h"
 #include "tempi/base/appsinknode.h"
-#include "tempi/base/baselibrary.h"
-#include "tempi/base/counternode.h"
-#include "tempi/base/metro_node.h"
-#include "tempi/base/nop_node.h"
-#include "tempi/base/print_node.h"
-#include "tempi/utils.h"
 
 namespace tempi { namespace base {
 
-void BaseLibrary::load(NodeFactory &factory, const char *prefix) const
+AppSinkNode::AppSinkNode() :
+    Node()
 {
-    using utils::concatenate;
-    factory.registerTypeT<PrintNode>(concatenate(prefix, "print").c_str());
-    factory.registerTypeT<NopNode>(concatenate(prefix, "nop").c_str());
-    factory.registerTypeT<MetroNode>(concatenate(prefix, "metro").c_str());
-    factory.registerTypeT<AnyNode>(concatenate(prefix, "any").c_str());
-    factory.registerTypeT<CounterNode>(concatenate(prefix, "counter").c_str());
-    factory.registerTypeT<AppSinkNode>(concatenate(prefix, "appsink").c_str());
+    addOutlet();
+}
+
+void AppSinkNode::processMessage(unsigned int inlet, const Message &message)
+{
+    queue_.push(message);
+}
+
+bool AppSinkNode::tryPop(Message &message)
+{
+    return queue_.try_pop(message);
+}
+
+bool AppSinkNode::isEmpty() const
+{
+    return queue_.empty();
+}
+
+void AppSinkNode::push(const Message &message)
+{
+    queue_.push(message);
 }
 
 } // end of namespace
