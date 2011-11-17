@@ -52,11 +52,11 @@ class Scheduler
          */
         bool createGraph(const char *name);
         // TODO: bool remoteGraph(const char *name);
+        NodeFactory::ptr getFactory() const;
     protected:
         bool sendToAllGraphs(const Message &message);
         Graph::ptr getGraph(const char *name);
         bool hasGraph(const char *name);
-        NodeFactory::ptr getFactory() const;
         bool tickGraphs();
     private:
         // TODO: rename this
@@ -64,6 +64,8 @@ class Scheduler
         std::map<std::string, Graph::ptr> graphs_;
         NodeFactory::ptr factory_;
 };
+
+std::ostream &operator<<(std::ostream &os, const Scheduler &scheduler);
 
 } // end of namespace
 

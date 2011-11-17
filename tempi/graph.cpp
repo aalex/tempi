@@ -348,7 +348,7 @@ bool Graph::handleMessage(const Message &message)
     if (utils::stringBeginsWith(types.c_str(), "s")
         && message.getString(0) == "__tempi__")
     {
-        std::cout << __FILE__ << "::" << __FUNCTION__ << ": starts with tempi" << std::endl;
+        //std::cout << __FILE__ << "::" << __FUNCTION__ << ": starts with tempi" << std::endl;
         return handleTempiMessage(
             message.cloneRange(1, message.getSize() - 1));
     }

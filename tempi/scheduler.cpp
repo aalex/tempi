@@ -99,5 +99,13 @@ bool Scheduler::tickGraphs()
     return true;
 }
 
+std::ostream &operator<<(std::ostream &os, const Scheduler &scheduler)
+{
+    os << "Scheduler:" << std::endl;
+    os << " Factory's node types:" << std::endl;
+    os << (* scheduler.getFactory().get()) << std::endl;
+    return os;
+}
+
 } // end of namespace
 
