@@ -458,7 +458,7 @@ std::ostream &operator<<(std::ostream &os, const Message &message)
                 os << message.getBoolean(i);
                 break;
             case CHAR:
-                os << message.getChar(i);
+                os << (unsigned int) message.getChar(i);
                 break;
             case DOUBLE:
                 os << message.getDouble(i);
