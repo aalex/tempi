@@ -19,6 +19,7 @@
 
 #include "tempi/midi/midilibrary.h"
 #include "tempi/midi/midireceivernode.h"
+#include "tempi/midi/midisendernode.h"
 #include "tempi/utils.h"
 #include "tempi/nodefactory.h"
 
@@ -28,6 +29,7 @@ void MidiLibrary::load(NodeFactory &factory, const char *prefix) const
 {
     using utils::concatenate;
     factory.registerTypeT<MidiReceiverNode>(concatenate(prefix, "receive").c_str());
+    factory.registerTypeT<MidiSenderNode>(concatenate(prefix, "send").c_str());
 }
 
 } // end of namespace

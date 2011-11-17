@@ -38,7 +38,7 @@
 namespace po = boost::program_options;
 
 // String constants:
-static const char *PROGRAM_NAME = "midi-print";
+static const char *PROGRAM_NAME = "midilooper";
 
 // Color constants:
 static ClutterColor black = { 0x00, 0x00, 0x00, 0xff };
@@ -247,10 +247,11 @@ bool App::setupGraph()
         return false;
     }
     engine_.reset(new tempi::ThreadedScheduler);
+    std::cout << (*engine_.get()) << std::endl;
     engine_->createGraph("graph0");
     engine_->start(5); // time precision in ms
     // Create objects:
-    engine_->sendMessage(Message("ssss", "__tempi__", "addNode", "midi.recv", "midi.recv0"));
+    engine_->sendMessage(Message("ssss", "__tempi__", "addNode", "midi.receive", "midi.recv0"));
     engine_->sendMessage(Message("ssss", "__tempi__", "addNode", "midi.send", "midi.send0"));
     engine_->sendMessage(Message("ssss", "__tempi__", "addNode", "base.print", "base.print0"));
     // Connections:
