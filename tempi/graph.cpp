@@ -343,18 +343,19 @@ bool Graph:: hasNode(const char *name) const
  */
 bool Graph::handleMessage(const Message &message)
 {
-    std::cout << "Graph::" << __FUNCTION__ << "(" << message << ")" << std::endl;
+    //std::cout << "Graph::" << __FUNCTION__ << "(" << message << ")" << std::endl;
     std::string types = message.getTypes();
     if (utils::stringBeginsWith(types.c_str(), "s")
         && message.getString(0) == "__tempi__")
     {
+        std::cout << __FILE__ << "::" << __FUNCTION__ << ": starts with tempi" << std::endl;
         return handleTempiMessage(
             message.cloneRange(1, message.getSize() - 1));
     }
     else if (utils::stringBeginsWith(types.c_str(), "s"))
     {
         std::string receiveSlot = message.getString(0);
-        std::cout << "TODO: Node::handleReceiveSlot(message)" << std::endl;
+        std::cout << "TODO: Graph::" << __FUNCTION__ << "(" << message << ")" << std::endl;
         return false;
     }
 }

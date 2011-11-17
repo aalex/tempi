@@ -27,6 +27,7 @@
 #include "tempi/concurrentqueue.h"
 #include "tempi/scheduler.h"
 #include "tempi/message.h"
+#include "tempi/sharedptr.h"
 #include <boost/thread.hpp>
 
 namespace tempi {
@@ -44,6 +45,7 @@ namespace tempi {
 class ThreadedScheduler : public Scheduler
 {
     public:
+        typedef std::tr1::shared_ptr<ThreadedScheduler> ptr;
         ThreadedScheduler();
         /**
          * Starts the thread.

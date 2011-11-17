@@ -31,6 +31,7 @@ ThreadedScheduler::ThreadedScheduler() :
     // the thread is not-a-thread until we call start()
 }
 
+// TODO: add graph ID argument
 void ThreadedScheduler::doSendMessage(const Message &message)
 {
     queue_.push(message);
@@ -78,7 +79,6 @@ void ThreadedScheduler::run(unsigned int sleep_interval_ms)
 
 void ThreadedScheduler::handlePoppedMessage(const Message &message)
 {
-    std::cout << "TODO: handle " << message << std::endl;
     sendToAllGraphs(message);
 }
 

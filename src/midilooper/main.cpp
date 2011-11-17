@@ -21,15 +21,11 @@
  * @file A MIDI printer.
  */
 
-#include "tempi/base/print_node.h"
 #include "tempi/config.h"
-#include "tempi/graph.h"
 #include "tempi/message.h"
+#include "tempi/threadedscheduler.h"
 #include "tempi/midi/midiinput.h"
 #include "tempi/midi/midioutput.h"
-#include "tempi/midi/midireceivernode.h"
-#include "tempi/midi/midisendernode.h"
-#include "tempi/node.h"
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/program_options.hpp>
@@ -40,7 +36,6 @@
 
 // namespaces:
 namespace po = boost::program_options;
-using namespace tempi;
 
 // String constants:
 static const char *PROGRAM_NAME = "midi-print";
@@ -84,6 +79,7 @@ class App
 {
     public:
         App();
+        ~App();
         /**
          * Return -1 if it's ok to run the program, or retuns 0 or 1 if we should terminate it.
          * Call this begore launching the app.
@@ -120,7 +116,7 @@ class App
         unsigned int midi_input_port_;
         unsigned int midi_output_port_;
         bool graph_ok_;
-        tempi::Graph::ptr graph_;
+        tempi::ThreadedScheduler::ptr engine_;
         ClutterActor *playback_button_;
         ClutterActor *record_button_;
         ClutterActor *stage_;
@@ -135,6 +131,16 @@ App::App() :
     graph_ok_(false)
 {
     stage_ = NULL;
+}
+
+App::~App()
+{
+    if (engine_.get() != 0)
+    {
+        if (verbose_)
+            std::cout << "Waiting for Scheduler's thread to join." << std::endl;
+        engine_->stop();
+    }
 }
 
 bool App::isRecording()
@@ -222,7 +228,7 @@ bool App::poll()
 {
     if (graph_ok_)
     {
-        graph_->tick();
+        //engine_->tick();
         return true;
     }
     else
@@ -234,37 +240,31 @@ bool App::poll()
 
 bool App::setupGraph()
 {
+    using tempi::Message;
     if (graph_ok_)
     {
         std::cerr << "App::" << __FUNCTION__ << ": already called.\n";
         return false;
     }
-    // Register node types
-    NodeFactory::ptr factory(new NodeFactory);
-    factory->registerTypeT<midi::MidiReceiverNode>("midi.recv");
-    factory->registerTypeT<midi::MidiSenderNode>("midi.send");
-    factory->registerTypeT<base::PrintNode>("print");
-
-    // Create graph
-    graph_.reset(new tempi::Graph(factory));
-
-    // MIDI nodes
-    graph_->addNode("midi.recv", "midi.recv0");
-    graph_->addNode("midi.send", "midi.send0");
-    graph_->connect("midi.recv0", 0, "midi.send0", 0);
-
-    // Print stuff:
-    if (verbose_)
+    engine_.reset(new tempi::ThreadedScheduler);
+    engine_->createGraph("graph0");
+    engine_->start(5); // time precision in ms
+    // Create objects:
+    engine_->sendMessage(Message("ssss", "__tempi__", "addNode", "midi.recv", "midi.recv0"));
+    engine_->sendMessage(Message("ssss", "__tempi__", "addNode", "midi.send", "midi.send0"));
+    engine_->sendMessage(Message("ssss", "__tempi__", "addNode", "base.print", "base.print0"));
+    // Connections:
+    engine_->sendMessage(Message("sssisi", "__tempi__", "connect", "midi.recv0", 0, "base.print0", 0));
+    engine_->sendMessage(Message("sssisi", "__tempi__", "connect", "midi.recv0", 0, "midi.send0", 0));
+    
+    // Set node properties:
+    engine_->sendMessage(Message("ssssi", "__tempi__", "setNodeProperty", "midi.recv0", "port", midi_input_port_));
+    engine_->sendMessage(Message("ssssi", "__tempi__", "setNodeProperty", "midi.send0", "port", midi_output_port_));
+    if (! verbose_)
     {
-        graph_->addNode("print", "print0");
-        graph_->connect("midi.recv0", 0, "print0", 0);
+        engine_->sendMessage(Message("ssssb", "__tempi__", "setNodeProperty", "base.print0", "enabled", false));
     }
-
-    // Set input and output ports:
-    Message inputMessage("ssi", "set", "port", midi_input_port_);
-    graph_->message("midi.recv0", 0, inputMessage);
-    Message outputMessage("ssi", "set", "port", midi_output_port_);
-    graph_->message("midi.send0", 0, outputMessage);
+    // TODO: create base.appsink
 
     graph_ok_ = true;
 }
@@ -352,14 +352,14 @@ bool App::createGUI()
 static void list_input_midi_devices()
 {
     std::cout << "MIDI inputs you can listen to:" << std::endl;
-    midi::MidiInput input;
+    tempi::midi::MidiInput input;
     input.enumerateDevices();
 }
 
 static void list_output_midi_devices()
 {
     std::cout << "MIDI outputs you can send to:" << std::endl;
-    midi::MidiOutput output;
+    tempi::midi::MidiOutput output;
     output.enumerateDevices();
 }
 

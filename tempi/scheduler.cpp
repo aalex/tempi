@@ -75,7 +75,6 @@ Graph::ptr Scheduler::getGraph(const char *name)
         return Graph::ptr(); // NULL pointer!!
     }
     return (* (graphs_.find(std::string(name)))).second;
-
 }
 
 bool Scheduler::hasGraph(const char *name)
