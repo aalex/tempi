@@ -436,10 +436,24 @@ bool Graph::setNodeProperty(const char *nodeName, const char *propertyName, cons
     }
 }
 
+std::vector<std::string> Graph::getNodeNames() const
+{
+    std::vector<std::string> ret;
+    NodesMapType::const_iterator iter;
+    for (iter = nodes_.begin(); iter != nodes_.end(); ++iter)
+    {
+        ret.push_back((*iter).first);
+    }
+    return ret;
+}
+
 std::ostream &operator<<(std::ostream &os, const Graph &graph)
 {
-    os << "Graph: " << std::endl;
-    os << " TODO " << std::endl;
+    os << "Graph:" << std::endl;
+    std::vector<std::string> nodes = graph.getNodeNames();
+    std::vector<std::string>::const_iterator iter;
+    for (iter = nodes.begin(); iter != nodes.end(); ++iter)
+        os << " * " << (*iter) << std::endl;
     return os;
 }
 
