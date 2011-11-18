@@ -247,7 +247,8 @@ bool App::setupGraph()
         return false;
     }
     engine_.reset(new tempi::ThreadedScheduler);
-    std::cout << (*engine_.get()) << std::endl;
+    if (verbose_)
+        std::cout << (*engine_.get()) << std::endl;
     engine_->createGraph("graph0");
     engine_->start(5); // time precision in ms
     // Create objects:
@@ -268,6 +269,11 @@ bool App::setupGraph()
     // TODO: create base.appsink
 
     graph_ok_ = true;
+    if (verbose_)
+    {
+        engine_->sleepMilliseconds(6.0f);
+        std::cout << (*engine_.get()) << std::endl;
+    }
 }
 
 bool App::launch()
