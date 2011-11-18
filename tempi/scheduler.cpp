@@ -66,7 +66,7 @@ bool Scheduler::sendToAllGraphs(const Message &message)
     return ret;
 }
 
-Graph::ptr Scheduler::getGraph(const char *name)
+Graph::ptr Scheduler::getGraph(const char *name) const
 {
     if (! hasGraph(name))
     {
@@ -77,7 +77,18 @@ Graph::ptr Scheduler::getGraph(const char *name)
     return (* (graphs_.find(std::string(name)))).second;
 }
 
-bool Scheduler::hasGraph(const char *name)
+std::vector<std::string> Scheduler::getGraphNames() const
+{
+    std::vector<std::string> ret;
+    std::map<std::string, Graph::ptr>::const_iterator iter;
+    for (iter = graphs_.begin(); iter != graphs_.end(); ++iter)
+    {
+        ret.push_back((*iter).first);
+    }
+    return ret;
+}
+
+bool Scheduler::hasGraph(const char *name) const
 {
     return graphs_.find(std::string(name)) != graphs_.end();
 }
@@ -102,8 +113,11 @@ bool Scheduler::tickGraphs()
 std::ostream &operator<<(std::ostream &os, const Scheduler &scheduler)
 {
     os << "Scheduler:" << std::endl;
-    os << " Factory's node types:" << std::endl;
     os << (* scheduler.getFactory().get()) << std::endl;
+    std::vector<std::string> graphsNames = scheduler.getGraphNames();
+    std::vector<std::string>::const_iterator iter;
+    for (iter = graphsNames.begin(); iter != graphsNames.end(); ++iter)
+        os << (* scheduler.getGraph((*iter).c_str()).get()) << std::endl;
     return os;
 }
 

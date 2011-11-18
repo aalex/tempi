@@ -53,10 +53,11 @@ class Scheduler
         bool createGraph(const char *name);
         // TODO: bool remoteGraph(const char *name);
         NodeFactory::ptr getFactory() const;
+        std::vector<std::string> getGraphNames() const;
+        Graph::ptr getGraph(const char *name) const;
     protected:
         bool sendToAllGraphs(const Message &message);
-        Graph::ptr getGraph(const char *name);
-        bool hasGraph(const char *name);
+        bool hasGraph(const char *name) const;
         bool tickGraphs();
     private:
         // TODO: rename this
