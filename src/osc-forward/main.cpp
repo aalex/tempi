@@ -147,7 +147,7 @@ bool App::launch()
 bool App::addSender(const char *host, unsigned int port)
 {
     if (verbose_)
-        std::cout << "App::" << __FUNCTION__ << "(" << host << ", " << port << ")" << std::endl;
+        std::cout << "App." << __FUNCTION__ << "(" << host << ", " << port << ")" << std::endl;
     std::ostringstream os;
     os << "send" << num_senders_;
     ++num_senders_;
@@ -164,7 +164,7 @@ bool App::addSender(const char *host, unsigned int port)
 bool App::addReceiver(unsigned int port)
 {
     if (verbose_)
-        std::cout << "App::" << __FUNCTION__ << "(" << port << ")" << std::endl;
+        std::cout << "App." << __FUNCTION__ << "(" << port << ")" << std::endl;
     std::ostringstream os;
     os << "recv" << num_receivers_;
     ++num_receivers_;
@@ -257,7 +257,7 @@ int App::parse_options(int argc, char **argv)
         }
     }
     if (verbose_)
-        std::cout << graph_ << std::endl;
+        std::cout << "App.graph_: " << (*graph_.get()) << std::endl;
     return -1;
 }
 
