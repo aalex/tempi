@@ -22,6 +22,11 @@
 
 namespace tempi {
 
+ScopedLock::ScopedLock(boost::mutex &mutex) :
+    lock_(mutex)
+{
+}
+
 ThreadedScheduler::ThreadedScheduler() :
     Scheduler(),
     is_running_(false),
@@ -68,7 +73,6 @@ void ThreadedScheduler::run(unsigned int sleep_interval_ms)
     std::cout << "ThreadedScheduler: started, will work every "
         << ms << "ms"
         << std::endl;
-    // We're busy, honest!
     while (should_be_running_)
     {
         tick();
@@ -98,6 +102,7 @@ void ThreadedScheduler::tick()
         if (num_popped >= max_messages_per_tick_)
             some_todo = false;
     }
+    ScopedLock::ptr lock = acquireLock();
     tickGraphs();
     //std::cout << "ThreadedScheduler" << __FUNCTION__ << std::endl;
 }

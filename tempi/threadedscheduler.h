@@ -29,6 +29,7 @@
 #include "tempi/message.h"
 #include "tempi/sharedptr.h"
 #include <boost/thread.hpp>
+#include <boost/thread/locks.hpp>
 
 namespace tempi {
 
@@ -41,6 +42,18 @@ namespace tempi {
 // };
 
 // TODO write Message::prepend(types, ...);
+
+/**
+ * Scoped lock for a mutex.
+ */
+class ScopedLock
+{
+    public:
+        typedef std::tr1::shared_ptr<ScopedLock> ptr;
+        ScopedLock(boost::mutex &mutex);
+    private:
+        boost::lock_guard<boost::mutex> lock_;
+};
 
 class ThreadedScheduler : public Scheduler
 {
@@ -62,12 +75,23 @@ class ThreadedScheduler : public Scheduler
          * Usually, you might call this from the main thread.
          */
         void sleepThisThread(float ms);
+        /**
+         * Acquires a lock for a mutex and returns a scoped lock, which
+         * frees that mutex when deleted.
+         * Might block forever if a lock has already been acquired.
+         * Users are responsible for acquiring a lock before altering graphs, and the like.
+         */
+        ScopedLock::ptr acquireLock()
+        {
+            return ScopedLock::ptr(new ScopedLock(mutex_));
+        }
     private:
         bool is_running_;
         bool should_be_running_;
         unsigned int max_messages_per_tick_;
         boost::thread thread_;
         ConcurrentQueue<Message> queue_;
+        boost::mutex mutex_;
 
         void join();
         // TODO: replace sleep_interval by dynamically-specified microseconds, sleeping waiting until it's elapsed on each iteration, instead of just sleeping a fixed duration.
