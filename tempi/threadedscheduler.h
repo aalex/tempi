@@ -61,7 +61,7 @@ class ThreadedScheduler : public Scheduler
          * Makes the thread from which you call it sleep.
          * Usually, you might call this from the main thread.
          */
-        void sleepMilliseconds(float ms);
+        void sleepThisThread(float ms);
     private:
         bool is_running_;
         bool should_be_running_;

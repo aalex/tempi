@@ -1,6 +1,5 @@
 bin_PROGRAMS = \
-	midilooper \
-    threadedscheduler
+	midilooper
 
 AM_CXXFLAGS = \
 	$(BOOST_CPPFLAGS) \
@@ -20,9 +19,3 @@ midilooper_LDADD = $(LDADD)
 
 midilooper_SOURCES = \
 	main.cpp
-
-threadedschedulter_CXXFLAGS = $(AM_CXXFLAGS)
-threadedscheduler_LDADD = $(LDADD)
-
-threadedscheduler_SOURCES = \
-	threadedscheduler.cpp

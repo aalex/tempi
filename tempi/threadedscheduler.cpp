@@ -102,7 +102,7 @@ void ThreadedScheduler::tick()
     //std::cout << "ThreadedScheduler" << __FUNCTION__ << std::endl;
 }
 
-void ThreadedScheduler::sleepMilliseconds(float ms)
+void ThreadedScheduler::sleepThisThread(float ms)
 {
     boost::posix_time::milliseconds sleepTime(ms);
     boost::this_thread::sleep(sleepTime);

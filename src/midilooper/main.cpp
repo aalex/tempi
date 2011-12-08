@@ -271,7 +271,7 @@ bool App::setupGraph()
     graph_ok_ = true;
     if (verbose_)
     {
-        engine_->sleepMilliseconds(6.0f);
+        engine_->sleepThisThread(6.0f);
         std::cout << (*engine_.get()) << std::endl;
     }
 }
