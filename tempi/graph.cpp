@@ -343,18 +343,19 @@ bool Graph:: hasNode(const char *name) const
  */
 bool Graph::handleMessage(const Message &message)
 {
-    std::cout << "Graph::" << __FUNCTION__ << "(" << message << ")" << std::endl;
+    //std::cout << "Graph::" << __FUNCTION__ << "(" << message << ")" << std::endl;
     std::string types = message.getTypes();
     if (utils::stringBeginsWith(types.c_str(), "s")
         && message.getString(0) == "__tempi__")
     {
+        //std::cout << __FILE__ << "::" << __FUNCTION__ << ": starts with tempi" << std::endl;
         return handleTempiMessage(
             message.cloneRange(1, message.getSize() - 1));
     }
     else if (utils::stringBeginsWith(types.c_str(), "s"))
     {
         std::string receiveSlot = message.getString(0);
-        std::cout << "TODO: Node::handleReceiveSlot(message)" << std::endl;
+        std::cout << "TODO: Graph::" << __FUNCTION__ << "(" << message << ")" << std::endl;
         return false;
     }
 }
@@ -435,10 +436,24 @@ bool Graph::setNodeProperty(const char *nodeName, const char *propertyName, cons
     }
 }
 
+std::vector<std::string> Graph::getNodeNames() const
+{
+    std::vector<std::string> ret;
+    NodesMapType::const_iterator iter;
+    for (iter = nodes_.begin(); iter != nodes_.end(); ++iter)
+    {
+        ret.push_back((*iter).first);
+    }
+    return ret;
+}
+
 std::ostream &operator<<(std::ostream &os, const Graph &graph)
 {
-    os << "Graph: " << std::endl;
-    os << " TODO " << std::endl;
+    os << "Graph:" << std::endl;
+    std::vector<std::string> nodes = graph.getNodeNames();
+    std::vector<std::string>::const_iterator iter;
+    for (iter = nodes.begin(); iter != nodes.end(); ++iter)
+        os << " * " << (*iter) << std::endl;
     return os;
 }
 

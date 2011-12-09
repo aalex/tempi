@@ -63,8 +63,8 @@ bool MidiOutput::sendMessage(const Message &message) const
         {
             ArgumentType type;
             message.getArgumentType(i, type);
-            if (type == 'c')
-                event.push_back((unsigned char) message.getChar(i));
+            if (type == 'C')
+                event.push_back(message.getUnsignedChar(i));
         }
         // TODO: build event
         try

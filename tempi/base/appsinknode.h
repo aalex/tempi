@@ -17,21 +17,37 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "tempi/midi/midilibrary.h"
-#include "tempi/midi/midireceivernode.h"
-#include "tempi/midi/midisendernode.h"
-#include "tempi/utils.h"
-#include "tempi/nodefactory.h"
+/**
+ * @file
+ * The NopNode class.
+ */
+#ifndef __TEMPI_BASE_APPSINKNODE_H__
+#define __TEMPI_BASE_APPSINKNODE_H__
 
-namespace tempi { namespace midi {
+#include "tempi/node.h"
+#include "tempi/concurrentqueue.h"
 
-void MidiLibrary::load(NodeFactory &factory, const char *prefix) const
+namespace tempi { namespace base {
+
+/**
+ * The AppSinkNode stores message and outputs them when it receives an empty message. (bang)
+ */
+class AppSinkNode : public Node
 {
-    using utils::concatenate;
-    factory.registerTypeT<MidiReceiverNode>(concatenate(prefix, "receive").c_str());
-    factory.registerTypeT<MidiSenderNode>(concatenate(prefix, "send").c_str());
-}
+    public:
+        AppSinkNode();
+        bool isEmpty() const;
+        bool tryPop(Message &message);
+        void clear();
+    protected:
+        virtual void processMessage(unsigned int inlet, const Message &message);
+    private:
+        ConcurrentQueue<Message> queue_;
+        void push(const Message &message);
+};
 
 } // end of namespace
 } // end of namespace
+
+#endif // ifndef
 

@@ -27,7 +27,7 @@
 #include "tempi/concurrentqueue.h"
 #include "tempi/scheduler.h"
 #include "tempi/message.h"
-#include <boost/thread.hpp>
+#include "tempi/sharedptr.h"
 
 namespace tempi {
 
@@ -44,6 +44,7 @@ namespace tempi {
 class ThreadedScheduler : public Scheduler
 {
     public:
+        typedef std::tr1::shared_ptr<ThreadedScheduler> ptr;
         ThreadedScheduler();
         /**
          * Starts the thread.
@@ -59,20 +60,36 @@ class ThreadedScheduler : public Scheduler
          * Makes the thread from which you call it sleep.
          * Usually, you might call this from the main thread.
          */
-        void sleepMilliseconds(float ms);
+        void sleepThisThread(float ms);
+//        virtual bool canGetGraphPtr() const
+//        {
+//            if (mutex_.try_lock())
+//            {
+//                mutex_.unlock();
+//                return true;
+//            }
+//            else
+//                return false;
+//        }
+    protected:
+        virtual ScopedLock::ptr doAcquireLock()
+        {
+            return ScopedLock::ptr(new ScopedLock(mutex_));
+        }
     private:
         bool is_running_;
         bool should_be_running_;
         unsigned int max_messages_per_tick_;
         boost::thread thread_;
-        ConcurrentQueue<Message> queue_;
+//        ConcurrentQueue<Message> queue_;
+        boost::mutex mutex_;
 
         void join();
         // TODO: replace sleep_interval by dynamically-specified microseconds, sleeping waiting until it's elapsed on each iteration, instead of just sleeping a fixed duration.
         void run(unsigned int sleep_interval_ms);
-        virtual void handlePoppedMessage(const Message &message);
+//        virtual void handlePoppedMessage(const Message &message);
         void tick();
-        virtual void doSendMessage(const Message &message);
+//        virtual void doSendMessage(const Message &message);
 };
 
 } // end of namespace

@@ -64,6 +64,7 @@ class Graph
         bool disconnect(const char *from, unsigned int outlet, const char *to, unsigned int inlet);
         bool isConnected(const char *from, unsigned int outlet, const char *to, unsigned int inlet);
         Node *getNode(const char *name) const;
+        std::vector<std::string> getNodeNames() const;
         bool hasNode(const char *name) const;
         void tick();
         /**
@@ -75,6 +76,7 @@ class Graph
          */
         std::vector<Connection> getAllConnections(); // TODO: const
         // TODO: store all connections in a vector
+        bool setNodeProperty(const char *nodeName, const char *propertyName, const Message &value);
     private:
         typedef std::map<std::string, Node::ptr> NodesMapType;
         typedef std::vector<Connection> ConnectionVec;
@@ -89,7 +91,6 @@ class Graph
         //void onInletTriggered(Source *source, boost::any data);
         // TODO: store connections to decrease complexity
         bool handleTempiMessage(const Message &message);
-        bool setNodeProperty(const char *nodeName, const char *propertyName, const Message &value);
 };
 
 // not a good idea:

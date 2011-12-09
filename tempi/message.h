@@ -45,6 +45,7 @@ typedef enum
 {
     BOOLEAN = 'b',
     CHAR = 'c',
+    UNSIGNED_CHAR = 'C',
     DOUBLE = 'd',
     FLOAT = 'f',
     INT = 'i',
@@ -88,6 +89,7 @@ class Message
 
         void appendBoolean(bool value);
         void appendChar(char value);
+        void appendUnsignedChar(unsigned char value);
         void appendDouble(double value);
         void appendFloat(float value);
         void appendInt(int value);
@@ -100,6 +102,7 @@ class Message
 
         void prependBoolean(bool value);
         void prependChar(char value);
+        void prependUnsignedChar(unsigned char value);
         void prependDouble(double value);
         void prependFloat(float value);
         void prependInt(int value);
@@ -113,6 +116,8 @@ class Message
         bool getBoolean(unsigned int index) const
             throw(BadArgumentTypeException, BadIndexException);
         char getChar(unsigned int index) const
+            throw(BadArgumentTypeException, BadIndexException);
+        unsigned char getUnsignedChar(unsigned int index) const
             throw(BadArgumentTypeException, BadIndexException);
         double getDouble(unsigned int index) const
             throw(BadArgumentTypeException, BadIndexException);
@@ -132,6 +137,8 @@ class Message
         void setBoolean(unsigned int index, bool value)
             throw(BadArgumentTypeException, BadIndexException);
         void setChar(unsigned int index, char value)
+            throw(BadArgumentTypeException, BadIndexException);
+        void setUnsignedChar(unsigned int index, unsigned char value)
             throw(BadArgumentTypeException, BadIndexException);
         void setDouble(unsigned int index, double value)
             throw(BadArgumentTypeException, BadIndexException);

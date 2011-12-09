@@ -73,6 +73,8 @@ void SamplerNode::doTick()
 
 void SamplerNode::record(bool enabled)
 {
+    if (enabled)
+        track_->reset();
     recorder_->reset();
 }
 

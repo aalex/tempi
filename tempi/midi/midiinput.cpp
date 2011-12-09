@@ -89,14 +89,14 @@ void MidiInput::input_message_cb(double /* delta_time */, std::vector<unsigned c
     Message result;
     std::vector<unsigned char>::iterator iter;
     for (iter = message->begin(); iter != message->end(); ++iter)
-        result.appendChar((char) *iter);
+        result.appendUnsignedChar(*iter);
     context->pushMessage(result);
 
     // if (message->size() <= 1)
     //     return; // Don't support messages with only one byte or less.
     // unsigned char midi_event_type = getMidiEventType(message->at(0));
     // Message result;
-    // result.appendChar(midi_event_type);
+    // result.appendUnsignedChar(midi_event_type);
     // switch (midi_event_type)
     // {
     //     case MIDINOTEON:
