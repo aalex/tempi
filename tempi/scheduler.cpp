@@ -24,6 +24,8 @@
 #include "tempi/scheduler.h"
 #include <iostream>
 
+// more thread-safety with mutexes
+
 namespace tempi {
 
 Scheduler::Scheduler()
@@ -32,8 +34,11 @@ Scheduler::Scheduler()
     // TODO: do not load internals by default?
     internals::loadInternals(*(factory_.get()));
 }
+
 bool Scheduler::createGraph(const char *name)
 {
+    //if (! makeSureLockIsAcquired())
+    //    return false;
     if (hasGraph(name))
     {
         std::cout << "Already has a Graph named "
@@ -48,13 +53,15 @@ bool Scheduler::createGraph(const char *name)
     }
 }
 
-void Scheduler::sendMessage(const Message &message)
-{
-    doSendMessage(message);
-}
+//void Scheduler::sendMessage(const Message &message)
+//{
+//    doSendMessage(message);
+//}
 
 bool Scheduler::sendToAllGraphs(const Message &message)
 {
+    //if (! makeSureLockIsAcquired())
+    //    return false;
     bool ret = false;
     std::cout << __FUNCTION__ << std::endl;
     std::map<std::string, Graph::ptr>::const_iterator iter;
@@ -68,6 +75,8 @@ bool Scheduler::sendToAllGraphs(const Message &message)
 
 Graph::ptr Scheduler::getGraph(const char *name) const
 {
+    //if (! makeSureLockIsAcquired())
+    //    return Graph::ptr();
     if (! hasGraph(name))
     {
         std::cout << "No Graph named "
@@ -79,6 +88,7 @@ Graph::ptr Scheduler::getGraph(const char *name) const
 
 std::vector<std::string> Scheduler::getGraphNames() const
 {
+//    ScopedLock lock = acquireLock();
     std::vector<std::string> ret;
     std::map<std::string, Graph::ptr>::const_iterator iter;
     for (iter = graphs_.begin(); iter != graphs_.end(); ++iter)
@@ -90,16 +100,20 @@ std::vector<std::string> Scheduler::getGraphNames() const
 
 bool Scheduler::hasGraph(const char *name) const
 {
+//    ScopedLock lock = acquireLock();
     return graphs_.find(std::string(name)) != graphs_.end();
 }
 
 NodeFactory::ptr Scheduler::getFactory() const
 {
+//    ScopedLock lock = acquireLock();
     return factory_;
 }
 
 bool Scheduler::tickGraphs()
 {
+    //if (! makeSureLockIsAcquired())
+    //    return false;
     if (! isRunning())
         return false;
     std::map<std::string, Graph::ptr>::const_iterator iter;
@@ -110,8 +124,22 @@ bool Scheduler::tickGraphs()
     return true;
 }
 
+
+// bool Scheduler::makeSureLockIsAcquired() const
+// {
+//     if (canGetGraphPtr())
+//         return true;
+//     else
+//     {
+//         std::cerr << "Cannot alter the internal state of the scheduler since its mutex is not locked." << std::endl;
+//         return false;
+//     }
+// }
+
 std::ostream &operator<<(std::ostream &os, const Scheduler &scheduler)
 {
+    //if (! scheduler.makeSureLockIsAcquired())
+    //    return os;
     os << "Scheduler:" << std::endl;
     os << (* scheduler.getFactory().get()) << std::endl;
     std::vector<std::string> graphsNames = scheduler.getGraphNames();

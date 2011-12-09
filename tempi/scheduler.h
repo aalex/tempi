@@ -27,9 +27,23 @@
 #include "tempi/nodefactory.h"
 #include "tempi/graph.h"
 #include "tempi/message.h"
+#include <boost/thread.hpp>
+#include <boost/thread/locks.hpp>
 #include <map>
 
 namespace tempi {
+
+/**
+ * Scoped lock for a mutex.
+ */
+class ScopedLock
+{
+    public:
+        typedef std::tr1::shared_ptr<ScopedLock> ptr;
+        ScopedLock(boost::mutex &mutex);
+    private:
+        boost::lock_guard<boost::mutex> lock_;
+};
 
 /**
  * A Scheduler holds graphs and one can send messages to them, synchronously or asynchronously.
@@ -42,11 +56,11 @@ class Scheduler
          * Returns if the scheduler is running or not.
          */
         virtual bool isRunning() const = 0;
-        /**
-         * Sends a message to all its graphs.
-         * See tempi::Graph::handleMessage for handled messages.
-         */
-        void sendMessage(const Message &message);
+//        /**
+//         * Sends a message to all its graphs.
+//         * See tempi::Graph::handleMessage for handled messages.
+//         */
+//        void sendMessage(const Message &message);
         /**
          * Create a Graph identified by a name.
          */
@@ -55,13 +69,32 @@ class Scheduler
         NodeFactory::ptr getFactory() const;
         std::vector<std::string> getGraphNames() const;
         Graph::ptr getGraph(const char *name) const;
+        /**
+         * Acquires a lock for a mutex and returns a scoped lock, which
+         * frees that mutex when deleted.
+         * Might block forever if a lock has already been acquired.
+         * Users are responsible for acquiring a lock before altering graphs, and the like.
+         */
+        ScopedLock::ptr acquireLock()
+        {
+            return doAcquireLock();
+        }
+        //virtual bool canGetGraphPtr() const
+        //{
+        //    return true;
+        //}
+        ///**
+        // * Same as canGetGraphPtr, but prints an error message if the user did not lock the mutex.
+        // */
+        //bool makeSureLockIsAcquired() const;
     protected:
         bool sendToAllGraphs(const Message &message);
         bool hasGraph(const char *name) const;
         bool tickGraphs();
+        virtual ScopedLock::ptr doAcquireLock() = 0;
     private:
         // TODO: rename this
-        virtual void doSendMessage(const Message &message) = 0;
+        //virtual void doSendMessage(const Message &message) = 0;
         std::map<std::string, Graph::ptr> graphs_;
         NodeFactory::ptr factory_;
 };

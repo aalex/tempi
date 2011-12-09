@@ -23,6 +23,7 @@
 
 #include "tempi/config.h"
 #include "tempi/message.h"
+#include "tempi/scheduler.h"
 #include "tempi/threadedscheduler.h"
 #include "tempi/midi/midiinput.h"
 #include "tempi/midi/midioutput.h"
@@ -247,31 +248,30 @@ bool App::setupGraph()
         return false;
     }
     engine_.reset(new tempi::ThreadedScheduler);
+    engine_->start(5); // time precision in ms
     if (verbose_)
         std::cout << (*engine_.get()) << std::endl;
+    tempi::ScopedLock::ptr lock = engine_->acquireLock();
     engine_->createGraph("graph0");
-    engine_->start(5); // time precision in ms
+    tempi::Graph::ptr graph = engine_->getGraph("graph0");
     // Create objects:
-    engine_->sendMessage(Message("ssss", "__tempi__", "addNode", "midi.receive", "midi.recv0"));
-    engine_->sendMessage(Message("ssss", "__tempi__", "addNode", "midi.send", "midi.send0"));
-    engine_->sendMessage(Message("ssss", "__tempi__", "addNode", "base.print", "base.print0"));
-    // Connections:
-    engine_->sendMessage(Message("sssisi", "__tempi__", "connect", "midi.recv0", 0, "base.print0", 0));
-    engine_->sendMessage(Message("sssisi", "__tempi__", "connect", "midi.recv0", 0, "midi.send0", 0));
-    
-    // Set node properties:
-    engine_->sendMessage(Message("ssssi", "__tempi__", "setNodeProperty", "midi.recv0", "port", midi_input_port_));
-    engine_->sendMessage(Message("ssssi", "__tempi__", "setNodeProperty", "midi.send0", "port", midi_output_port_));
-    if (! verbose_)
-    {
-        engine_->sendMessage(Message("ssssb", "__tempi__", "setNodeProperty", "base.print0", "enabled", false));
-    }
+    graph->addNode("midi.receive", "midi.recv0");
+    graph->addNode("midi.send", "midi.send0");
+    graph->addNode("base.print", "base.print0");
     // TODO: create base.appsink
+    // Connections:
+    graph->connect("midi.recv0", 0, "midi.send0", 0);
+    graph->connect("midi.recv0", 0, "base.print0", 0);
+    // Set node properties:
+    graph->setNodeProperty("midi.recv0", "port", tempi::Message("i", midi_input_port_));
+    graph->setNodeProperty("midi.send0", "port", tempi::Message("i", midi_output_port_));
+    if (! verbose_)
+        graph->setNodeProperty("base.print0", "enabled", tempi::Message("b", false));
 
     graph_ok_ = true;
     if (verbose_)
     {
-        engine_->sleepThisThread(6.0f);
+        //engine_->sleepThisThread(6.0f);
         std::cout << (*engine_.get()) << std::endl;
     }
 }

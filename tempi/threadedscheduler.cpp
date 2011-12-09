@@ -36,11 +36,11 @@ ThreadedScheduler::ThreadedScheduler() :
     // the thread is not-a-thread until we call start()
 }
 
-// TODO: add graph ID argument
-void ThreadedScheduler::doSendMessage(const Message &message)
-{
-    queue_.push(message);
-}
+//// TODO: add graph ID argument
+//void ThreadedScheduler::doSendMessage(const Message &message)
+//{
+//    queue_.push(message);
+//}
 
 void ThreadedScheduler::start(unsigned int sleep_interval_ms)
 {
@@ -81,27 +81,27 @@ void ThreadedScheduler::run(unsigned int sleep_interval_ms)
     std::cout << "ThreadedScheduler: completed" << std::endl;
 }
 
-void ThreadedScheduler::handlePoppedMessage(const Message &message)
-{
-    sendToAllGraphs(message);
-}
+//void ThreadedScheduler::handlePoppedMessage(const Message &message)
+//{
+//    sendToAllGraphs(message);
+//}
 
 void ThreadedScheduler::tick()
 {
-    unsigned int num_popped = 0;
-    bool some_todo = true;
-    while (some_todo)
-    {
-        Message message;
-        some_todo = queue_.try_pop(message);
-        if (some_todo)
-        {
-            handlePoppedMessage(message);
-        }
-        ++ num_popped;
-        if (num_popped >= max_messages_per_tick_)
-            some_todo = false;
-    }
+    //unsigned int num_popped = 0;
+    //bool some_todo = true;
+    //while (some_todo)
+    //{
+    //    Message message;
+    //    some_todo = queue_.try_pop(message);
+    //    if (some_todo)
+    //    {
+    //        handlePoppedMessage(message);
+    //    }
+    //    ++ num_popped;
+    //    if (num_popped >= max_messages_per_tick_)
+    //        some_todo = false;
+    //}
     ScopedLock::ptr lock = acquireLock();
     tickGraphs();
     //std::cout << "ThreadedScheduler" << __FUNCTION__ << std::endl;

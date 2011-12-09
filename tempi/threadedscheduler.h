@@ -28,8 +28,6 @@
 #include "tempi/scheduler.h"
 #include "tempi/message.h"
 #include "tempi/sharedptr.h"
-#include <boost/thread.hpp>
-#include <boost/thread/locks.hpp>
 
 namespace tempi {
 
@@ -42,18 +40,6 @@ namespace tempi {
 // };
 
 // TODO write Message::prepend(types, ...);
-
-/**
- * Scoped lock for a mutex.
- */
-class ScopedLock
-{
-    public:
-        typedef std::tr1::shared_ptr<ScopedLock> ptr;
-        ScopedLock(boost::mutex &mutex);
-    private:
-        boost::lock_guard<boost::mutex> lock_;
-};
 
 class ThreadedScheduler : public Scheduler
 {
@@ -75,13 +61,18 @@ class ThreadedScheduler : public Scheduler
          * Usually, you might call this from the main thread.
          */
         void sleepThisThread(float ms);
-        /**
-         * Acquires a lock for a mutex and returns a scoped lock, which
-         * frees that mutex when deleted.
-         * Might block forever if a lock has already been acquired.
-         * Users are responsible for acquiring a lock before altering graphs, and the like.
-         */
-        ScopedLock::ptr acquireLock()
+//        virtual bool canGetGraphPtr() const
+//        {
+//            if (mutex_.try_lock())
+//            {
+//                mutex_.unlock();
+//                return true;
+//            }
+//            else
+//                return false;
+//        }
+    protected:
+        virtual ScopedLock::ptr doAcquireLock()
         {
             return ScopedLock::ptr(new ScopedLock(mutex_));
         }
@@ -90,15 +81,15 @@ class ThreadedScheduler : public Scheduler
         bool should_be_running_;
         unsigned int max_messages_per_tick_;
         boost::thread thread_;
-        ConcurrentQueue<Message> queue_;
+//        ConcurrentQueue<Message> queue_;
         boost::mutex mutex_;
 
         void join();
         // TODO: replace sleep_interval by dynamically-specified microseconds, sleeping waiting until it's elapsed on each iteration, instead of just sleeping a fixed duration.
         void run(unsigned int sleep_interval_ms);
-        virtual void handlePoppedMessage(const Message &message);
+//        virtual void handlePoppedMessage(const Message &message);
         void tick();
-        virtual void doSendMessage(const Message &message);
+//        virtual void doSendMessage(const Message &message);
 };
 
 } // end of namespace
