@@ -154,7 +154,7 @@ bool App::addSender(const char *host, unsigned int port)
     std::string name = os.str();
 
     graph_->addNode("osc.send", name.c_str());
-    Node *node = graph_->getNode(name.c_str());
+    Node::ptr node = graph_->getNode(name.c_str());
     Message mess = Message("si", host, port);
     node->setProperty("host_port", mess);
 
@@ -171,7 +171,7 @@ bool App::addReceiver(unsigned int port)
     std::string name = os.str();
 
     graph_->addNode("osc.receive", name.c_str());
-    Node *node = graph_->getNode(name.c_str());
+    Node::ptr node = graph_->getNode(name.c_str());
     Message mess = Message("i", port);
     node->setProperty("port", mess);
 

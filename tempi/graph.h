@@ -63,7 +63,7 @@ class Graph
         bool connect(const char *from, unsigned int outlet, const char *to, unsigned int inlet);
         bool disconnect(const char *from, unsigned int outlet, const char *to, unsigned int inlet);
         bool isConnected(const char *from, unsigned int outlet, const char *to, unsigned int inlet);
-        Node *getNode(const char *name) const;
+        Node::ptr getNode(const char *name) const;
         std::vector<std::string> getNodeNames() const;
         bool hasNode(const char *name) const;
         void tick();

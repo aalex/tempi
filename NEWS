@@ -26,6 +26,7 @@ Bugs fixed:
 * Remove deprecated property.{h,cpp} files
 * midilooper: do not list our own ports
 * midilooper: do not crash in case of bad option
+* Graph::getNode returns a shared pointer, not a raw one anymore
 
 
 Tempi 0.1.2 (2011-10-14)

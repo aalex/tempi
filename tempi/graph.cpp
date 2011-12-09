@@ -43,7 +43,7 @@ bool Graph::addNode(const char *type, const char *name)
     if (factory_->hasType(type))
     {
         //std::cerr << "Graph::" << __FUNCTION__ << ": NodeFactory does have type " << type << std::endl;
-        if (getNode(name) != 0)
+        if (getNode(name).get() != 0)
         {
             std::cerr << "Graph::" << __FUNCTION__ << ": There is already a node with ID " << name << std::endl;
             return false;
@@ -70,8 +70,8 @@ bool Graph::addNode(const char *type, const char *name)
 
 bool Graph::message(const char *node, unsigned int inlet, const Message &message)
 {
-    Node *nodePtr = getNode(node);
-    if (nodePtr == 0)
+    Node::ptr nodePtr = getNode(node);
+    if (nodePtr.get() == 0)
     {
         std::cerr << "Graph::" << __FUNCTION__ << ": No such node: " << node << std::endl;
         return false;
@@ -81,15 +81,15 @@ bool Graph::message(const char *node, unsigned int inlet, const Message &message
 
 bool Graph::connect(const char *from, unsigned int outlet, const char *to, unsigned int inlet)
 {
-    Node *fromNode = getNode(from);
-    if (fromNode == 0)
+    Node::ptr fromNode = getNode(from);
+    if (fromNode.get() == 0)
     {
 
         std::cerr << "Graph::" << __FUNCTION__ << ": Cannot find node " << from << "." << std::endl;
         return false;
     }
-    Node *toNode = getNode(to);
-    if (toNode == 0)
+    Node::ptr toNode = getNode(to);
+    if (toNode.get() == 0)
     {
         std::cerr << "Graph::" << __FUNCTION__ << ": Cannot find node " << to << "." << std::endl;
         return false;
@@ -118,15 +118,15 @@ bool Graph::connect(const char *from, unsigned int outlet, const char *to, unsig
 
 bool Graph::isConnected(const char *from, unsigned int outlet, const char *to, unsigned int inlet)
 {
-    Node *fromNode = getNode(from);
-    if (fromNode == 0)
+    Node::ptr fromNode = getNode(from);
+    if (fromNode.get() == 0)
     {
 
         std::cerr << "Graph::" << __FUNCTION__ << ": Cannot find node " << from << "." << std::endl;
         return false;
     }
-    Node *toNode = getNode(to);
-    if (toNode == 0)
+    Node::ptr toNode = getNode(to);
+    if (toNode.get() == 0)
     {
         std::cerr << "Graph::" << __FUNCTION__ << ": Cannot find node " << to << "." << std::endl;
         return false;
@@ -149,15 +149,15 @@ bool Graph::isConnected(const char *from, unsigned int outlet, const char *to, u
 
 bool Graph::disconnect(const char *from, unsigned int outlet, const char *to, unsigned int inlet)
 {
-    Node *fromNode = getNode(from);
-    if (fromNode == 0)
+    Node::ptr fromNode = getNode(from);
+    if (fromNode.get() == 0)
     {
 
         std::cerr << "Graph::" << __FUNCTION__ << ": Cannot find node " << from << "." << std::endl;
         return false;
     }
-    Node *toNode = getNode(to);
-    if (toNode == 0)
+    Node::ptr toNode = getNode(to);
+    if (toNode.get() == 0)
     {
         std::cerr << "Graph::" << __FUNCTION__ << ": Cannot find node " << to << "." << std::endl;
         return false;
@@ -178,16 +178,16 @@ bool Graph::disconnect(const char *from, unsigned int outlet, const char *to, un
     return sink->disconnect(source);
 }
 
-Node *Graph::getNode(const char *name) const
+Node::ptr Graph::getNode(const char *name) const
 {
     std::string nameString(name);
     NodesMapType::const_iterator iter = nodes_.find(nameString);
     if (iter == nodes_.end())
     {
-        return 0;
+        return Node::ptr((Node *) 0);
     }
     else
-        return (*iter).second.get();
+        return (*iter).second;
 }
 
 void Graph::tick()
@@ -240,7 +240,7 @@ std::vector<Graph::Connection> Graph::getAllConnectedFrom(const char *name, unsi
 
 std::vector<Graph::Connection> Graph::getAllConnectedTo(const char *name)
 {
-    Node *node = getNode(name);
+    Node::ptr node = getNode(name);
     ConnectionVec ret;
     for (unsigned int inlet = 0; inlet < node->getNumberOfInlets(); ++inlet)
     {
@@ -256,7 +256,7 @@ std::vector<Graph::Connection> Graph::getAllConnectedTo(const char *name)
 
 std::vector<Graph::Connection> Graph::getAllConnectedFrom(const char *name)
 {
-    Node *node = getNode(name);
+    Node::ptr node = getNode(name);
     ConnectionVec ret;
     for (unsigned int outlet = 0; outlet < node->getNumberOfOutlets(); ++outlet)
     {
@@ -273,7 +273,7 @@ std::vector<Graph::Connection> Graph::getAllConnectedFrom(const char *name)
 void Graph::disconnectAllConnectedTo(const char *name)
 {
     // FIXME: O(n!)
-    Node *node = getNode(name);
+    Node::ptr node = getNode(name);
     ConnectionVec connections = getAllConnectedTo(name);
     ConnectionVec::const_iterator iter;
     for (iter = connections.begin(); iter != connections.end(); ++iter)
@@ -286,7 +286,7 @@ void Graph::disconnectAllConnectedTo(const char *name)
 void Graph::disconnectAllConnectedFrom(const char *name)
 {
     // FIXME: O(n!)
-    Node *node = getNode(name);
+    Node::ptr node = getNode(name);
     ConnectionVec connections = getAllConnectedFrom(name);
     ConnectionVec::const_iterator iter;
     for (iter = connections.begin(); iter != connections.end(); ++iter)
@@ -316,8 +316,8 @@ std::vector<Graph::Connection> Graph::getAllConnections()
 
 bool Graph::deleteNode(const char *name)
 {
-    Node *node = getNode(name);
-    if (node == 0)
+    Node::ptr node = getNode(name);
+    if (node.get() == 0)
     {
         std::cerr << "Graph::" << __FUNCTION__ << ": Cannot find node " << name << "." << std::endl;
         return false;
@@ -335,7 +335,7 @@ bool Graph::deleteNode(const char *name)
 
 bool Graph:: hasNode(const char *name) const
 {
-    return getNode(name) != 0;
+    return getNode(name).get() != 0;
 }
 
 /**
@@ -413,8 +413,8 @@ bool Graph::setNodeProperty(const char *nodeName, const char *propertyName, cons
 {
     if (! hasNode(nodeName))
         return false;
-    Node *nodePtr = getNode(nodeName);
-    if (nodePtr == 0)
+    Node::ptr nodePtr = getNode(nodeName);
+    if (nodePtr.get() == 0)
     {
         std::cerr << "Graph::" << __FUNCTION__ << ": No such node: " << nodeName << std::endl;
         return false;
