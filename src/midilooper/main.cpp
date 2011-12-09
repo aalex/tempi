@@ -262,22 +262,27 @@ bool App::setupGraph()
     tempi::Graph::ptr graph = engine_->getGraph("graph0");
     // Create objects:
     graph->addNode("midi.receive", "midi.recv0");
+    graph->addNode("sampler.sampler", "sampler.sampler0");
     graph->addNode("midi.send", "midi.send0");
     graph->addNode("base.print", "base.print0");
-    graph->addNode("sampler.sampler", "sampler.sampler0");
-    graph->addNode("base.prepend", "base.prepend0");
+    graph->addNode("base.print", "base.print1");
     // Connections:
     //graph->connect("midi.recv0", 0, "midi.send0", 0);
     graph->connect("midi.recv0", 0, "base.print0", 0);
     graph->connect("midi.recv0", 0, "sampler.sampler0", 0);
     graph->connect("sampler.sampler0", 0, "midi.send0", 0);
-    graph->connect("sampler.sampler0", 0, "base.print0", 0);
+    graph->connect("sampler.sampler0", 0, "base.print1", 0);
     //TODO graph->connect("sampler.sampler0", 0, "base.prepend0", 0);
     // Set node properties:
     graph->setNodeProperty("midi.recv0", "port", tempi::Message("i", midi_input_port_));
     graph->setNodeProperty("midi.send0", "port", tempi::Message("i", midi_output_port_));
+    graph->setNodeProperty("base.print0", "prefix", tempi::Message("s", "input"));
+    graph->setNodeProperty("base.print1", "prefix", tempi::Message("s", "playback"));
     if (! verbose_)
+    {
         graph->setNodeProperty("base.print0", "enabled", tempi::Message("b", false));
+        graph->setNodeProperty("base.print1", "enabled", tempi::Message("b", false));
+    }
 
     graph_ok_ = true;
     if (verbose_)
