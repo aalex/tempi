@@ -70,6 +70,7 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     sampler/player.cpp \
     sampler/recorder.cpp \
     sampler/samplernode.cpp \
+    sampler/simpleplayback.cpp \
     sampler/score.cpp \
     sampler/track.cpp \
     scheduler.cpp \
@@ -129,6 +130,7 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     sampler/player.h \
     sampler/recorder.h \
     sampler/samplernode.h \
+    sampler/simpleplayback.h \
     sampler/score.h \
     sampler/track.h \
     scheduler.h \
