@@ -197,26 +197,32 @@ static void key_event_cb(ClutterActor *actor, ClutterKeyEvent *event, gpointer u
 bool App::togglePlayback()
 {
     bool state = isPlaying();
-    std::cout << "TODO: " << __FUNCTION__ << std::endl;
+    //std::cout << "TODO: " << __FUNCTION__ << std::endl;
     playing_ = ! state;
 
     if (isPlaying())
         clutter_rectangle_set_color(CLUTTER_RECTANGLE(playback_button_), &green);
     else
         clutter_rectangle_set_color(CLUTTER_RECTANGLE(playback_button_), &gray);
+    
+    tempi::ScopedLock::ptr lock = engine_->acquireLock();
+    engine_->getGraph("graph0")->setNodeProperty("sampler.sampler0", "playing", tempi::Message("b", isPlaying()));
     return isPlaying();
 }
 
 bool App::toggleRecord()
 {
     bool state = isRecording();
-    std::cout << "TODO: " << __FUNCTION__ << std::endl;
+    //std::cout << "TODO: " << __FUNCTION__ << std::endl;
     recording_ = ! state;
 
     if (isRecording())
         clutter_rectangle_set_color(CLUTTER_RECTANGLE(record_button_), &red);
     else
         clutter_rectangle_set_color(CLUTTER_RECTANGLE(record_button_), &gray);
+
+    tempi::ScopedLock::ptr lock = engine_->acquireLock();
+    engine_->getGraph("graph0")->setNodeProperty("sampler.sampler0", "recording", tempi::Message("b", isRecording()));
     return isRecording();
 }
 
@@ -258,10 +264,15 @@ bool App::setupGraph()
     graph->addNode("midi.receive", "midi.recv0");
     graph->addNode("midi.send", "midi.send0");
     graph->addNode("base.print", "base.print0");
-    // TODO: create base.appsink
+    graph->addNode("sampler.sampler", "sampler.sampler0");
+    graph->addNode("base.prepend", "base.prepend0");
     // Connections:
-    graph->connect("midi.recv0", 0, "midi.send0", 0);
+    //graph->connect("midi.recv0", 0, "midi.send0", 0);
     graph->connect("midi.recv0", 0, "base.print0", 0);
+    graph->connect("midi.recv0", 0, "sampler.sampler0", 0);
+    graph->connect("sampler.sampler0", 0, "midi.send0", 0);
+    graph->connect("sampler.sampler0", 0, "base.print0", 0);
+    //TODO graph->connect("sampler.sampler0", 0, "base.prepend0", 0);
     // Set node properties:
     graph->setNodeProperty("midi.recv0", "port", tempi::Message("i", midi_input_port_));
     graph->setNodeProperty("midi.send0", "port", tempi::Message("i", midi_output_port_));
@@ -445,6 +456,7 @@ int main(int argc, char *argv[])
         return 1;
 
     app.launch();
+    app.togglePlayback(); // playback is on at startup
     clutter_main();
     return 0;
 }
