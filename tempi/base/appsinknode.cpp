@@ -42,6 +42,11 @@ bool AppSinkNode::isEmpty() const
     return queue_.empty();
 }
 
+void AppSinkNode::clear()
+{
+    queue_.clear();
+}
+
 void AppSinkNode::push(const Message &message)
 {
     queue_.push(message);

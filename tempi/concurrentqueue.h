@@ -49,6 +49,7 @@ class ConcurrentQueue
             mutex_(),
             condition_()
         {}
+
         /**
          * Adds a message to the FIFO.
          */
@@ -59,6 +60,17 @@ class ConcurrentQueue
             lock.unlock();
             condition_.notify_one();
         }
+
+        /**
+         * Clears the contents of the queue.
+         */
+        void clear()
+        {
+            boost::mutex::scoped_lock lock(mutex_);
+            while (! queue_.empty())
+                queue_.pop();
+        }
+
         /**
          * Checks whether the FIFO is empty or not.
          */

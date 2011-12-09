@@ -36,13 +36,14 @@ class AppSinkNode : public Node
 {
     public:
         AppSinkNode();
-        void push(const Message &message);
         bool isEmpty() const;
         bool tryPop(Message &message);
+        void clear();
     protected:
         virtual void processMessage(unsigned int inlet, const Message &message);
     private:
         ConcurrentQueue<Message> queue_;
+        void push(const Message &message);
 };
 
 } // end of namespace
