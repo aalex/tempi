@@ -3,10 +3,29 @@ Tempi 0.1.4 (2011-??-??)
 This release is a developer snapshot in the 0.1 series.
 
 New features:
-* (none)
+* New atom types: pointer, unsigned char
+* New command-line utilities: midilooper
+* New namespaces: base, osc, midi, sampler, mapping, table
+* New nodes types: base.print, base.prepend, sampler.sampler, base.appsink, base.any, base.counter, base.metro, midi.send, midi.receive
+* New prototypes: module loader, i18n, XML state saving files
+* Add Message::prepend*
+* Add classes Scheduler, ThreadedScheduler, Library
+* Add functions utils::stringsMatch, librarytools::loadLibrary
+* Add man pages
+* Add method ConcurrentQueue::clear()
+* Add node arguments
+* Add operator ostream for Graph and Graph
+* Add the Library classes.
+* Implement registerTypeT<class>(name)
+* Rename utility "tempi" to "tempi-draw"
+
+TODO : 38d6514aee11c6c47bd3df9e039da373cb82cbb3 add ReceiverNode
 
 Bugs fixed:
-* (none)
+* Move executables' source code to subdirectories
+* Remove deprecated property.{h,cpp} files
+* midilooper: do not list our own ports
+* midilooper: do not crash in case of bad option
 
 
 Tempi 0.1.2 (2011-10-14)
