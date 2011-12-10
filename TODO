@@ -1,6 +1,13 @@
 To do in Tempi
 ==============
 
+To do for 0.1.4
+---------------
+ * Add Node::init, onInit, isInitiated
+ * Move network and MIDI initialization in each Node::onInit implementation.
+ * SamplerNode: play each message only once
+ * midilooper: Do not play when recording
+
 To do for 0.2
 -------------
  * Bugfix: Message.*(...): avoid segfault if length does not match
@@ -24,7 +31,6 @@ To do for 0.2
  * Fix test for MetroNode
  * Get done with tempi/tempi-signal.h (or delete it)
  * [mapping.*] should be provided a typetag argument. (and support fdi)
- * Create a pointer atom type.
  * Create a matrix atom type.
  * Get done with [mapping.*]
  * Provide complete introspection for nodes' attributes.
