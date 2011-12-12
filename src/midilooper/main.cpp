@@ -217,9 +217,17 @@ bool App::toggleRecord()
     recording_ = ! state;
 
     if (isRecording())
+    {
+        if (isPlaying())
+            togglePlayback();
         clutter_rectangle_set_color(CLUTTER_RECTANGLE(record_button_), &red);
+    }
     else
+    {
+        if (! isPlaying())
+            togglePlayback();
         clutter_rectangle_set_color(CLUTTER_RECTANGLE(record_button_), &gray);
+    }
 
     tempi::ScopedLock::ptr lock = engine_->acquireLock();
     engine_->getGraph("graph0")->setNodeProperty("sampler.sampler0", "recording", tempi::Message("b", isRecording()));
