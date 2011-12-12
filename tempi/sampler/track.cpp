@@ -85,23 +85,16 @@ Message *Track::getClosest(TimePosition target)
     return &(*ret).get<1>();
 }
 
-boost::tuple<TimePosition, Message *> Track::getClosestBefore(TimePosition target)
+bool Track::getClosestBefore(TimePosition target, TimePosition &resultPosition, Message **resultMessage)
 {
-    boost::tuple<TimePosition, Message> ret(0, 0);
-    TimePosition duration = getDuration();
     if (numberOfEvents() == 0)
-    {
-        return ret;
-    }
-    else if (duration == 0L)
-    {
-        return ret;
-    }
+        return false;
+    else if (getDuration() == 0L)
+        return false;
+
     EventVecIter iter;
-    EventVecIter current;
-    current = events_.begin();
+    EventVecIter cursor = events_.begin();
     TimePosition smallest = getDuration();
-    
     for (iter = events_.begin(); iter < events_.end(); ++iter)
     {
         TimePosition pos = (*iter).get<0>();
@@ -110,14 +103,14 @@ boost::tuple<TimePosition, Message *> Track::getClosestBefore(TimePosition targe
             TimePosition distance = (TimePosition) std::abs(((double) target) - ((double) pos));
             if (distance < smallest)
             {
-                current = iter;
+                cursor = iter;
                 smallest = distance;
-                ret.get<0>() = pos;
             }
         }
     }
-    ret.get<1>() = &(*current).get<1>();
-    return ret;
+    (* resultMessage) = &((*cursor).get<1>());
+    (resultPosition) = (*cursor).get<0>();
+    return true;
 }
 
 //void Track::print()

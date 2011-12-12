@@ -18,17 +18,38 @@ Message *SimplePlayback::read(Player &player)
         return track->getLast();
     else
     {
-        TimePosition cursor = elapsed % duration;
+        TimePosition cursor = elapsed;
+        if (elapsed > duration)
+        {
+            cursor = elapsed % duration;
+            previous_timeposition_played_ = 0L; //reset the previous message sent
+        }
         player.setPosition(cursor);
 
-        boost::tuple<TimePosition, Message *> current = track->getClosestBefore(cursor);
-        if (current.get<0>() != previous_timeposition_played_)
+        TimePosition resultPosition;
+        Message *resultMessage;
+        bool ok = track->getClosestBefore(cursor, resultPosition, &resultMessage);
+        if (! ok)
         {
-            previous_timeposition_played_ = current.get<0>();
-            return current.get<1>();
+            //std::cout << "no message to output\n";
+            return 0; // no message to output
+        }
+        if (resultPosition != previous_timeposition_played_)
+        {
+            previous_timeposition_played_ = resultPosition;
+            if (resultMessage == 0)
+            {
+                //std::cerr << "INVALID MESSAGE POINTER in SimplePlayback::read\n";
+                return 0;
+            }
+            else
+                return resultMessage;
         }
         else
-            return 0;
+        {
+            //std::cout << "same message as previous one.\n";
+            return 0; // same message as previous one
+        }
     }
 }
 

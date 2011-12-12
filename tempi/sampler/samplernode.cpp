@@ -66,6 +66,7 @@ void SamplerNode::doTick()
         Message *message = player_->read();
         if (message != 0)
         {
+            std::cout << (* message) << std::endl;
             output(0, *message);
         }
     }

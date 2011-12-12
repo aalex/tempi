@@ -60,7 +60,7 @@ class Track
         Message *getFirst();
         Message *getLast();
         Message *getClosest(TimePosition target);
-        boost::tuple<TimePosition, Message *> getClosestBefore(TimePosition target);
+        bool getClosestBefore(TimePosition target, TimePosition &resultPosition, Message **resultMessage);
     private:
         typedef boost::tuple<TimePosition, Message> Event;
         typedef std::vector<Event>::iterator EventVecIter;

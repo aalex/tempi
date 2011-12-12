@@ -276,8 +276,8 @@ bool App::setupGraph()
     // Set node properties:
     graph->setNodeProperty("midi.recv0", "port", tempi::Message("i", midi_input_port_));
     graph->setNodeProperty("midi.send0", "port", tempi::Message("i", midi_output_port_));
-    graph->setNodeProperty("base.print0", "prefix", tempi::Message("s", "input"));
-    graph->setNodeProperty("base.print1", "prefix", tempi::Message("s", "playback"));
+    graph->setNodeProperty("base.print0", "prefix", tempi::Message("s", "input: "));
+    graph->setNodeProperty("base.print1", "prefix", tempi::Message("s", "playback: "));
     if (! verbose_)
     {
         graph->setNodeProperty("base.print0", "enabled", tempi::Message("b", false));
