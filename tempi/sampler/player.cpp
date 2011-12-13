@@ -1,7 +1,7 @@
 #include "tempi/sampler/player.h"
 #include "tempi/sampler/track.h"
 #include "tempi/timer.h"
-#include "tempi/sampler/loopingplayback.h"
+#include "tempi/sampler/simpleplayback.h"
 #include <iostream>
 
 namespace tempi
@@ -13,7 +13,7 @@ Player::Player(Track *track) :
     speed_(1.0),
     playback_()
 {
-    playback_.reset(new LoopingPlayback());
+    playback_.reset(new SimplePlayback());
 }
 
 void Player::setTrack(Track *track)

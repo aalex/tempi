@@ -85,6 +85,34 @@ Message *Track::getClosest(TimePosition target)
     return &(*ret).get<1>();
 }
 
+bool Track::getClosestBefore(TimePosition target, TimePosition &resultPosition, Message **resultMessage)
+{
+    if (numberOfEvents() == 0)
+        return false;
+    else if (getDuration() == 0L)
+        return false;
+
+    EventVecIter iter;
+    EventVecIter cursor = events_.begin();
+    TimePosition smallest = getDuration();
+    for (iter = events_.begin(); iter < events_.end(); ++iter)
+    {
+        TimePosition pos = (*iter).get<0>();
+        if (pos <= target)
+        {
+            TimePosition distance = (TimePosition) std::abs(((double) target) - ((double) pos));
+            if (distance < smallest)
+            {
+                cursor = iter;
+                smallest = distance;
+            }
+        }
+    }
+    (* resultMessage) = &((*cursor).get<1>());
+    (resultPosition) = (*cursor).get<0>();
+    return true;
+}
+
 //void Track::print()
 //{
 //    // TODO
