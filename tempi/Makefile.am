@@ -68,6 +68,7 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     sampler/marker.cpp \
     sampler/pingpongplayback.cpp \
     sampler/player.cpp \
+    sampler/region.cpp \
     sampler/recorder.cpp \
     sampler/samplernode.cpp \
     sampler/simpleplayback.cpp \
@@ -128,6 +129,7 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     sampler/pingpongplayback.h \
     sampler/playback.h \
     sampler/player.h \
+    sampler/region.h \
     sampler/recorder.h \
     sampler/samplernode.h \
     sampler/simpleplayback.h \

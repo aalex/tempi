@@ -19,7 +19,7 @@
 
 /**
  * @file
- * The LoopingPlayback class.
+ * The SimplePlayback class.
  */
 #ifndef __TEMPI_SIMPLEPLAYBACK_H__
 #define __TEMPI_SIMPLEPLAYBACK_H__
@@ -27,20 +27,21 @@
 #include "tempi/sampler/playback.h"
 #include "tempi/timeposition.h"
 
-namespace tempi
-{
+namespace tempi {
+namespace sampler {
 
 /**
- * A SimplePlayback plays each event of a Track once from start to end, and goes back to its beginning once at its end.
+ * A SimplePlayback plays each event of a Region once from start to end, and goes back to its beginning once at its end.
  */
 class SimplePlayback : public Playback
 {
     public:
-        virtual Message *read(Player &player);
+        virtual bool read(Player &player, Message &result);
     private:
         TimePosition previous_timeposition_played_;
 };
 
+} // end of namespace
 } // end of namespace
 
 #endif // ifndef

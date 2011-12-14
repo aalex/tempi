@@ -18,13 +18,14 @@
  */
 
 #include "sampler.h"
-#include "tempi/sampler/pingpongplayback.h"
+#include "tempi/sampler/simpleplayback.h"
 
-Sampler::Sampler()
+Sampler::Sampler() :
+    track_(new tempi::sampler::Region)
 {
-    recorder_.reset(new tempi::Recorder(&track_));
-    player_.reset(new tempi::Player(&track_));
-    player_.get()->setPlaybackMode(new tempi::LoopingPlayback()); //new tempi::PingPongPlayback());
+    recorder_.reset(new tempi::sampler::Recorder(track_));
+    player_.reset(new tempi::sampler::Player(track_));
+    player_->setPlaybackMode(new tempi::sampler::SimplePlayback);
     recording_ = false;
 }
 
@@ -33,12 +34,12 @@ ParticleGenerator *Sampler::getGenerator()
     return &generator_;
 }
 
-tempi::Player *Sampler::getPlayer()
+tempi::sampler::Player *Sampler::getPlayer()
 {
     return player_.get();
 }
 
-tempi::Recorder *Sampler::getRecorder()
+tempi::sampler::Recorder *Sampler::getRecorder()
 {
     return recorder_.get();
 }
@@ -52,12 +53,13 @@ void Sampler::startRecording()
 {
     recording_ = true;
     track_.reset(); // clears the track
-    recorder_.get()->reset();
+    recorder_.get()->start();
 }
 
 void Sampler::stopRecording()
 {
      recording_ = false;
+    recorder_.get()->stop();
 }
 
 bool Sampler::isRecording()

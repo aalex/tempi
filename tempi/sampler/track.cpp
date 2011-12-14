@@ -26,9 +26,6 @@ TimePosition Track::getDuration()
 void Track::add(TimePosition position, Message value)
 {
     events_.insert(getIteratorAfter(position), Event(position, value));
-    //std::cout << "add " << position << ": ?";
-    //std::cout << " ... We have " << events_.size() << " events.";
-    //std::cout << std::endl;
 }
 
 Track::EventVecIter Track::getIteratorAfter(TimePosition target)

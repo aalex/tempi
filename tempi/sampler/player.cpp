@@ -1,29 +1,29 @@
 #include "tempi/sampler/player.h"
-#include "tempi/sampler/track.h"
+#include "tempi/sampler/region.h"
 #include "tempi/timer.h"
 #include "tempi/sampler/simpleplayback.h"
 #include <iostream>
 
-namespace tempi
-{
+namespace tempi {
+namespace sampler {
 
-Player::Player(Track *track) :
+Player::Player(Region::ptr region) :
     timer_(),
-    track_(track),
+    region_(region),
     speed_(1.0),
     playback_()
 {
     playback_.reset(new SimplePlayback());
 }
 
-void Player::setTrack(Track *track)
+void Player::setRegion(Region::ptr region)
 {
-    track_ = track;
+    region_ = region;
 }
 
-Track *Player::getTrack()
+Region::ptr Player::getRegion()
 {
-    return track_;
+    return region_;
 }
 
 Timer *Player::getTimer()
@@ -41,20 +41,15 @@ bool Player::setPosition(TimePosition position)
     return timer_.setPosition(position);
 }
 
-Message *Player::read()
+bool Player::read(Message &result)
 {
-    if (! track_)
-    {
-        std::cout << "This Recorder has an invalid Track. Cannot read events." << std::endl;
-        return 0;
-    }
-    else if (track_->numberOfEvents() == 0)
+    if (region_->numberOfEvents() == 0)
     {
         //std::cout << "No point to read." << std::endl;
-        return 0;
+        return false;
     }
     else
-        return playback_.get()->read(*this);
+        return playback_.get()->read(*this, result);
 }
 
 void Player::setSpeed(double factor)
@@ -77,5 +72,6 @@ Playback *Player::getPlaybackMode()
     return playback_.get();
 }
 
+} // end of namespace
 } // end of namespace
 
