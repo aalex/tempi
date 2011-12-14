@@ -4,6 +4,11 @@ Loops MIDI events.
 [SYNOPSIS]
 midilooper [options]
 
+[INTERACTIVE USAGE]
+To start/stop recording, press the space bar.
+
+Press control-q to quit.
+
 [EXAMPLES]
 To print MIDI events from device 1:
 
