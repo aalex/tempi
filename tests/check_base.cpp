@@ -104,7 +104,7 @@ bool checkMetro()
     }
     if (VERBOSE)
         std::cout << "getNode(counter0):" << std::endl;
-    Node* counter0 = graph.getNode("counter0");
+    Node* counter0 = graph.getNode("counter0").get();
     if (counter0 == 0)
     {
         std::cout << "counter0 is a null pointer" << std::endl;
@@ -122,7 +122,7 @@ bool checkMetro()
         // TODO: return false;
     }
 
-    Node* any0 = graph.getNode("any0");
+    Node* any0 = graph.getNode("any0").get();
     if (any0 == 0)
     {
         std::cout << "FIXME: This test should fail " << std::endl;

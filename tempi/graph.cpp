@@ -184,10 +184,10 @@ Node::ptr Graph::getNode(const char *name) const
     NodesMapType::const_iterator iter = nodes_.find(nameString);
     if (iter == nodes_.end())
     {
-        return Node::ptr((Node *) 0);
+        return Node::ptr((Node *) 0); // NULL pointer
     }
     else
-        return (*iter).second;
+        return (*iter).second; // The Node::ptr
 }
 
 void Graph::tick()
@@ -333,7 +333,7 @@ bool Graph::deleteNode(const char *name)
     }
 }
 
-bool Graph:: hasNode(const char *name) const
+bool Graph::hasNode(const char *name) const
 {
     return getNode(name).get() != 0;
 }
