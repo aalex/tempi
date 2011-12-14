@@ -251,6 +251,8 @@ bool App::handleOscMessage(const tempi::Message &message)
     //    std::cout << "TODO: /tempi/rec/select i" << std::endl;
     //    return true;
     //}
+    if (verbose_)
+        std::cout << __FUNCTION__ << ": " << message << std::endl;
     if (tempi::osc::oscMessageMatches(message, "/tempi/rec/write", "ff"))
     {
         if (isRecording())
@@ -583,6 +585,8 @@ bool App::parse_options(int argc, char **argv)
             std::cerr << "OSC receiving Port number too high: " << osc_recv_port_ << std::endl;
             //return false;
         }
+        if (verbose_)
+            std::cout << "Set OSC listening port to " << osc_recv_port_ << std::endl;
     }
     return false;
 }

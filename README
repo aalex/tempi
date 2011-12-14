@@ -19,7 +19,7 @@ Tempi eases routing data, and provides tracks in which one can store the changes
 
 History
 -------
-Tempi is inspired by the Toonloop application, developed since 2008 by the artist-developper Alexandre Quessy. Toonloop is an in situ frame by frame animation editor, whose clips are played back as we add frames to them. It eases spontaneous creation. Tempi expands this idea to apply it to any type of data that can be produced by sensors.
+Tempi is inspired by the Toonloop application, developed since 2008 by the artist-developper Alexandre Quessy. Tempi is developed at the Society for Arts and Technology [SAT] as part of the Metalab 2011-2013 research projects. Toonloop is an in situ frame by frame animation editor, whose clips are played back as we add frames to them. It eases spontaneous creation. Tempi expands this idea to apply it to any type of data that can be produced by sensors.
 
 The first prototypes have been done as of August 2011. It now supports sending and receiving OSC messages. It provides a dataflow environment in which you can connect nodes in a graph.
 
@@ -55,7 +55,7 @@ Installation
 Here is how to build and install it on Debian GNU/Linux or Ubuntu::
 
   $ sudo apt-get install help2man gettext automake bison build-essential flex libtool 
-  $ sudo apt-get install libxml2-dev libclutter-1.0-dev libglib-2.0-dev libboost-all-dev
+  $ sudo apt-get install libxml2-dev libclutter-1.0-dev libglib-2.0-dev libboost-all-dev libstk0-dev liblo0-dev
   $ ./autogen.sh
   $ ./configure
   $ make

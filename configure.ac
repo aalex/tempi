@@ -14,7 +14,7 @@
 # - increase tempi_interface_version to the next odd number
 m4_define([tempi_major_version], [0])
 m4_define([tempi_minor_version], [1])
-m4_define([tempi_micro_version], [3])
+m4_define([tempi_micro_version], [4])
 
 m4_define([tempi_release_status],
           [m4_if(m4_eval(tempi_micro_version % 2), [1], [git],
