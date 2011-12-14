@@ -20,8 +20,8 @@
 #include "tempi/sampler/score.h"
 #include <iostream>
 
-namespace tempi
-{
+namespace tempi {
+namespace sampler {
 
 Score::Score()
 {
@@ -81,5 +81,6 @@ Track *Score::getTrack(Identifier identifier)
     return 0;
 }
 
+} // end of namespace
 } // end of namespace
 

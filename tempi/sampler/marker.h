@@ -28,8 +28,8 @@
 #include "tempi/identifier.h"
 #include "tempi/sharedptr.h"
 
-namespace tempi
-{
+namespace tempi {
+namespace sampler {
 
 /**
  * Marker for the beginning of a section in a Track.
@@ -47,6 +47,7 @@ class Marker
         Identifier id_;
 };
 
+} // end of namespace
 } // end of namespace
 
 #endif // ifndef

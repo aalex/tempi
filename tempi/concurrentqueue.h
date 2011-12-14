@@ -36,6 +36,8 @@
 #include <boost/thread/thread.hpp>
 #include <boost/thread/condition.hpp>
 
+namespace tempi {
+
 /**
  * Asynchronous FIFO used to communicate between threads.
  * FIFO stands for "First In First Out".
@@ -115,6 +117,8 @@ class ConcurrentQueue
         mutable boost::mutex mutex_;
         boost::condition_variable condition_;
 };
+
+} // end of namespace
 
 #endif //ifndef
 

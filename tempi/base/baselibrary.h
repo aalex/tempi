@@ -26,7 +26,15 @@
 
 #include "tempi/library.h"
 
-namespace tempi { namespace base {
+namespace tempi { 
+
+/**
+ * @namespace tempi::base
+ *
+ * Base Tempi node types.
+ */
+
+namespace base {
 
 class BaseLibrary : public Library
 {

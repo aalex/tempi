@@ -26,7 +26,15 @@
 
 #include "tempi/library.h"
 
-namespace tempi { namespace osc {
+namespace tempi {
+
+/**
+ * @namespace tempi::osc
+ *
+ * OSC Tempi node types.
+ */
+    
+namespace osc {
 
 class OscLibrary : public Library
 {

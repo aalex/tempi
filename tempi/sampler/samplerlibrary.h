@@ -26,7 +26,15 @@
 
 #include "tempi/library.h"
 
-namespace tempi { namespace sampler {
+namespace tempi {
+    
+/**
+ * @namespace tempi::sampler
+ *
+ * Sampling node types.
+ */
+
+namespace sampler {
 
 class SamplerLibrary : public Library
 {

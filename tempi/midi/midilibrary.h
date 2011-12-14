@@ -26,7 +26,15 @@
 
 #include "tempi/library.h"
 
-namespace tempi { namespace midi {
+namespace tempi {
+    
+/**
+ * @namespace tempi::midi
+ *
+ * MIDI Tempi node types.
+ */
+
+namespace midi {
 
 class MidiLibrary : public Library
 {
