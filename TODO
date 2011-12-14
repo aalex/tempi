@@ -1,11 +1,12 @@
 To do in Tempi
 ==============
 
-To do for 0.1.4
+To do for 0.1.6
 ---------------
  * Add Node::init, onInit, isInitiated
  * Move network and MIDI initialization in each Node::onInit implementation.
  * sampler::Player: Fix weird timing issues with events at beginning of regions.
+ * add ReceiverNode
 
 To do for 0.2
 -------------

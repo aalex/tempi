@@ -19,8 +19,6 @@ New features:
 * Implement registerTypeT<class>(name)
 * Rename utility "tempi" to "tempi-draw"
 
-TODO : 38d6514aee11c6c47bd3df9e039da373cb82cbb3 add ReceiverNode
-
 Bugs fixed:
 * Move executables' source code to subdirectories
 * Remove deprecated property.{h,cpp} files
