@@ -5,8 +5,7 @@ To do for 0.1.4
 ---------------
  * Add Node::init, onInit, isInitiated
  * Move network and MIDI initialization in each Node::onInit implementation.
- * SamplerNode: play each message only once
- * midilooper: Do not play when recording
+ * sampler::Player: Fix weird timing issues with events at beginning of regions.
 
 To do for 0.2
 -------------
