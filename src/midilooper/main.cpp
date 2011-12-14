@@ -94,8 +94,8 @@ class App
          * Polls the tempi::Graph.
          */
         bool poll();
-        void playFaster() {} // Not implemented
-        void playSlower() {} // Not implemented
+        //void playFaster() {} // Not implemented
+        //void playSlower() {} // Not implemented
         bool isRecording();
         bool isPlaying();
         /**
@@ -106,7 +106,7 @@ class App
          * Toggles recording and returns its new state.
          */
         bool toggleRecord();
-        void clearScore();
+        //void clearScore();
     protected:
         bool setupGraph();
         bool createGUI();
@@ -180,13 +180,13 @@ static void key_event_cb(ClutterActor *actor, ClutterKeyEvent *event, gpointer u
                 clutter_main_quit();
             break;
         case CLUTTER_KEY_BackSpace:
-            app->clearScore();
+            //app->clearScore();
             break;
         case CLUTTER_KEY_Up:
-            app->playFaster();
+            //app->playFaster();
             break;
         case CLUTTER_KEY_Down:
-            app->playSlower();
+            //app->playSlower();
             break;
         case CLUTTER_KEY_space:
             app->toggleRecord();
@@ -234,10 +234,10 @@ bool App::toggleRecord()
     return isRecording();
 }
 
-void App::clearScore()
-{
-    std::cout << "TODO: " << __FUNCTION__ << std::endl;
-}
+// void App::clearScore()
+// {
+//     std::cout << "TODO: " << __FUNCTION__ << std::endl;
+// }
 
 bool App::poll()
 {
