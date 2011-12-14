@@ -52,7 +52,7 @@ AC_INIT([tempi],
         [tempi_version],
         [http://github.com/aalex/tempi/issues],
         [tempi],
-        [http://github.com/aalex/tempi])
+        [http://tempi.toonloop.com])
 AC_CONFIG_MACRO_DIR([m4])
 AC_MSG_NOTICE([Configuring tempi])
 AM_INIT_AUTOMAKE([subdir-objects -Wno-portability])
