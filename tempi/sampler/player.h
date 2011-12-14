@@ -26,27 +26,27 @@
 
 #include "tempi/sharedptr.h"
 #include "tempi/timer.h"
-#include "tempi/sampler/track.h"
+#include "tempi/sampler/region.h"
 #include "tempi/sampler/playback.h"
 #include "tempi/message.h"
 #include "tempi/timeposition.h"
 
-namespace tempi
-{
+namespace tempi {
+namespace sampler {
 
 /**
- * A Player plays events from a Track.
+ * A Player plays events from a Region.
  */
 class Player
 {
     public:
         typedef std::tr1::shared_ptr<Player> ptr;
-        Player(Track *track);
-        void setTrack(Track *track);
+        Player(Region::ptr region);
+        void setRegion(Region::ptr region);
         /**
-         * Returns the Track played by this Timer.
+         * Returns the Region played by this Timer.
          */
-        Track *getTrack();
+        Region::ptr getRegion();
         /**
          * Returns this Timer's internal Timer.
          * Never free this pointer.
@@ -67,7 +67,7 @@ class Player
          * Returns 0 if none is found.
          * Never free this pointer.
          */
-        Message *read();
+        bool read(Message &result);
         // TODO: add a signal
         
         /**
@@ -81,11 +81,12 @@ class Player
         // TODO: add start stop
     private:
         Timer timer_;
-        Track *track_;
+        Region::ptr region_;
         double speed_;
         std::tr1::shared_ptr<Playback> playback_;
 };
 
+} // end of namespace
 } // end of namespace
 
 #endif // ifndef

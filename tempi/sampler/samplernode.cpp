@@ -18,15 +18,16 @@
  */
 
 #include "tempi/sampler/samplernode.h"
+#include "tempi/message.h"
 
-namespace tempi
-{
+namespace tempi {
+namespace sampler {
 
 SamplerNode::SamplerNode() :
     Node(),
-    track_(new Track()),
-    recorder_(new Recorder(track_.get())),
-    player_(new Player(track_.get()))
+    region_(new Region()),
+    recorder_(new Recorder(region_)),
+    player_(new Player(region_))
 {
     Message recording = Message("b", false);
     addProperty("recording", recording);
@@ -63,11 +64,12 @@ void SamplerNode::doTick()
 {
     if (getProperty("playing").getBoolean(0))
     {
-        Message *message = player_->read();
-        if (message != 0)
+        Message result;
+        bool ok = player_->read(result);
+        if (ok)
         {
-            std::cout << (* message) << std::endl;
-            output(0, *message);
+            //std::cout << message << std::endl;
+            output(0, result);
         }
     }
 }
@@ -75,8 +77,14 @@ void SamplerNode::doTick()
 void SamplerNode::record(bool enabled)
 {
     if (enabled)
-        track_->reset();
-    recorder_->reset();
+    {
+        recorder_->clear();
+        recorder_->start(); // at beginning
+    }
+    else
+    {
+        recorder_->stop();
+    }
 }
 
 void SamplerNode::processMessage(unsigned int inlet, const Message &message)
@@ -92,5 +100,6 @@ void SamplerNode::processMessage(unsigned int inlet, const Message &message)
     }
 }
 
+} // end of namespace
 } // end of namespace
 

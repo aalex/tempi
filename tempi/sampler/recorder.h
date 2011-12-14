@@ -26,35 +26,52 @@
 
 #include <boost/any.hpp>
 #include "tempi/sharedptr.h"
-#include "tempi/sampler/track.h"
+#include "tempi/timeposition.h"
+#include "tempi/sampler/region.h"
 
-namespace tempi
-{
+namespace tempi {
+namespace sampler {
 
 /**
- * A Recorder records events to a Track.
+ * A Recorder records events to a Region.
  */
 class Recorder
 {
     public:
         typedef std::tr1::shared_ptr<Recorder> ptr;
-        Recorder(Track *track);
-        void setTrack(Track *track);
-        Track *getTrack();
+        Recorder(Region::ptr region);
+        void setRegion(Region::ptr region);
+        Region::ptr getRegion();
         /**
-         * Resets the internal timer of this Recorder.
+         * Starts recording at the beginning of its Region.
          */
-        void reset();
+        void start();
+        /**
+         * Starts recording at the given position.
+         */
+        void start(TimePosition position);
+        /**
+         * Clears the Region.
+         */
+        void clear();
+        /**
+         * Stops recording and sets the duration of its Region if not already greater than current time position.
+         */
+        void stop();
+        /**
+         * Sets the position of the write head.
+         */
         bool setPosition(TimePosition position);
         /**
-         * Adds an event to the track now.
+         * Adds an event to its Region at the time specified by its internal timer.
          */
         void add(Message value);
     private:
         Timer timer_;
-        Track *track_;
+        Region::ptr region_;
 };
 
+} // end of namespace
 } // end of namespace
 
 #endif // ifndef

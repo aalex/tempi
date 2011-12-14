@@ -31,14 +31,14 @@ struct Sampler
         void startRecording();
         void stopRecording();
         bool isRecording();
-        tempi::Player *getPlayer();
-        tempi::Recorder *getRecorder();
+        tempi::sampler::Player *getPlayer();
+        tempi::sampler::Recorder *getRecorder();
         ParticleGenerator *getGenerator();
         void setColor(int r, int g, int b);
     private:
-        tempi::Track track_;
-        std::tr1::shared_ptr<tempi::Recorder> recorder_;
-        std::tr1::shared_ptr<tempi::Player> player_;
+        tempi::sampler::Region::ptr track_;
+        tempi::sampler::Recorder::ptr recorder_;
+        tempi::sampler::Player::ptr player_;
         bool recording_;
         ParticleGenerator generator_;
 };

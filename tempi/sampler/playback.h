@@ -26,8 +26,8 @@
 
 #include "tempi/message.h"
 
-namespace tempi
-{
+namespace tempi {
+namespace sampler {
 
 class Player; // forward declaration
 
@@ -42,10 +42,11 @@ class Playback
          * Returns 0 if none is found.
          * Never free this pointer.
          */
-        virtual Message *read(Player &player) = 0;
+        virtual bool read(Player &player, Message &result) = 0;
         virtual ~Playback() {}
 };
 
+} // end of namespace
 } // end of namespace
 
 #endif // ifndef

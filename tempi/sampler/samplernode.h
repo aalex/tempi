@@ -29,14 +29,14 @@
 #include "tempi/sampler/score.h"
 #include "tempi/timeposition.h"
 #include "tempi/identifier.h"
-#include "tempi/sampler/track.h"
+#include "tempi/sampler/region.h"
 #include "tempi/sampler/recorder.h"
 #include "tempi/sampler/player.h"
 #include "tempi/node.h"
 //#include "tempi/sampler/marker.h"
 
-namespace tempi
-{
+namespace tempi {
+namespace sampler {
 
 /**
  * A SamplerNode is a node with a Score in it.
@@ -61,7 +61,7 @@ class SamplerNode : public Node
     private:
 //        bool recording_;
 //        bool playing_;
-        Track::ptr track_;
+        Region::ptr region_;
         Recorder::ptr recorder_;
         Player::ptr player_;
 
@@ -74,6 +74,7 @@ class SamplerNode : public Node
         //std::map<TimePosition, MarkerPtr> markers_;
 };
 
+} // end of namespace
 } // end of namespace
 
 #endif // ifndef
