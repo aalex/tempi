@@ -3,10 +3,11 @@ To do in Tempi
 
 To do for 0.1.6
 ---------------
+ * FIXME: header files are not installed in subdirectories, but flat
  * Add Node::init, onInit, isInitiated
  * Move network and MIDI initialization in each Node::onInit implementation.
  * sampler::Player: Fix weird timing issues with events at beginning of regions.
- * add ReceiverNode
+ * add ReceiverNode (and a way to send/receive messages with symbols as keys)
 
 To do for 0.2
 -------------
