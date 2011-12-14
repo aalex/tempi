@@ -106,6 +106,7 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     graph.h \
     identifier.h \
     internals.h \
+    library.h \
     mapping/average.h \
     mapping/slide.h \
     mapping/slidefilter.h \
