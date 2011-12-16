@@ -112,7 +112,7 @@ bool Region::getClosestBefore(TimePosition target, Region::Event &result)
     return true;
 }
 
-void Region::getRange(TimePosition from, TimePosition to, std::vector<Event> &result)
+void Region::getRange(TimePosition from, TimePosition to, std::vector<Event> &result, bool includeFirst)
 {
     EventVecIter iter;
     for (iter = events_.begin(); iter < events_.end(); ++iter)
@@ -120,6 +120,9 @@ void Region::getRange(TimePosition from, TimePosition to, std::vector<Event> &re
         TimePosition pos = (*iter).get<0>();
         if (from < pos && pos <= to)
             result.push_back(*iter);
+        if (includeFirst)
+            if (pos == from)
+                result.push_back(*iter);
     }
 }
 

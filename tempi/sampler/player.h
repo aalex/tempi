@@ -63,11 +63,9 @@ class Player
         void setSpeed(double factor);
         double getSpeed() const;
         /**
-         * Reads an event from the track at the time pointed to by the internal Timer.
-         * Returns 0 if none is found.
-         * Never free this pointer.
+         * Reads events from the track at the time pointed to by the internal Timer.
+         * Returns false if none is found.
          */
-        bool read(Message &result);
         bool read(std::vector<Message> &result);
         // TODO: add a signal
         

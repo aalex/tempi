@@ -24,50 +24,6 @@
 namespace tempi {
 namespace sampler {
 
-// TODO: read many messages if needed. (read all events since last read whose timestamp is in the past)
-// TODO: bool SimplePlayback::read(Player &player, TimePosition lastRead, Message &result)
-bool SimplePlayback::read(Player &player, Message &result)
-{
-    Region::ptr region = player.getRegion();
-    TimePosition duration = region->getDuration();
-    TimePosition elapsed = player.getTimer()->elapsed();
-    elapsed *= player.getSpeed(); // FIXME: might be wrong when speed != 1.0
-    if (duration == 0L)
-        return false;
-    else
-    {
-        TimePosition cursor = elapsed;
-        if (elapsed > duration)
-        {
-            cursor = 0L; //elapsed % duration;
-            // TODO: make sure we play the last event in the region
-            //previous_timeposition_played_ = 0L; //reset the previous message sent
-            player.setPosition(cursor); // FIXME??
-        }
-        Region::Event event;
-        bool ok = region->getClosestBefore(cursor, event);
-        if (! ok)
-        {
-            //std::cout << "no message to output\n";
-            return false; // no message to output
-        }
-
-        TimePosition resultPosition = event.get<0>();
-        if (resultPosition != previous_timeposition_played_)
-        {
-            previous_timeposition_played_ = resultPosition;
-            result = event.get<1>();
-            std::cout << resultPosition << " :" << result << std::endl;
-            return true;
-        }
-        else
-        {
-            //std::cout << "same message as previous one.\n";
-            return false; // same message as previous one
-        }
-    }
-}
-
 bool SimplePlayback::read(Player &player, std::vector<Message> &result)
 {
     bool ret = false;
@@ -77,18 +33,25 @@ bool SimplePlayback::read(Player &player, std::vector<Message> &result)
     now *= player.getSpeed(); // FIXME: might be wrong when speed != 1.0
     if (now > duration) // check for looping:
     {
-        now = (now % duration);
+        if (duration == 0L) // make sure we don't divide by 0
+            now = 0L;
+        else
+            now = (now % duration);
         player.setPosition(now);
     }
     std::vector<Region::Event> events;
-    region->getRange(previous_timeposition_played_, now, events);
+    if (previous_timeposition_played_ <= now)
+        region->getRange(previous_timeposition_played_, now, events);
+    else
+    {
+        region->getRange(previous_timeposition_played_, duration, events);
+        region->getRange(0L, now, events, true);
+    }
     if (events.size() > 0)
         ret = true;
     std::vector<Region::Event>::const_iterator iter;
     for (iter = events.begin(); iter != events.end(); ++iter)
-    {
         result.push_back((*iter).get<1>());
-    }
     previous_timeposition_played_ = now;
     return ret;
 }

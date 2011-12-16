@@ -59,7 +59,7 @@ class Region
          * Range is: ]from, to]
          * Results is stored in result.
          */
-         void getRange(TimePosition from, TimePosition to, std::vector<Event> &result);
+         void getRange(TimePosition from, TimePosition to, std::vector<Event> &result, bool includeFirst=false);
     private:
         typedef std::vector<Event> EventVec;
         typedef EventVec::iterator EventVecIter;
