@@ -3,10 +3,11 @@ Tempi 0.1.6 (2011-??-??)
 This release is a developer snapshot in the 0.1 series.
 
 New features:
-* (none)
+* Read multiple events at once from a Region
 
 Bugs fixed:
-* (none)
+* Fix timing issue with first event recorded in a Region
+
 
 Tempi 0.1.4 (2011-12-14)
 ------------------------
