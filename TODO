@@ -44,6 +44,7 @@ To do for 0.2
 * [base.route]
 * [base.send]
 * [base.spigot]
+* [base.timer]
 * [sampler.reader]
 * [sampler.score]
 * [sampler.writer]
