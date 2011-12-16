@@ -33,6 +33,7 @@
 #include <glib.h>
 #include <iostream>
 #include <tr1/memory>
+#include <vector>
 #include <unistd.h>
 
 namespace po = boost::program_options;
@@ -294,18 +295,23 @@ void App::drawSamplers()
     for (iter = samplers_.begin(); iter < samplers_.end(); ++iter)
     {
         Sampler *sampler = (*iter).get();
-        tempi::Message result;
-        bool ok = sampler->getPlayer()->read(result);
+        std::vector<tempi::Message> messages;
+        bool ok = sampler->getPlayer()->read(messages);
         if (ok)
         {
-            if (result.typesMatch("ff"))
+            std::vector<tempi::Message>::const_iterator messIter;
+            for (messIter = messages.begin(); messIter != messages.end(); ++messIter)
             {
-                float x = result.getFloat(0);
-                float y = result.getFloat(1);
-                sampler->getGenerator()->setSourcePosition(x, y);
+                tempi::Message message = (*messIter);
+                if (message.typesMatch("ff"))
+                {
+                    float x = message.getFloat(0);
+                    float y = message.getFloat(1);
+                    sampler->getGenerator()->setSourcePosition(x, y);
+                }
+                else
+                    std::cerr << "types don't match: " << message.getTypes() << std::endl;
             }
-            else
-                std::cerr << "types don't match: " << result.getTypes() << std::endl;
         }
         sampler->getGenerator()->onDraw();
     }

@@ -19,6 +19,7 @@
 
 #include "tempi/sampler/samplernode.h"
 #include "tempi/message.h"
+#include <vector>
 
 namespace tempi {
 namespace sampler {
@@ -64,12 +65,13 @@ void SamplerNode::doTick()
 {
     if (getProperty("playing").getBoolean(0))
     {
-        Message result;
-        bool ok = player_->read(result);
+        std::vector<Message> messages;
+        bool ok = player_->read(messages);
         if (ok)
         {
-            //std::cout << message << std::endl;
-            output(0, result);
+            std::vector<Message>::const_iterator iter;
+            for (iter = messages.begin(); iter != messages.end(); ++iter)
+                output(0, (*iter));
         }
     }
 }

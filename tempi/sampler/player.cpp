@@ -41,15 +41,9 @@ bool Player::setPosition(TimePosition position)
     return timer_.setPosition(position);
 }
 
-bool Player::read(Message &result)
+bool Player::read(std::vector<Message> &result)
 {
-    if (region_->numberOfEvents() == 0)
-    {
-        //std::cout << "No point to read." << std::endl;
-        return false;
-    }
-    else
-        return playback_.get()->read(*this, result);
+    return playback_.get()->read(*this, result);
 }
 
 void Player::setSpeed(double factor)

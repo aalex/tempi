@@ -8,7 +8,6 @@ To do for 0.1.6
 * Node::onInit()
 * Node::isInitiated()
 * Move network and MIDI initialization in each Node::onInit implementation.
-* [sampler.sampler]: Fix weird timing issues with events at beginning of regions.
 * list/configure MIDI ports by their ALSA ID, not an index
 
 To do for 0.2
@@ -44,6 +43,7 @@ To do for 0.2
 * [base.route]
 * [base.send]
 * [base.spigot]
+* [base.timer]
 * [sampler.reader]
 * [sampler.score]
 * [sampler.writer]
