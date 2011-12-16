@@ -54,6 +54,12 @@ class Region
         TimePosition getDuration();
         unsigned int numberOfEvents();
         bool getClosestBefore(TimePosition target, Region::Event &result);
+        /**
+         * Retrieves events whose time is after a given time and before or equal to another one.
+         * Range is: ]from, to]
+         * Results is stored in result.
+         */
+         void getRange(TimePosition from, TimePosition to, std::vector<Event> &result);
     private:
         typedef std::vector<Event> EventVec;
         typedef EventVec::iterator EventVecIter;

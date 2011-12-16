@@ -43,6 +43,7 @@ class Playback
          * Never free this pointer.
          */
         virtual bool read(Player &player, Message &result) = 0;
+        virtual bool read(Player &player, std::vector<Message> &result) = 0;
         virtual ~Playback() {}
 };
 

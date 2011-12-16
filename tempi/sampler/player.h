@@ -68,6 +68,7 @@ class Player
          * Never free this pointer.
          */
         bool read(Message &result);
+        bool read(std::vector<Message> &result);
         // TODO: add a signal
         
         /**

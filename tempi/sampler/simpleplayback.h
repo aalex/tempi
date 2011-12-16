@@ -37,6 +37,7 @@ class SimplePlayback : public Playback
 {
     public:
         virtual bool read(Player &player, Message &result);
+        virtual bool read(Player &player, std::vector<Message> &result);
     private:
         TimePosition previous_timeposition_played_;
 };

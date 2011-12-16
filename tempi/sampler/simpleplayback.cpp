@@ -24,12 +24,14 @@
 namespace tempi {
 namespace sampler {
 
+// TODO: read many messages if needed. (read all events since last read whose timestamp is in the past)
+// TODO: bool SimplePlayback::read(Player &player, TimePosition lastRead, Message &result)
 bool SimplePlayback::read(Player &player, Message &result)
 {
     Region::ptr region = player.getRegion();
     TimePosition duration = region->getDuration();
     TimePosition elapsed = player.getTimer()->elapsed();
-    elapsed *= player.getSpeed();
+    elapsed *= player.getSpeed(); // FIXME: might be wrong when speed != 1.0
     if (duration == 0L)
         return false;
     else
@@ -40,8 +42,8 @@ bool SimplePlayback::read(Player &player, Message &result)
             cursor = 0L; //elapsed % duration;
             // TODO: make sure we play the last event in the region
             //previous_timeposition_played_ = 0L; //reset the previous message sent
+            player.setPosition(cursor); // FIXME??
         }
-        player.setPosition(cursor);
         Region::Event event;
         bool ok = region->getClosestBefore(cursor, event);
         if (! ok)
@@ -65,6 +67,32 @@ bool SimplePlayback::read(Player &player, Message &result)
         }
     }
 }
+
+bool SimplePlayback::read(Player &player, std::vector<Message> &result)
+{
+    bool ret = false;
+    Region::ptr region = player.getRegion();
+    TimePosition duration = region->getDuration();
+    TimePosition now = player.getTimer()->elapsed();
+    now *= player.getSpeed(); // FIXME: might be wrong when speed != 1.0
+    if (now > duration) // check for looping:
+    {
+        now = (now % duration);
+        player.setPosition(now);
+    }
+    std::vector<Region::Event> events;
+    region->getRange(previous_timeposition_played_, now, events);
+    if (events.size() > 0)
+        ret = true;
+    std::vector<Region::Event>::const_iterator iter;
+    for (iter = events.begin(); iter != events.end(); ++iter)
+    {
+        result.push_back((*iter).get<1>());
+    }
+    previous_timeposition_played_ = now;
+    return ret;
+}
+
 
 } // end of namespace
 } // end of namespace

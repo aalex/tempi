@@ -65,7 +65,7 @@ class Recorder
         /**
          * Adds an event to its Region at the time specified by its internal timer.
          */
-        void add(Message value);
+        void add(Message value); // TODO: const Message &
     private:
         Timer timer_;
         Region::ptr region_;

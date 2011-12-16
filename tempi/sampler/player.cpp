@@ -52,6 +52,11 @@ bool Player::read(Message &result)
         return playback_.get()->read(*this, result);
 }
 
+bool Player::read(std::vector<Message> &result)
+{
+    return playback_.get()->read(*this, result);
+}
+
 void Player::setSpeed(double factor)
 {
     speed_ = factor;
