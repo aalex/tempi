@@ -103,6 +103,8 @@ App::App()
     g_signal_connect(timeline, "new-frame", G_CALLBACK(on_frame_cb), this);
     g_signal_connect(stage_, "key-press-event", G_CALLBACK(key_event_cb), this);
 
+    g_object_unref(script); // avoid memory leak
+
     clutter_actor_show(stage_);
 }
 
