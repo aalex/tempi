@@ -21,11 +21,8 @@
 #include <iostream>
 #include <stk/RtMidi.h>
 
-namespace tempi
-{
-
-namespace midi
-{
+namespace tempi {
+namespace midi {
 
 bool MidiOutput::isOpen() const
 {
@@ -145,6 +142,5 @@ void MidiOutput::setVerbose(bool verbose)
 }
 
 } // end of namespace
-
 } // end of namespace
 

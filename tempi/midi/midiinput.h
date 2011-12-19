@@ -30,11 +30,8 @@
 #include "tempi/message.h"
 #include <stk/RtMidi.h>
 
-namespace tempi
-{
-
-namespace midi
-{
+namespace tempi {
+namespace midi {
 
 /** 
  * MIDI input using RtMidi.
@@ -72,7 +69,6 @@ class MidiInput
 };
 
 } // end of namespace
-
 } // end of namespace
 
 #endif // include guard

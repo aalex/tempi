@@ -21,11 +21,8 @@
 #include <iostream>
 #include <stk/RtMidi.h>
 
-namespace tempi
-{
-
-namespace midi
-{
+namespace tempi {
+namespace midi {
 
 static const unsigned char MIDINOTEOFF =       0x80; // channel, pitch, velocity
 static const unsigned char MIDINOTEON =        0x90; // channel, pitch, velocity
@@ -266,6 +263,5 @@ void MidiInput::setVerbose(bool verbose)
 }
 
 } // end of namespace
-
 } // end of namespace
 
