@@ -4,9 +4,6 @@ To do in Tempi
 To do for 0.1.6
 ---------------
 * FIXME: header files are not installed in subdirectories, but flat
-* Node::init()
-* Node::onInit()
-* Node::isInitiated()
 * Move network and MIDI initialization in each Node::onInit implementation.
 * list/configure MIDI ports by their ALSA ID, not an index
 

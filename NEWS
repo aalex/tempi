@@ -4,6 +4,7 @@ This release is a developer snapshot in the 0.1 series.
 
 New features:
 * Read multiple events at once from a Region
+* Add Node::init() to move node initialization routines out of the constructor.
 
 Bugs fixed:
 * Fix timing issue with first event recorded in a Region
