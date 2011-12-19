@@ -144,6 +144,31 @@ static bool checkMetro()
     return true;
 }
 
+static bool check_all_loaded()
+{
+    NodeFactory factory;
+    internals::loadInternals(factory);
+
+    std::vector<std::string> names;
+    names.push_back(std::string("base.print"));
+    names.push_back(std::string("base.nop"));
+    names.push_back(std::string("base.metro"));
+    names.push_back(std::string("base.any"));
+    names.push_back(std::string("base.counter"));
+    names.push_back(std::string("base.appsink"));
+
+    std::vector<std::string>::const_iterator iter;
+    for (iter = names.begin(); iter != names.end(); ++iter)
+    {
+        if (! factory.hasType((*iter).c_str()))
+        {
+            std::cout << "Factory should have type " << (*iter) << std::endl;
+            return false;
+        }
+    }
+    return true;
+}
+
 int main(int argc, char **argv)
 {
     if (! checkMetro())
@@ -151,6 +176,8 @@ int main(int argc, char **argv)
     if (! check_create())
         return 1;
     if (! checkPrepend())
+        return 1;
+    if (! check_all_loaded())
         return 1;
     return 0;
 }
