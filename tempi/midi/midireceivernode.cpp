@@ -20,11 +20,8 @@
 #include "tempi/midi/midireceivernode.h"
 #include <iostream>
 
-namespace tempi
-{
-
-namespace midi
-{
+namespace tempi {
+namespace midi {
 
 MidiReceiverNode::MidiReceiverNode() :
     Node()
@@ -50,7 +47,7 @@ void MidiReceiverNode::doTick()
 {
     if (! midi_input_->isOpen())
     {
-        std::cerr << "MidiReceiverNode::" << __FUNCTION__ << " not initialized. Please specifiy a port number." << std::endl;
+        std::cerr << "MidiReceiverNode::" << __FUNCTION__ << "(): MidiInput is not initialized. Please specifiy a port number." << std::endl;
         return;
     }
     std::vector<Message> messages = midi_input_->poll();
@@ -62,6 +59,5 @@ void MidiReceiverNode::doTick()
 }
 
 } // end of namespace
-
 } // end of namespace
 

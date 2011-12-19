@@ -20,11 +20,8 @@
 #include "tempi/midi/midisendernode.h"
 #include <iostream>
 
-namespace tempi
-{
-
-namespace midi
-{
+namespace tempi {
+namespace midi {
 
 MidiSenderNode::MidiSenderNode() :
     Node()
@@ -61,6 +58,5 @@ void MidiSenderNode::processMessage(unsigned int inlet, const Message &message)
 }
 
 } // end of namespace
-
 } // end of namespace
 
