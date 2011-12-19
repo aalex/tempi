@@ -46,6 +46,7 @@ prototypes/fusion/vec
 prototypes/kinect/freedraw
 prototypes/midi/alsalist
 prototypes/midi/midiprobe
+prototypes/midilooper-gui/run
 prototypes/modules/main
 prototypes/nodefactory
 prototypes/phoenix/findif
@@ -84,5 +85,6 @@ tests/check_version
 # negations:
 !prototypes/kinect/Makefile
 !prototypes/midi/Makefile
+!prototypes/midilooper-gui/Makefile
 !prototypes/modules/Makefile
 

@@ -1,0 +1,19 @@
+{
+    "id" : "group0",
+    "type" : "ClutterGroup",
+    "children" :
+    [
+        {
+            "id" : "button0",
+            "type" : "MxButton",
+            "width" : 200,
+            "height" : 50,
+            "label" : "hello",
+            "name" : "button0",
+            "reactive" : true,
+            "signals" : [
+              { "name" : "clicked", "handler" : "on_button0_clicked" }
+            ]
+        }
+    ]
+}
