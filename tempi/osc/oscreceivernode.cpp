@@ -21,7 +21,8 @@
 #include "tempi/utils.h"
 #include <iostream>
 
-namespace tempi { namespace osc {
+namespace tempi {
+namespace osc {
 
 OscReceiverNode::OscReceiverNode() :
     Node()
