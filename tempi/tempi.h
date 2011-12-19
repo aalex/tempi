@@ -52,7 +52,6 @@ std::string get_version();
 
 }; // end of namespace
 
-#include "tempi/filter.h"
 #include "tempi/graph.h"
 #include "tempi/identifier.h"
 #include "tempi/sampler/loopingplayback.h"
@@ -66,11 +65,10 @@ std::string get_version();
 #include "tempi/sampler/recorder.h"
 #include "tempi/fsm/rule.h"
 #include "tempi/sharedptr.h"
-#include "tempi/sink.h"
-#include "tempi/sinknode.h"
+#include "tempi/mapping/filter.h"
 #include "tempi/mapping/slidefilter.h"
+#include "tempi/sink.h"
 #include "tempi/source.h"
-#include "tempi/sourcenode.h"
 #include "tempi/fsm/state.h"
 #include "tempi/fsm/statemachine.h"
 #include "tempi/table/table.h"

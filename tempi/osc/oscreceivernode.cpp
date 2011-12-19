@@ -18,10 +18,11 @@
  */
 
 #include "tempi/osc/oscreceivernode.h"
+#include "tempi/utils.h"
 #include <iostream>
 
-namespace tempi
-{
+namespace tempi {
+namespace osc {
 
 OscReceiverNode::OscReceiverNode() :
     Node()
@@ -34,11 +35,14 @@ OscReceiverNode::OscReceiverNode() :
 void OscReceiverNode::onPropertyChanged(const char *name, const Message &value)
 {
     //std::cout << "OscReceiverNode::" << __FUNCTION__ << "(" << name << ", " << value << ")" << std::endl;
-    static std::string key("port");
-    if (key == name)
+    if (utils::stringsMatch("port", name))
     {
-        //std::cout << "OscReceiver::" << __FUNCTION__ << " listen on port " << value.getInt(0) << std::endl;
-        osc_receiver_.reset(new OscReceiver((unsigned int) value.getInt(0)));
+        unsigned int portNumber = value.getInt(0);
+        //std::cout << "OscReceiver::" << __FUNCTION__ << " listen on port " << portNumber << std::endl;
+        if (portNumber == 0)
+            osc_receiver_.reset((OscReceiver *) 0);
+        else
+            osc_receiver_.reset(new OscReceiver(portNumber));
     }
 }
 
@@ -46,7 +50,7 @@ void OscReceiverNode::doTick()
 {
     if (osc_receiver_.get() == 0)
     {
-        std::cerr << "OscReceiverNode::" << __FUNCTION__ << " not initialized. Please specifiy a port number." << std::endl;
+        // std::cerr << "OscReceiverNode::" << __FUNCTION__ << "(): OscReceiver is NULL. Cannot poll incoming OSC messages. Please specifiy a port number." << std::endl;
         return;
     }
     std::vector<Message> messages = osc_receiver_->poll();
@@ -57,5 +61,6 @@ void OscReceiverNode::doTick()
     }
 }
 
+} // end of namespace
 } // end of namespace
 

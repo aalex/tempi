@@ -14,7 +14,7 @@
 # - increase tempi_interface_version to the next odd number
 m4_define([tempi_major_version], [0])
 m4_define([tempi_minor_version], [1])
-m4_define([tempi_micro_version], [3])
+m4_define([tempi_micro_version], [6])
 
 m4_define([tempi_release_status],
           [m4_if(m4_eval(tempi_micro_version % 2), [1], [git],
@@ -52,7 +52,7 @@ AC_INIT([tempi],
         [tempi_version],
         [http://github.com/aalex/tempi/issues],
         [tempi],
-        [http://github.com/aalex/tempi])
+        [http://tempi.toonloop.com])
 AC_CONFIG_MACRO_DIR([m4])
 AC_MSG_NOTICE([Configuring tempi])
 AM_INIT_AUTOMAKE([subdir-objects -Wno-portability])
@@ -207,10 +207,14 @@ AC_CONFIG_FILES([
         tempi/tempi-version.h
         tempi/Makefile 
         src/Makefile
+        src/midilooper/Makefile
+        src/osc-forward/Makefile
+        src/tempi-draw/Makefile
         tests/Makefile
         doxyfile 
         data/Makefile
         doc/Makefile
+        man/Makefile
         tempi-${TEMPI_API_VERSION}.pc:tempi.pc.in
         ])
 

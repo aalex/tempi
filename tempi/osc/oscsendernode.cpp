@@ -18,10 +18,11 @@
  */
 
 #include "tempi/osc/oscsendernode.h"
+#include "tempi/utils.h"
 #include <iostream>
 
-namespace tempi
-{
+namespace tempi {
+namespace osc {
 
 OscSenderNode::OscSenderNode() :
     Node()
@@ -44,12 +45,12 @@ void OscSenderNode::processMessage(unsigned int inlet, const Message &message)
 void OscSenderNode::onPropertyChanged(const char *name, const Message &value)
 {
     //std::cout << "OscSenderNode::" << __FUNCTION__ << "(" << name << ", " << value << ")" << std::endl;
-    static std::string host_port("host_port");
-    if (host_port == name)
+    if (utils::stringsMatch("host_port", name))
     {
         osc_sender_.reset(new OscSender(value.getString(0).c_str(), value.getInt(1)));
     }
 }
 
+} // end of namespace
 } // end of namespace
 

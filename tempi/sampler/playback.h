@@ -26,8 +26,8 @@
 
 #include "tempi/message.h"
 
-namespace tempi
-{
+namespace tempi {
+namespace sampler {
 
 class Player; // forward declaration
 
@@ -38,14 +38,13 @@ class Playback
 {
     public:
         /**
-         * Reads an event from a Track at the time pointed to by a Player's  internal Timer according to how it should do it.
-         * Returns 0 if none is found.
-         * Never free this pointer.
+         * Reads events from a Track up to the time pointed to by a Player's internal Timer according to how it should do it.
          */
-        virtual Message *read(Player &player) = 0;
+        virtual bool read(Player &player, std::vector<Message> &result) = 0;
         virtual ~Playback() {}
 };
 
+} // end of namespace
 } // end of namespace
 
 #endif // ifndef

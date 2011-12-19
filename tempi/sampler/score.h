@@ -32,8 +32,8 @@
 #include "tempi/sampler/track.h"
 #include "tempi/sampler/marker.h"
 
-namespace tempi
-{
+namespace tempi {
+namespace sampler {
 
 /**
  * A Score contains one or many tracks.
@@ -61,6 +61,7 @@ class Score
         std::map<TimePosition, MarkerPtr> markers_;
 };
 
+} // end of namespace
 } // end of namespace
 
 #endif // ifndef

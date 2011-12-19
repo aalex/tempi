@@ -1,0 +1,30 @@
+[DESCRIPTION]
+Loops MIDI events.
+
+[SYNOPSIS]
+midilooper [options]
+
+[INTERACTIVE USAGE]
+To start/stop recording, press the space bar.
+
+Press control-q to quit.
+
+[EXAMPLES]
+To print MIDI events from device 1:
+
+ midilooper -p 1 -v
+
+[AUTHOR]
+Alexandre Quessy
+
+[HISTORY]
+2011 - Written by Alexandre Quessy
+
+[REPORTING BUGS]
+See http://tempi.toonloop.com
+
+[COPYRIGHT]
+Copyright (c) 2011 Alexandre Quessy <alexandre@quessy.net>
+
+[SEE ALSO]
+osc-forward(1), tempi-draw(1)

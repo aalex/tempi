@@ -19,8 +19,8 @@
 
 #include "tempi/sampler/marker.h"
 
-namespace tempi
-{
+namespace tempi {
+namespace sampler {
 
 Marker::Marker(Identifier id) :
     id_(id)
@@ -44,5 +44,6 @@ void Marker::setName(const std::string &name)
     name_ = name;
 }
 
+} // end of namespace
 } // end of namespace
 

@@ -1,8 +1,7 @@
 #include "tempi/table/table_player.h"
 #include <iostream>
 
-namespace tempi
-{
+namespace tempi { namespace table {
 
 TablePlayer::TablePlayer(Table *table) :
     table_(table),
@@ -83,5 +82,6 @@ unsigned int TablePlayer::getSpeed() const
     return speed_;
 }
 
+} // end of namespace
 } // end of namespace
 

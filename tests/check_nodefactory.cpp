@@ -1,5 +1,6 @@
 #include "tempi/tempi.h"
 #include "tempi/graph.h"
+#include "tempi/internals.h"
 #include <iostream>
 
 using namespace tempi;
@@ -70,10 +71,12 @@ bool check_nodefactory()
     }
     Node::ptr foo = factory.create("foo");
     Node::ptr bar = factory.create("bar");
+    foo->init();
+    bar->init();
 
     Message message;
-    foo.get()->getInlet(0)->trigger(message);
-    bar.get()->getInlet(0)->trigger(message);
+    foo->getInlet(0)->trigger(message);
+    bar->getInlet(0)->trigger(message);
     return true;
 }
 
@@ -82,7 +85,7 @@ bool check_many_instances()
     if (VERBOSE)
         std::cout << __FUNCTION__ << std::endl;
     NodeFactory factory;
-    factory.loadInternals();
+    internals::loadInternals(factory);
     if (factory.registerTypeT<FooNode>("foo").get() == 0)
     {
         std::cout << "Could not register type FooNode" << std::endl;
@@ -90,7 +93,7 @@ bool check_many_instances()
     }
     Node::ptr foo0 = factory.create("foo");
     Node::ptr foo1 = factory.create("foo");
-    Node::ptr foo2 = factory.create("nop");
+    Node::ptr foo2 = factory.create("base.nop");
     if (foo0.get() == 0 || foo1.get() == 0 || foo2.get() == 0)
     {
         std::cout << __FUNCTION__ << ": invalid pointer" << std::endl;
@@ -103,25 +106,27 @@ bool check_print()
 {
     if (VERBOSE)
         std::cout << __FUNCTION__ << std::endl;
-    NodeFactory factory;
-    factory.loadInternals();
-    Node::ptr nop0 = factory.create("nop");
-    Node::ptr nop1 = factory.create("nop");
-    Node::ptr print0 = factory.create("print");
-    Node::ptr sampler0 = factory.create("sampler");
-    Node::ptr print1 = factory.create("print");
+    NodeFactory::ptr factory(new NodeFactory);
+    internals::loadInternals(*(factory.get()));
+    Node::ptr nop0 = factory->create("base.nop");
+    Node::ptr nop1 = factory->create("base.nop");
+    Node::ptr print0 = factory->create("base.print");
+    Node::ptr sampler0 = factory->create("sampler.sampler");
+    Node::ptr print1 = factory->create("base.print");
 
     if (nop0.get() == 0 || print0.get() == 0 || sampler0.get() == 0)
     {
         std::cout << __FUNCTION__ << ": invalid pointer" << std::endl;
         return false;
     }
-    Graph graph;
-    graph.addNode(nop0, "nop0");
-    graph.addNode(nop1, "nop1");
-    graph.addNode(print0, "print0");
-    graph.addNode(sampler0, "sampler0");
-    graph.addNode(print1, "print1");
+    Graph graph(factory);
+    graph.addNode("base.nop", "nop0");
+    graph.addNode("base.nop", "nop1");
+    graph.addNode("base.print", "print0");
+    graph.addNode("sampler.sampler", "sampler0");
+    graph.addNode("base.print", "print1");
+
+    graph.tick(); // call init() on each node
 
     graph.connect("nop0", 0, "nop1", 0);
     graph.connect("nop1", 0, "print0", 0);

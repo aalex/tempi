@@ -20,27 +20,41 @@
 #include "tempi/sampler/recorder.h"
 #include <iostream>
 
-namespace tempi
-{
+namespace tempi {
+namespace sampler {
 
-Recorder::Recorder(Track *track)
+Recorder::Recorder(Region::ptr region)
 {
-    track_ = track;
+    region_ = region;
 }
 
-void Recorder::setTrack(Track *track)
+void Recorder::setRegion(Region::ptr region)
 {
-    track_ = track;
+    region_ = region;
 }
 
-Track *Recorder::getTrack()
+Region::ptr Recorder::getRegion()
 {
-    return track_;
+    return region_;
 }
 
-void Recorder::reset()
+void Recorder::start()
 {
     timer_.reset();
+    //setPosition(0L);
+}
+
+void Recorder::start(TimePosition position)
+{
+    start();
+    setPosition(position);
+}
+
+void Recorder::stop()
+{
+    TimePosition end = timer_.elapsed();
+    if (region_->getDuration() < timer_.elapsed())
+        region_->setDuration(timer_.elapsed());
 }
 
 bool Recorder::setPosition(TimePosition position)
@@ -50,11 +64,14 @@ bool Recorder::setPosition(TimePosition position)
 
 void Recorder::add(Message value)
 {
-    if (track_)
-        track_->add(timer_.elapsed(), value);
-    else
-        std::cout << "This Recorder has an invalid Track. Cannot add event." << std::endl;
+    region_->add(timer_.elapsed(), value);
 }
 
+void Recorder::clear()
+{
+    region_->clear();
+}
+
+} // end of namespace
 } // end of namespace
 

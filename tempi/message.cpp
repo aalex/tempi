@@ -55,28 +55,28 @@ void Message::appendVaList(const char *types, va_list arguments)
     {
         switch (types[i])
         {
-            case 'f':
+            case FLOAT:
             {
                 float value = va_arg(arguments, double);
                 //std::cout << "Caught a float : " << value;
                 appendFloat(value);
                 break;
             }
-            case 'i':
+            case INT:
             {
                 int value = va_arg(arguments, int);
                 //std::cout << "Caught an integer : " << value;
                 appendInt(value);
                 break;
             }
-            case 'b':
+            case BOOLEAN:
             {
                 bool value = (bool) va_arg(arguments, int);
                 //std::cout << "Caught a bool : " << value;
                 appendBoolean(value);
                 break;
             }
-            case 's':
+            case STRING:
             {
                 const char *value = va_arg(arguments, const char*);
                 // FIXME: does this memleak?
@@ -84,25 +84,39 @@ void Message::appendVaList(const char *types, va_list arguments)
                 appendString(value);
                 break;
             }
-            case 'd':
+            case DOUBLE:
             {
                 double value = va_arg(arguments, double);
                 std::cout << "Caught a double : " << value;
                 appendDouble(value);
                 break;
             }
-            case 'c':
+            case CHAR:
             {
                 char value = (char) va_arg(arguments, int);
                 //std::cout << "Caught a char : " <<  value;
                 appendChar(value);
                 break;
             }
-            case 'l':
+            case UNSIGNED_CHAR:
+            {
+                unsigned char value = (unsigned char) va_arg(arguments, int);
+                //std::cout << "Caught a char : " <<  value;
+                appendChar(value);
+                break;
+            }
+            case LONG:
             {
                 long long int value = va_arg(arguments, long long int);
                 //std::cout << "Caught a long long :" << value;
                 appendLong(value);
+                break;
+            }
+            case POINTER:
+            {
+                void *value = va_arg(arguments, void *);
+                //std::cout << "Caught a pointer :" << value;
+                appendPointer(value);
                 break;
             }
             default:
@@ -116,6 +130,13 @@ void Message::appendVaList(const char *types, va_list arguments)
 bool Message::append(boost::any value)
 {
     arguments_.push_back(value);
+    return true;
+}
+
+bool Message::prepend(boost::any value)
+{
+    arguments_.insert(arguments_.begin(), value);
+    return true;
 }
 
 unsigned int Message::getSize() const
@@ -138,31 +159,87 @@ const boost::any *Message::getArgument(unsigned int index) const // throw(BadInd
     }
 }
 
+void Message::prependFloat(float value)
+{
+    prepend(boost::any(value));
+}
+
+void Message::prependInt(int value)
+{
+    prepend(boost::any(value));
+}
+
+void Message::prependLong(long long int value)
+{
+    prepend(boost::any(value));
+}
+
+void Message::prependStdString(std::string value)
+{
+    prepend(boost::any(value));
+}
+
+void Message::prependBoolean(bool value)
+{
+    prepend(boost::any(value));
+}
+
+void Message::prependChar(char value)
+{
+    prepend(boost::any(value));
+}
+
+void Message::prependDouble(double value)
+{
+    prepend(boost::any(value));
+}
+
+void Message::prependPointer(void *value)
+{
+    prepend(boost::any(value));
+}
+
 void Message::appendFloat(float value)
 {
     append(boost::any(value));
 }
+
 void Message::appendInt(int value)
 {
     append(boost::any(value));
 }
+
 void Message::appendLong(long long int value)
 {
     append(boost::any(value));
 }
+
 void Message::appendStdString(std::string value)
 {
     append(boost::any(value));
 }
+
 void Message::appendBoolean(bool value)
 {
     append(boost::any(value));
 }
+
 void Message::appendChar(char value)
 {
     append(boost::any(value));
 }
+
+void Message::appendUnsignedChar(unsigned char value)
+{
+    append(boost::any(value));
+}
+
 void Message::appendDouble(double value)
+{
+    append(boost::any(value));
+}
+
+void Message::appendPointer(void *value)
 {
     append(boost::any(value));
 }
@@ -173,36 +250,49 @@ int Message::getInt(unsigned int index) const throw(BadArgumentTypeException, Ba
     get<int>(index, value);
     return value;
 }
+
 long long int Message::getLong(unsigned int index) const throw(BadArgumentTypeException, BadIndexException)
 {
     long long int value;
     get<long long int>(index, value);
     return value;
 }
+
 double Message::getDouble(unsigned int index) const throw(BadArgumentTypeException, BadIndexException)
 {
     double value;
     get<double>(index, value);
     return value;
 }
+
 std::string Message::getString(unsigned int index) const throw(BadArgumentTypeException, BadIndexException)
 {
     std::string value;
     get<std::string>(index, value);
     return value;
 }
+
 float Message::getFloat(unsigned int index) const throw(BadArgumentTypeException, BadIndexException)
 {
     float value;
     get<float>(index, value);
     return value;
 }
+
 char Message::getChar(unsigned int index) const throw(BadArgumentTypeException, BadIndexException)
 {
     char value;
     get<char>(index, value);
     return value;
 }
+
+unsigned char Message::getUnsignedChar(unsigned int index) const throw(BadArgumentTypeException, BadIndexException)
+{
+    unsigned char value;
+    get<unsigned char>(index, value);
+    return value;
+}
+
 bool Message::getBoolean(unsigned int index) const throw(BadArgumentTypeException, BadIndexException)
 {
     bool value;
@@ -210,33 +300,56 @@ bool Message::getBoolean(unsigned int index) const throw(BadArgumentTypeExceptio
     return value;
 }
 
+void *Message::getPointer(unsigned int index) const throw(BadArgumentTypeException, BadIndexException)
+{
+    void *value;
+    get<void *>(index, value);
+    return value;
+}
+
 void Message::setBoolean(unsigned int index, bool value) throw(BadArgumentTypeException, BadIndexException)
 {
     set<bool>(index, value);
 }
+
 void Message::setChar(unsigned int index, char value) throw(BadArgumentTypeException, BadIndexException)
 {
     set<char>(index, value);
 }
+
+void Message::setUnsignedChar(unsigned int index, unsigned char value) throw(BadArgumentTypeException, BadIndexException)
+{
+    set<unsigned char>(index, value);
+}
+
 void Message::setDouble(unsigned int index, double value) throw(BadArgumentTypeException, BadIndexException)
 {
     set<double>(index, value);
 }
+
 void Message::setFloat(unsigned int index, float value) throw(BadArgumentTypeException, BadIndexException)
 {
     set<float>(index, value);
 }
+
 void Message::setInt(unsigned int index, int value) throw(BadArgumentTypeException, BadIndexException)
 {
     set<int>(index, value);
 }
+
 void Message::setLong(unsigned int index, long long int value) throw(BadArgumentTypeException, BadIndexException)
 {
     set<long long int>(index, value);
 }
+
 void Message::setString(unsigned int index, std::string value) throw(BadArgumentTypeException, BadIndexException)
 {
     set<std::string>(index, value);
+}
+
+void Message::setPointer(unsigned int index, void *value) throw(BadArgumentTypeException, BadIndexException)
+{
+    set<void *>(index, value);
 }
 
 namespace types
@@ -251,6 +364,8 @@ bool getArgumentTypeForAny(const boost::any &value, ArgumentType &type)
         type = BOOLEAN;
     else if (actual == typeid(char))
         type = CHAR;
+    else if (actual == typeid(unsigned char))
+        type = UNSIGNED_CHAR;
     else if (actual == typeid(double))
         type = DOUBLE;
     else if (actual == typeid(float))
@@ -261,6 +376,8 @@ bool getArgumentTypeForAny(const boost::any &value, ArgumentType &type)
         type = LONG;
     else if (actual == typeid(std::string))
         type = STRING;
+    else if (actual == typeid(void *))
+        type = POINTER;
     else
     {
         std::cerr << __FUNCTION__ << ": Could not figure out type of value. It's " << actual.name() << std::endl;
@@ -344,6 +461,10 @@ bool Message::operator==(const Message &other) const
                 if (getChar(i) != other.getChar(i))
                     return false;
                 break;
+            case UNSIGNED_CHAR:
+                if (getUnsignedChar(i) != other.getUnsignedChar(i))
+                    return false;
+                break;
             case DOUBLE:
                 if (getDouble(i) != other.getDouble(i))
                     return false;
@@ -362,6 +483,10 @@ bool Message::operator==(const Message &other) const
                 break;
             case STRING:
                 if (getString(i) != other.getString(i))
+                    return false;
+                break;
+            case POINTER:
+                if (getPointer(i) != other.getPointer(i))
                     return false;
                 break;
             defaut:
@@ -386,7 +511,10 @@ std::ostream &operator<<(std::ostream &os, const Message &message)
                 os << message.getBoolean(i);
                 break;
             case CHAR:
-                os << message.getChar(i);
+                os << (unsigned int) message.getChar(i);
+                break;
+            case UNSIGNED_CHAR:
+                os << (unsigned int) message.getUnsignedChar(i);
                 break;
             case DOUBLE:
                 os << message.getDouble(i);

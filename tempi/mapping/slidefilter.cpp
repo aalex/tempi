@@ -22,8 +22,7 @@
 #include "tempi/sharedptr.h"
 #include <iostream>
 
-namespace tempi
-{
+namespace tempi { namespace mapping {
 
 SlideFilter::SlideFilter() :
     Filter(),
@@ -71,5 +70,6 @@ bool SlideFilter::setSlide(double slide)
         return false;
 }
 
+} // end of namespace
 } // end of namespace
 

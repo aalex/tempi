@@ -1,13 +1,28 @@
-#include "oscreceiver.h"
+/*
+ * Copyright (C) 2011 Alexandre Quessy
+ * 
+ * This file is part of Tempi.
+ * 
+ * Tempi is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Tempi is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#include "tempi/osc/oscreceiver.h"
 #include <boost/lexical_cast.hpp>
 #include <stdio.h>
 #include <string>
 
-namespace tempi
-{
-
-namespace osc
-{
+namespace tempi { namespace osc {
 
 std::string removeFirstChar(const std::string &from)
 {
@@ -54,8 +69,6 @@ bool oscMessageMatches(const tempi::Message &message, const char *path, const ch
     //    std::cout << " - success!" << std::endl;
     return true;
 }
-
-} // end of namespace
 
 OscReceiver::OscReceiver(unsigned int port) :
     port_(port),
@@ -144,7 +157,6 @@ int OscReceiver::generic_handler(const char *path, const char *types, lo_arg **a
     return 1;
 }
 
-
 std::vector<Message> OscReceiver::poll()
 {
     if (running_)
@@ -183,5 +195,6 @@ std::ostream &operator<<(std::ostream &os, const OscReceiver &osc_receiver)
     return os;
 }
 
-} // end of namespace temp
+} // end of namespace
+} // end of namespace
 

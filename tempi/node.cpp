@@ -30,6 +30,34 @@ Node::Node()
     addInlet(); // all nodes have at least one inlet for properties
 }
 
+bool Node::isInitiated() const
+{
+    return initiated_;
+}
+
+bool Node::init()
+{
+    if (isInitiated())
+        return false;
+    else
+    {
+        initiated_ = true; // very important!
+        onInit();
+        std::map<std::string, Message>::const_iterator iter;
+        for (iter = properties_.begin(); iter != properties_.end(); ++iter)
+        {
+            // Updates properties, etc.
+            onPropertyChanged((*iter).first.c_str(), (*iter).second);
+        }
+        return true;
+    }
+}
+
+void Node::onInit()
+{
+    // pass
+}
+
 std::vector<Source::ptr> Node::getOutlets()
 {
     return outlets_;
@@ -69,11 +97,11 @@ void Node::onInletTriggered(Sink *sink, const Message &message)
                 }
                 catch (const BadIndexException &e)
                 {
-                    std::cerr << "Node::" << __FUNCTION__ << ": " << e.what();
+                    std::cerr << "Node(" << getTypeName() << ":" << getInstanceName() << ")::" << __FUNCTION__ << ": " << e.what();
                 }
                 catch (const BadArgumentTypeException &e)
                 {
-                    std::cerr << "Node::" << __FUNCTION__ << ": " << e.what();
+                    std::cerr << "Node(" << getTypeName() << ":" << getInstanceName() << ")::" << __FUNCTION__ << ": " << e.what();
                 }
             }
         }
@@ -95,7 +123,7 @@ unsigned int Node::getInletIndex(Sink *sink) const throw(BadIndexException)
         ++index;
     }
     std::ostringstream os;
-    os << "Node::" << __FUNCTION__ << ": No such inlet pointer";
+    os << "Node(" << getTypeName() << ":" << getInstanceName() << ")::" << __FUNCTION__ << ": " << ": No such inlet pointer";
     throw BadIndexException(os.str().c_str());
 }
 
@@ -163,6 +191,8 @@ bool Node::hasOutlet(Source *source)
 
 void Node::tick()
 {
+    if (! isInitiated())
+        init();
     doTick();
 }
 
@@ -206,7 +236,7 @@ Source::ptr Node::getOutletSharedPtr(unsigned int number) const throw(BadIndexEx
     if (number >= getNumberOfInlets())
     {
         std::ostringstream os;
-        os << "Node::" << __FUNCTION__ << ": Bad outlet index: " << number;
+        os << "Node(" << getTypeName() << ":" << getInstanceName() << ")::" << __FUNCTION__ << ": " << ": Bad outlet index: " << number;
         throw BadIndexException(os.str().c_str());
     }
     return outlets_[number];
@@ -218,7 +248,7 @@ const Message &Node::getProperty(const char *name) const throw(BadIndexException
     if (iter == properties_.end())
     {
         std::ostringstream os;
-        os << "Node::" << __FUNCTION__ << ": No such property: " << name;
+        os << "Node(" << getTypeName() << ":" << getInstanceName() << ")::" << __FUNCTION__ << ": " << ": No such property: " << name;
         throw (BadIndexException(os.str().c_str()));
     }
     else
@@ -232,6 +262,7 @@ const Message &Node::getArguments() const
 void Node::setArguments(const Message &message)
 {
     arguments_ = message;
+    onSetArguments(message);
 }
 
 bool Node::hasProperty(const char *name) const
@@ -256,16 +287,9 @@ void Node::setProperty(const char *name, const Message &value) throw(BadIndexExc
     //std::cout << "Node::" << __FUNCTION__ << ": " << name << " = " << value << std::endl;
     if (current.getTypes().compare(value.getTypes()) == 0)
     {
-        // TODO: checking if changed did not work.
-        // if (value == current)
-        // {
-        //     std::cerr << "Node::" << __FUNCTION__ << ": Not changing value." << std::endl;
-        // }
-        // else
-        // {
         properties_[std::string(name)] = value;
-        onPropertyChanged(name, value);
-        // }
+        if (isInitiated())
+            onPropertyChanged(name, value);
     }
     else
     {
@@ -293,15 +317,53 @@ bool Node::message(unsigned int inlet, const Message &message)
         std::cerr << "Node::" << __FUNCTION__ << ": Inlet " << inlet << "too big for node." << std::endl;
         return false;
     }
-    Sink *inletPtr = getInlet(inlet);
-    inletPtr->trigger(message);
-    return true;
+    if (isInitiated())
+    {
+        Sink *inletPtr = getInlet(inlet);
+        inletPtr->trigger(message);
+        return true;
+    }
+    else
+    {
+        std::cerr << "Warning: Called " << __FUNCTION__ << "() on non-initialized Node of type " << getTypeName() << " in inlet " << inlet << ": " << message << std::endl;
+        return false;
+    }
 }
 
 void Node::output(unsigned int outlet, const Message &message) const throw(BadIndexException)
 {
     Source::ptr source = getOutletSharedPtr(outlet);
     source->trigger(message);
+}
+
+void Node::setTypeName(const char *typeName)
+{
+    typeName_ = std::string(typeName);
+}
+
+const std::string &Node::getTypeName() const
+{
+    return typeName_;
+}
+
+void Node::setInstanceName(const char *instanceName)
+{
+    instanceName_ = std::string(instanceName);
+}
+
+const std::string &Node::getInstanceName() const
+{
+    return instanceName_;
+}
+
+void Node::enableHandlingReceiveSymbol(const char *selector)
+{
+    handledReceiveSymbol_ = selector;
+}
+
+bool Node::handlesReceiveSymbol(const char *selector) const
+{
+    return handledReceiveSymbol_ == selector;
 }
 
 } // end of namespace

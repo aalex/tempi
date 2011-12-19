@@ -24,10 +24,9 @@
 #ifndef __TEMPI_SLIDEFILTER_H__
 #define __TEMPI_SLIDEFILTER_H__
 
-#include "tempi/filter.h"
+#include "tempi/mapping/filter.h"
 
-namespace tempi
-{
+namespace tempi { namespace mapping {
 
 /**
  * The slide filter smooths changes in streams of numbers.
@@ -46,6 +45,7 @@ class SlideFilter : public Filter
         bool had_some_in_yet_;
 };
 
+} // end of namespace
 } // end of namespace
 
 #endif // ifndef

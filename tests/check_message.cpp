@@ -67,6 +67,32 @@ bool check_clone()
     return true;
 }
 
+struct Foo
+{
+    int i;
+};
+
+bool checkPointer()
+{
+    Foo f;
+    f.i = 2;
+
+    Message m;
+    m.appendPointer((void *) &f);
+    if (m.getTypes() != "p")
+    {
+        std::cout << "Expected message with p types\n";
+        return false;
+    }
+    Foo *p = (Foo *) m.getPointer(0);
+    if (p->i != f.i)
+    {
+        std::cout << "Struct pointed by pointer doesn't match.\n";
+        return false;
+    }
+    return true;
+}
+
 int main(int argc, char *argv[])
 {
     if (! check_message())
@@ -74,6 +100,8 @@ int main(int argc, char *argv[])
     if (! check_clone())
         return 1;
     if (! check_valist())
+        return 1;
+    if (! checkPointer())
         return 1;
     return 0;
 }

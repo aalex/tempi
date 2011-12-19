@@ -1,20 +1,111 @@
 To do in Tempi
 ==============
 
-Soon
------
- * Create a NodeLibrary class with a load() static template method
- * Prevent from recursion by throwing a RecursionException upon output triggered twice. No?
- * Create the tempi-plugins-base library
- * Enclose signals as private data member. Provide accessors to it, or allow to add callbacks to it.
- * Fix test for MetroNode
- * move CounterNode to base.
+To do for 0.1.8
+---------------
+* Move nodes to tempi-plugins-base // FIXME: header files are not installed in subdirectories, but flat
+* Node: remove arguments
+* Node: dynamic type properties
+* Node: rename property to attribute
+* named inlets/outlets, not numbered
+* Node::listInlets()
+* Node::listOutlets()
+* list/configure MIDI ports by their ALSA ID, not an index
 
-Later
------
- * Many sender/receiver with the same host+port should share the same OSC sender. Use a map of tuple<ip,port> to shared_ptr<OscSender>.
- * Get done with tempi/samplernode.cpp
- * Get done with tempi/tempi-signal.h
- * Create MIDI sink and sources nodes
- * Create a timeline viewing Clutter actor.
+To do for 0.2
+-------------
+* midilooper: multitrack sequencer with GUI
+* Bugfix: Message.*(...): avoid segfault if length does not match
+* Bugfix: Message.*(...): avoid segfault if types do not match
+* Rename Filter to FilterNode.
+* FilterNode.filter should return a const&
+* Each scheduler should access some tracks
+* Each scheduler should access some state machines
+* Graph::load(fileName)
+* Graph::save(fileName)
+* Node::addInlet (i18n doc)
+* Node::addMethod (i18n doc)
+* Node::addOutlet (i18n doc)
+* Node::addProperty (i18n doc, allow non type strict)
+* Node::listProperties()
+* Scheduler::deleteGraph()
+* Score::load(fileName)
+* Score::save(fileName)
+* tempi::MATRIX
+* tempi::LIST
+* [mapping.curve]
+* [base.prepend]
+* [base.receive]
+* [base.route]
+* [base.send]
+* [base.spigot]
+* [base.timer]
+* [sampler.reader]
+* [sampler.score]
+* [sampler.writer]
+* [base.metro]: fix unit tests
+
+To do for 0.4
+-------------
+* Regions have mapping modifiers. (range, clip, etc.)
+* Regions have follow actions. (nothing, stop, play again, previous, next, first, last, any, other)
+* Create libraries of nodes (tempi-plugins-base)
+* Enclose signals as private data member. Provide accessors to it, or allow to add callbacks to it.
+* Improve FilterNode to explode arrays and make sure they are doubles, not floats.
+* Feature: allow to configure externals with an XML config file. (system-wide, then user-specific)
+* Application: Write a basic trajectories editor, for 3D coordinates with 3D and 2D views. (like Hole-edit)
+* Application: Write a basic node editor.
+* [mapping.*] should be provided a typetag argument. (and support types fdi)
+* [base.converttype]
+* [base.delay]
+* [base.trigger]
+* [base.typematches]
+* [base.python]
+* [math.*]
+* [math.+]
+* [math.-]
+* [math./]
+* [math.<]
+* [math.==]
+* [math.>]
+* [math.clip]
+* [math.rsqrt]
+* [math.sqrt]
+* [math.wrap]
+* [osc.prepend]
+* [osc.route]
+* [osc.pop]
+* [table.read]
+* [table.write]
+* [table.table]
+
+To do for 0.6
+-------------
+* [base.textfile]
+* [freenect.pointscloud]
+* [math.abs]
+* [math.dbtopow]
+* [math.dbtorms]
+* [math.exp]
+* [math.ftom]
+* [math.log]
+* [math.mtof]
+* [math.powtodb]
+* [math.rmstodb]
+* [pd.receive]
+* [pd.send]
+* [base.regex]
+* [rtp.rtpreceive]
+* [rtp.rtpsend]
+* [spatosc.scene]
+* [spin.receive]
+* [spin.send]
+* Support loading extensions and finding files from a list of paths
+* All nodes should have an enabled attribute
+* All nodes should have a verbose attribute
+* Implement Node::error, which triggers a signal that the Graph catches.
+* Feature: Many OSC sender/receiver with the same host+port should share the same OSC sender. Use a map of tuple<ip,port> to shared_ptr<OscSender>.
+* Bugfix: Prevent from recursion by throwing a RecursionException upon output triggered twice. No?
+* Create a timeline Clutter actor.
+* Create a graph editor Clutter actor.
 

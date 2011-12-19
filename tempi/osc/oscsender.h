@@ -23,8 +23,8 @@
  * The OscSender class.
  */
 
-#ifndef __OSC_SENDER_H__
-#define __OSC_SENDER_H__
+#ifndef __TEMPI_OSCSENDER_H__
+#define __TEMPI_OSCSENDER_H__
 
 #include <iostream>
 #include <string>
@@ -32,8 +32,8 @@
 #include "tempi/message.h"
 #include "tempi/sharedptr.h"
 
-namespace tempi
-{
+namespace tempi {
+namespace osc {
 
 /**
  * Sends OpenSoundControl messages.
@@ -53,6 +53,7 @@ class OscSender
         lo_address lo_address_;
 };
 
+} // end of namespace
 } // end of namespace
 
 #endif // __OSC_SENDER_H__

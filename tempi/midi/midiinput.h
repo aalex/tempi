@@ -30,11 +30,8 @@
 #include "tempi/message.h"
 #include <stk/RtMidi.h>
 
-namespace tempi
-{
-
-namespace midi
-{
+namespace tempi {
+namespace midi {
 
 /** 
  * MIDI input using RtMidi.
@@ -48,8 +45,9 @@ class MidiInput
         /** Opens a MIDI source device. */
         bool open(unsigned int port);
         unsigned int getPort() const;
-        /** Enumerates the list of MIDI source devices. */
+        /** Prints the list of MIDI source devices. */
         void enumerateDevices() const;
+        // TODO: std::vector<boost::tuple<unsigned int, std::string> > enumerateDevices();
         bool isOpen() const;
         bool isVerbose() const;
         /** Sets it verbose or not. */
@@ -61,6 +59,7 @@ class MidiInput
         bool opened_;
         unsigned int port_;
         unsigned int ports_count_;
+        std::string client_name_;
         ConcurrentQueue<Message> messaging_queue_;
         RtMidiIn *midi_in_;
         // methods:
@@ -70,7 +69,6 @@ class MidiInput
 };
 
 } // end of namespace
-
 } // end of namespace
 
 #endif // include guard

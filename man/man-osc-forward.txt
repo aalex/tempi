@@ -1,0 +1,25 @@
+[DESCRIPTION]
+Forwards OSC messages received at given ports to some given hostnames and ports.
+
+[SYNOPSIS]
+osc-forward [options]
+
+[EXAMPLES]
+Forward OSC message from port 10000 to port 20000 on localhost:
+
+  osc-forward -r 10000 -s localhost:20000
+
+[AUTHOR]
+Alexandre Quessy
+
+[HISTORY]
+2011 - Written by Alexandre Quessy
+
+[REPORTING BUGS]
+See http://tempi.toonloop.com
+
+[COPYRIGHT]
+Copyright (c) 2011 Alexandre Quessy <alexandre@quessy.net>
+
+[SEE ALSO]
+midilooper(1), tempi-draw(1)

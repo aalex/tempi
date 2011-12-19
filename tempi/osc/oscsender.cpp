@@ -1,9 +1,9 @@
-#include "oscsender.h"
+#include "tempi/osc/oscsender.h"
 #include <sstream>
 #include <string>
 
-namespace tempi
-{
+namespace tempi {
+namespace osc {
 
 OscSender::OscSender(const char *host, unsigned int port) :
     port_(port),
@@ -87,5 +87,6 @@ bool OscSender::isValidPath(const std::string &path)
     return true;
 }
 
+} // end of namespace
 } // end of namespace
 

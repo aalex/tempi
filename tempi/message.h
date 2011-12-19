@@ -45,12 +45,14 @@ typedef enum
 {
     BOOLEAN = 'b',
     CHAR = 'c',
+    UNSIGNED_CHAR = 'C',
     DOUBLE = 'd',
     FLOAT = 'f',
     INT = 'i',
     LONG = 'l',
-    STRING = 's'
-    //TODO: POINTER = 'p'
+    STRING = 's',
+    // TODO: UNICODE = 'u',
+    POINTER = 'p'
 } ArgumentType;
 
 namespace types
@@ -87,6 +89,7 @@ class Message
 
         void appendBoolean(bool value);
         void appendChar(char value);
+        void appendUnsignedChar(unsigned char value);
         void appendDouble(double value);
         void appendFloat(float value);
         void appendInt(int value);
@@ -95,10 +98,26 @@ class Message
         {
             appendStdString(std::string(value));
         }
+        void appendPointer(void *value);
+
+        void prependBoolean(bool value);
+        void prependChar(char value);
+        void prependUnsignedChar(unsigned char value);
+        void prependDouble(double value);
+        void prependFloat(float value);
+        void prependInt(int value);
+        void prependLong(long long int value);
+        void prependString(const char *value)
+        {
+            prependStdString(std::string(value));
+        }
+        void prependPointer(void *value);
 
         bool getBoolean(unsigned int index) const
             throw(BadArgumentTypeException, BadIndexException);
         char getChar(unsigned int index) const
+            throw(BadArgumentTypeException, BadIndexException);
+        unsigned char getUnsignedChar(unsigned int index) const
             throw(BadArgumentTypeException, BadIndexException);
         double getDouble(unsigned int index) const
             throw(BadArgumentTypeException, BadIndexException);
@@ -112,10 +131,14 @@ class Message
             throw(BadArgumentTypeException, BadIndexException);
         //void getString(unsigned int index, std::string &value) const
         //  throw(BadArgumentTypeException, BadIndexException);
+        void *getPointer(unsigned int index) const
+            throw(BadArgumentTypeException, BadIndexException);
 
         void setBoolean(unsigned int index, bool value)
             throw(BadArgumentTypeException, BadIndexException);
         void setChar(unsigned int index, char value)
+            throw(BadArgumentTypeException, BadIndexException);
+        void setUnsignedChar(unsigned int index, unsigned char value)
             throw(BadArgumentTypeException, BadIndexException);
         void setDouble(unsigned int index, double value)
             throw(BadArgumentTypeException, BadIndexException);
@@ -132,6 +155,8 @@ class Message
         {
             setString(index, std::string(value));
         }
+        void setPointer(unsigned int index, void *value)
+            throw(BadArgumentTypeException, BadIndexException);
 
         // TODO: deprecate the string version
         bool typesMatch(std::string &types) const;
@@ -151,6 +176,9 @@ class Message
         //     return append(boost::any(value));
         // }
 
+        /**
+         * FIXME: seems it's broken.
+         */
         bool operator==(const Message &other) const;
         bool operator!=(const Message &other) const;
 
@@ -167,11 +195,13 @@ class Message
     private:
         void appendVaList(const char* types, va_list arguments);
         void appendStdString(std::string value);
+        void prependStdString(std::string value);
         // Message(std::vector<boost::any> arguments);
         // std::vector<boost::any> &getArguments();
         const boost::any *getArgument(unsigned int index) const; // throw(BadIndexException);
         std::vector<boost::any> arguments_;
         bool append(boost::any value);
+        bool prepend(boost::any value);
 
         template <typename T>
         void get(unsigned int index, T &value) const

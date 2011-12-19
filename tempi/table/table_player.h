@@ -27,8 +27,8 @@
 #include "tempi/table/table.h"
 #include "tempi/message.h"
 
-namespace tempi
-{
+namespace tempi {
+namespace table {
 
 /**
  * A TablePlayer plays events from a Table.
@@ -64,6 +64,7 @@ class TablePlayer
         unsigned int index_;
 };
 
+} // end of namespace
 } // end of namespace
 
 #endif // ifndef

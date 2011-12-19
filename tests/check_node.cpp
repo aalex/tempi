@@ -7,15 +7,16 @@ using namespace tempi;
 /**
  * Dummy sink node.
  */
-class DummySinkNode: public NopNode
+class DummySinkNode: public base::NopNode
 {
     public:
         DummySinkNode() :
-            NopNode()
+            base::NopNode()
         {
             triggered_ = false;
             expected_ = false;
             last_value_was_ok_ = false;
+            addOutlet();
         }
         bool triggered_;
         bool last_value_was_ok_;
@@ -31,15 +32,15 @@ class DummySinkNode: public NopNode
 
 bool check_simple()
 {
-    NopNode a;
-    NopNode b;
+    base::NopNode a;
+    base::NopNode b;
     DummySinkNode c;
     if (! b.getInlets()[0].get()->connect(a.getOutlets()[0]))
     {
         std::cout << "Could not connect a to b." << std::endl;
         return false;
     }
-    if (! c.getInlet()->connect(b.getOutlets()[0]))
+    if (! c.getInlet(0)->connect(b.getOutlets()[0]))
     {
         std::cout << "Could not connect b to c." << std::endl;
         return false;
@@ -64,12 +65,12 @@ bool check_simple()
         return false;
     }
 
-    if (! c.getInlet()->disconnect(b.getOutlets()[0]))
+    if (! c.getInlet(0)->disconnect(b.getOutlets()[0]))
     {
         std::cout << "Could not disconnect b to c." << std::endl;
         return false;
     }
-    if (c.getInlet()->disconnect(b.getOutlets()[0]))
+    if (c.getInlet(0)->disconnect(b.getOutlets()[0]))
     {
         std::cout << "Could disconnect b to c twice." << std::endl;
         return false;
@@ -79,7 +80,7 @@ bool check_simple()
 
 bool check_args()
 {
-    NopNode a;
+    base::NopNode a;
     // test arguments
     Message args;
     args.appendString("foo");

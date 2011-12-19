@@ -1,0 +1,26 @@
+[DESCRIPTION]
+Simple drawing program that plays drawing trajectories in loops.
+
+[INTERACTIVE USAGE]
+Click and hold the mouse to draw a stroke. Click on a colored square to choose a color.
+
+Press Backspace to erase the most recent stroke.
+
+Press Escape to toggle fullscreen mode.
+
+Press control-q to quit.
+
+[AUTHOR]
+Alexandre Quessy
+
+[HISTORY]
+2011 - Written by Alexandre Quessy
+
+[REPORTING BUGS]
+See http://tempi.toonloop.com
+
+[COPYRIGHT]
+Copyright (c) 2011 Alexandre Quessy <alexandre@quessy.net>
+
+[SEE ALSO]
+osc-forward(1), midilooper(1)

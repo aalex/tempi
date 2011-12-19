@@ -19,14 +19,17 @@ static bool fail(const char *message)
 static bool check_oscsender_node()
 {
     NodeFactory::ptr factory(new NodeFactory);
-    AbstractNodeType::ptr oscSenderNodeType((AbstractNodeType*) (new NodeType<OscSenderNode>));
-    factory->registerType("osc.send", oscSenderNodeType);
+
+    factory->registerTypeT<osc::OscSenderNode>("osc.send");
+
     Graph graph(factory);
 
     if (! graph.addNode("osc.send", "sender0"))
         return fail("Failed to add sender0");
 
-    Node *sender0 = graph.getNode("sender0");
+    graph.tick(); // calls Node::init() of the osc.send Node.
+
+    Node *sender0 = graph.getNode("sender0").get();
     if (sender0 == 0)
     {
         return fail("Failed to get sender0 node.");

@@ -28,7 +28,6 @@
 #include <vector>
 #include "tempi/exceptions.h"
 #include "tempi/message.h"
-//#include "tempi/property.h"
 #include "tempi/sharedptr.h"
 #include "tempi/sink.h"
 #include "tempi/source.h"
@@ -46,6 +45,8 @@ class Node
         typedef std::tr1::shared_ptr<Node> ptr;
         Node();
         virtual ~Node() {}
+        bool init();
+        bool isInitiated() const;
         /**
          * Returns all its outlets.
          */
@@ -84,7 +85,22 @@ class Node
         // typedef boost::signals2::signal<void(Message)> Signal;
         // std::map<std::string, Signal> getSignals();
         // type_info *getSignalType(std::string signal);
+        void setTypeName(const char *typeName);
+        const std::string &getTypeName() const;
+        void setInstanceName(const char *instanceName);
+        const std::string &getInstanceName() const;
+        bool handlesReceiveSymbol(const char *selector) const;
+        bool handleReceive(const char *selector, const Message &message)
+        {
+            if (! handlesReceiveSymbol(selector))
+                return false;
+            onHandleReceive(selector, message);
+            return true;
+        }
     protected:
+        void enableHandlingReceiveSymbol(const char *selector);
+        virtual void onHandleReceive(const char *selector, const Message &message)
+        {}
         /**
          * Adds a outlet.
          */
@@ -105,17 +121,32 @@ class Node
         void output(unsigned int outlet, const Message &message) const throw(BadIndexException);
         virtual void onPropertyChanged(const char *name, const Message &value)
         {}
+        virtual void onSetArguments(const Message &message)
+        {}
         unsigned int getInletIndex(Sink *sink) const throw(BadIndexException);
+        // TODO: make private:
         void onInletTriggered(Sink *sink, const Message &message);
+        // TODO: make private:
         virtual void processMessage(unsigned int inlet, const Message &message) = 0;
+        // TODO: make private:
         virtual void doTick();
         bool hasInlet(Sink *sink);
         bool hasOutlet(Source *source);
+        /**
+         * Called when init() is called.
+         * Subclasses of node should implement this if needed.
+         * (for initiating sockets, files, user interfaces, etc.)
+         */
+        virtual void onInit();
     private:
+        bool initiated_;
         std::vector<Source::ptr> outlets_;
         std::map<std::string, Message> properties_;
         std::vector<Sink::ptr> inlets_;
         Message arguments_;
+        std::string typeName_;
+        std::string instanceName_;
+        std::string handledReceiveSymbol_;
         // TODO: return success
         // TODO: add unsigned int inlet_number
 };
