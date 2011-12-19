@@ -38,7 +38,10 @@ void OscReceiverNode::onPropertyChanged(const char *name, const Message &value)
     {
         unsigned int portNumber = value.getInt(0);
         //std::cout << "OscReceiver::" << __FUNCTION__ << " listen on port " << portNumber << std::endl;
-        osc_receiver_.reset(new OscReceiver(portNumber));
+        if (portNumber == 0)
+            osc_receiver_.reset((OscReceiver *) 0);
+        else
+            osc_receiver_.reset(new OscReceiver(portNumber));
     }
 }
 
@@ -46,7 +49,7 @@ void OscReceiverNode::doTick()
 {
     if (osc_receiver_.get() == 0)
     {
-        std::cerr << "OscReceiverNode::" << __FUNCTION__ << " not initialized. Please specifiy a port number." << std::endl;
+        // std::cerr << "OscReceiverNode::" << __FUNCTION__ << "(): OscReceiver is NULL. Cannot poll incoming OSC messages. Please specifiy a port number." << std::endl;
         return;
     }
     std::vector<Message> messages = osc_receiver_->poll();
