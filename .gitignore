@@ -81,5 +81,6 @@ tests/check_version
 # -------------------------
 # negations:
 !prototypes/kinect/Makefile
+!prototypes/midi/Makefile
 !prototypes/modules/Makefile
 
