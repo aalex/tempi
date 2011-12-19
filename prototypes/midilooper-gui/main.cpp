@@ -36,6 +36,9 @@ static ClutterColor black = { 0x00, 0x00, 0x00, 0xff };
 static void on_frame_cb(ClutterTimeline *timeline, guint *ms, gpointer user_data);
 static void key_event_cb(ClutterActor *actor, ClutterKeyEvent *event, gpointer user_data);
 
+// functions that are dynamically exported:
+void on_button0_clicked(MxButton *actor, gpointer data);
+
 #define USE_FUNCTION(x) (void) (x)
 
 // Clutter legacy macro aliases:
@@ -108,7 +111,7 @@ App::App()
     clutter_actor_show(stage_);
 }
 
-static void on_button0_clicked(MxButton *actor, gpointer data)
+void on_button0_clicked(MxButton *actor, gpointer data)
 {
     (void) actor;
     (void) data;
