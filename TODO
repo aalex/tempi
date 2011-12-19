@@ -4,19 +4,24 @@ To do in Tempi
 To do for 0.1.6
 ---------------
 * FIXME: header files are not installed in subdirectories, but flat
-* list/configure MIDI ports by their ALSA ID, not an index
 
-To do for 0.2
--------------
+To do for 0.1.8
+---------------
 * Node: remove arguments
 * Node: dynamic type properties
 * Node: rename property to attribute
 * named inlets/outlets, not numbered
+* Node::listInlets()
+* Node::listOutlets()
+* list/configure MIDI ports by their ALSA ID, not an index
+
+To do for 0.2
+-------------
+* midilooper: multitrack sequencer with GUI
 * Bugfix: Message.*(...): avoid segfault if length does not match
 * Bugfix: Message.*(...): avoid segfault if types do not match
 * Rename Filter to FilterNode.
 * FilterNode.filter should return a const&
-* Allow non type strict attributes
 * Each scheduler should access some tracks
 * Each scheduler should access some state machines
 * Graph::load(fileName)
@@ -25,8 +30,6 @@ To do for 0.2
 * Node::addMethod (i18n doc)
 * Node::addOutlet (i18n doc)
 * Node::addProperty (i18n doc, allow non type strict)
-* Node::listInlets()
-* Node::listOutlets()
 * Node::listProperties()
 * Scheduler::deleteGraph()
 * Score::load(fileName)
