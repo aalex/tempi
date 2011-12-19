@@ -27,11 +27,8 @@
 #include "tempi/midi/midioutput.h"
 #include "tempi/node.h"
 
-namespace tempi
-{
-
-namespace midi
-{
+namespace tempi {
+namespace midi {
 
 /**
  * Node that sends MIDI messages.
@@ -50,7 +47,6 @@ class MidiSenderNode : public Node
 };
 
 } // end of namespace
-
 } // end of namespace
 
 #endif // ifndef

@@ -22,11 +22,8 @@
 #include <iostream>
 #include <string.h>
 
-namespace tempi
-{
-
-namespace utils
-{
+namespace tempi {
+namespace utils {
 
 bool stringBeginsWith(const char *text, const char *pattern)
 {
@@ -84,6 +81,5 @@ std::string concatenate(const char *a, const char *b)
 }
 
 } // end of namespace
-
 } // end of namespace
 
