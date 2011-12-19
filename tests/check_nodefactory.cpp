@@ -71,10 +71,12 @@ bool check_nodefactory()
     }
     Node::ptr foo = factory.create("foo");
     Node::ptr bar = factory.create("bar");
+    foo->init();
+    bar->init();
 
     Message message;
-    foo.get()->getInlet(0)->trigger(message);
-    bar.get()->getInlet(0)->trigger(message);
+    foo->getInlet(0)->trigger(message);
+    bar->getInlet(0)->trigger(message);
     return true;
 }
 
@@ -123,6 +125,8 @@ bool check_print()
     graph.addNode("base.print", "print0");
     graph.addNode("sampler.sampler", "sampler0");
     graph.addNode("base.print", "print1");
+
+    graph.tick(); // call init() on each node
 
     graph.connect("nop0", 0, "nop1", 0);
     graph.connect("nop1", 0, "print0", 0);

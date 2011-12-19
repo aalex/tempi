@@ -196,7 +196,14 @@ void Graph::tick()
     NodesMapType::const_iterator iter;
     for (iter = nodes_.begin(); iter != nodes_.end(); ++iter)
     {
-        (*iter).second.get()->tick();
+        Node *node = (*iter).second.get();
+        if (! node->isInitiated())
+            node->init();
+    }
+    for (iter = nodes_.begin(); iter != nodes_.end(); ++iter)
+    {
+        Node *node = (*iter).second.get();
+        node->tick();
     }
 }
 

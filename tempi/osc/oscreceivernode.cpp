@@ -36,8 +36,9 @@ void OscReceiverNode::onPropertyChanged(const char *name, const Message &value)
     //std::cout << "OscReceiverNode::" << __FUNCTION__ << "(" << name << ", " << value << ")" << std::endl;
     if (utils::stringsMatch("port", name))
     {
-        //std::cout << "OscReceiver::" << __FUNCTION__ << " listen on port " << value.getInt(0) << std::endl;
-        osc_receiver_.reset(new OscReceiver((unsigned int) value.getInt(0)));
+        unsigned int portNumber = value.getInt(0);
+        //std::cout << "OscReceiver::" << __FUNCTION__ << " listen on port " << portNumber << std::endl;
+        osc_receiver_.reset(new OscReceiver(portNumber));
     }
 }
 

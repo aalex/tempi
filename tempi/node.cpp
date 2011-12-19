@@ -30,6 +30,34 @@ Node::Node()
     addInlet(); // all nodes have at least one inlet for properties
 }
 
+bool Node::isInitiated() const
+{
+    return initiated_;
+}
+
+bool Node::init()
+{
+    if (isInitiated())
+        return false;
+    else
+    {
+        initiated_ = true; // very important!
+        onInit();
+        std::map<std::string, Message>::const_iterator iter;
+        for (iter = properties_.begin(); iter != properties_.end(); ++iter)
+        {
+            // Updates properties, etc.
+            onPropertyChanged((*iter).first.c_str(), (*iter).second);
+        }
+        return true;
+    }
+}
+
+void Node::onInit()
+{
+    // pass
+}
+
 std::vector<Source::ptr> Node::getOutlets()
 {
     return outlets_;
@@ -163,6 +191,8 @@ bool Node::hasOutlet(Source *source)
 
 void Node::tick()
 {
+    if (! isInitiated())
+        init();
     doTick();
 }
 
@@ -257,16 +287,9 @@ void Node::setProperty(const char *name, const Message &value) throw(BadIndexExc
     //std::cout << "Node::" << __FUNCTION__ << ": " << name << " = " << value << std::endl;
     if (current.getTypes().compare(value.getTypes()) == 0)
     {
-        // TODO: checking if changed did not work.
-        // if (value == current)
-        // {
-        //     std::cerr << "Node::" << __FUNCTION__ << ": Not changing value." << std::endl;
-        // }
-        // else
-        // {
         properties_[std::string(name)] = value;
-        onPropertyChanged(name, value);
-        // }
+        if (isInitiated())
+            onPropertyChanged(name, value);
     }
     else
     {
@@ -294,9 +317,17 @@ bool Node::message(unsigned int inlet, const Message &message)
         std::cerr << "Node::" << __FUNCTION__ << ": Inlet " << inlet << "too big for node." << std::endl;
         return false;
     }
-    Sink *inletPtr = getInlet(inlet);
-    inletPtr->trigger(message);
-    return true;
+    if (isInitiated())
+    {
+        Sink *inletPtr = getInlet(inlet);
+        inletPtr->trigger(message);
+        return true;
+    }
+    else
+    {
+        std::cerr << "Warning: Called " << __FUNCTION__ << "() on non-initialized Node of type " << getTypeName() << " in inlet " << inlet << ": " << message << std::endl;
+        return false;
+    }
 }
 
 void Node::output(unsigned int outlet, const Message &message) const throw(BadIndexException)
