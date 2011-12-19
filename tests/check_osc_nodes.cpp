@@ -27,6 +27,8 @@ static bool check_oscsender_node()
     if (! graph.addNode("osc.send", "sender0"))
         return fail("Failed to add sender0");
 
+    graph.tick(); // calls Node::init() of the osc.send Node.
+
     Node *sender0 = graph.getNode("sender0").get();
     if (sender0 == 0)
     {

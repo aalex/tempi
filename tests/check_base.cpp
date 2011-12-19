@@ -7,7 +7,7 @@
 using namespace tempi;
 static const bool VERBOSE = false;
 
-bool check_create()
+static bool check_create()
 {
     NodeFactory factory;
     internals::loadInternals(factory);
@@ -22,7 +22,10 @@ bool check_create()
     return true;
 }
 
-bool checkPrepend()
+/**
+ * Creates a node of a type that is supposed to be available in the base plugins.
+ */
+static bool checkPrepend()
 {
     if (VERBOSE)
         std::cout << __FUNCTION__ << std::endl;
@@ -36,12 +39,12 @@ bool checkPrepend()
     Graph graph(factory); // FIXME: smart ptr or not for factory?
     if (VERBOSE)
         std::cout << "add nodes:" << std::endl;
-    graph.addNode("base.prepend", "prepend0");
+    graph.addNode("base.print", "print0");
     // TODO: setNodeArguments
     return true;
 }
 
-bool checkMetro()
+static bool checkMetro()
 {
     if (VERBOSE)
         std::cout << __FUNCTION__ << std::endl;
@@ -69,6 +72,8 @@ bool checkMetro()
     graph.connect("metro0", 0, "print0", 0);
     graph.connect("metro0", 0, "counter0", 0);
     graph.connect("counter0", 0, "any0", 0);
+
+    graph.tick(); // init the nodes
 
     // disable print
     if (VERBOSE)

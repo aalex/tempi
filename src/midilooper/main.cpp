@@ -274,6 +274,8 @@ bool App::setupGraph()
     graph->addNode("midi.send", "midi.send0");
     graph->addNode("base.print", "base.print0");
     graph->addNode("base.print", "base.print1");
+
+    graph->tick(); // calls Node::init() on each node.
     // Connections:
     //graph->connect("midi.recv0", 0, "midi.send0", 0);
     graph->connect("midi.recv0", 0, "base.print0", 0);

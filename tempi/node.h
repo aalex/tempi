@@ -28,7 +28,6 @@
 #include <vector>
 #include "tempi/exceptions.h"
 #include "tempi/message.h"
-//#include "tempi/property.h"
 #include "tempi/sharedptr.h"
 #include "tempi/sink.h"
 #include "tempi/source.h"
@@ -46,6 +45,8 @@ class Node
         typedef std::tr1::shared_ptr<Node> ptr;
         Node();
         virtual ~Node() {}
+        bool init();
+        bool isInitiated() const;
         /**
          * Returns all its outlets.
          */
@@ -131,7 +132,14 @@ class Node
         virtual void doTick();
         bool hasInlet(Sink *sink);
         bool hasOutlet(Source *source);
+        /**
+         * Called when init() is called.
+         * Subclasses of node should implement this if needed.
+         * (for initiating sockets, files, user interfaces, etc.)
+         */
+        virtual void onInit();
     private:
+        bool initiated_;
         std::vector<Source::ptr> outlets_;
         std::map<std::string, Message> properties_;
         std::vector<Sink::ptr> inlets_;

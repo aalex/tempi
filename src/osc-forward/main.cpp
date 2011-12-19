@@ -127,6 +127,7 @@ void App::setupGraph()
     graph_.reset(new tempi::Graph(factory));
     
     graph_->addNode("nop", "nop0");
+    graph_->tick(); // calls Node::init()
 }
 
 static gboolean on_idle(gpointer data)
@@ -154,6 +155,7 @@ bool App::addSender(const char *host, unsigned int port)
     std::string name = os.str();
 
     graph_->addNode("osc.send", name.c_str());
+    graph_->tick(); // calls Node::init()
     Node::ptr node = graph_->getNode(name.c_str());
     Message mess = Message("si", host, port);
     node->setProperty("host_port", mess);
@@ -171,6 +173,7 @@ bool App::addReceiver(unsigned int port)
     std::string name = os.str();
 
     graph_->addNode("osc.receive", name.c_str());
+    graph_->tick(); // calls Node::init()
     Node::ptr node = graph_->getNode(name.c_str());
     Message mess = Message("i", port);
     node->setProperty("port", mess);
