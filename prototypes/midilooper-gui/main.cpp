@@ -35,10 +35,6 @@ static ClutterColor black = { 0x00, 0x00, 0x00, 0xff };
 // static functions:
 static void on_frame_cb(ClutterTimeline *timeline, guint *ms, gpointer user_data);
 static void key_event_cb(ClutterActor *actor, ClutterKeyEvent *event, gpointer user_data);
-static void connect_script_signal(
-    ClutterScript *script, GObject *object, const gchar *signal_name,
-    const gchar *handler_name, GObject *connect_object,
-    GConnectFlags flags, gpointer user_data);
 
 #define USE_FUNCTION(x) (void) (x)
 
@@ -96,7 +92,7 @@ App::App()
     }
     ClutterActor *group0 = CLUTTER_ACTOR(clutter_script_get_object(script, "group0"));
     clutter_container_add_actor(CLUTTER_CONTAINER(stage_), group0);
-    clutter_script_connect_signals_full(script, connect_script_signal, this);
+    clutter_script_connect_signals(script, this);
 
     // timeline to attach a callback for each frame that is rendered
     ClutterTimeline *timeline;
@@ -110,27 +106,11 @@ App::App()
     clutter_actor_show(stage_);
 }
 
-static void connect_script_signal(
-    ClutterScript *script, GObject *object, const gchar *signal_name,
-    const gchar *handler_name, GObject *connect_object,
-    GConnectFlags flags, gpointer user_data)
+static void on_button0_clicked(MxButton *actor, gpointer data)
 {
-    (void) script;
-    (void) object;
-    std::cout << __FUNCTION__ << "(" << signal_name << ", " << handler_name << ")" << std::endl;
-    if (CLUTTER_IS_ACTOR(object))
-    {
-        if (g_strcmp0(clutter_actor_get_name(CLUTTER_ACTOR(object)), "button0") == 0 &&
-            g_strcmp0(signal_name, "clicked") == 0)
-        {
-            std::cout << "button0 clicked\n";
-        }
-    }
-    else
-    {
-        std::cerr << "Not an actor: " << signal_name << std::endl;
-    }
-    std::cout << "leaving " << __FUNCTION__ << std::endl;
+    (void) actor;
+    (void) data;
+    std::cout << __FUNCTION__ << "" << std::endl;
 }
 
 static void on_frame_cb(ClutterTimeline * /*timeline*/, guint * /*ms*/, gpointer user_data)
@@ -157,6 +137,9 @@ static void key_event_cb(ClutterActor *actor, ClutterKeyEvent *event, gpointer u
 
 int main(int argc, char *argv[])
 {
+    // avoid unused warnings
+    (void) on_button0_clicked;
+
     if (clutter_init(&argc, &argv) != CLUTTER_INIT_SUCCESS)
         return 1;
     App app;
