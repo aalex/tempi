@@ -44,6 +44,8 @@ missing
 prototypes/any
 prototypes/fusion/vec
 prototypes/kinect/freedraw
+prototypes/midi/alsalist
+prototypes/midi/midiprobe
 prototypes/modules/main
 prototypes/nodefactory
 prototypes/phoenix/findif
