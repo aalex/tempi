@@ -46,8 +46,6 @@ static void tempi_clutter_connect_signals(
     GConnectFlags flags,
     gpointer user_data);
 
-#define USE_FUNCTION(x) (void) (x)
-
 // Clutter legacy macro aliases:
 #if CLUTTER_CHECK_VERSION(1,4,0)
 #else
@@ -118,7 +116,7 @@ static void tempi_clutter_connect_signals(
     GConnectFlags flags,
     gpointer user_data)
 {
-    TempiClutterSignalConnection::ptr conn;
+    TempiClutterSignalConnection::ptr conn(new TempiClutterSignalConnection);
     std::cout << __FUNCTION__ << ": sig:" << signal_name << ", handler:" << handler_name << std::endl;
 
     // store info about the signal we are connecting to:
