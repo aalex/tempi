@@ -124,18 +124,18 @@ static void tempi_clutter_connect_signals(
     gpointer user_data)
 {
     TempiClutterSignalConnection::ptr conn(new TempiClutterSignalConnection);
-    std::cout << __FUNCTION__ << ": sig:" << signal_name << ", handler:" << handler_name << std::endl;
+    //std::cout << __FUNCTION__ << ": sig:" << signal_name << ", handler:" << handler_name << std::endl;
 
     // store info about the signal we are connecting to:
-    std::cout << "set signal name to " << signal_name << " length:" << strlen(signal_name) << std::endl;
+    //std::cout << "set signal name to " << signal_name << " length:" << strlen(signal_name) << std::endl;
     conn->signal_name_.assign(signal_name, strlen(signal_name));
 
-    std::cout << "set handler name to " << handler_name << " length:" << strlen(handler_name) << std::endl;
+    //std::cout << "set handler name to " << handler_name << " length:" << strlen(handler_name) << std::endl;
     conn->handler_name_.assign(handler_name, strlen(handler_name));
 
     if (CLUTTER_IS_ACTOR(object))
     {
-        std::cout << "set actor name to " << clutter_actor_get_name(CLUTTER_ACTOR(object)) << std::endl;
+        //std::cout << "set actor name to " << clutter_actor_get_name(CLUTTER_ACTOR(object)) << std::endl;
         const char *actor_name = clutter_actor_get_name(CLUTTER_ACTOR(object));
         if (actor_name != NULL)
             conn->actor_name_.assign(actor_name, strlen(actor_name));
@@ -191,7 +191,6 @@ App::App()
 
     clutter_actor_show(stage_);
 }
-
 
 void App::onMessage(const tempi::Message &message)
 {
