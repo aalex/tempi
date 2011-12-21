@@ -82,6 +82,7 @@ class App
     public:
         App();
         std::vector<TempiClutterSignalConnection::ptr> connections_;
+        void onMessage(const tempi::Message &message);
 //        ~App();
     private:
         //ClutterActor *playback_button_;
@@ -93,11 +94,17 @@ static gboolean tempi_clutter_event_cb(ClutterActor *actor, gpointer user_data)
 {
     g_return_val_if_fail(CLUTTER_IS_ACTOR(actor), FALSE);
     TempiClutterSignalConnection *conn = static_cast<TempiClutterSignalConnection *>(user_data);
-    g_message("%s: actor %s triggered event [%s][%s]",
-        __FUNCTION__,
-        clutter_actor_get_name(actor),
-        conn->signal_name_.c_str(), 
-        conn->handler_name_.c_str());
+    App *app = conn->app_;
+    // g_message("%s: actor %s triggered event [%s][%s]",
+    //     __FUNCTION__,
+    //     conn->actor_name_.c_str(), 
+    //     conn->signal_name_.c_str(), 
+    //     conn->handler_name_.c_str());
+    tempi::Message message;
+    message.appendString(conn->actor_name_.c_str());
+    message.appendString(conn->signal_name_.c_str());
+    message.appendString(conn->handler_name_.c_str());
+    app->onMessage(message);
     // TODO: use app pointer
     // TODO: turn it into a tempi::Message
     return TRUE; // handled
@@ -183,6 +190,12 @@ App::App()
     g_object_unref(script); // avoid memory leak
 
     clutter_actor_show(stage_);
+}
+
+
+void App::onMessage(const tempi::Message &message)
+{
+    std::cout << "App::" << __FUNCTION__ << "(): " << message << std::endl;
 }
 
 // void on_button0_clicked(MxButton *actor, gpointer data)
