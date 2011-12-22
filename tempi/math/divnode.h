@@ -32,7 +32,7 @@ namespace tempi {
 namespace math {
 
 /**
- * The DivNode adds two floats together.
+ * The DivNode divides two floats.
  */
 class DivNode : public Node
 {

@@ -19,7 +19,7 @@
 
 /**
  * @file
- * The AddNode class.
+ * The SubtractNode class.
  */
 #ifndef __TEMPI_MATH_SUBNODE_H__
 #define __TEMPI_MATH_SUBNODE_H__
@@ -32,7 +32,7 @@ namespace tempi {
 namespace math {
 
 /**
- * The AddNode adds two floats together.
+ * The SubtractNode subtracts one float from another
  */
 class SubtractNode : public Node
 {

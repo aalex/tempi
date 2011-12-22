@@ -32,7 +32,7 @@ namespace tempi {
 namespace math {
 
 /**
- * The MultNode adds two floats together.
+ * The MultNode multiplies two floats.
  */
 class MultNode : public Node
 {

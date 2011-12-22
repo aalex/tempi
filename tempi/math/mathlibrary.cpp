@@ -20,6 +20,7 @@
 #include "tempi/math/mathlibrary.h"
 #include "tempi/math/addnode.h"
 #include "tempi/math/divnode.h"
+#include "tempi/math/iseqnode.h"
 #include "tempi/math/multnode.h"
 #include "tempi/math/subtractnode.h"
 #include "tempi/utils.h"
@@ -32,6 +33,7 @@ void MathLibrary::load(NodeFactory &factory, const char *prefix) const
     using utils::concatenate;
     factory.registerTypeT<AddNode>(concatenate(prefix, "+").c_str());
     factory.registerTypeT<DivNode>(concatenate(prefix, "/").c_str());
+    factory.registerTypeT<IsEqualNode>(concatenate(prefix, "==").c_str());
     factory.registerTypeT<SubtractNode>(concatenate(prefix, "-").c_str());
     factory.registerTypeT<MultNode>(concatenate(prefix, "*").c_str());
 }
