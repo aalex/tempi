@@ -118,8 +118,8 @@ static bool checkMetro()
         //return false;
     }
     if (VERBOSE)
-        std::cout << "count = counter0->getProperty\"count\".getInt(0);" << std::endl;
-    int count = counter0->getProperty("count").getInt(0);
+        std::cout << "count = counter0->getAttribute\"count\".getInt(0);" << std::endl;
+    int count = counter0->getAttribute("count").getInt(0);
     if (count < 10)
     {
         std::cout << "[counter] Bad count: expect 10 but got " << count << std::endl;
@@ -134,7 +134,7 @@ static bool checkMetro()
         //return true; // FIXME
         return false;
     }
-//     int value = any0->getProperty("value").getInt(0);
+//     int value = any0->getAttribute("value").getInt(0);
 //     if (value < 10)
 //     {
 //         std::cout << "[any] Bad count: expect 10 but got " << value << std::endl;

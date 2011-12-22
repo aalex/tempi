@@ -29,10 +29,10 @@ OscReceiverNode::OscReceiverNode() :
 {
     addOutlet();
     Message port = Message("i", 0);
-    addProperty("port", port);
+    addAttribute("port", port);
 }
 
-void OscReceiverNode::onPropertyChanged(const char *name, const Message &value)
+void OscReceiverNode::onAttributeChanged(const char *name, const Message &value)
 {
     //std::cout << "OscReceiverNode::" << __FUNCTION__ << "(" << name << ", " << value << ")" << std::endl;
     if (utils::stringsMatch("port", name))

@@ -67,19 +67,19 @@ class Node
          */
         void tick();
         // TODO: properties:
-        // std::map<std::string, Message> getProperties();
-        const Message &getProperty(const char *name) const throw(BadIndexException);
+        // std::map<std::string, Message> getAttributes();
+        const Message &getAttribute(const char *name) const throw(BadIndexException);
         const Message &getArguments() const;
         void setArguments(const Message &message);
-        bool hasProperty(const char *name) const;
+        bool hasAttribute(const char *name) const;
         /**
          * Sets a property value.
          * You can also do this by sending a message in the form s:"set" s:name ...
-         * WARNING: if the value has not changed, it won't call onPropertyChanged.
+         * WARNING: if the value has not changed, it won't call onAttributeChanged.
          */
-        void setProperty(const char *name, const Message &value) throw(BadIndexException, BadArgumentTypeException);
-        std::string getPropertyType(const char *name);
-        std::vector<std::string> getPropertiesNames() const;
+        void setAttribute(const char *name, const Message &value) throw(BadIndexException, BadArgumentTypeException);
+        std::string getAttributeType(const char *name);
+        std::vector<std::string> getAttributesNames() const;
         //
         // TODO: signals:
         // typedef boost::signals2::signal<void(Message)> Signal;
@@ -117,9 +117,9 @@ class Node
          * Adds a inlet.
          */
         bool addInlet(Inlet::ptr sink);
-        void addProperty(const char *name, const Message &property) throw(BadIndexException);
+        void addAttribute(const char *name, const Message &property) throw(BadIndexException);
         void output(unsigned int outlet, const Message &message) const throw(BadIndexException);
-        virtual void onPropertyChanged(const char *name, const Message &value)
+        virtual void onAttributeChanged(const char *name, const Message &value)
         {}
         virtual void onSetArguments(const Message &message)
         {}
