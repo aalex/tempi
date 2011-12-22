@@ -38,7 +38,7 @@ void SubtractNode::processMessage(unsigned int inlet, const Message &message)
     if (message.typesMatch("f"))
     {
         float left_operand = message.getFloat(0);
-        float right_operand = getProperty("operand").getFloat(0);
+        float right_operand = getAttribute("operand").getFloat(0);
 
         Message result("f", left_operand - right_operand);
         //std::cout << "AddNode::" << __FUNCTION__ << ": " << left_operand
