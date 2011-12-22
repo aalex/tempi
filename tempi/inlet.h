@@ -21,8 +21,8 @@
  * @file
  * The Inlet class.
  */
-#ifndef __TEMPI_SINK_H__
-#define __TEMPI_SINK_H__
+#ifndef __TEMPI_INLET_H__
+#define __TEMPI_INLET_H__
 
 #include <boost/signals2.hpp>
 #include <map>
