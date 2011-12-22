@@ -29,8 +29,8 @@
 #include "tempi/exceptions.h"
 #include "tempi/message.h"
 #include "tempi/sharedptr.h"
-#include "tempi/sink.h"
-#include "tempi/source.h"
+#include "tempi/inlet.h"
+#include "tempi/outlet.h"
 
 namespace tempi
 {
@@ -50,36 +50,36 @@ class Node
         /**
          * Returns all its outlets.
          */
-        std::vector<Source::ptr> getOutlets();
+        std::vector<Outlet::ptr> getOutlets();
         /**
          * Returns all its inlets.
          */
-        std::vector<Sink::ptr> getInlets();
+        std::vector<Inlet::ptr> getInlets();
         unsigned int getNumberOfInlets() const;
         unsigned int getNumberOfOutlets() const;
         bool message(unsigned int inlet, const Message &message);
-        Sink *getInlet(unsigned int number) const;
+        Inlet *getInlet(unsigned int number) const;
         // TODO: deprecate getOutlet?
-        Source *getOutlet(unsigned int number) const;
-        Source::ptr getOutletSharedPtr(unsigned int number) const throw(BadIndexException);
+        Outlet *getOutlet(unsigned int number) const;
+        Outlet::ptr getOutletSharedPtr(unsigned int number) const throw(BadIndexException);
         /**
          * Triggers whatever time-dependent events. Calleds by the Graph.
          */
         void tick();
         // TODO: properties:
-        // std::map<std::string, Message> getProperties();
-        const Message &getProperty(const char *name) const throw(BadIndexException);
+        // std::map<std::string, Message> getAttributes();
+        const Message &getAttribute(const char *name) const throw(BadIndexException);
         const Message &getArguments() const;
         void setArguments(const Message &message);
-        bool hasProperty(const char *name) const;
+        bool hasAttribute(const char *name) const;
         /**
-         * Sets a property value.
+         * Sets a attribute value.
          * You can also do this by sending a message in the form s:"set" s:name ...
-         * WARNING: if the value has not changed, it won't call onPropertyChanged.
+         * WARNING: if the value has not changed, it won't call onAttributeChanged.
          */
-        void setProperty(const char *name, const Message &value) throw(BadIndexException, BadArgumentTypeException);
-        std::string getPropertyType(const char *name);
-        std::vector<std::string> getPropertiesNames() const;
+        void setAttribute(const char *name, const Message &value) throw(BadIndexException, BadArgumentTypeException);
+        std::string getAttributeType(const char *name);
+        std::vector<std::string> getAttributesNames() const;
         //
         // TODO: signals:
         // typedef boost::signals2::signal<void(Message)> Signal;
@@ -112,26 +112,26 @@ class Node
         /**
          * Adds a outlet.
          */
-        bool addOutlet(Source::ptr source);
+        bool addOutlet(Outlet::ptr source);
         /**
          * Adds a inlet.
          */
-        bool addInlet(Sink::ptr sink);
-        void addProperty(const char *name, const Message &property) throw(BadIndexException);
+        bool addInlet(Inlet::ptr sink);
+        void addAttribute(const char *name, const Message &attribute) throw(BadIndexException);
         void output(unsigned int outlet, const Message &message) const throw(BadIndexException);
-        virtual void onPropertyChanged(const char *name, const Message &value)
+        virtual void onAttributeChanged(const char *name, const Message &value)
         {}
         virtual void onSetArguments(const Message &message)
         {}
-        unsigned int getInletIndex(Sink *sink) const throw(BadIndexException);
+        unsigned int getInletIndex(Inlet *sink) const throw(BadIndexException);
         // TODO: make private:
-        void onInletTriggered(Sink *sink, const Message &message);
+        void onInletTriggered(Inlet *sink, const Message &message);
         // TODO: make private:
         virtual void processMessage(unsigned int inlet, const Message &message) = 0;
         // TODO: make private:
         virtual void doTick();
-        bool hasInlet(Sink *sink);
-        bool hasOutlet(Source *source);
+        bool hasInlet(Inlet *sink);
+        bool hasOutlet(Outlet *source);
         /**
          * Called when init() is called.
          * Subclasses of node should implement this if needed.
@@ -140,9 +140,9 @@ class Node
         virtual void onInit();
     private:
         bool initiated_;
-        std::vector<Source::ptr> outlets_;
+        std::vector<Outlet::ptr> outlets_;
         std::map<std::string, Message> properties_;
-        std::vector<Sink::ptr> inlets_;
+        std::vector<Inlet::ptr> inlets_;
         Message arguments_;
         std::string typeName_;
         std::string instanceName_;

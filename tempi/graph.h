@@ -24,9 +24,9 @@
 #include <boost/tuple/tuple.hpp>
 #include <iostream>
 #include <vector>
-#include "tempi/source.h"
+#include "tempi/outlet.h"
 #include "tempi/message.h"
-#include "tempi/sink.h"
+#include "tempi/inlet.h"
 #include "tempi/node.h"
 #include "tempi/sharedptr.h"
 #include "tempi/nodefactory.h"
@@ -57,7 +57,7 @@ class Graph
          * - ,ssisi: connect [from] [outlet] [to] [inlet]
          * - ,sss: addNode [type] [name]
          * - ,ss: deleteNode [name]
-         * - ,ss...: setNodeProperty [nodeName] [prop] ...
+         * - ,ss...: setNodeAttribute [nodeName] [prop] ...
          */
         bool handleMessage(const Message &message);
         bool connect(const char *from, unsigned int outlet, const char *to, unsigned int inlet);
@@ -76,7 +76,7 @@ class Graph
          */
         std::vector<Connection> getAllConnections(); // TODO: const
         // TODO: store all connections in a vector
-        bool setNodeProperty(const char *nodeName, const char *propertyName, const Message &value);
+        bool setNodeAttribute(const char *nodeName, const char *attributeName, const Message &value);
     private:
         typedef std::map<std::string, Node::ptr> NodesMapType;
         typedef std::vector<Connection> ConnectionVec;
@@ -88,7 +88,7 @@ class Graph
         std::vector<Connection> getAllConnectedFrom(const char *name, unsigned int inlet); // TODO: const
         std::vector<Connection> getAllConnectedTo(const char *name); // TODO: const
         std::vector<Connection> getAllConnectedFrom(const char *name); // TODO: const
-        //void onInletTriggered(Source *source, boost::any data);
+        //void onInletTriggered(Outlet *source, boost::any data);
         // TODO: store connections to decrease complexity
         bool handleTempiMessage(const Message &message);
 };

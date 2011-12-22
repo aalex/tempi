@@ -206,7 +206,7 @@ bool App::togglePlayback()
         clutter_rectangle_set_color(CLUTTER_RECTANGLE(playback_button_), &gray);
     
     tempi::ScopedLock::ptr lock = engine_->acquireLock();
-    engine_->getGraph("graph0")->setNodeProperty("sampler.sampler0", "playing", tempi::Message("b", isPlaying()));
+    engine_->getGraph("graph0")->setNodeAttribute("sampler.sampler0", "playing", tempi::Message("b", isPlaying()));
     return isPlaying();
 }
 
@@ -230,7 +230,7 @@ bool App::toggleRecord()
     }
 
     tempi::ScopedLock::ptr lock = engine_->acquireLock();
-    engine_->getGraph("graph0")->setNodeProperty("sampler.sampler0", "recording", tempi::Message("b", isRecording()));
+    engine_->getGraph("graph0")->setNodeAttribute("sampler.sampler0", "recording", tempi::Message("b", isRecording()));
     return isRecording();
 }
 
@@ -284,14 +284,14 @@ bool App::setupGraph()
     graph->connect("sampler.sampler0", 0, "base.print1", 0);
     //TODO graph->connect("sampler.sampler0", 0, "base.prepend0", 0);
     // Set node properties:
-    graph->setNodeProperty("midi.recv0", "port", tempi::Message("i", midi_input_port_));
-    graph->setNodeProperty("midi.send0", "port", tempi::Message("i", midi_output_port_));
-    graph->setNodeProperty("base.print0", "prefix", tempi::Message("s", "input: "));
-    graph->setNodeProperty("base.print1", "prefix", tempi::Message("s", "playback: "));
+    graph->setNodeAttribute("midi.recv0", "port", tempi::Message("i", midi_input_port_));
+    graph->setNodeAttribute("midi.send0", "port", tempi::Message("i", midi_output_port_));
+    graph->setNodeAttribute("base.print0", "prefix", tempi::Message("s", "input: "));
+    graph->setNodeAttribute("base.print1", "prefix", tempi::Message("s", "playback: "));
     if (! verbose_)
     {
-        graph->setNodeProperty("base.print0", "enabled", tempi::Message("b", false));
-        graph->setNodeProperty("base.print1", "enabled", tempi::Message("b", false));
+        graph->setNodeAttribute("base.print0", "enabled", tempi::Message("b", false));
+        graph->setNodeAttribute("base.print1", "enabled", tempi::Message("b", false));
     }
 
     graph_ok_ = true;

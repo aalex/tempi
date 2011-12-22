@@ -142,8 +142,8 @@ bool Graph::isConnected(const char *from, unsigned int outlet, const char *to, u
         return false;
     }
     // no need to catch BadIndexException sinze already tested it
-    Source::ptr source = fromNode->getOutletSharedPtr(outlet);
-    Sink *sink = toNode->getInlet(inlet);
+    Outlet::ptr source = fromNode->getOutletSharedPtr(outlet);
+    Inlet *sink = toNode->getInlet(inlet);
     return sink->isConnected(source);
 }
 
@@ -173,8 +173,8 @@ bool Graph::disconnect(const char *from, unsigned int outlet, const char *to, un
         return false;
     }
     // no need to catch BadIndexException sinze already tested it
-    Source::ptr source = fromNode->getOutletSharedPtr(outlet);
-    Sink *sink = toNode->getInlet(inlet);
+    Outlet::ptr source = fromNode->getOutletSharedPtr(outlet);
+    Inlet *sink = toNode->getInlet(inlet);
     return sink->disconnect(source);
 }
 
@@ -372,7 +372,7 @@ bool Graph::handleMessage(const Message &message)
  * - ,ssisi: connect [from] [outlet] [to] [inlet]
  * - ,sss: addNode [type] [name]
  * - ,ss: deleteNode [name]
- * - ,ss...: setNodeProperty [nodeName] [prop] ...
+ * - ,ss...: setNodeAttribute [nodeName] [prop] ...
  */
 bool Graph::handleTempiMessage(const Message &message)
 {
@@ -405,18 +405,18 @@ bool Graph::handleTempiMessage(const Message &message)
         return deleteNode(name.c_str());
     }
     if (utils::stringBeginsWith(types.c_str(), "sss")
-        && message.getString(0) == "setNodeProperty")
+        && message.getString(0) == "setNodeAttribute")
     {
         std::string nodeName = message.getString(1);
-        std::string propertyName = message.getString(2);
+        std::string attributeName = message.getString(2);
         Message value = message.cloneRange(3, message.getSize() - 1);
-        return setNodeProperty(nodeName.c_str(),
-            propertyName.c_str(), value);
+        return setNodeAttribute(nodeName.c_str(),
+            attributeName.c_str(), value);
     }
     return false; // unhandled
 }
 
-bool Graph::setNodeProperty(const char *nodeName, const char *propertyName, const Message &value)
+bool Graph::setNodeAttribute(const char *nodeName, const char *attributeName, const Message &value)
 {
     if (! hasNode(nodeName))
         return false;
@@ -428,7 +428,7 @@ bool Graph::setNodeProperty(const char *nodeName, const char *propertyName, cons
     }
     try
     {
-        nodePtr->setProperty(propertyName, value);
+        nodePtr->setAttribute(attributeName, value);
         return true;
     }
     catch (const BadIndexException &e)

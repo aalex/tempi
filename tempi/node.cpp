@@ -47,7 +47,7 @@ bool Node::init()
         for (iter = properties_.begin(); iter != properties_.end(); ++iter)
         {
             // Updates properties, etc.
-            onPropertyChanged((*iter).first.c_str(), (*iter).second);
+            onAttributeChanged((*iter).first.c_str(), (*iter).second);
         }
         return true;
     }
@@ -58,16 +58,16 @@ void Node::onInit()
     // pass
 }
 
-std::vector<Source::ptr> Node::getOutlets()
+std::vector<Outlet::ptr> Node::getOutlets()
 {
     return outlets_;
 }
 
-void Node::onInletTriggered(Sink *sink, const Message &message)
+void Node::onInletTriggered(Inlet *sink, const Message &message)
 {
     //std::cout << __FUNCTION__ << std::endl;
     unsigned int inlet = getInletIndex(sink);
-    bool is_a_property = false;
+    bool is_a_attribute = false;
     if (inlet == 0 && message.getSize() >= 3)
     {
         // ArgumentType type0;
@@ -89,11 +89,11 @@ void Node::onInletTriggered(Sink *sink, const Message &message)
             {
                 try
                 {
-                    Message property = message.cloneRange(2, message.getSize() - 1);
+                    Message attribute = message.cloneRange(2, message.getSize() - 1);
                     std::string name = message.getString(1);
-                    setProperty(name.c_str(), property);
-                    // std::cout << "Node::" << __FUNCTION__ << ": set property " << name << ": " << property << std::endl;
-                    is_a_property = true;
+                    setAttribute(name.c_str(), attribute);
+                    // std::cout << "Node::" << __FUNCTION__ << ": set attribute " << name << ": " << attribute << std::endl;
+                    is_a_attribute = true;
                 }
                 catch (const BadIndexException &e)
                 {
@@ -106,16 +106,16 @@ void Node::onInletTriggered(Sink *sink, const Message &message)
             }
         }
     }
-    if (! is_a_property)
+    if (! is_a_attribute)
     {
         processMessage(inlet, message);
     }
 }
 
-unsigned int Node::getInletIndex(Sink *sink) const throw(BadIndexException)
+unsigned int Node::getInletIndex(Inlet *sink) const throw(BadIndexException)
 {
     unsigned int index = 0;
-    std::vector<Sink::ptr>::const_iterator iter;
+    std::vector<Inlet::ptr>::const_iterator iter;
     for (iter = inlets_.begin(); iter != inlets_.end(); ++iter)
     {
         if ((*iter).get() == sink)
@@ -127,12 +127,12 @@ unsigned int Node::getInletIndex(Sink *sink) const throw(BadIndexException)
     throw BadIndexException(os.str().c_str());
 }
 
-std::vector<Sink::ptr> Node::getInlets()
+std::vector<Inlet::ptr> Node::getInlets()
 {
     return inlets_;
 }
 
-bool Node::addOutlet(Source::ptr source)
+bool Node::addOutlet(Outlet::ptr source)
 {
     if (! hasOutlet(source.get()))
     {
@@ -142,7 +142,7 @@ bool Node::addOutlet(Source::ptr source)
     return false;
 }
 
-bool Node::addInlet(Sink::ptr sink)
+bool Node::addInlet(Inlet::ptr sink)
 {
     if (! hasInlet(sink.get()))
     {
@@ -155,17 +155,17 @@ bool Node::addInlet(Sink::ptr sink)
 
 bool Node::addInlet()
 {
-    return addInlet(Sink::ptr(new Sink()));
+    return addInlet(Inlet::ptr(new Inlet()));
 }
 
 bool Node::addOutlet()
 {
-    return addOutlet(Source::ptr(new Source()));
+    return addOutlet(Outlet::ptr(new Outlet()));
 }
 
-bool Node::hasInlet(Sink *sink)
+bool Node::hasInlet(Inlet *sink)
 {
-    std::vector<Sink::ptr>::iterator iter;
+    std::vector<Inlet::ptr>::iterator iter;
     for (iter = inlets_.begin(); iter != inlets_.end(); ++iter)
     {
         if ((*iter).get() == sink)
@@ -176,9 +176,9 @@ bool Node::hasInlet(Sink *sink)
     return false;
 }
 
-bool Node::hasOutlet(Source *source)
+bool Node::hasOutlet(Outlet *source)
 {
-    std::vector<Source::ptr>::iterator iter;
+    std::vector<Outlet::ptr>::iterator iter;
     for (iter = outlets_.begin(); iter != outlets_.end(); ++iter)
     {
         if ((*iter).get() == source)
@@ -211,7 +211,7 @@ unsigned int Node::getNumberOfOutlets() const
     return inlets_.size();
 }
 
-Sink *Node::getInlet(unsigned int number) const
+Inlet *Node::getInlet(unsigned int number) const
 {
     if (number >= getNumberOfInlets())
     {
@@ -221,7 +221,7 @@ Sink *Node::getInlet(unsigned int number) const
     return inlets_[number].get();
 }
 
-Source *Node::getOutlet(unsigned int number) const
+Outlet *Node::getOutlet(unsigned int number) const
 {
     if (number >= getNumberOfInlets())
     {
@@ -231,7 +231,7 @@ Source *Node::getOutlet(unsigned int number) const
     return outlets_[number].get();
 }
 
-Source::ptr Node::getOutletSharedPtr(unsigned int number) const throw(BadIndexException)
+Outlet::ptr Node::getOutletSharedPtr(unsigned int number) const throw(BadIndexException)
 {
     if (number >= getNumberOfInlets())
     {
@@ -242,13 +242,13 @@ Source::ptr Node::getOutletSharedPtr(unsigned int number) const throw(BadIndexEx
     return outlets_[number];
 }
 
-const Message &Node::getProperty(const char *name) const throw(BadIndexException)
+const Message &Node::getAttribute(const char *name) const throw(BadIndexException)
 {
     std::map<std::string, Message>::const_iterator iter = properties_.find(std::string(name));
     if (iter == properties_.end())
     {
         std::ostringstream os;
-        os << "Node(" << getTypeName() << ":" << getInstanceName() << ")::" << __FUNCTION__ << ": " << ": No such property: " << name;
+        os << "Node(" << getTypeName() << ":" << getInstanceName() << ")::" << __FUNCTION__ << ": " << ": No such attribute: " << name;
         throw (BadIndexException(os.str().c_str()));
     }
     else
@@ -265,41 +265,41 @@ void Node::setArguments(const Message &message)
     onSetArguments(message);
 }
 
-bool Node::hasProperty(const char *name) const
+bool Node::hasAttribute(const char *name) const
 {
     return (properties_.find(std::string(name)) != properties_.end());
 }
 
-void Node::addProperty(const char *name, const Message &property) throw(BadIndexException)
+void Node::addAttribute(const char *name, const Message &attribute) throw(BadIndexException)
 {
-    if (hasProperty(name))
+    if (hasAttribute(name))
     {
         std::ostringstream os;
-        os << "Node::" << __FUNCTION__ << ": Already has property: " << name;
+        os << "Node::" << __FUNCTION__ << ": Already has attribute: " << name;
         throw (BadIndexException(os.str().c_str()));
     }
-    properties_[std::string(name)] = property;
+    properties_[std::string(name)] = attribute;
 }
 
-void Node::setProperty(const char *name, const Message &value) throw(BadIndexException, BadArgumentTypeException)
+void Node::setAttribute(const char *name, const Message &value) throw(BadIndexException, BadArgumentTypeException)
 {
-    Message current = getProperty(name); // might throw BadIndexException
+    Message current = getAttribute(name); // might throw BadIndexException
     //std::cout << "Node::" << __FUNCTION__ << ": " << name << " = " << value << std::endl;
     if (current.getTypes().compare(value.getTypes()) == 0)
     {
         properties_[std::string(name)] = value;
         if (isInitiated())
-            onPropertyChanged(name, value);
+            onAttributeChanged(name, value);
     }
     else
     {
         std::ostringstream os;
-        os << "Node::" << __FUNCTION__ << ": Property " << name << ": Bad type " << value.getTypes() << " while expecting " << current.getTypes();
+        os << "Node::" << __FUNCTION__ << ": Attribute " << name << ": Bad type " << value.getTypes() << " while expecting " << current.getTypes();
         throw (BadArgumentTypeException(os.str().c_str()));
     }
 }
 
-std::vector<std::string> Node::getPropertiesNames() const
+std::vector<std::string> Node::getAttributesNames() const
 {
     std::vector<std::string> ret;
     std::map<std::string, Message>::const_iterator iter;
@@ -319,7 +319,7 @@ bool Node::message(unsigned int inlet, const Message &message)
     }
     if (isInitiated())
     {
-        Sink *inletPtr = getInlet(inlet);
+        Inlet *inletPtr = getInlet(inlet);
         inletPtr->trigger(message);
         return true;
     }
@@ -332,7 +332,7 @@ bool Node::message(unsigned int inlet, const Message &message)
 
 void Node::output(unsigned int outlet, const Message &message) const throw(BadIndexException)
 {
-    Source::ptr source = getOutletSharedPtr(outlet);
+    Outlet::ptr source = getOutletSharedPtr(outlet);
     source->trigger(message);
 }
 

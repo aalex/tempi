@@ -27,8 +27,8 @@
 
 #include "tempi/node.h"
 #include "tempi/sharedptr.h"
-#include "tempi/source.h"
-#include "tempi/sink.h"
+#include "tempi/outlet.h"
+#include "tempi/inlet.h"
 
 namespace tempi { namespace mapping {
 
@@ -40,8 +40,8 @@ class Filter : public Node
     public:
         Filter();
         virtual ~Filter() {}
-        Source *getOutlet();
-        Sink *getInlet();
+        Outlet *getOutlet();
+        Inlet *getInlet();
     private:
         // Inherited from Node:
         virtual void processMessage(unsigned int inlet, const Message &message);

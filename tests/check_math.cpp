@@ -45,7 +45,7 @@ static bool check_add()
     graph.message("add0", 0, float_mess);
 
     // TODO when properties type will be dynamic and arguments deprecated
-    // float result = graph.getNode("any0").getProperty("value").getFloat(0);
+    // float result = graph.getNode("any0").getAttribute("value").getFloat(0);
     // if ( != 4.0f)
     // {
     //     std::cout << "expected 4.0f in any0 but got "

@@ -80,8 +80,8 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     sampler/score.cpp \
     sampler/track.cpp \
     scheduler.cpp \
-    sink.cpp \
-    source.cpp \
+    inlet.cpp \
+    outlet.cpp \
     table/table.cpp \
     table/table_player.cpp \
     table/table_writer.cpp \
@@ -148,8 +148,8 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     sampler/track.h \
     scheduler.h \
     sharedptr.h \
-    sink.h \
-    source.h \
+    inlet.h \
+    outlet.h \
     table/table.h \
     table/table_player.h \
     table/table_writer.h \

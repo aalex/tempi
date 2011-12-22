@@ -17,22 +17,41 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "tempi/source.h"
-#include <iostream>
+/**
+ * @file
+ * The Outlet class.
+ */
+#ifndef __TEMPI_OUTLET_H__
+#define __TEMPI_OUTLET_H__
+
+#include <boost/signals2.hpp>
+#include "tempi/sharedptr.h"
+#include "tempi/message.h"
 
 namespace tempi
 {
 
-Source::Source()
+/**
+ * A Outlet is a pad that can be connected to Inlet pads.
+ */
+class Outlet
 {
-    // pass
-}
-
-void Source::trigger(const Message &message)
-{
-    //std::cout << __FUNCTION__ << std::endl;
-    on_triggered_signal_(message);
-}
+    public:
+        typedef std::tr1::shared_ptr<Outlet> ptr;
+        typedef boost::signals2::signal<void (const Message&)> TriggeredSignal;
+        Outlet();
+        // TODO: return success
+        void trigger(const Message &message);
+        TriggeredSignal &getOnTriggeredSignal()
+        {
+            return on_triggered_signal_;
+        }
+    private:
+         TriggeredSignal on_triggered_signal_;
+};
 
 } // end of namespace
+
+#endif // ifndef
+
 

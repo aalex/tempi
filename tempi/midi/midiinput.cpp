@@ -200,7 +200,7 @@ MidiInput::MidiInput() :
         messaging_queue_()
 {
     // RtMidiIn constructor
-    // TODO:allow to change client name using a property
+    // TODO:allow to change client name using a attribute
     try
     {
         midi_in_ = new RtMidiIn(client_name_);
