@@ -77,7 +77,7 @@ std::string get_version();
 #include "tempi/timer.h"
 #include "tempi/sampler/track.h"
 //#include "tempi/types.h"
-//#include "tempi/property.h"
+//#include "tempi/attribute.h"
 
 //TODO: #include "tempi/sampler/score.h"
 

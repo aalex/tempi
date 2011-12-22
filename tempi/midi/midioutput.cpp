@@ -86,7 +86,7 @@ MidiOutput::MidiOutput() :
         ports_count_(0),
         client_name_("tempi.midi.out")
 {
-    // TODO: allow to change the client name using an argument or a property
+    // TODO: allow to change the client name using an argument or a attribute
     // RtMidiIn constructor
     try
     {

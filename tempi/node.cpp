@@ -67,7 +67,7 @@ void Node::onInletTriggered(Inlet *sink, const Message &message)
 {
     //std::cout << __FUNCTION__ << std::endl;
     unsigned int inlet = getInletIndex(sink);
-    bool is_a_property = false;
+    bool is_a_attribute = false;
     if (inlet == 0 && message.getSize() >= 3)
     {
         // ArgumentType type0;
@@ -89,11 +89,11 @@ void Node::onInletTriggered(Inlet *sink, const Message &message)
             {
                 try
                 {
-                    Message property = message.cloneRange(2, message.getSize() - 1);
+                    Message attribute = message.cloneRange(2, message.getSize() - 1);
                     std::string name = message.getString(1);
-                    setAttribute(name.c_str(), property);
-                    // std::cout << "Node::" << __FUNCTION__ << ": set property " << name << ": " << property << std::endl;
-                    is_a_property = true;
+                    setAttribute(name.c_str(), attribute);
+                    // std::cout << "Node::" << __FUNCTION__ << ": set attribute " << name << ": " << attribute << std::endl;
+                    is_a_attribute = true;
                 }
                 catch (const BadIndexException &e)
                 {
@@ -106,7 +106,7 @@ void Node::onInletTriggered(Inlet *sink, const Message &message)
             }
         }
     }
-    if (! is_a_property)
+    if (! is_a_attribute)
     {
         processMessage(inlet, message);
     }
@@ -248,7 +248,7 @@ const Message &Node::getAttribute(const char *name) const throw(BadIndexExceptio
     if (iter == properties_.end())
     {
         std::ostringstream os;
-        os << "Node(" << getTypeName() << ":" << getInstanceName() << ")::" << __FUNCTION__ << ": " << ": No such property: " << name;
+        os << "Node(" << getTypeName() << ":" << getInstanceName() << ")::" << __FUNCTION__ << ": " << ": No such attribute: " << name;
         throw (BadIndexException(os.str().c_str()));
     }
     else
@@ -270,15 +270,15 @@ bool Node::hasAttribute(const char *name) const
     return (properties_.find(std::string(name)) != properties_.end());
 }
 
-void Node::addAttribute(const char *name, const Message &property) throw(BadIndexException)
+void Node::addAttribute(const char *name, const Message &attribute) throw(BadIndexException)
 {
     if (hasAttribute(name))
     {
         std::ostringstream os;
-        os << "Node::" << __FUNCTION__ << ": Already has property: " << name;
+        os << "Node::" << __FUNCTION__ << ": Already has attribute: " << name;
         throw (BadIndexException(os.str().c_str()));
     }
-    properties_[std::string(name)] = property;
+    properties_[std::string(name)] = attribute;
 }
 
 void Node::setAttribute(const char *name, const Message &value) throw(BadIndexException, BadArgumentTypeException)

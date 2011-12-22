@@ -73,7 +73,7 @@ class Node
         void setArguments(const Message &message);
         bool hasAttribute(const char *name) const;
         /**
-         * Sets a property value.
+         * Sets a attribute value.
          * You can also do this by sending a message in the form s:"set" s:name ...
          * WARNING: if the value has not changed, it won't call onAttributeChanged.
          */
@@ -117,7 +117,7 @@ class Node
          * Adds a inlet.
          */
         bool addInlet(Inlet::ptr sink);
-        void addAttribute(const char *name, const Message &property) throw(BadIndexException);
+        void addAttribute(const char *name, const Message &attribute) throw(BadIndexException);
         void output(unsigned int outlet, const Message &message) const throw(BadIndexException);
         virtual void onAttributeChanged(const char *name, const Message &value)
         {}

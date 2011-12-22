@@ -76,7 +76,7 @@ class Graph
          */
         std::vector<Connection> getAllConnections(); // TODO: const
         // TODO: store all connections in a vector
-        bool setNodeAttribute(const char *nodeName, const char *propertyName, const Message &value);
+        bool setNodeAttribute(const char *nodeName, const char *attributeName, const Message &value);
     private:
         typedef std::map<std::string, Node::ptr> NodesMapType;
         typedef std::vector<Connection> ConnectionVec;

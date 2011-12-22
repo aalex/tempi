@@ -408,15 +408,15 @@ bool Graph::handleTempiMessage(const Message &message)
         && message.getString(0) == "setNodeAttribute")
     {
         std::string nodeName = message.getString(1);
-        std::string propertyName = message.getString(2);
+        std::string attributeName = message.getString(2);
         Message value = message.cloneRange(3, message.getSize() - 1);
         return setNodeAttribute(nodeName.c_str(),
-            propertyName.c_str(), value);
+            attributeName.c_str(), value);
     }
     return false; // unhandled
 }
 
-bool Graph::setNodeAttribute(const char *nodeName, const char *propertyName, const Message &value)
+bool Graph::setNodeAttribute(const char *nodeName, const char *attributeName, const Message &value)
 {
     if (! hasNode(nodeName))
         return false;
@@ -428,7 +428,7 @@ bool Graph::setNodeAttribute(const char *nodeName, const char *propertyName, con
     }
     try
     {
-        nodePtr->setAttribute(propertyName, value);
+        nodePtr->setAttribute(attributeName, value);
         return true;
     }
     catch (const BadIndexException &e)
