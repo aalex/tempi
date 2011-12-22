@@ -26,11 +26,12 @@
 
 #include <boost/bind.hpp>
 #include <vector>
+#include "tempi/attribute.h"
 #include "tempi/exceptions.h"
-#include "tempi/message.h"
-#include "tempi/sharedptr.h"
 #include "tempi/inlet.h"
+#include "tempi/message.h"
 #include "tempi/outlet.h"
+#include "tempi/sharedptr.h"
 
 namespace tempi
 {
@@ -68,7 +69,8 @@ class Node
         void tick();
         // TODO: properties:
         // std::map<std::string, Message> getAttributes();
-        const Message &getAttribute(const char *name) const throw(BadIndexException);
+        Attribute::ptr getAttribute(const char *name) const throw(BadIndexException);
+        const Message &getAttributeValue(const char *name) const throw(BadIndexException);
         const Message &getArguments() const;
         void setArguments(const Message &message);
         bool hasAttribute(const char *name) const;
@@ -117,7 +119,7 @@ class Node
          * Adds a inlet.
          */
         bool addInlet(Inlet::ptr sink);
-        void addAttribute(const char *name, const Message &attribute) throw(BadIndexException);
+        void addAttribute(const char *name, const Message &value, const char *doc="", bool type_strict=true) throw(BadIndexException);
         void output(unsigned int outlet, const Message &message) const throw(BadIndexException);
         virtual void onAttributeChanged(const char *name, const Message &value)
         {}
@@ -141,7 +143,7 @@ class Node
     private:
         bool initiated_;
         std::vector<Outlet::ptr> outlets_;
-        std::map<std::string, Message> properties_;
+        std::map<std::string, Attribute::ptr> attributes_;
         std::vector<Inlet::ptr> inlets_;
         Message arguments_;
         std::string typeName_;

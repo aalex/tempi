@@ -43,11 +43,11 @@ bool Node::init()
     {
         initiated_ = true; // very important!
         onInit();
-        std::map<std::string, Message>::const_iterator iter;
-        for (iter = properties_.begin(); iter != properties_.end(); ++iter)
+        std::map<std::string, Attribute::ptr>::const_iterator iter;
+        for (iter = attributes_.begin(); iter != attributes_.end(); ++iter)
         {
             // Updates properties, etc.
-            onAttributeChanged((*iter).first.c_str(), (*iter).second);
+            onAttributeChanged((*iter).first.c_str(), (*iter).second->getValue());
         }
         return true;
     }
@@ -242,10 +242,10 @@ Outlet::ptr Node::getOutletSharedPtr(unsigned int number) const throw(BadIndexEx
     return outlets_[number];
 }
 
-const Message &Node::getAttribute(const char *name) const throw(BadIndexException)
+Attribute::ptr Node::getAttribute(const char *name) const throw(BadIndexException)
 {
-    std::map<std::string, Message>::const_iterator iter = properties_.find(std::string(name));
-    if (iter == properties_.end())
+    std::map<std::string, Attribute::ptr>::const_iterator iter = attributes_.find(std::string(name));
+    if (iter == attributes_.end())
     {
         std::ostringstream os;
         os << "Node(" << getTypeName() << ":" << getInstanceName() << ")::" << __FUNCTION__ << ": " << ": No such attribute: " << name;
@@ -253,6 +253,11 @@ const Message &Node::getAttribute(const char *name) const throw(BadIndexExceptio
     }
     else
         return (*iter).second;
+}
+
+const Message &Node::getAttributeValue(const char *name) const throw(BadIndexException)
+{
+    return getAttribute(name)->getValue();
 }
 
 const Message &Node::getArguments() const
@@ -267,10 +272,10 @@ void Node::setArguments(const Message &message)
 
 bool Node::hasAttribute(const char *name) const
 {
-    return (properties_.find(std::string(name)) != properties_.end());
+    return (attributes_.find(std::string(name)) != attributes_.end());
 }
 
-void Node::addAttribute(const char *name, const Message &attribute) throw(BadIndexException)
+void Node::addAttribute(const char *name, const Message &value, const char *doc, bool type_strict) throw(BadIndexException)
 {
     if (hasAttribute(name))
     {
@@ -278,32 +283,44 @@ void Node::addAttribute(const char *name, const Message &attribute) throw(BadInd
         os << "Node::" << __FUNCTION__ << ": Already has attribute: " << name;
         throw (BadIndexException(os.str().c_str()));
     }
-    properties_[std::string(name)] = attribute;
+    Attribute::ptr attr(new Attribute(name, value, doc, type_strict));
+    attributes_[std::string(name)] = attr;
 }
 
 void Node::setAttribute(const char *name, const Message &value) throw(BadIndexException, BadArgumentTypeException)
 {
-    Message current = getAttribute(name); // might throw BadIndexException
+    bool ok_to_change = false;
+    Attribute::ptr current = getAttribute(name); // might throw BadIndexException
     //std::cout << "Node::" << __FUNCTION__ << ": " << name << " = " << value << std::endl;
-    if (current.getTypes().compare(value.getTypes()) == 0)
+    if (current->isTypeStrict())
     {
-        properties_[std::string(name)] = value;
-        if (isInitiated())
-            onAttributeChanged(name, value);
+        if (current->getValue().getTypes().compare(value.getTypes()) == 0)
+        {
+            ok_to_change = true;
+        }
+        else
+        {
+            std::ostringstream os;
+            os << "Node::" << __FUNCTION__ << ": Attribute " << name << ": Bad type " << value.getTypes() << " while expecting " << current->getValue().getTypes();
+            throw (BadArgumentTypeException(os.str().c_str()));
+        }
     }
     else
+        ok_to_change = true;
+    // do it:
+    if (ok_to_change)
     {
-        std::ostringstream os;
-        os << "Node::" << __FUNCTION__ << ": Attribute " << name << ": Bad type " << value.getTypes() << " while expecting " << current.getTypes();
-        throw (BadArgumentTypeException(os.str().c_str()));
+        current->setValue(value);
+        if (isInitiated())
+            onAttributeChanged(name, value);
     }
 }
 
 std::vector<std::string> Node::getAttributesNames() const
 {
     std::vector<std::string> ret;
-    std::map<std::string, Message>::const_iterator iter;
-    for (iter = properties_.begin(); iter != properties_.end(); ++iter)
+    std::map<std::string, Attribute::ptr>::const_iterator iter;
+    for (iter = attributes_.begin(); iter != attributes_.end(); ++iter)
     {
         ret.push_back((*iter).first);
     }

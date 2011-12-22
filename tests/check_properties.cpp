@@ -76,7 +76,7 @@ static bool check_properties()
     if (VERBOSE)
     {
         std::cout << n.triggered_ << std::endl;
-        std::cout << n.getAttribute("hello") << std::endl;
+        std::cout << n.getAttributeValue("hello") << std::endl;
     }
     if (! n.triggered_)
     {

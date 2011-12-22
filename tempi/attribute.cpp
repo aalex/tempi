@@ -17,30 +17,45 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "tempi/attribute.h"
 #include <iostream>
-#include "tempi/base/receivenode.h"
 
-namespace tempi { namespace base {
+namespace tempi {
 
-ReceiveNode::ReceiveNode() :
-    Node()
+Attribute::Attribute(const char *name, const Message &value, const char *doc, bool type_strict)
 {
-    Message receiveSymbol;
-    receiveSymbol.appendString("");
-    addAttribute("symbol", receiveSymbol);
+    value_ = value;
+    name_ = std::string(name);
+    documentation_ = std::string(documentation_);
+    type_strict_ = type_strict;
 }
 
-void ReceiveNode::processMessage(unsigned int inlet, const Message &message)
+std::string Attribute::getName() const
 {
-    // if (inlet == 0)
-    //    output(message);
+    return name_;
 }
 
-std::string ReceiverNode::getReceiveSymbol() const
+std::string Attribute::getDocumentation() const
 {
-    return getAttributeValue("symbol").getString(0);
+    return documentation_;
 }
 
-} // end of namespace
+const Message &Attribute::getValue()
+{
+    return value_;
+}
+
+bool Attribute::setValue(const Message &value)
+{
+    // TODO: check here if same type or not
+    value_ = value;
+    return true;
+}
+
+bool Attribute::isTypeStrict() const
+{
+    return type_strict_;
+}
+
 } // end of namespace
 
