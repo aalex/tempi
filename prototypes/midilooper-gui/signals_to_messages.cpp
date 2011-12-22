@@ -110,6 +110,41 @@ static gboolean tempi_clutter_event_cb(ClutterActor *actor, gpointer user_data)
     return TRUE; // handled
 }
 
+// static bool tempi_clutter_set_obj_property(GObject *object, const char *name, const tempi::Message &value)
+// {
+//     GParamSpec **pspecs, **p;
+//     guint i = 0;
+// 
+//     g_datalist_init (&settings->queued_settings);
+//     object_list = g_slist_prepend (object_list, settings);
+// 
+//     /* build up property array for all yet existing properties and queue
+//      * notification for them (at least notification for internal properties
+//      * will instantly be caught)
+//      */
+//     pspecs = g_object_class_list_properties (G_OBJECT_GET_CLASS (settings), NULL);
+//     for (p = pspecs; *p; p++)
+//         if ((*p)->owner_type == G_OBJECT_TYPE (settings))
+//             i++;
+//     settings->property_values = g_new0 (GtkSettingsPropertyValue, i);
+//     i = 0;
+//     g_object_freeze_notify (G_OBJECT (settings));
+//     for (p = pspecs; *p; p++)
+//     {
+//         GParamSpec *pspec = *p;
+// 
+//         if (pspec->owner_type != G_OBJECT_TYPE (settings))
+//             continue;
+//         g_value_init (&settings->property_values[i].value, G_PARAM_SPEC_VALUE_TYPE (pspec));
+//         g_param_value_set_default (pspec, &settings->property_values[i].value);
+//         g_object_notify (G_OBJECT (settings), pspec->name);
+//         settings->property_values[i].source = GTK_SETTINGS_SOURCE_DEFAULT;
+//         i++;
+//     }
+//     g_object_thaw_notify (G_OBJECT (settings));
+//     g_free (pspecs); 
+// }
+
 /**
  * Custom handler for the signals in the ClutterScript.
  * Slots are turned into tempi::Message instances
