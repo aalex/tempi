@@ -26,7 +26,7 @@
 #include <vector>
 #include "tempi/source.h"
 #include "tempi/message.h"
-#include "tempi/sink.h"
+#include "tempi/inlet.h"
 #include "tempi/node.h"
 #include "tempi/sharedptr.h"
 #include "tempi/nodefactory.h"

@@ -29,7 +29,7 @@
 #include "tempi/exceptions.h"
 #include "tempi/message.h"
 #include "tempi/sharedptr.h"
-#include "tempi/sink.h"
+#include "tempi/inlet.h"
 #include "tempi/source.h"
 
 namespace tempi

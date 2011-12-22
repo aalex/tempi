@@ -17,7 +17,7 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "tempi/sink.h"
+#include "tempi/inlet.h"
 #include "tempi/source.h"
 #include <iostream>
 

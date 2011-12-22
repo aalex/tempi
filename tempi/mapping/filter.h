@@ -28,7 +28,7 @@
 #include "tempi/node.h"
 #include "tempi/sharedptr.h"
 #include "tempi/source.h"
-#include "tempi/sink.h"
+#include "tempi/inlet.h"
 
 namespace tempi { namespace mapping {
 
