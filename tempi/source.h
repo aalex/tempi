@@ -32,7 +32,7 @@ namespace tempi
 {
 
 /**
- * A Source is a pad that can be connected to Sink pads.
+ * A Source is a pad that can be connected to Inlet pads.
  */
 class Source
 {

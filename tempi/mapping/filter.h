@@ -41,7 +41,7 @@ class Filter : public Node
         Filter();
         virtual ~Filter() {}
         Source *getOutlet();
-        Sink *getInlet();
+        Inlet *getInlet();
     private:
         // Inherited from Node:
         virtual void processMessage(unsigned int inlet, const Message &message);
