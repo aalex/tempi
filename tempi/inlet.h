@@ -28,7 +28,7 @@
 #include <map>
 #include "tempi/sharedptr.h"
 #include "tempi/message.h"
-#include "tempi/source.h"
+#include "tempi/outlet.h"
 
 namespace tempi
 {

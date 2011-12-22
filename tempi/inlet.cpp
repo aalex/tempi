@@ -18,7 +18,7 @@
  */
 
 #include "tempi/inlet.h"
-#include "tempi/source.h"
+#include "tempi/outlet.h"
 #include <iostream>
 
 namespace tempi

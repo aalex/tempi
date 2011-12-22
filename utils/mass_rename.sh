@@ -14,6 +14,7 @@ sed -i "s/$1/$2/g" \
     tempi/osc/*.{h,cpp} \
     tempi/sampler/*.{h,cpp} \
     tempi/table/*.{h,cpp} \
+    tempi/Makefile.am \
     src/midilooper/*.{h,cpp} \
     src/tempi-draw/*.{h,cpp} \
     src/osc-forward/*.{h,cpp} \

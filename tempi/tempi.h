@@ -68,7 +68,7 @@ std::string get_version();
 #include "tempi/mapping/filter.h"
 #include "tempi/mapping/slidefilter.h"
 #include "tempi/inlet.h"
-#include "tempi/source.h"
+#include "tempi/outlet.h"
 #include "tempi/fsm/state.h"
 #include "tempi/fsm/statemachine.h"
 #include "tempi/table/table.h"

@@ -30,7 +30,7 @@
 #include "tempi/message.h"
 #include "tempi/sharedptr.h"
 #include "tempi/inlet.h"
-#include "tempi/source.h"
+#include "tempi/outlet.h"
 
 namespace tempi
 {

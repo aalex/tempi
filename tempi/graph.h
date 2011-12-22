@@ -24,7 +24,7 @@
 #include <boost/tuple/tuple.hpp>
 #include <iostream>
 #include <vector>
-#include "tempi/source.h"
+#include "tempi/outlet.h"
 #include "tempi/message.h"
 #include "tempi/inlet.h"
 #include "tempi/node.h"
