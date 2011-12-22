@@ -27,7 +27,7 @@ namespace math {
 void MathLibrary::load(NodeFactory &factory, const char *prefix) const
 {
     using utils::concatenate;
-    factory.registerTypeT<AddNode>(concatenate(prefix, "add").c_str());
+    factory.registerTypeT<AddNode>(concatenate(prefix, "+").c_str());
 }
 
 } // end of namespace

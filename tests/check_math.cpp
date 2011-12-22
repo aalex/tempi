@@ -12,7 +12,7 @@ static bool check_add()
     // Check we can instanciate it:
     NodeFactory::ptr factory(new NodeFactory);
     internals::loadInternals(factory);
-    Node::ptr add_obj = factory->create("math.add");
+    Node::ptr add_obj = factory->create("math.+");
     if (add_obj.get() == 0)
     {
         std::cout << "AddNode ptr is null" << std::endl;
@@ -23,13 +23,18 @@ static bool check_add()
     Graph graph(factory);
     if (VERBOSE)
         std::cout << "add nodes:" << std::endl;
-    graph.addNode("math.add", "add0");
-    graph.addNode("base.print", "print0");
-    graph.addNode("base.any", "any0");
+    graph.addNode("math.+", "add0");
     if (VERBOSE)
         std::cout << "connect nodes:" << std::endl;
-    graph.connect("add0", 0, "print0", 0);
-    graph.connect("add0", 0, "any0", 0);
+    // [print]
+    if (VERBOSE)
+    {
+        graph.addNode("base.print", "print0");
+        graph.connect("add0", 0, "print0", 0);
+    }
+    // TODO: store result in [any] or [appsink]
+    //graph.addNode("base.any", "any0");
+    //graph.connect("add0", 0, "any0", 0);
 
     graph.tick(); // init the nodes
 

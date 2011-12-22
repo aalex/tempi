@@ -41,8 +41,8 @@ void AddNode::processMessage(unsigned int inlet, const Message &message)
         float right_operand = getProperty("operand").getFloat(0);
 
         Message result("f", left_operand + right_operand);
-        std::cout << "AddNode::" << __FUNCTION__ << ": " << left_operand
-            << " + " << right_operand << " = " << result << std::endl;
+        //std::cout << "AddNode::" << __FUNCTION__ << ": " << left_operand
+        //    << " + " << right_operand << " = " << result << std::endl;
         output(0, result);
     }
     else
