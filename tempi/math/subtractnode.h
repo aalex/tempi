@@ -17,21 +17,33 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "tempi/math/mathlibrary.h"
-#include "tempi/math/addnode.h"
-#include "tempi/math/subtractnode.h"
-#include "tempi/utils.h"
+/**
+ * @file
+ * The AddNode class.
+ */
+#ifndef __TEMPI_MATH_SUBNODE_H__
+#define __TEMPI_MATH_SUBNODE_H__
+
+#include "tempi/node.h"
+#include "tempi/message.h"
+#include <iostream>
 
 namespace tempi {
 namespace math {
 
-void MathLibrary::load(NodeFactory &factory, const char *prefix) const
+/**
+ * The AddNode adds two floats together.
+ */
+class SubtractNode : public Node
 {
-    using utils::concatenate;
-    factory.registerTypeT<AddNode>(concatenate(prefix, "+").c_str());
-    factory.registerTypeT<SubtractNode>(concatenate(prefix, "-").c_str());
-}
+    public:
+        SubtractNode();
+    protected:
+        virtual void processMessage(unsigned int inlet, const Message &message);
+};
 
 } // end of namespace
 } // end of namespace
+
+#endif // ifndef
 

@@ -17,19 +17,36 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "tempi/math/mathlibrary.h"
-#include "tempi/math/addnode.h"
+#include <iostream>
 #include "tempi/math/subtractnode.h"
 #include "tempi/utils.h"
 
 namespace tempi {
 namespace math {
 
-void MathLibrary::load(NodeFactory &factory, const char *prefix) const
+SubtractNode::SubtractNode() :
+    Node()
 {
-    using utils::concatenate;
-    factory.registerTypeT<AddNode>(concatenate(prefix, "+").c_str());
-    factory.registerTypeT<SubtractNode>(concatenate(prefix, "-").c_str());
+    addOutlet();
+
+    Message operand = Message("f", 0.0f);
+    addProperty("operand", operand);
+}
+
+void SubtractNode::processMessage(unsigned int inlet, const Message &message)
+{
+    if (message.typesMatch("f"))
+    {
+        float left_operand = message.getFloat(0);
+        float right_operand = getProperty("operand").getFloat(0);
+
+        Message result("f", left_operand - right_operand);
+        //std::cout << "AddNode::" << __FUNCTION__ << ": " << left_operand
+        //    << " + " << right_operand << " = " << result << std::endl;
+        output(0, result);
+    }
+    else
+        std::cerr << "SubtractNode::" << __FUNCTION__ << "(): Bad type for message " << message << std::endl;
 }
 
 } // end of namespace
