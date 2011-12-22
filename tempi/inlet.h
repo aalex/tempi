@@ -34,7 +34,7 @@ namespace tempi
 {
 
 /**
- * A Inlet is a pad to which we can connect Source pads.
+ * A Inlet is a pad to which we can connect Outlet pads.
  * TODO: rename to Destination
  */
 class Inlet
@@ -46,9 +46,9 @@ class Inlet
         // TODO: rename to ReceiveSlot
         typedef TriggeredSignal::slot_function_type TriggeredSlot;
         Inlet();
-        bool connect(Source::ptr source);
-        bool disconnect(Source::ptr source);
-        bool isConnected(Source::ptr source);
+        bool connect(Outlet::ptr source);
+        bool disconnect(Outlet::ptr source);
+        bool isConnected(Outlet::ptr source);
         // TODO: rename to receive
         void trigger(const Message &message);
         TriggeredSignal &getOnTriggeredSignal()
@@ -57,10 +57,10 @@ class Inlet
         }
         void disconnectAll();
     private:
-        //typedef std::map<Source::ptr, std::tr1::shared_ptr<boost::signals2::scoped_connection> > SourceMap;
-        //SourceMap sources_;
-        typedef std::vector<Source::ptr> SourcesVec;
-        SourcesVec sources_;
+        //typedef std::map<Outlet::ptr, std::tr1::shared_ptr<boost::signals2::scoped_connection> > OutletMap;
+        //OutletMap sources_;
+        typedef std::vector<Outlet::ptr> OutletsVec;
+        OutletsVec sources_;
         TriggeredSignal on_triggered_signal_;
 };
 

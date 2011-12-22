@@ -19,7 +19,7 @@
 
 /**
  * @file
- * The Source class.
+ * The Outlet class.
  */
 #ifndef __TEMPI_SOURCE_H__
 #define __TEMPI_SOURCE_H__
@@ -32,14 +32,14 @@ namespace tempi
 {
 
 /**
- * A Source is a pad that can be connected to Inlet pads.
+ * A Outlet is a pad that can be connected to Inlet pads.
  */
-class Source
+class Outlet
 {
     public:
-        typedef std::tr1::shared_ptr<Source> ptr;
+        typedef std::tr1::shared_ptr<Outlet> ptr;
         typedef boost::signals2::signal<void (const Message&)> TriggeredSignal;
-        Source();
+        Outlet();
         // TODO: return success
         void trigger(const Message &message);
         TriggeredSignal &getOnTriggeredSignal()

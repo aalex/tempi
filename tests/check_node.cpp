@@ -45,7 +45,7 @@ bool check_simple()
         std::cout << "Could not connect b to c." << std::endl;
         return false;
     }
-    Source *source = a.getOutlets()[0].get();
+    Outlet *source = a.getOutlets()[0].get();
     Message message = Message("b", true);
     if (c.triggered_)
     {

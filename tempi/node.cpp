@@ -58,7 +58,7 @@ void Node::onInit()
     // pass
 }
 
-std::vector<Source::ptr> Node::getOutlets()
+std::vector<Outlet::ptr> Node::getOutlets()
 {
     return outlets_;
 }
@@ -132,7 +132,7 @@ std::vector<Inlet::ptr> Node::getInlets()
     return inlets_;
 }
 
-bool Node::addOutlet(Source::ptr source)
+bool Node::addOutlet(Outlet::ptr source)
 {
     if (! hasOutlet(source.get()))
     {
@@ -160,7 +160,7 @@ bool Node::addInlet()
 
 bool Node::addOutlet()
 {
-    return addOutlet(Source::ptr(new Source()));
+    return addOutlet(Outlet::ptr(new Outlet()));
 }
 
 bool Node::hasInlet(Inlet *sink)
@@ -176,9 +176,9 @@ bool Node::hasInlet(Inlet *sink)
     return false;
 }
 
-bool Node::hasOutlet(Source *source)
+bool Node::hasOutlet(Outlet *source)
 {
-    std::vector<Source::ptr>::iterator iter;
+    std::vector<Outlet::ptr>::iterator iter;
     for (iter = outlets_.begin(); iter != outlets_.end(); ++iter)
     {
         if ((*iter).get() == source)
@@ -221,7 +221,7 @@ Inlet *Node::getInlet(unsigned int number) const
     return inlets_[number].get();
 }
 
-Source *Node::getOutlet(unsigned int number) const
+Outlet *Node::getOutlet(unsigned int number) const
 {
     if (number >= getNumberOfInlets())
     {
@@ -231,7 +231,7 @@ Source *Node::getOutlet(unsigned int number) const
     return outlets_[number].get();
 }
 
-Source::ptr Node::getOutletSharedPtr(unsigned int number) const throw(BadIndexException)
+Outlet::ptr Node::getOutletSharedPtr(unsigned int number) const throw(BadIndexException)
 {
     if (number >= getNumberOfInlets())
     {
@@ -332,7 +332,7 @@ bool Node::message(unsigned int inlet, const Message &message)
 
 void Node::output(unsigned int outlet, const Message &message) const throw(BadIndexException)
 {
-    Source::ptr source = getOutletSharedPtr(outlet);
+    Outlet::ptr source = getOutletSharedPtr(outlet);
     source->trigger(message);
 }
 

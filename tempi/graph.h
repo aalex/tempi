@@ -88,7 +88,7 @@ class Graph
         std::vector<Connection> getAllConnectedFrom(const char *name, unsigned int inlet); // TODO: const
         std::vector<Connection> getAllConnectedTo(const char *name); // TODO: const
         std::vector<Connection> getAllConnectedFrom(const char *name); // TODO: const
-        //void onInletTriggered(Source *source, boost::any data);
+        //void onInletTriggered(Outlet *source, boost::any data);
         // TODO: store connections to decrease complexity
         bool handleTempiMessage(const Message &message);
 };

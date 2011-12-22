@@ -33,7 +33,7 @@ Inlet *Filter::getInlet()
     return getInlets()[0].get();
 }
 
-Source *Filter::getOutlet()
+Outlet *Filter::getOutlet()
 {
     return getOutlets()[0].get();
 }

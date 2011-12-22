@@ -23,12 +23,12 @@
 namespace tempi
 {
 
-Source::Source()
+Outlet::Outlet()
 {
     // pass
 }
 
-void Source::trigger(const Message &message)
+void Outlet::trigger(const Message &message)
 {
     //std::cout << __FUNCTION__ << std::endl;
     on_triggered_signal_(message);

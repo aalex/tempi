@@ -142,7 +142,7 @@ bool Graph::isConnected(const char *from, unsigned int outlet, const char *to, u
         return false;
     }
     // no need to catch BadIndexException sinze already tested it
-    Source::ptr source = fromNode->getOutletSharedPtr(outlet);
+    Outlet::ptr source = fromNode->getOutletSharedPtr(outlet);
     Inlet *sink = toNode->getInlet(inlet);
     return sink->isConnected(source);
 }
@@ -173,7 +173,7 @@ bool Graph::disconnect(const char *from, unsigned int outlet, const char *to, un
         return false;
     }
     // no need to catch BadIndexException sinze already tested it
-    Source::ptr source = fromNode->getOutletSharedPtr(outlet);
+    Outlet::ptr source = fromNode->getOutletSharedPtr(outlet);
     Inlet *sink = toNode->getInlet(inlet);
     return sink->disconnect(source);
 }

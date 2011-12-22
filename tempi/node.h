@@ -50,7 +50,7 @@ class Node
         /**
          * Returns all its outlets.
          */
-        std::vector<Source::ptr> getOutlets();
+        std::vector<Outlet::ptr> getOutlets();
         /**
          * Returns all its inlets.
          */
@@ -60,8 +60,8 @@ class Node
         bool message(unsigned int inlet, const Message &message);
         Inlet *getInlet(unsigned int number) const;
         // TODO: deprecate getOutlet?
-        Source *getOutlet(unsigned int number) const;
-        Source::ptr getOutletSharedPtr(unsigned int number) const throw(BadIndexException);
+        Outlet *getOutlet(unsigned int number) const;
+        Outlet::ptr getOutletSharedPtr(unsigned int number) const throw(BadIndexException);
         /**
          * Triggers whatever time-dependent events. Calleds by the Graph.
          */
@@ -112,7 +112,7 @@ class Node
         /**
          * Adds a outlet.
          */
-        bool addOutlet(Source::ptr source);
+        bool addOutlet(Outlet::ptr source);
         /**
          * Adds a inlet.
          */
@@ -131,7 +131,7 @@ class Node
         // TODO: make private:
         virtual void doTick();
         bool hasInlet(Inlet *sink);
-        bool hasOutlet(Source *source);
+        bool hasOutlet(Outlet *source);
         /**
          * Called when init() is called.
          * Subclasses of node should implement this if needed.
@@ -140,7 +140,7 @@ class Node
         virtual void onInit();
     private:
         bool initiated_;
-        std::vector<Source::ptr> outlets_;
+        std::vector<Outlet::ptr> outlets_;
         std::map<std::string, Message> properties_;
         std::vector<Inlet::ptr> inlets_;
         Message arguments_;

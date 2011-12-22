@@ -40,7 +40,7 @@ class Filter : public Node
     public:
         Filter();
         virtual ~Filter() {}
-        Source *getOutlet();
+        Outlet *getOutlet();
         Inlet *getInlet();
     private:
         // Inherited from Node:
