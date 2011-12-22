@@ -18,7 +18,7 @@
  */
 
 #include "tempi/inlet.h"
-#include "tempi/source.h"
+#include "tempi/outlet.h"
 #include <iostream>
 
 namespace tempi
@@ -29,7 +29,7 @@ Inlet::Inlet()
     // pass
 }
 
-bool Inlet::connect(Source::ptr source)
+bool Inlet::connect(Outlet::ptr source)
 {
     if (! isConnected(source))
     {
@@ -46,7 +46,7 @@ void Inlet::disconnectAll()
     sources_.clear();
 }
 
-bool Inlet::disconnect(Source::ptr source)
+bool Inlet::disconnect(Outlet::ptr source)
 {
     if (isConnected(source))
     {
@@ -58,7 +58,7 @@ bool Inlet::disconnect(Source::ptr source)
         return false;
 }
 
-bool Inlet::isConnected(Source::ptr source)
+bool Inlet::isConnected(Outlet::ptr source)
 {
     return std::find(sources_.begin(), sources_.end(), source) != sources_.end();
 }

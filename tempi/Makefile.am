@@ -78,7 +78,7 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     sampler/track.cpp \
     scheduler.cpp \
     inlet.cpp \
-    source.cpp \
+    outlet.cpp \
     table/table.cpp \
     table/table_player.cpp \
     table/table_writer.cpp \
@@ -143,7 +143,7 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     scheduler.h \
     sharedptr.h \
     inlet.h \
-    source.h \
+    outlet.h \
     table/table.h \
     table/table_player.h \
     table/table_writer.h \
