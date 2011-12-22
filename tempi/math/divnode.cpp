@@ -30,7 +30,7 @@ DivNode::DivNode() :
     addOutlet();
 
     Message operand = Message("f", 0.0f);
-    addProperty("operand", operand);
+    addAttribute("operand", operand);
 }
 
 void DivNode::processMessage(unsigned int inlet, const Message &message)

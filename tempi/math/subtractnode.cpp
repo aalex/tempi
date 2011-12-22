@@ -30,7 +30,7 @@ SubtractNode::SubtractNode() :
     addOutlet();
 
     Message operand = Message("f", 0.0f);
-    addProperty("operand", operand);
+    addAttribute("operand", operand);
 }
 
 void SubtractNode::processMessage(unsigned int inlet, const Message &message)

@@ -30,7 +30,7 @@ MultNode::MultNode() :
     addOutlet();
 
     Message operand = Message("f", 0.0f);
-    addProperty("operand", operand);
+    addAttribute("operand", operand);
 }
 
 void MultNode::processMessage(unsigned int inlet, const Message &message)
