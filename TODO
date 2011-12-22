@@ -10,10 +10,16 @@ To do for 0.1.8
 * named inlets/outlets, not numbered
 * Node::listInlets()
 * Node::listOutlets()
-* list/configure MIDI ports by their ALSA ID, not an index
+* [math.*]
+* [math.-]
+* [math./]
+* [math.<]
+* [math.==]
+* [math.>]
 
 To do for 0.2
 -------------
+* list/configure MIDI ports by their ALSA ID, not an index
 * midilooper: multitrack sequencer with GUI
 * Bugfix: Message.*(...): avoid segfault if length does not match
 * Bugfix: Message.*(...): avoid segfault if types do not match
@@ -61,13 +67,6 @@ To do for 0.4
 * [base.trigger]
 * [base.typematches]
 * [base.python]
-* [math.*]
-* [math.+]
-* [math.-]
-* [math./]
-* [math.<]
-* [math.==]
-* [math.>]
 * [math.clip]
 * [math.rsqrt]
 * [math.sqrt]
