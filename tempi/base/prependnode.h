@@ -26,7 +26,8 @@
 
 #include "tempi/node.h"
 
-namespace tempi { namespace base {
+namespace tempi {
+namespace base {
 
 /**
  * The PrependNode prepends some atoms to a message.
@@ -35,10 +36,7 @@ class PrependNode : public Node
 {
     public:
         PrependNode();
-    protected:
-        virtual void onSetArguments(const Message &message);
     private:
-        Message prefix_;
         virtual void processMessage(unsigned int inlet, const Message &message);
 };
 
