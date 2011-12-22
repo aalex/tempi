@@ -25,15 +25,15 @@ MetroNode::MetroNode() :
     Node()
 {
     Message running = Message("b", false);
-    addProperty("running", running);
+    addAttribute("running", running);
 
     Message interval = Message("i", 1000);
-    addProperty("interval", interval); // ms
+    addAttribute("interval", interval); // ms
 
     addOutlet();
 }
 
-void MetroNode::onPropertyChanged(const char *name, const Message &value)
+void MetroNode::onAttributeChanged(const char *name, const Message &value)
 {
     const static std::string running("running");
 //  const static std::string interval("interval");
@@ -55,10 +55,10 @@ void MetroNode::startMetro()
 
 void MetroNode::doTick()
 {
-    //std::cout << "MetroNode::" << __FUNCTION__ << " running:" << getProperty("running").getBoolean(0) << std::endl;
-    if (getProperty("running").getBoolean(0))
+    //std::cout << "MetroNode::" << __FUNCTION__ << " running:" << getAttribute("running").getBoolean(0) << std::endl;
+    if (getAttribute("running").getBoolean(0))
     {
-        TimePosition interval = timeposition::from_ms((unsigned long long) getProperty("interval").getInt(0));
+        TimePosition interval = timeposition::from_ms((unsigned long long) getAttribute("interval").getInt(0));
         TimePosition elapsed = timer_.elapsed();
         //std::cout << "MetroNode::" << __FUNCTION__ << " interval:" << interval << " elapsed:" << elapsed << std::endl;
         if (elapsed >= interval)

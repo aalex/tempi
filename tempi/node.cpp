@@ -47,7 +47,7 @@ bool Node::init()
         for (iter = properties_.begin(); iter != properties_.end(); ++iter)
         {
             // Updates properties, etc.
-            onPropertyChanged((*iter).first.c_str(), (*iter).second);
+            onAttributeChanged((*iter).first.c_str(), (*iter).second);
         }
         return true;
     }
@@ -91,7 +91,7 @@ void Node::onInletTriggered(Inlet *sink, const Message &message)
                 {
                     Message property = message.cloneRange(2, message.getSize() - 1);
                     std::string name = message.getString(1);
-                    setProperty(name.c_str(), property);
+                    setAttribute(name.c_str(), property);
                     // std::cout << "Node::" << __FUNCTION__ << ": set property " << name << ": " << property << std::endl;
                     is_a_property = true;
                 }
@@ -242,7 +242,7 @@ Outlet::ptr Node::getOutletSharedPtr(unsigned int number) const throw(BadIndexEx
     return outlets_[number];
 }
 
-const Message &Node::getProperty(const char *name) const throw(BadIndexException)
+const Message &Node::getAttribute(const char *name) const throw(BadIndexException)
 {
     std::map<std::string, Message>::const_iterator iter = properties_.find(std::string(name));
     if (iter == properties_.end())
@@ -265,14 +265,14 @@ void Node::setArguments(const Message &message)
     onSetArguments(message);
 }
 
-bool Node::hasProperty(const char *name) const
+bool Node::hasAttribute(const char *name) const
 {
     return (properties_.find(std::string(name)) != properties_.end());
 }
 
-void Node::addProperty(const char *name, const Message &property) throw(BadIndexException)
+void Node::addAttribute(const char *name, const Message &property) throw(BadIndexException)
 {
-    if (hasProperty(name))
+    if (hasAttribute(name))
     {
         std::ostringstream os;
         os << "Node::" << __FUNCTION__ << ": Already has property: " << name;
@@ -281,25 +281,25 @@ void Node::addProperty(const char *name, const Message &property) throw(BadIndex
     properties_[std::string(name)] = property;
 }
 
-void Node::setProperty(const char *name, const Message &value) throw(BadIndexException, BadArgumentTypeException)
+void Node::setAttribute(const char *name, const Message &value) throw(BadIndexException, BadArgumentTypeException)
 {
-    Message current = getProperty(name); // might throw BadIndexException
+    Message current = getAttribute(name); // might throw BadIndexException
     //std::cout << "Node::" << __FUNCTION__ << ": " << name << " = " << value << std::endl;
     if (current.getTypes().compare(value.getTypes()) == 0)
     {
         properties_[std::string(name)] = value;
         if (isInitiated())
-            onPropertyChanged(name, value);
+            onAttributeChanged(name, value);
     }
     else
     {
         std::ostringstream os;
-        os << "Node::" << __FUNCTION__ << ": Property " << name << ": Bad type " << value.getTypes() << " while expecting " << current.getTypes();
+        os << "Node::" << __FUNCTION__ << ": Attribute " << name << ": Bad type " << value.getTypes() << " while expecting " << current.getTypes();
         throw (BadArgumentTypeException(os.str().c_str()));
     }
 }
 
-std::vector<std::string> Node::getPropertiesNames() const
+std::vector<std::string> Node::getAttributesNames() const
 {
     std::vector<std::string> ret;
     std::map<std::string, Message>::const_iterator iter;

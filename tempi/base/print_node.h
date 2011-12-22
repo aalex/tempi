@@ -39,7 +39,7 @@ class PrintNode : public Node
         PrintNode();
     protected:
         virtual void processMessage(unsigned int inlet, const Message &message);
-        virtual void onPropertyChanged(const char *name, const Message &value);
+        virtual void onAttributeChanged(const char *name, const Message &value);
     private:
         std::string prefix_;
         bool enabled_;

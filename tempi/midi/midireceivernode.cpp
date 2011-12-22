@@ -28,11 +28,11 @@ MidiReceiverNode::MidiReceiverNode() :
 {
     addOutlet();
     Message port = Message("i", 0);
-    addProperty("port", port);
+    addAttribute("port", port);
     midi_input_.reset(new MidiInput);
 }
 
-void MidiReceiverNode::onPropertyChanged(const char *name, const Message &value)
+void MidiReceiverNode::onAttributeChanged(const char *name, const Message &value)
 {
     //std::cout << "MidiReceiverNode::" << __FUNCTION__ << "(" << name << ", " << value << ")" << std::endl;
     static std::string key("port");

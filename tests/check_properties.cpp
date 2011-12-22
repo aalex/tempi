@@ -14,11 +14,11 @@ class DummyNode : public Node
             triggered_(false)
         {
             Message message_a = Message("ifs", 1, 3.14159f, "foo");
-            addProperty("hello", message_a);
+            addAttribute("hello", message_a);
         }
         bool triggered_;
     private:
-        virtual void onPropertyChanged(const char *name, const Message &value)
+        virtual void onAttributeChanged(const char *name, const Message &value)
         {
             triggered_ = true;
             if (VERBOSE)
@@ -43,7 +43,7 @@ static bool check_properties()
     message_b.appendFloat(6.819f);
     message_b.appendString("bar");
 
-    n.setProperty("hello", message_b);
+    n.setAttribute("hello", message_b);
     if (! n.triggered_)
     {
         std::cout << "property not triggered" << std::endl;
@@ -54,7 +54,7 @@ static bool check_properties()
     {
         Message message_c;
         message_c.appendInt(9);
-        n.setProperty("hello", message_c);
+        n.setAttribute("hello", message_c);
         std::cout << "Should not be able to set a property with a different type.\n";
         return false;
     }
@@ -63,7 +63,7 @@ static bool check_properties()
 
     try
     {
-        n.setProperty("invalid", message_b);
+        n.setAttribute("invalid", message_b);
         std::cout << "Should not be able to set a property that does not exist.\n";
         return false;
     }
@@ -76,7 +76,7 @@ static bool check_properties()
     if (VERBOSE)
     {
         std::cout << n.triggered_ << std::endl;
-        std::cout << n.getProperty("hello") << std::endl;
+        std::cout << n.getAttribute("hello") << std::endl;
     }
     if (! n.triggered_)
     {

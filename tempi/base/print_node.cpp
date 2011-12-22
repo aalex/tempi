@@ -31,10 +31,10 @@ PrintNode::PrintNode() :
     //addOutlet();
 
     Message prefix_prop = Message("s", prefix_.c_str());
-    addProperty("prefix", prefix_prop);
+    addAttribute("prefix", prefix_prop);
 
     Message enabled_prop = Message("b", enabled_);
-    addProperty("enabled", enabled_prop);
+    addAttribute("enabled", enabled_prop);
 }
 
 void PrintNode::processMessage(unsigned int inlet, const Message &message)
@@ -43,7 +43,7 @@ void PrintNode::processMessage(unsigned int inlet, const Message &message)
         std::cout << prefix_ << message << std::endl;
 }
 
-void PrintNode::onPropertyChanged(const char *name, const Message &value)
+void PrintNode::onAttributeChanged(const char *name, const Message &value)
 {
     if (utils::stringsMatch(name, "prefix"))
         prefix_ = value.getString(0);

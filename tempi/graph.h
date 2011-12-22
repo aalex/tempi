@@ -57,7 +57,7 @@ class Graph
          * - ,ssisi: connect [from] [outlet] [to] [inlet]
          * - ,sss: addNode [type] [name]
          * - ,ss: deleteNode [name]
-         * - ,ss...: setNodeProperty [nodeName] [prop] ...
+         * - ,ss...: setNodeAttribute [nodeName] [prop] ...
          */
         bool handleMessage(const Message &message);
         bool connect(const char *from, unsigned int outlet, const char *to, unsigned int inlet);
@@ -76,7 +76,7 @@ class Graph
          */
         std::vector<Connection> getAllConnections(); // TODO: const
         // TODO: store all connections in a vector
-        bool setNodeProperty(const char *nodeName, const char *propertyName, const Message &value);
+        bool setNodeAttribute(const char *nodeName, const char *propertyName, const Message &value);
     private:
         typedef std::map<std::string, Node::ptr> NodesMapType;
         typedef std::vector<Connection> ConnectionVec;

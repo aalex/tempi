@@ -26,13 +26,13 @@ AnyNode::AnyNode() :
     value_("")
 {
 //    Message value = Message();
-//    addProperty("value", value);
+//    addAttribute("value", value);
     addOutlet();
 }
 
 void AnyNode::onSetArguments(const Message &message)
 {
-//    setProperty("value", message);
+//    setAttribute("value", message);
 //    std::cout << "AnyNode::" << __FUNCTION__ << std::endl;
     Message v = message;
     value_ = v;
@@ -49,7 +49,7 @@ void AnyNode::processMessage(unsigned int inlet, const Message &message)
         Message v = message;
         value_ = v;
     }
-        //setProperty("value", message);
+        //setAttribute("value", message);
     if (inlet == 0)
         output(0, value_);
 //    std::cout << "done" << std::endl;

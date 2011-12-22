@@ -32,27 +32,27 @@ CounterNode::CounterNode() :
 {
     addOutlet();
     Message increment = Message("i", 1);
-    addProperty(PROP_INCREMENT, increment);
+    addAttribute(PROP_INCREMENT, increment);
     Message count = Message("i", 0);
-    addProperty(PROP_COUNT, count);
+    addAttribute(PROP_COUNT, count);
 }
 void CounterNode::processMessage(unsigned int inlet, const Message &message)
 {
     // bang outputs and increments
     if (message.getTypes() == "")
     {
-        int count = getProperty(PROP_COUNT).getInt(0);
-        int increment = getProperty(PROP_INCREMENT).getInt(0);
-        output(0, getProperty(PROP_COUNT));
+        int count = getAttribute(PROP_COUNT).getInt(0);
+        int increment = getAttribute(PROP_INCREMENT).getInt(0);
+        output(0, getAttribute(PROP_COUNT));
         count += increment;
-        setProperty(PROP_COUNT, Message("i", count));
+        setAttribute(PROP_COUNT, Message("i", count));
     }
     // int replaces the value and outputs
     else if (message.getTypes() == "i")
     {
         count_ = message.getInt(0);
-        setProperty(PROP_COUNT, message);
-        output(0, getProperty(PROP_COUNT));
+        setAttribute(PROP_COUNT, message);
+        output(0, getAttribute(PROP_COUNT));
     }
     else
     {
@@ -60,7 +60,7 @@ void CounterNode::processMessage(unsigned int inlet, const Message &message)
     }
 }
 
-void CounterNode::onPropertyChanged(const char *name, const Message &value)
+void CounterNode::onAttributeChanged(const char *name, const Message &value)
 {
     if (utils::stringsMatch("increment", name))
     {
