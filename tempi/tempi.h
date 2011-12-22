@@ -67,7 +67,7 @@ std::string get_version();
 #include "tempi/sharedptr.h"
 #include "tempi/mapping/filter.h"
 #include "tempi/mapping/slidefilter.h"
-#include "tempi/sink.h"
+#include "tempi/inlet.h"
 #include "tempi/source.h"
 #include "tempi/fsm/state.h"
 #include "tempi/fsm/statemachine.h"

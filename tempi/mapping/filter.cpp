@@ -28,7 +28,7 @@ Filter::Filter() :
     addOutlet();
 }
 
-Sink *Filter::getInlet()
+Inlet *Filter::getInlet()
 {
     return getInlets()[0].get();
 }

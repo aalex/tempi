@@ -19,7 +19,7 @@
 
 /**
  * @file
- * The Sink class.
+ * The Inlet class.
  */
 #ifndef __TEMPI_SINK_H__
 #define __TEMPI_SINK_H__
@@ -34,18 +34,18 @@ namespace tempi
 {
 
 /**
- * A Sink is a pad to which we can connect Source pads.
+ * A Inlet is a pad to which we can connect Source pads.
  * TODO: rename to Destination
  */
-class Sink
+class Inlet
 {
     public:
-        typedef std::tr1::shared_ptr<Sink> ptr;
+        typedef std::tr1::shared_ptr<Inlet> ptr;
         // TODO: rename to ReceiveSignal
-        typedef boost::signals2::signal<void (Sink *sink, const Message&)> TriggeredSignal;
+        typedef boost::signals2::signal<void (Inlet *sink, const Message&)> TriggeredSignal;
         // TODO: rename to ReceiveSlot
         typedef TriggeredSignal::slot_function_type TriggeredSlot;
-        Sink();
+        Inlet();
         bool connect(Source::ptr source);
         bool disconnect(Source::ptr source);
         bool isConnected(Source::ptr source);

@@ -63,7 +63,7 @@ std::vector<Source::ptr> Node::getOutlets()
     return outlets_;
 }
 
-void Node::onInletTriggered(Sink *sink, const Message &message)
+void Node::onInletTriggered(Inlet *sink, const Message &message)
 {
     //std::cout << __FUNCTION__ << std::endl;
     unsigned int inlet = getInletIndex(sink);
@@ -112,10 +112,10 @@ void Node::onInletTriggered(Sink *sink, const Message &message)
     }
 }
 
-unsigned int Node::getInletIndex(Sink *sink) const throw(BadIndexException)
+unsigned int Node::getInletIndex(Inlet *sink) const throw(BadIndexException)
 {
     unsigned int index = 0;
-    std::vector<Sink::ptr>::const_iterator iter;
+    std::vector<Inlet::ptr>::const_iterator iter;
     for (iter = inlets_.begin(); iter != inlets_.end(); ++iter)
     {
         if ((*iter).get() == sink)
@@ -127,7 +127,7 @@ unsigned int Node::getInletIndex(Sink *sink) const throw(BadIndexException)
     throw BadIndexException(os.str().c_str());
 }
 
-std::vector<Sink::ptr> Node::getInlets()
+std::vector<Inlet::ptr> Node::getInlets()
 {
     return inlets_;
 }
@@ -142,7 +142,7 @@ bool Node::addOutlet(Source::ptr source)
     return false;
 }
 
-bool Node::addInlet(Sink::ptr sink)
+bool Node::addInlet(Inlet::ptr sink)
 {
     if (! hasInlet(sink.get()))
     {
@@ -155,7 +155,7 @@ bool Node::addInlet(Sink::ptr sink)
 
 bool Node::addInlet()
 {
-    return addInlet(Sink::ptr(new Sink()));
+    return addInlet(Inlet::ptr(new Inlet()));
 }
 
 bool Node::addOutlet()
@@ -163,9 +163,9 @@ bool Node::addOutlet()
     return addOutlet(Source::ptr(new Source()));
 }
 
-bool Node::hasInlet(Sink *sink)
+bool Node::hasInlet(Inlet *sink)
 {
-    std::vector<Sink::ptr>::iterator iter;
+    std::vector<Inlet::ptr>::iterator iter;
     for (iter = inlets_.begin(); iter != inlets_.end(); ++iter)
     {
         if ((*iter).get() == sink)
@@ -211,7 +211,7 @@ unsigned int Node::getNumberOfOutlets() const
     return inlets_.size();
 }
 
-Sink *Node::getInlet(unsigned int number) const
+Inlet *Node::getInlet(unsigned int number) const
 {
     if (number >= getNumberOfInlets())
     {
@@ -319,7 +319,7 @@ bool Node::message(unsigned int inlet, const Message &message)
     }
     if (isInitiated())
     {
-        Sink *inletPtr = getInlet(inlet);
+        Inlet *inletPtr = getInlet(inlet);
         inletPtr->trigger(message);
         return true;
     }

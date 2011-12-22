@@ -29,7 +29,7 @@
 #include "tempi/exceptions.h"
 #include "tempi/message.h"
 #include "tempi/sharedptr.h"
-#include "tempi/sink.h"
+#include "tempi/inlet.h"
 #include "tempi/source.h"
 
 namespace tempi
@@ -54,11 +54,11 @@ class Node
         /**
          * Returns all its inlets.
          */
-        std::vector<Sink::ptr> getInlets();
+        std::vector<Inlet::ptr> getInlets();
         unsigned int getNumberOfInlets() const;
         unsigned int getNumberOfOutlets() const;
         bool message(unsigned int inlet, const Message &message);
-        Sink *getInlet(unsigned int number) const;
+        Inlet *getInlet(unsigned int number) const;
         // TODO: deprecate getOutlet?
         Source *getOutlet(unsigned int number) const;
         Source::ptr getOutletSharedPtr(unsigned int number) const throw(BadIndexException);
@@ -116,21 +116,21 @@ class Node
         /**
          * Adds a inlet.
          */
-        bool addInlet(Sink::ptr sink);
+        bool addInlet(Inlet::ptr sink);
         void addProperty(const char *name, const Message &property) throw(BadIndexException);
         void output(unsigned int outlet, const Message &message) const throw(BadIndexException);
         virtual void onPropertyChanged(const char *name, const Message &value)
         {}
         virtual void onSetArguments(const Message &message)
         {}
-        unsigned int getInletIndex(Sink *sink) const throw(BadIndexException);
+        unsigned int getInletIndex(Inlet *sink) const throw(BadIndexException);
         // TODO: make private:
-        void onInletTriggered(Sink *sink, const Message &message);
+        void onInletTriggered(Inlet *sink, const Message &message);
         // TODO: make private:
         virtual void processMessage(unsigned int inlet, const Message &message) = 0;
         // TODO: make private:
         virtual void doTick();
-        bool hasInlet(Sink *sink);
+        bool hasInlet(Inlet *sink);
         bool hasOutlet(Source *source);
         /**
          * Called when init() is called.
@@ -142,7 +142,7 @@ class Node
         bool initiated_;
         std::vector<Source::ptr> outlets_;
         std::map<std::string, Message> properties_;
-        std::vector<Sink::ptr> inlets_;
+        std::vector<Inlet::ptr> inlets_;
         Message arguments_;
         std::string typeName_;
         std::string instanceName_;

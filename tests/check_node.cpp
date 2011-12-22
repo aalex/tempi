@@ -7,10 +7,10 @@ using namespace tempi;
 /**
  * Dummy sink node.
  */
-class DummySinkNode: public base::NopNode
+class DummyInletNode: public base::NopNode
 {
     public:
-        DummySinkNode() :
+        DummyInletNode() :
             base::NopNode()
         {
             triggered_ = false;
@@ -34,7 +34,7 @@ bool check_simple()
 {
     base::NopNode a;
     base::NopNode b;
-    DummySinkNode c;
+    DummyInletNode c;
     if (! b.getInlets()[0].get()->connect(a.getOutlets()[0]))
     {
         std::cout << "Could not connect a to b." << std::endl;
