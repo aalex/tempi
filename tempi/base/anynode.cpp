@@ -19,40 +19,28 @@
 
 #include "tempi/base/anynode.h"
 
-namespace tempi { namespace base {
+namespace tempi {
+namespace base {
 
 AnyNode::AnyNode() :
-    Node(),
-    value_("")
+    Node()
 {
-//    Message value = Message();
-//    addAttribute("value", value);
+    addAttribute("value", Message(), "Holds any message to store.", false);
     addOutlet();
-}
-
-void AnyNode::onSetArguments(const Message &message)
-{
-//    setAttribute("value", message);
-//    std::cout << "AnyNode::" << __FUNCTION__ << std::endl;
-    Message v = message;
-    value_ = v;
-//    std::cout << "done" << std::endl;
 }
 
 void AnyNode::processMessage(unsigned int inlet, const Message &message)
 {
-//    std::cout << "AnyNode::" << __FUNCTION__ << std::endl;
-    // bang outputs the value.
-    // A new message replaces the value and 
-    if (message.getTypes() != "")
+    if (message.getTypes() == "") // bang only outputs the value
     {
-        Message v = message;
-        value_ = v;
+        // pass
     }
-        //setAttribute("value", message);
+    else // any message with some type tags sets the value and outputs it
+    {
+        setAttribute("value", message);
+    }
     if (inlet == 0)
-        output(0, value_);
-//    std::cout << "done" << std::endl;
+        output(0, getAttributeValue("value"));
 }
 
 } // end of namespace

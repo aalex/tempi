@@ -169,6 +169,20 @@ static bool check_all_loaded()
     return true;
 }
 
+/**
+ * checks base.any
+ */
+static bool check_any()
+{
+    NodeFactory::ptr factory(new NodeFactory);
+    internals::loadInternals(factory);
+    Graph graph(factory); // FIXME: smart ptr or not for factory?
+    graph.addNode("base.any", "any0");
+    Node::ptr any0 = graph.getNode("any0");
+    any0->setAttribute("value", Message("f", 3.14159f));
+    return true;
+}
+
 int main(int argc, char **argv)
 {
     if (! checkMetro())
@@ -178,6 +192,8 @@ int main(int argc, char **argv)
     if (! checkPrepend())
         return 1;
     if (! check_all_loaded())
+        return 1;
+    if (! check_any())
         return 1;
     return 0;
 }
