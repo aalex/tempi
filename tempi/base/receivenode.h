@@ -36,7 +36,7 @@ class ReceiveNode : public Node
     public:
         ReceiveNode();
     protected:
-        virtual void processMessage(unsigned int inlet, const Message &message);
+        virtual void processMessage(const char *inlet, const Message &message);
     private:
         std::string getReceiveSymbol() const;
 };

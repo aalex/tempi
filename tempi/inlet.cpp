@@ -24,9 +24,10 @@
 namespace tempi
 {
 
-Inlet::Inlet()
+Inlet::Inlet(const char *name, const char *documentation)
 {
-    // pass
+    name_(name);
+    documentation_(documentation);
 }
 
 bool Inlet::connect(Outlet::ptr source)
@@ -68,6 +69,16 @@ void Inlet::trigger(const Message &message)
     // TODO
     //std::cout << __FUNCTION__ << std::endl;
     on_triggered_signal_(this, message);
+}
+
+std::string Inlet::getName() const
+{
+    return name_;
+}
+
+std::string Inlet::getDocumentation() const
+{
+    return documentation_;
 }
 
 } // end of namespace

@@ -40,7 +40,7 @@ class AppSinkNode : public Node
         bool tryPop(Message &message);
         void clear();
     protected:
-        virtual void processMessage(unsigned int inlet, const Message &message);
+        virtual void processMessage(const char *inlet, const Message &message);
     private:
         ConcurrentQueue<Message> queue_;
         void push(const Message &message);

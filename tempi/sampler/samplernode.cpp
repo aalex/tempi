@@ -36,8 +36,8 @@ SamplerNode::SamplerNode() :
     Message playing = Message("b", false);
     addAttribute("playing", playing);
 
-    addInlet(); // messages to record
-    addOutlet(); // played back messages messages
+    addInlet("0"); // messages to record
+    addOutlet("0"); // played back messages messages
 }
 
 void SamplerNode::onAttributeChanged(const char *name, const Message &value)
@@ -71,7 +71,7 @@ void SamplerNode::doTick()
         {
             std::vector<Message>::const_iterator iter;
             for (iter = messages.begin(); iter != messages.end(); ++iter)
-                output(0, (*iter));
+                output("0", (*iter));
         }
     }
 }

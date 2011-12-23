@@ -27,14 +27,14 @@ PrependNode::PrependNode() :
     Node()
 {
     addAttribute("value", Message(), "Holds any message to prepend.", false);
-    addOutlet();
+    addOutlet("0");
 }
 
-void PrependNode::processMessage(unsigned int inlet, const Message &message)
+void PrependNode::processMessage(const char *inlet, const Message &message)
 {
     Message ret = message;
     ret.prependMessage(getAttributeValue("value"));
-    output(0, ret);
+    output("0", ret);
 }
 
 } // end of namespace

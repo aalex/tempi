@@ -27,13 +27,13 @@ namespace math {
 AddNode::AddNode() :
     Node()
 {
-    addOutlet();
+    addOutlet("0");
 
     Message operand = Message("f", 0.0f);
     addAttribute("operand", operand);
 }
 
-void AddNode::processMessage(unsigned int inlet, const Message &message)
+void AddNode::processMessage(const char *inlet, const Message &message)
 {
     if (message.typesMatch("f"))
     {
@@ -43,7 +43,7 @@ void AddNode::processMessage(unsigned int inlet, const Message &message)
         Message result("f", left_operand + right_operand);
         //std::cout << "AddNode::" << __FUNCTION__ << ": " << left_operand
         //    << " + " << right_operand << " = " << result << std::endl;
-        output(0, result);
+        output("0", result);
     }
     else
         std::cerr << "AddNode::" << __FUNCTION__ << "(): Bad type for message " << message << std::endl;

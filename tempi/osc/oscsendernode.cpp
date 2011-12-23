@@ -33,7 +33,7 @@ OscSenderNode::OscSenderNode() :
     addAttribute("host_port", host_port);
 }
 
-void OscSenderNode::processMessage(unsigned int inlet, const Message &message)
+void OscSenderNode::processMessage(const char *inlet, const Message &message)
 {
     // TODO: send osc message
     if (osc_sender_.get() == 0)

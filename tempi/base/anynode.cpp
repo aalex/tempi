@@ -18,6 +18,7 @@
  */
 
 #include "tempi/base/anynode.h"
+#include "tempi/utils.h"
 
 namespace tempi {
 namespace base {
@@ -26,10 +27,10 @@ AnyNode::AnyNode() :
     Node()
 {
     addAttribute("value", Message(), "Holds any message to store.", false);
-    addOutlet();
+    addOutlet("0");
 }
 
-void AnyNode::processMessage(unsigned int inlet, const Message &message)
+void AnyNode::processMessage(const char *inlet, const Message &message)
 {
     if (message.getTypes() == "") // bang only outputs the value
     {
@@ -39,8 +40,8 @@ void AnyNode::processMessage(unsigned int inlet, const Message &message)
     {
         setAttribute("value", message);
     }
-    if (inlet == 0)
-        output(0, getAttributeValue("value"));
+    if (utils::stringsMatch(inlet, "0"))
+        output("0", getAttributeValue("value"));
 }
 
 } // end of namespace

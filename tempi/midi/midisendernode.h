@@ -38,7 +38,7 @@ class MidiSenderNode : public Node
     public:
         MidiSenderNode();
     protected:
-        virtual void processMessage(unsigned int inlet, const Message &message);
+        virtual void processMessage(const char *inlet, const Message &message);
         virtual void onAttributeChanged(const char *name, const Message &value);
         virtual void doTick()
         {}

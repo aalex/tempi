@@ -23,15 +23,26 @@
 namespace tempi
 {
 
-Outlet::Outlet()
+Outlet::Outlet(const char *name, const char *documentation)
 {
-    // pass
+    name_(name);
+    documentation_(documentation);
 }
 
 void Outlet::trigger(const Message &message)
 {
     //std::cout << __FUNCTION__ << std::endl;
     on_triggered_signal_(message);
+}
+
+std::string Outlet::getName() const
+{
+    return name_;
+}
+
+std::string Outlet::getDocumentation() const
+{
+    return documentation_;
 }
 
 } // end of namespace

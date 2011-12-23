@@ -30,7 +30,7 @@ MetroNode::MetroNode() :
     Message interval = Message("i", 1000);
     addAttribute("interval", interval); // ms
 
-    addOutlet();
+    addOutlet("0");
 }
 
 void MetroNode::onAttributeChanged(const char *name, const Message &value)
@@ -64,7 +64,7 @@ void MetroNode::doTick()
         if (elapsed >= interval)
         {
             Message message = Message(""); // bang
-            output(0, message);
+            output("0", message);
             timer_.reset();
         }
     }

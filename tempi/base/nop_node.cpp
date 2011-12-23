@@ -25,12 +25,12 @@ namespace tempi { namespace base {
 NopNode::NopNode() :
     Node()
 {
-    addOutlet();
+    addOutlet("0");
 }
 
-void NopNode::processMessage(unsigned int inlet, const Message &message)
+void NopNode::processMessage(const char *inlet, const Message &message)
 {
-    output(0, message);
+    output("0", message);
 }
 
 } // end of namespace

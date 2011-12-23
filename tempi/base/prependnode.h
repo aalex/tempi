@@ -37,7 +37,7 @@ class PrependNode : public Node
     public:
         PrependNode();
     private:
-        virtual void processMessage(unsigned int inlet, const Message &message);
+        virtual void processMessage(const char *inlet, const Message &message);
 };
 
 } // end of namespace

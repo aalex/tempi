@@ -27,6 +27,7 @@
 #include <boost/signals2.hpp>
 #include "tempi/sharedptr.h"
 #include "tempi/message.h"
+#include <string>
 
 namespace tempi
 {
@@ -39,15 +40,19 @@ class Outlet
     public:
         typedef std::tr1::shared_ptr<Outlet> ptr;
         typedef boost::signals2::signal<void (const Message&)> TriggeredSignal;
-        Outlet();
+        Outlet(const char *name, const char *documentation);
         // TODO: return success
         void trigger(const Message &message);
         TriggeredSignal &getOnTriggeredSignal()
         {
             return on_triggered_signal_;
         }
+        std::string getName() const;
+        std::string getDocumentation() const;
     private:
          TriggeredSignal on_triggered_signal_;
+         std::string name_;
+         std::string documentation_;
 };
 
 } // end of namespace

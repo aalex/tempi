@@ -51,18 +51,18 @@ class Node
         /**
          * Returns all its outlets.
          */
-        std::vector<Outlet::ptr> getOutlets();
+        std::map<std::string, Outlet::ptr> getOutlets();
         /**
          * Returns all its inlets.
          */
-        std::vector<Inlet::ptr> getInlets();
+        std::map<std::string, Inlet::ptr> getInlets();
         unsigned int getNumberOfInlets() const;
         unsigned int getNumberOfOutlets() const;
         bool message(unsigned int inlet, const Message &message);
-        Inlet *getInlet(unsigned int number) const;
+        Inlet *getInlet(const char *name) const;
         // TODO: deprecate getOutlet?
-        Outlet *getOutlet(unsigned int number) const;
-        Outlet::ptr getOutletSharedPtr(unsigned int number) const throw(BadIndexException);
+        Outlet *getOutlet(const char *name) const;
+        Outlet::ptr getOutletSharedPtr(const char *name) const throw(BadIndexException);
         /**
          * Triggers whatever time-dependent events. Calleds by the Graph.
          */
@@ -97,6 +97,8 @@ class Node
             onHandleReceive(selector, message);
             return true;
         }
+        bool hasInlet(const char *name) const;
+        bool hasOutlet(const char *name) const;
     protected:
         void enableHandlingReceiveSymbol(const char *selector);
         virtual void onHandleReceive(const char *selector, const Message &message)
@@ -104,11 +106,11 @@ class Node
         /**
          * Adds a outlet.
          */
-        bool addOutlet();
+        bool addOutlet(const char *name, const char *documentation="");
         /**
          * Adds a inlet.
          */
-        bool addInlet();
+        bool addInlet(const char *name, const char *documentation="");
         /**
          * Adds a outlet.
          */
@@ -118,14 +120,13 @@ class Node
          */
         bool addInlet(Inlet::ptr inlet);
         void addAttribute(const char *name, const Message &value, const char *doc="", bool type_strict=true) throw(BadIndexException);
-        void output(unsigned int outlet, const Message &message) const throw(BadIndexException);
+        void output(const char *outlet, const Message &message) const throw(BadIndexException);
         virtual void onAttributeChanged(const char *name, const Message &value)
         {}
-        unsigned int getInletIndex(Inlet *inlet) const throw(BadIndexException);
         // TODO: make private:
         void onInletTriggered(Inlet *inlet, const Message &message);
         // TODO: make private:
-        virtual void processMessage(unsigned int inlet, const Message &message) = 0;
+        virtual void processMessage(const char *inlet, const Message &message) = 0;
         // TODO: make private:
         virtual void doTick();
         bool hasInlet(Inlet *inlet);
@@ -138,9 +139,9 @@ class Node
         virtual void onInit();
     private:
         bool initiated_;
-        std::vector<Outlet::ptr> outlets_;
+        std::map<std::string, Outlet::ptr> outlets_;
         std::map<std::string, Attribute::ptr> attributes_;
-        std::vector<Inlet::ptr> inlets_;
+        std::map<std::string, Inlet::ptr> inlets_;
         std::string typeName_;
         std::string instanceName_;
         std::string handledReceiveSymbol_;

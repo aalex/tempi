@@ -79,7 +79,7 @@ bool Graph::message(const char *node, unsigned int inlet, const Message &message
     return nodePtr->message(inlet, message);
 }
 
-bool Graph::connect(const char *from, unsigned int outlet, const char *to, unsigned int inlet)
+bool Graph::connect(const char *from, const char *outlet, const char *to, const char *inlet)
 {
     Node::ptr fromNode = getNode(from);
     if (fromNode.get() == 0)
@@ -94,14 +94,14 @@ bool Graph::connect(const char *from, unsigned int outlet, const char *to, unsig
         std::cerr << "Graph::" << __FUNCTION__ << ": Cannot find node " << to << "." << std::endl;
         return false;
     }
-    if (outlet >= fromNode->getNumberOfOutlets())
+    if (! fromNode->hasOutlet(outlet))
     {
-        std::cerr << "Graph::" << __FUNCTION__ << ": Outlet " << outlet << "too big for node " << from << "." << std::endl;
+        std::cerr << "Graph::" << __FUNCTION__ << ": Outlet " << outlet << " not found in " << from << "." << std::endl;
         return false;
     }
-    if (inlet >= toNode->getNumberOfInlets())
+    if (! toNode->hasInlet(inlet))
     {
-        std::cerr << "Graph::" << __FUNCTION__ << ": Inlet " << inlet << "too big for node " << to << "." << std::endl;
+        std::cerr << "Graph::" << __FUNCTION__ << ": Inlet " << inlet << " not found in " << to << "." << std::endl;
         return false;
     }
     try
@@ -113,69 +113,49 @@ bool Graph::connect(const char *from, unsigned int outlet, const char *to, unsig
         std::cerr << e.what() << std::endl;
         return false;
     }
+    connections_.push_back(Connection(std::string(from), std::string(outlet), std::string(to), std::string(inlet)));
     return true;
 }
 
-bool Graph::isConnected(const char *from, unsigned int outlet, const char *to, unsigned int inlet)
+bool Graph::isConnected(const char *from, const char *outlet, const char *to, const char *inlet)
 {
-    Node::ptr fromNode = getNode(from);
-    if (fromNode.get() == 0)
+    if (hasNode(from))
     {
-
         std::cerr << "Graph::" << __FUNCTION__ << ": Cannot find node " << from << "." << std::endl;
         return false;
     }
-    Node::ptr toNode = getNode(to);
-    if (toNode.get() == 0)
+    if (hasNode(to))
     {
         std::cerr << "Graph::" << __FUNCTION__ << ": Cannot find node " << to << "." << std::endl;
         return false;
     }
-    if (outlet >= fromNode->getNumberOfOutlets())
+    std::vector<Connection>::const_iterator iter;
+    for (iter = connections_.begin(); iter != connections_.end(); ++iter)
     {
-        std::cerr << "Graph::" << __FUNCTION__ << ": Outlet " << outlet << "too big for node " << from << "." << std::endl;
-        return false;
+        if ((*iter).get<0>() == from && 
+            (*iter).get<1>() == outlet && 
+            (*iter).get<2>() == to && 
+            (*iter).get<3>() == inlet)
+        {
+            return true;
+        }
     }
-    if (inlet >= toNode->getNumberOfInlets())
-    {
-        std::cerr << "Graph::" << __FUNCTION__ << ": Inlet " << inlet << "too big for node " << to << "." << std::endl;
-        return false;
-    }
-    // no need to catch BadIndexException sinze already tested it
-    Outlet::ptr source = fromNode->getOutletSharedPtr(outlet);
-    Inlet *sink = toNode->getInlet(inlet);
-    return sink->isConnected(source);
+    return false;
 }
 
-bool Graph::disconnect(const char *from, unsigned int outlet, const char *to, unsigned int inlet)
+bool Graph::disconnect(const char *from, const char *outlet, const char *to, const char *inlet)
 {
-    Node::ptr fromNode = getNode(from);
-    if (fromNode.get() == 0)
+    if (isConnected(from, outlet, to, inlet))
     {
-
-        std::cerr << "Graph::" << __FUNCTION__ << ": Cannot find node " << from << "." << std::endl;
-        return false;
+        Node::ptr fromNode = getNode(from);
+        Node::ptr toNode = getNode(to);
+        // no need to catch BadIndexException sinze already tested it
+        Outlet::ptr source = fromNode->getOutletSharedPtr(outlet);
+        Inlet *sink = toNode->getInlet(inlet);
+        return sink->disconnect(source);
     }
-    Node::ptr toNode = getNode(to);
-    if (toNode.get() == 0)
-    {
-        std::cerr << "Graph::" << __FUNCTION__ << ": Cannot find node " << to << "." << std::endl;
+    else
         return false;
-    }
-    if (outlet >= fromNode->getNumberOfOutlets())
-    {
-        std::cerr << "Graph::" << __FUNCTION__ << ": Outlet " << outlet << "too big for node " << from << "." << std::endl;
-        return false;
-    }
-    if (inlet >= toNode->getNumberOfInlets())
-    {
-        std::cerr << "Graph::" << __FUNCTION__ << ": Inlet " << inlet << "too big for node " << to << "." << std::endl;
-        return false;
-    }
-    // no need to catch BadIndexException sinze already tested it
-    Outlet::ptr source = fromNode->getOutletSharedPtr(outlet);
-    Inlet *sink = toNode->getInlet(inlet);
-    return sink->disconnect(source);
 }
 
 Node::ptr Graph::getNode(const char *name) const
@@ -207,53 +187,42 @@ void Graph::tick()
     }
 }
 
-std::vector<Graph::Connection> Graph::getAllConnectedTo(const char *name, unsigned int inlet)
+std::vector<Graph::Connection> Graph::getAllConnectedTo(const char *name, const char *inlet)
 {
     std::vector<Connection> ret;
-    NodesMapType::const_iterator iter;
-    for (iter = nodes_.begin(); iter != nodes_.end(); ++iter)
+    std::vector<Connection>::const_iterator iter;
+    for (iter = connections_.begin(); iter != connections_.end(); ++iter)
     {
-        Node *node = (*iter).second.get();
-        std::string fromName((*iter).first);
-        for (unsigned int outlet = 0; outlet < node->getNumberOfOutlets(); ++outlet)
+        if ((*iter).get<2>() == name && 
+            (*iter).get<3>() == inlet)
         {
-            if (isConnected(fromName.c_str(), outlet, name, inlet))
-            {
-                ret.push_back(Connection(fromName, outlet, name, inlet));
-            }
+            ret.push_back(*iter);
         }
     }
     return ret;
 }
 
-std::vector<Graph::Connection> Graph::getAllConnectedFrom(const char *name, unsigned int inlet)
+std::vector<Graph::Connection> Graph::getAllConnectedFrom(const char *name, const char *outlet)
 {
     std::vector<Connection> ret;
-    NodesMapType::const_iterator iter;
-    for (iter = nodes_.begin(); iter != nodes_.end(); ++iter)
+    std::vector<Connection>::const_iterator iter;
+    for (iter = connections_.begin(); iter != connections_.end(); ++iter)
     {
-        Node *node = (*iter).second.get();
-        std::string toName((*iter).first);
-        for (unsigned int outlet = 0; outlet < node->getNumberOfOutlets(); ++outlet)
+        if ((*iter).get<0>() == name && 
+            (*iter).get<1>() == outlet)
         {
-            if (isConnected(name, outlet, toName.c_str(), inlet))
-            {
-                ret.push_back(Connection(toName, outlet));
-            }
+            ret.push_back(*iter);
         }
     }
-    return ret;
 }
 
 std::vector<Graph::Connection> Graph::getAllConnectedTo(const char *name)
 {
-    Node::ptr node = getNode(name);
-    ConnectionVec ret;
-    for (unsigned int inlet = 0; inlet < node->getNumberOfInlets(); ++inlet)
+    std::vector<Connection> ret;
+    std::vector<Connection>::const_iterator iter;
+    for (iter = connections_.begin(); iter != connections_.end(); ++iter)
     {
-        ConnectionVec connections = getAllConnectedTo(name, inlet);
-        ConnectionVec::const_iterator iter;
-        for (iter = connections.begin(); iter != connections.end(); ++iter)
+        if ((*iter).get<2>() == name)
         {
             ret.push_back(*iter);
         }
@@ -263,13 +232,11 @@ std::vector<Graph::Connection> Graph::getAllConnectedTo(const char *name)
 
 std::vector<Graph::Connection> Graph::getAllConnectedFrom(const char *name)
 {
-    Node::ptr node = getNode(name);
-    ConnectionVec ret;
-    for (unsigned int outlet = 0; outlet < node->getNumberOfOutlets(); ++outlet)
+    std::vector<Connection> ret;
+    std::vector<Connection>::const_iterator iter;
+    for (iter = connections_.begin(); iter != connections_.end(); ++iter)
     {
-        ConnectionVec connections = getAllConnectedFrom(name, outlet);
-        ConnectionVec::const_iterator iter;
-        for (iter = connections.begin(); iter != connections.end(); ++iter)
+        if ((*iter).get<0>() == name)
         {
             ret.push_back(*iter);
         }
@@ -279,46 +246,31 @@ std::vector<Graph::Connection> Graph::getAllConnectedFrom(const char *name)
 
 void Graph::disconnectAllConnectedTo(const char *name)
 {
-    // FIXME: O(n!)
     Node::ptr node = getNode(name);
     ConnectionVec connections = getAllConnectedTo(name);
     ConnectionVec::const_iterator iter;
     for (iter = connections.begin(); iter != connections.end(); ++iter)
     {
         Connection conn = (*iter);
-        disconnect(conn.get<0>().c_str(), conn.get<1>(), conn.get<2>().c_str(), conn.get<3>());
+        disconnect(conn.get<0>().c_str(), conn.get<1>().c_str(), conn.get<2>().c_str(), conn.get<3>().c_str());
     }
 }
 
 void Graph::disconnectAllConnectedFrom(const char *name)
 {
-    // FIXME: O(n!)
     Node::ptr node = getNode(name);
     ConnectionVec connections = getAllConnectedFrom(name);
     ConnectionVec::const_iterator iter;
     for (iter = connections.begin(); iter != connections.end(); ++iter)
     {
         Connection conn = (*iter);
-        disconnect(conn.get<0>().c_str(), conn.get<1>(), conn.get<2>().c_str(), conn.get<3>());
+        disconnect(conn.get<0>().c_str(), conn.get<1>().c_str(), conn.get<2>().c_str(), conn.get<3>().c_str());
     }
 }
 
 std::vector<Graph::Connection> Graph::getAllConnections()
 {
-    // FIXME: O(n!)
-    std::vector<Connection> ret;
-    NodesMapType::const_iterator iter;
-    for (iter = nodes_.begin(); iter != nodes_.end(); ++iter)
-    {
-        std::string nodeName = (*iter).first;
-        ConnectionVec connections = getAllConnectedFrom(nodeName.c_str());
-        ConnectionVec::const_iterator iter2;
-        for (iter2 = connections.begin(); iter2 != connections.end(); ++iter2)
-        {
-            ret.push_back(*iter2);
-        }
-    }
-    return ret;
+    return connections_;
 }
 
 bool Graph::deleteNode(const char *name)
@@ -345,76 +297,76 @@ bool Graph::hasNode(const char *name) const
     return getNode(name).get() != 0;
 }
 
-/**
- * Return true if handled.
- */
-bool Graph::handleMessage(const Message &message)
-{
-    //std::cout << "Graph::" << __FUNCTION__ << "(" << message << ")" << std::endl;
-    std::string types = message.getTypes();
-    if (utils::stringBeginsWith(types.c_str(), "s")
-        && message.getString(0) == "__tempi__")
-    {
-        //std::cout << __FILE__ << "::" << __FUNCTION__ << ": starts with tempi" << std::endl;
-        return handleTempiMessage(
-            message.cloneRange(1, message.getSize() - 1));
-    }
-    else if (utils::stringBeginsWith(types.c_str(), "s"))
-    {
-        std::string receiveSlot = message.getString(0);
-        std::cout << "TODO: Graph::" << __FUNCTION__ << "(" << message << ")" << std::endl;
-        return false;
-    }
-}
-
-/**
- * Handles messages meant to dynamically patch the graph.
- * - ,ssisi: connect [from] [outlet] [to] [inlet]
- * - ,sss: addNode [type] [name]
- * - ,ss: deleteNode [name]
- * - ,ss...: setNodeAttribute [nodeName] [prop] ...
- */
-bool Graph::handleTempiMessage(const Message &message)
-{
-    std::string types = message.getTypes();
-    if (utils::stringsMatch(types.c_str(), "ssisi")
-        && message.getString(0) == "connect")
-    {
-        std::string from = message.getString(1);
-        unsigned int outlet = (unsigned) message.getInt(2);
-        std::string to = message.getString(3);
-        unsigned int inlet = (unsigned) message.getInt(4);
-        std::string string0 = message.getString(0);
-        return connect(from.c_str(), outlet,
-            to.c_str(), inlet);
-    }
-    if (utils::stringsMatch(types.c_str(), "sss")
-        && message.getString(0) == "addNode")
-    {
-        std::string type = message.getString(1);
-        std::string name = message.getString(2);
-        bool ok = addNode(type.c_str(), name.c_str());
-        if (ok)
-            std::cout << "did create node " << name << std::endl;
-        return ok;
-    }
-    if (utils::stringsMatch(types.c_str(), "ss")
-        && message.getString(0) == "deleteNode")
-    {
-        std::string name = message.getString(1);
-        return deleteNode(name.c_str());
-    }
-    if (utils::stringBeginsWith(types.c_str(), "sss")
-        && message.getString(0) == "setNodeAttribute")
-    {
-        std::string nodeName = message.getString(1);
-        std::string attributeName = message.getString(2);
-        Message value = message.cloneRange(3, message.getSize() - 1);
-        return setNodeAttribute(nodeName.c_str(),
-            attributeName.c_str(), value);
-    }
-    return false; // unhandled
-}
+// /**
+//  * Return true if handled.
+//  */
+// bool Graph::handleMessage(const Message &message)
+// {
+//     //std::cout << "Graph::" << __FUNCTION__ << "(" << message << ")" << std::endl;
+//     std::string types = message.getTypes();
+//     if (utils::stringBeginsWith(types.c_str(), "s")
+//         && message.getString(0) == "__tempi__")
+//     {
+//         //std::cout << __FILE__ << "::" << __FUNCTION__ << ": starts with tempi" << std::endl;
+//         return handleTempiMessage(
+//             message.cloneRange(1, message.getSize() - 1));
+//     }
+//     else if (utils::stringBeginsWith(types.c_str(), "s"))
+//     {
+//         std::string receiveSlot = message.getString(0);
+//         std::cout << "TODO: Graph::" << __FUNCTION__ << "(" << message << ")" << std::endl;
+//         return false;
+//     }
+// }
+// 
+// /**
+//  * Handles messages meant to dynamically patch the graph.
+//  * - ,ssisi: connect [from] [outlet] [to] [inlet]
+//  * - ,sss: addNode [type] [name]
+//  * - ,ss: deleteNode [name]
+//  * - ,ss...: setNodeAttribute [nodeName] [prop] ...
+//  */
+// bool Graph::handleTempiMessage(const Message &message)
+// {
+//     std::string types = message.getTypes();
+//     if (utils::stringsMatch(types.c_str(), "ssisi")
+//         && message.getString(0) == "connect")
+//     {
+//         std::string from = message.getString(1);
+//         unsigned int outlet = (unsigned) message.getInt(2);
+//         std::string to = message.getString(3);
+//         unsigned int inlet = (unsigned) message.getInt(4);
+//         std::string string0 = message.getString(0);
+//         return connect(from.c_str(), outlet,
+//             to.c_str(), inlet);
+//     }
+//     if (utils::stringsMatch(types.c_str(), "sss")
+//         && message.getString(0) == "addNode")
+//     {
+//         std::string type = message.getString(1);
+//         std::string name = message.getString(2);
+//         bool ok = addNode(type.c_str(), name.c_str());
+//         if (ok)
+//             std::cout << "did create node " << name << std::endl;
+//         return ok;
+//     }
+//     if (utils::stringsMatch(types.c_str(), "ss")
+//         && message.getString(0) == "deleteNode")
+//     {
+//         std::string name = message.getString(1);
+//         return deleteNode(name.c_str());
+//     }
+//     if (utils::stringBeginsWith(types.c_str(), "sss")
+//         && message.getString(0) == "setNodeAttribute")
+//     {
+//         std::string nodeName = message.getString(1);
+//         std::string attributeName = message.getString(2);
+//         Message value = message.cloneRange(3, message.getSize() - 1);
+//         return setNodeAttribute(nodeName.c_str(),
+//             attributeName.c_str(), value);
+//     }
+//     return false; // unhandled
+// }
 
 bool Graph::setNodeAttribute(const char *nodeName, const char *attributeName, const Message &value)
 {
