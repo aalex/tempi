@@ -71,8 +71,6 @@ class Node
         // std::map<std::string, Message> getAttributes();
         Attribute::ptr getAttribute(const char *name) const throw(BadIndexException);
         const Message &getAttributeValue(const char *name) const throw(BadIndexException);
-        const Message &getArguments() const;
-        void setArguments(const Message &message);
         bool hasAttribute(const char *name) const;
         /**
          * Sets a attribute value.
@@ -123,8 +121,6 @@ class Node
         void output(unsigned int outlet, const Message &message) const throw(BadIndexException);
         virtual void onAttributeChanged(const char *name, const Message &value)
         {}
-        virtual void onSetArguments(const Message &message)
-        {}
         unsigned int getInletIndex(Inlet *sink) const throw(BadIndexException);
         // TODO: make private:
         void onInletTriggered(Inlet *sink, const Message &message);
@@ -145,7 +141,6 @@ class Node
         std::vector<Outlet::ptr> outlets_;
         std::map<std::string, Attribute::ptr> attributes_;
         std::vector<Inlet::ptr> inlets_;
-        Message arguments_;
         std::string typeName_;
         std::string instanceName_;
         std::string handledReceiveSymbol_;

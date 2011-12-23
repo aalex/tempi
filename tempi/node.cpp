@@ -260,16 +260,6 @@ const Message &Node::getAttributeValue(const char *name) const throw(BadIndexExc
     return getAttribute(name)->getValue();
 }
 
-const Message &Node::getArguments() const
-{
-    return arguments_;
-}
-void Node::setArguments(const Message &message)
-{
-    arguments_ = message;
-    onSetArguments(message);
-}
-
 bool Node::hasAttribute(const char *name) const
 {
     return (attributes_.find(std::string(name)) != attributes_.end());
