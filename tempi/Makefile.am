@@ -51,11 +51,7 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     internals.cpp \
     mapping/slide.cpp \
     mapping/slidefilter.cpp \
-    math/addnode.cpp \
-    math/divnode.cpp \
     math/mathlibrary.cpp \
-    math/multnode.cpp \
-    math/subtractnode.cpp \
     message.cpp \
     midi/midiinput.cpp \
     midi/midilibrary.cpp \
@@ -117,11 +113,7 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     mapping/average.h \
     mapping/slide.h \
     mapping/slidefilter.h \
-    math/addnode.h \
-    math/divnode.h \
     math/mathlibrary.h \
-    math/multnode.h \
-    math/subtractnode.h \
     message.h \
     midi/midiinput.h \
     midi/midilibrary.h \
