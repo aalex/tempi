@@ -63,12 +63,12 @@ std::vector<Outlet::ptr> Node::getOutlets()
     return outlets_;
 }
 
-void Node::onInletTriggered(Inlet *sink, const Message &message)
+void Node::onInletTriggered(Inlet *inlet, const Message &message)
 {
     //std::cout << __FUNCTION__ << std::endl;
-    unsigned int inlet = getInletIndex(sink);
+    unsigned int inlet_index = getInletIndex(inlet);
     bool is_a_attribute = false;
-    if (inlet == 0 && message.getSize() >= 3)
+    if (inlet_index == 0 && message.getSize() >= 3)
     {
         // ArgumentType type0;
         // ArgumentType type1;
@@ -108,17 +108,17 @@ void Node::onInletTriggered(Inlet *sink, const Message &message)
     }
     if (! is_a_attribute)
     {
-        processMessage(inlet, message);
+        processMessage(inlet_index, message);
     }
 }
 
-unsigned int Node::getInletIndex(Inlet *sink) const throw(BadIndexException)
+unsigned int Node::getInletIndex(Inlet *inlet) const throw(BadIndexException)
 {
     unsigned int index = 0;
     std::vector<Inlet::ptr>::const_iterator iter;
     for (iter = inlets_.begin(); iter != inlets_.end(); ++iter)
     {
-        if ((*iter).get() == sink)
+        if ((*iter).get() == inlet)
             return index;
         ++index;
     }
@@ -132,22 +132,22 @@ std::vector<Inlet::ptr> Node::getInlets()
     return inlets_;
 }
 
-bool Node::addOutlet(Outlet::ptr source)
+bool Node::addOutlet(Outlet::ptr outlet)
 {
-    if (! hasOutlet(source.get()))
+    if (! hasOutlet(outlet.get()))
     {
-        outlets_.push_back(source);
+        outlets_.push_back(outlet);
         return true;
     }
     return false;
 }
 
-bool Node::addInlet(Inlet::ptr sink)
+bool Node::addInlet(Inlet::ptr inlet)
 {
-    if (! hasInlet(sink.get()))
+    if (! hasInlet(inlet.get()))
     {
-        inlets_.push_back(sink);
-        sink.get()->getOnTriggeredSignal().connect(boost::bind(&Node::onInletTriggered, this, _1, _2));
+        inlets_.push_back(inlet);
+        inlet.get()->getOnTriggeredSignal().connect(boost::bind(&Node::onInletTriggered, this, _1, _2));
         return true;
     }
     return false;
@@ -163,12 +163,12 @@ bool Node::addOutlet()
     return addOutlet(Outlet::ptr(new Outlet()));
 }
 
-bool Node::hasInlet(Inlet *sink)
+bool Node::hasInlet(Inlet *inlet)
 {
     std::vector<Inlet::ptr>::iterator iter;
     for (iter = inlets_.begin(); iter != inlets_.end(); ++iter)
     {
-        if ((*iter).get() == sink)
+        if ((*iter).get() == inlet)
         {
             return true;
         }
@@ -176,12 +176,12 @@ bool Node::hasInlet(Inlet *sink)
     return false;
 }
 
-bool Node::hasOutlet(Outlet *source)
+bool Node::hasOutlet(Outlet *outlet)
 {
     std::vector<Outlet::ptr>::iterator iter;
     for (iter = outlets_.begin(); iter != outlets_.end(); ++iter)
     {
-        if ((*iter).get() == source)
+        if ((*iter).get() == outlet)
         {
             return true;
         }
@@ -339,8 +339,8 @@ bool Node::message(unsigned int inlet, const Message &message)
 
 void Node::output(unsigned int outlet, const Message &message) const throw(BadIndexException)
 {
-    Outlet::ptr source = getOutletSharedPtr(outlet);
-    source->trigger(message);
+    Outlet::ptr outlet_ptr = getOutletSharedPtr(outlet);
+    outlet_ptr->trigger(message);
 }
 
 void Node::setTypeName(const char *typeName)

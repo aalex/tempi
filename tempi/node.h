@@ -112,24 +112,24 @@ class Node
         /**
          * Adds a outlet.
          */
-        bool addOutlet(Outlet::ptr source);
+        bool addOutlet(Outlet::ptr outlet);
         /**
          * Adds a inlet.
          */
-        bool addInlet(Inlet::ptr sink);
+        bool addInlet(Inlet::ptr inlet);
         void addAttribute(const char *name, const Message &value, const char *doc="", bool type_strict=true) throw(BadIndexException);
         void output(unsigned int outlet, const Message &message) const throw(BadIndexException);
         virtual void onAttributeChanged(const char *name, const Message &value)
         {}
-        unsigned int getInletIndex(Inlet *sink) const throw(BadIndexException);
+        unsigned int getInletIndex(Inlet *inlet) const throw(BadIndexException);
         // TODO: make private:
-        void onInletTriggered(Inlet *sink, const Message &message);
+        void onInletTriggered(Inlet *inlet, const Message &message);
         // TODO: make private:
         virtual void processMessage(unsigned int inlet, const Message &message) = 0;
         // TODO: make private:
         virtual void doTick();
-        bool hasInlet(Inlet *sink);
-        bool hasOutlet(Outlet *source);
+        bool hasInlet(Inlet *inlet);
+        bool hasOutlet(Outlet *outlet);
         /**
          * Called when init() is called.
          * Subclasses of node should implement this if needed.
