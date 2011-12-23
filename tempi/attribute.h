@@ -1,4 +1,4 @@
-/*
+ /*
  * Copyright (C) 2011 Alexandre Quessy
  * 
  * This file is part of Tempi.
@@ -19,28 +19,39 @@
 
 /**
  * @file
- * The PrependNode class.
+ * The Attribute class
  */
-#ifndef __TEMPI_BASE_PREPENDNODE_H__
-#define __TEMPI_BASE_PREPENDNODE_H__
 
-#include "tempi/node.h"
+#ifndef __TEMPI_ATTRIBUTE_H__
+#define __TEMPI_ATTRIBUTE_H__
+
+#include <iostream>
+#include <string>
+#include "tempi/message.h"
+#include "tempi/sharedptr.h"
 
 namespace tempi {
-namespace base {
 
 /**
- * The PrependNode prepends some atoms to a message.
+ * An Attribute is used to store info in a Node and to control its behaviour.
  */
-class PrependNode : public Node
+class Attribute
 {
     public:
-        PrependNode();
+        typedef std::tr1::shared_ptr<Attribute> ptr;
+        Attribute(const char *name, const Message &value, const char *doc, bool type_strict=true);
+        std::string getName() const;
+        std::string getDocumentation() const;
+        const Message &getValue();
+        bool setValue(const Message &value);
+        bool isTypeStrict() const;
     private:
-        virtual void processMessage(unsigned int inlet, const Message &message);
+        std::string name_;
+        Message value_;
+        std::string documentation_;
+        bool type_strict_;
 };
 
-} // end of namespace
 } // end of namespace
 
 #endif // ifndef

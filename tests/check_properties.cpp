@@ -37,6 +37,7 @@ class DummyNode : public Node
 static bool check_properties()
 {
     DummyNode n;
+    n.init();
 
     Message message_b;
     message_b.appendInt(2);
@@ -76,7 +77,7 @@ static bool check_properties()
     if (VERBOSE)
     {
         std::cout << n.triggered_ << std::endl;
-        std::cout << n.getAttribute("hello") << std::endl;
+        std::cout << n.getAttributeValue("hello") << std::endl;
     }
     if (! n.triggered_)
     {

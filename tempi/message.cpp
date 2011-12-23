@@ -542,5 +542,41 @@ std::ostream &operator<<(std::ostream &os, const Message &message)
     return os;
 }
 
+void Message::prependMessage(const Message &message)
+{
+    for (unsigned int i = message.getSize(); i >= 0; --i)
+    {
+        ArgumentType type;
+        message.getArgumentType(i, type);
+        switch (type)
+        {
+            case BOOLEAN:
+                prependBoolean(message.getBoolean(i));
+                break;
+            case CHAR:
+                prependChar(message.getChar(i));
+                break;
+            case DOUBLE:
+                prependDouble(message.getDouble(i));
+                break;
+            case FLOAT:
+                prependFloat(message.getFloat(i));
+                break;
+            case INT:
+                prependInt(message.getInt(i));
+                break;
+            case LONG:
+                prependLong(message.getLong(i));
+                break;
+            case STRING:
+                prependString(message.getString(i).c_str());
+                break;
+            default:
+                std::cerr << "Node::PrependMessage: Unknow type of atom: " << type << std::endl;
+                break;
+        }
+    }
+}
+
 } // end of namespace
 

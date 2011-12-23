@@ -78,29 +78,9 @@ bool check_simple()
     return true;
 }
 
-bool check_args()
-{
-    base::NopNode a;
-    // test arguments
-    Message args;
-    args.appendString("foo");
-    args.appendInt(2);
-    args.appendFloat(3.14159f);
-    a.setArguments(args);
-    Message probe = a.getArguments();
-    if (probe != args)
-    {
-        std::cout << "args should match" << std::endl;
-        return false;
-    }
-    return true;
-}
-
 int main(int argc, char *argv[])
 {
     if (! check_simple())
-        return 1;
-    if (! check_args())
         return 1;
     return 0;
 }
