@@ -17,29 +17,38 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "tempi/math/mathlibrary.h"
-#include "tempi/math/addnode.h"
-#include "tempi/math/divnode.h"
-#include "tempi/math/greaternode.h"
+#include <iostream>
 #include "tempi/math/lessnode.h"
-#include "tempi/math/iseqnode.h"
-#include "tempi/math/multnode.h"
-#include "tempi/math/subtractnode.h"
 #include "tempi/utils.h"
 
 namespace tempi {
 namespace math {
 
-void MathLibrary::load(NodeFactory &factory, const char *prefix) const
+IsLessNode::IsLessNode() :
+    Node()
 {
-    using utils::concatenate;
-    factory.registerTypeT<AddNode>(concatenate(prefix, "+").c_str());
-    factory.registerTypeT<DivNode>(concatenate(prefix, "/").c_str());
-    factory.registerTypeT<IsEqualNode>(concatenate(prefix, "==").c_str());
-    factory.registerTypeT<IsGreaterNode>(concatenate(prefix, ">").c_str());
-    factory.registerTypeT<IsLessNode>(concatenate(prefix, "<").c_str());
-    factory.registerTypeT<SubtractNode>(concatenate(prefix, "-").c_str());
-    factory.registerTypeT<MultNode>(concatenate(prefix, "*").c_str());
+    addOutlet();
+
+    Message operand = Message("f", 0.0f);
+    addAttribute("operand", operand);
+}
+
+void IsLessNode::processMessage(unsigned int inlet, const Message &message)
+{
+    bool equal = false;
+    if (message.typesMatch("f"))
+    {
+        float left_operand = message.getFloat(0);
+        float right_operand = getAttribute("operand").getFloat(0);
+        if (left_operand < right_operand)
+            equal = true;
+        Message result("b", equal);
+        //std::cout << "IsLessNode::" << __FUNCTION__ << ": " << left_operand
+        //    << " + " << right_operand << " = " << result << std::endl;
+        output(0, result);
+    }
+    else
+        std::cerr << "IsLessNode::" << __FUNCTION__ << "(): Bad type for message " << message << std::endl;
 }
 
 } // end of namespace
