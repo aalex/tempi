@@ -18,47 +18,12 @@
  */
 
 #include "tempi/midi/midiroutenode.h"
+#include "tempi/midi/midiutilities.h"
 #include "tempi/utils.h"
 #include <iostream>
 
 namespace tempi {
 namespace midi {
-
-static const unsigned char MIDINOTEOFF =       0x80; // channel, pitch, velocity
-static const unsigned char MIDINOTEON =        0x90; // channel, pitch, velocity
-static const unsigned char MIDICONTROLCHANGE = 0xb0; // channel, controller, value
-static const unsigned char MIDIPROGRAMCHANGE = 0xc0; // channel, value
-static const unsigned char MIDIPITCHBEND =     0xe0; // channel, value
-static const unsigned char MIDI_NOT_SUPPORTED = 0x00;
-
-static unsigned char getMidiEventType(const unsigned char first_byte)
-{
-    unsigned char type_code;
-    if (first_byte >= 0xf0)
-        type_code = first_byte; // Soem type codes use two bytes?
-    else
-        type_code = first_byte & 0xf0;
-    unsigned char ret;
-    switch (type_code)
-    {
-        case MIDINOTEOFF:
-        case MIDINOTEON:
-        case MIDICONTROLCHANGE:
-        case MIDIPROGRAMCHANGE:
-        case MIDIPITCHBEND:
-            ret = type_code;
-            break;
-        default:
-            ret = MIDI_NOT_SUPPORTED; // FIXME
-            break;
-    }
-    return ret;
-}
-
-static unsigned char getChannelNumber(unsigned char c)
-{
-    return (c & 0x0F);
-}
 
 MidiRouteNode::MidiRouteNode() :
     Node()
@@ -70,6 +35,7 @@ MidiRouteNode::MidiRouteNode() :
 
 void MidiRouteNode::processMessage(unsigned int inlet, const Message &message)
 {
+    using namespace utilities;
     if (! message.indexMatchesType(0, 'C'))
     {
         std::cerr << "MidiRouteNode::" << __FUNCTION__ << ": First atom should be an unsigned char: " << message << std::endl;
