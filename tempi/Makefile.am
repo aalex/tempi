@@ -33,6 +33,7 @@ libtempi_@TEMPI_API_VERSION@_la_includedir = $(includedir)/tempi-$(TEMPI_API_VER
 ## and the variable name derived from that.
 ## PLEASE KEEP THEM IN ALPHABETICAL ORDER
 libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
+    attribute.cpp \
     base/anynode.cpp \
     base/appsinknode.cpp \
     base/baselibrary.cpp \
@@ -90,6 +91,7 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
 
 ## PLEASE KEEP THEM IN ALPHABETICAL ORDER
 libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
+    attribute.h \
     base/anynode.h \
     base/appsinknode.h \
     base/baselibrary.h \

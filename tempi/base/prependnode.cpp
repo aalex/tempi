@@ -20,56 +20,21 @@
 #include <iostream>
 #include "tempi/base/prependnode.h"
 
-namespace tempi { namespace base {
+namespace tempi {
+namespace base {
 
 PrependNode::PrependNode() :
-    Node(),
-    prefix_()
+    Node()
 {
+    addAttribute("value", Message(), "Holds any message to prepend.", false);
     addOutlet();
 }
 
 void PrependNode::processMessage(unsigned int inlet, const Message &message)
 {
     Message ret = message;
-    for (unsigned int i = prefix_.getSize(); i >= 0; --i)
-    {
-        ArgumentType type;
-        prefix_.getArgumentType(i, type);
-        switch (type)
-        {
-            case BOOLEAN:
-                ret.prependBoolean(prefix_.getBoolean(i));
-                break;
-            case CHAR:
-                ret.prependBoolean(prefix_.getBoolean(i));
-                break;
-            case DOUBLE:
-                ret.prependDouble(prefix_.getDouble(i));
-                break;
-            case FLOAT:
-                ret.prependFloat(prefix_.getFloat(i));
-                break;
-            case INT:
-                ret.prependInt(prefix_.getInt(i));
-                break;
-            case LONG:
-                ret.prependLong(prefix_.getLong(i));
-                break;
-            case STRING:
-                ret.prependString(prefix_.getString(i).c_str());
-                break;
-            default:
-                std::cerr << "base::PrependNode: Unknow type of atom: " << type << std::endl;
-                break;
-        }
-    }
+    ret.prependMessage(getAttributeValue("value"));
     output(0, ret);
-}
-
-void PrependNode::onSetArguments(const Message &message)
-{
-    prefix_ = message;
 }
 
 } // end of namespace

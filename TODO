@@ -4,9 +4,6 @@ To do in Tempi
 To do for 0.1.8
 ---------------
 * Move nodes to tempi-plugins-base // FIXME: header files are not installed in subdirectories, but flat
-* Node: remove arguments
-* Node: dynamic type properties
-* Node: rename property to attribute
 * named inlets/outlets, not numbered
 * Node::listInlets()
 * Node::listOutlets()

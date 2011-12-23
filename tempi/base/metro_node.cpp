@@ -55,10 +55,10 @@ void MetroNode::startMetro()
 
 void MetroNode::doTick()
 {
-    //std::cout << "MetroNode::" << __FUNCTION__ << " running:" << getAttribute("running").getBoolean(0) << std::endl;
-    if (getAttribute("running").getBoolean(0))
+    //std::cout << "MetroNode::" << __FUNCTION__ << " running:" << getAttributeValue("running").getBoolean(0) << std::endl;
+    if (getAttributeValue("running").getBoolean(0))
     {
-        TimePosition interval = timeposition::from_ms((unsigned long long) getAttribute("interval").getInt(0));
+        TimePosition interval = timeposition::from_ms((unsigned long long) getAttributeValue("interval").getInt(0));
         TimePosition elapsed = timer_.elapsed();
         //std::cout << "MetroNode::" << __FUNCTION__ << " interval:" << interval << " elapsed:" << elapsed << std::endl;
         if (elapsed >= interval)

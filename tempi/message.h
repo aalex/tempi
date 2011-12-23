@@ -112,6 +112,7 @@ class Message
             prependStdString(std::string(value));
         }
         void prependPointer(void *value);
+        void prependMessage(const Message &message);
 
         bool getBoolean(unsigned int index) const
             throw(BadArgumentTypeException, BadIndexException);

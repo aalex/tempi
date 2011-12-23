@@ -41,9 +41,9 @@ void CounterNode::processMessage(unsigned int inlet, const Message &message)
     // bang outputs and increments
     if (message.getTypes() == "")
     {
-        int count = getAttribute(PROP_COUNT).getInt(0);
-        int increment = getAttribute(PROP_INCREMENT).getInt(0);
-        output(0, getAttribute(PROP_COUNT));
+        int count = getAttributeValue(PROP_COUNT).getInt(0);
+        int increment = getAttributeValue(PROP_INCREMENT).getInt(0);
+        output(0, getAttributeValue(PROP_COUNT));
         count += increment;
         setAttribute(PROP_COUNT, Message("i", count));
     }
@@ -52,7 +52,7 @@ void CounterNode::processMessage(unsigned int inlet, const Message &message)
     {
         count_ = message.getInt(0);
         setAttribute(PROP_COUNT, message);
-        output(0, getAttribute(PROP_COUNT));
+        output(0, getAttributeValue(PROP_COUNT));
     }
     else
     {

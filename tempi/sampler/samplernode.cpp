@@ -63,7 +63,7 @@ void SamplerNode::play(bool enabled)
 
 void SamplerNode::doTick()
 {
-    if (getAttribute("playing").getBoolean(0))
+    if (getAttributeValue("playing").getBoolean(0))
     {
         std::vector<Message> messages;
         bool ok = player_->read(messages);
@@ -91,7 +91,7 @@ void SamplerNode::record(bool enabled)
 
 void SamplerNode::processMessage(unsigned int inlet, const Message &message)
 {
-    bool rec = getAttribute("recording").getBoolean(0);
+    bool rec = getAttributeValue("recording").getBoolean(0);
     static unsigned int record_inlet = 0;
     if (inlet == record_inlet)
     {
