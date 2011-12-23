@@ -52,6 +52,7 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     mapping/slidefilter.cpp \
     math/addnode.cpp \
     math/divnode.cpp \
+    math/iseqnode.cpp \
     math/mathlibrary.cpp \
     math/multnode.cpp \
     math/subtractnode.cpp \
@@ -117,6 +118,7 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     mapping/slidefilter.h \
     math/addnode.h \
     math/divnode.h \
+    math/iseqnode.h \
     math/mathlibrary.h \
     math/multnode.h \
     math/subtractnode.h \
