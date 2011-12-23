@@ -25,6 +25,9 @@
 #define __TEMPI_MATHLIBRARY_H__
 
 #include "tempi/library.h"
+#include "tempi/message.h"
+#include "tempi/node.h"
+#include <iostream>
 
 namespace tempi { 
 
@@ -43,6 +46,83 @@ class MathLibrary : public Library
 {
     public:
         virtual void load(NodeFactory &factory, const char *prefix) const;
+};
+
+/**
+ * The AddNode adds two floats together.
+ */
+class AddNode : public Node
+{
+    public:
+        AddNode();
+    protected:
+        virtual void processMessage(unsigned int inlet, const Message &message);
+};
+
+/**
+ * The DivNode divides two floats.
+ */
+class DivNode : public Node
+{
+    public:
+        DivNode();
+    protected:
+        virtual void processMessage(unsigned int inlet, const Message &message);
+};
+
+/**
+ * The IsGreaterNode checks if one float is greater than another. 
+ */
+class IsGreaterNode : public Node
+{
+    public:
+        IsGreaterNode();
+    protected:
+        virtual void processMessage(unsigned int inlet, const Message &message);
+};
+
+/**
+ * The IsEqualNode checks if 2 floats have the same value.
+ */
+class IsEqualNode : public Node
+{
+    public:
+        IsEqualNode();
+    protected:
+        virtual void processMessage(unsigned int inlet, const Message &message);
+};
+
+/**
+ * The IsLessNode checks if one float is lesser than another. 
+ */
+class IsLessNode : public Node
+{
+    public:
+        IsLessNode();
+    protected:
+        virtual void processMessage(unsigned int inlet, const Message &message);
+};
+
+/**
+ * The MultNode multiplies two floats.
+ */
+class MultNode : public Node
+{
+    public:
+        MultNode();
+    protected:
+        virtual void processMessage(unsigned int inlet, const Message &message);
+};
+
+/**
+ * The SubtractNode subtracts one float from another
+ */
+class SubtractNode : public Node
+{
+    public:
+        SubtractNode();
+    protected:
+        virtual void processMessage(unsigned int inlet, const Message &message);
 };
 
 } // end of namespace
