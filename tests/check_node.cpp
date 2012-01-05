@@ -35,12 +35,12 @@ bool check_simple()
     base::NopNode a;
     base::NopNode b;
     DummyInletNode c;
-    if (! b.getInlets()[0].get()->connect(a.getOutlets()["0"]))
+    if (! b.getInlets()["0"].get()->connect(a.getOutlets()["0"]))
     {
         std::cout << "Could not connect a to b." << std::endl;
         return false;
     }
-    if (! c.getInlet(0)->connect(b.getOutlets()["0"]))
+    if (! c.getInlet("0")->connect(b.getOutlets()["0"]))
     {
         std::cout << "Could not connect b to c." << std::endl;
         return false;
@@ -65,12 +65,12 @@ bool check_simple()
         return false;
     }
 
-    if (! c.getInlet(0)->disconnect(b.getOutlets()["0"]))
+    if (! c.getInlet("0")->disconnect(b.getOutlets()["0"]))
     {
         std::cout << "Could not disconnect b to c." << std::endl;
         return false;
     }
-    if (c.getInlet(0)->disconnect(b.getOutlets()["0"]))
+    if (c.getInlet("0")->disconnect(b.getOutlets()["0"]))
     {
         std::cout << "Could disconnect b to c twice." << std::endl;
         return false;

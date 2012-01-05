@@ -27,7 +27,8 @@ namespace math {
 AddNode::AddNode() :
     Node()
 {
-    addOutlet("0");
+    addOutlet("0", "result");
+    addInlet("0", "left operand");
 
     Message operand = Message("f", 0.0f);
     addAttribute("operand", operand);

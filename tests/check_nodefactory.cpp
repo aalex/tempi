@@ -75,8 +75,8 @@ bool check_nodefactory()
     bar->init();
 
     Message message;
-    foo->getInlet(0)->trigger(message);
-    bar->getInlet(0)->trigger(message);
+    foo->getInlet("0")->trigger(message);
+    bar->getInlet("0")->trigger(message);
     return true;
 }
 

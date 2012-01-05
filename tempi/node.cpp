@@ -67,7 +67,8 @@ void Node::onInletTriggered(Inlet *inlet, const Message &message)
 {
     //std::cout << __FUNCTION__ << std::endl;
     bool is_a_attribute = false;
-    if (inlet->getName() == "0" && message.getSize() >= 3)
+    // FIXME: the name of the "attributes" inlet should be a constant
+    if (inlet->getName() == "attributes" && message.getSize() >= 3)
     {
         // ArgumentType type0;
         // ArgumentType type1;
@@ -321,18 +322,24 @@ bool Node::message(const char *inlet, const Message &message)
 {
     if (inlet == 0)
     {
-        std::cerr << "Error: Called " << __FUNCTION__ << "() with non-initialized inlet on node of type " << getTypeName() << ": " << message << std::endl;
+        std::cerr << "Error: Called " << __FUNCTION__ << "() with null-string inlet on node of type " << getTypeName() << ": " << message << std::endl;
         return false;
     }
     if (isInitiated())
     {
         Inlet *inletPtr = getInlet(inlet);
+        if (inletPtr == 0)
+        {
+            std::cerr << "Error: Node of type " << getTypeName() << "has no inlet named " << inlet << "!!" << std::endl;
+            // : Called " << __FUNCTION__ << "() on Node of type " << getTypeName() << " via inlet " << inlet << " but could not find such an inlet. Message is: " << message << std::endl;
+            return false;
+        }
         inletPtr->trigger(message);
         return true;
     }
     else
     {
-        std::cerr << "Warning: Called " << __FUNCTION__ << "() on non-initialized Node of type " << getTypeName() << " in inlet " << inlet << ": " << message << std::endl;
+        std::cerr << "Warning: Called " << __FUNCTION__ << "() on null-string Node of type " << getTypeName() << " in inlet " << inlet << ": " << message << std::endl;
         return false;
     }
 }
