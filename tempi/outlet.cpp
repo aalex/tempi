@@ -25,8 +25,8 @@ namespace tempi
 
 Outlet::Outlet(const char *name, const char *documentation)
 {
-    name_(name);
-    documentation_(documentation);
+    name_ = std::string(name);
+    documentation_ = std::string(documentation);
 }
 
 void Outlet::trigger(const Message &message)

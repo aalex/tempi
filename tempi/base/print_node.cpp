@@ -29,6 +29,7 @@ PrintNode::PrintNode() :
     enabled_(true)
 {
     //addOutlet();
+    addInlet("0", "Print messages received from this inlet.");
 
     Message prefix_prop = Message("s", prefix_.c_str());
     addAttribute("prefix", prefix_prop);

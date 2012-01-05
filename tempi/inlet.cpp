@@ -26,8 +26,8 @@ namespace tempi
 
 Inlet::Inlet(const char *name, const char *documentation)
 {
-    name_(name);
-    documentation_(documentation);
+    name_ = std::string(name);
+    documentation_ = std::string(documentation);
 }
 
 bool Inlet::connect(Outlet::ptr source)

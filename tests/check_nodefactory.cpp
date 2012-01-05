@@ -14,11 +14,11 @@ class FooNode: public Node
         {
             if (VERBOSE)
                 std::cout << "Create a FooNode" << std::endl;
-            addInlet();
-            addOutlet();
+            addInlet("0", "");
+            addOutlet("0", "");
         }
     private:
-        virtual void processMessage(unsigned int inlet, const Message &message) {}
+        virtual void processMessage(const char *inlet, const Message &message) {}
 };
 
 class BarNode: public Node
@@ -27,13 +27,13 @@ class BarNode: public Node
         BarNode() :
             Node()
         {
-            addInlet();
-            addOutlet();
+            addInlet("0", "");
+            addOutlet("0", "");
             if (VERBOSE)
                 std::cout << "Create a BarNode" << std::endl;
         }
     private:
-        virtual void processMessage(unsigned int inlet, const Message &message) {}
+        virtual void processMessage(const char *inlet, const Message &message) {}
 };
 
 bool check_nodefactory()
@@ -128,10 +128,10 @@ bool check_print()
 
     graph.tick(); // call init() on each node
 
-    graph.connect("nop0", 0, "nop1", 0);
-    graph.connect("nop1", 0, "print0", 0);
-    graph.connect("nop1", 0, "sampler0", 0);
-    graph.connect("sampler0", 0, "print1", 0);
+    graph.connect("nop0", "0", "nop1", "0");
+    graph.connect("nop1", "0", "print0", "0");
+    graph.connect("nop1", "0", "sampler0", "0");
+    graph.connect("sampler0", "0", "print1", "0");
 
     // disable print
     Message disable_message = Message("ssb", "set", "enabled", false);

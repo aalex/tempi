@@ -27,7 +27,8 @@ AnyNode::AnyNode() :
     Node()
 {
     addAttribute("value", Message(), "Holds any message to store.", false);
-    addOutlet("0");
+    addOutlet("0", "Value.");
+    addInlet("0", "Bang to output value. Any other message will set and output value.");
 }
 
 void AnyNode::processMessage(const char *inlet, const Message &message)

@@ -27,7 +27,7 @@ class DummyNode : public Node
                 std::cout << "DummyNode::triggered_ = " << triggered_ << std::endl;
             }
         }
-        virtual void processMessage(unsigned int inlet, const Message &message)
+        virtual void processMessage(const char *inlet, const Message &message)
         {
             if (VERBOSE)
                 std::cout << __FUNCTION__ << " " << inlet << " " << message << std::endl;

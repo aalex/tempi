@@ -58,20 +58,20 @@ bool Scheduler::createGraph(const char *name)
 //    doSendMessage(message);
 //}
 
-bool Scheduler::sendToAllGraphs(const Message &message)
-{
-    //if (! makeSureLockIsAcquired())
-    //    return false;
-    bool ret = false;
-    std::cout << __FUNCTION__ << std::endl;
-    std::map<std::string, Graph::ptr>::const_iterator iter;
-    for (iter = graphs_.begin(); iter != graphs_.end(); ++iter)
-    {
-        if ((*iter).second.get()->handleMessage(message))
-            ret = true;
-    }
-    return ret;
-}
+// bool Scheduler::sendToAllGraphs(const Message &message)
+// {
+//     //if (! makeSureLockIsAcquired())
+//     //    return false;
+//     bool ret = false;
+//     std::cout << __FUNCTION__ << std::endl;
+//     std::map<std::string, Graph::ptr>::const_iterator iter;
+//     for (iter = graphs_.begin(); iter != graphs_.end(); ++iter)
+//     {
+//         if ((*iter).second.get()->handleMessage(message))
+//             ret = true;
+//     }
+//     return ret;
+// }
 
 Graph::ptr Scheduler::getGraph(const char *name) const
 {

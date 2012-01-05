@@ -30,14 +30,17 @@ CounterNode::CounterNode() :
     Node(),
     increment_(1)
 {
-    addOutlet("0");
+    addOutlet("0", "Count.");
+    addInlet("0", "Bangs increase and output the count. Integers sets and outputs the count.");
     Message increment = Message("i", 1);
     addAttribute(PROP_INCREMENT, increment);
     Message count = Message("i", 0);
     addAttribute(PROP_COUNT, count);
 }
+
 void CounterNode::processMessage(const char *inlet, const Message &message)
 {
+    // TODO: check if inlet == "0"
     // bang outputs and increments
     if (message.getTypes() == "")
     {

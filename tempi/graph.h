@@ -48,7 +48,7 @@ class Graph
         Graph(NodeFactory::ptr factory);
         Graph();
         bool addNode(const char *type, const char *name);
-        bool message(const char *node, unsigned int inlet, const Message &message);
+        bool message(const char *node, const char *inlet, const Message &message);
         /**
          * This method allows dynamic patching of a Graph.
          * Message not start with "__tempi__" are sent to receive symbols in the Graph. See the tempi::base::ReceiveNode class which allows to receive messages starting by a receive symbol. (selector)

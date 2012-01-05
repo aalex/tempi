@@ -19,6 +19,7 @@
 
 #include "tempi/sampler/samplernode.h"
 #include "tempi/message.h"
+#include "tempi/utils.h"
 #include <vector>
 
 namespace tempi {
@@ -89,11 +90,11 @@ void SamplerNode::record(bool enabled)
     }
 }
 
-void SamplerNode::processMessage(unsigned int inlet, const Message &message)
+void SamplerNode::processMessage(const char *inlet, const Message &message)
 {
     bool rec = getAttributeValue("recording").getBoolean(0);
-    static unsigned int record_inlet = 0;
-    if (inlet == record_inlet)
+    static const char *record_inlet = "0";
+    if (utils::stringsMatch(inlet, record_inlet))
     {
         if (rec)
         {

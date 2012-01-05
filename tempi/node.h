@@ -58,7 +58,7 @@ class Node
         std::map<std::string, Inlet::ptr> getInlets();
         unsigned int getNumberOfInlets() const;
         unsigned int getNumberOfOutlets() const;
-        bool message(unsigned int inlet, const Message &message);
+        bool message(const char *inlet, const Message &message);
         Inlet *getInlet(const char *name) const;
         // TODO: deprecate getOutlet?
         Outlet *getOutlet(const char *name) const;

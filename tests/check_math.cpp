@@ -30,7 +30,7 @@ static bool check_add()
     if (VERBOSE)
     {
         graph.addNode("base.print", "print0");
-        graph.connect("add0", 0, "print0", 0);
+        graph.connect("add0", "0", "print0", "0");
     }
     // TODO: store result in [any] or [appsink]
     //graph.addNode("base.any", "any0");
@@ -39,9 +39,9 @@ static bool check_add()
     graph.tick(); // init the nodes
 
     Message set_operand = Message("ssf", "set", "operand", 2.0f);
-    graph.message("add0", 0, set_operand);
+    graph.message("add0", "0", set_operand);
     Message float_mess = Message("f", 2.0f);
-    graph.message("add0", 0, float_mess);
+    graph.message("add0", "0", float_mess);
 
     // TODO when properties type will be dynamic and arguments deprecated
     // float result = graph.getNode("any0").getAttribute("value").getFloat(0);

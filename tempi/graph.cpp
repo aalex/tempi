@@ -68,7 +68,7 @@ bool Graph::addNode(const char *type, const char *name)
     }
 }
 
-bool Graph::message(const char *node, unsigned int inlet, const Message &message)
+bool Graph::message(const char *node, const char *inlet, const Message &message)
 {
     Node::ptr nodePtr = getNode(node);
     if (nodePtr.get() == 0)

@@ -144,7 +144,7 @@ bool Node::addInlet(const char *name, const char *documentation)
 
 bool Node::addOutlet(const char *name, const char *documentation)
 {
-    return addOutlet(Inlet::ptr(new Outlet(name, documentation)));
+    return addOutlet(Outlet::ptr(new Outlet(name, documentation)));
 }
 
 bool Node::hasInlet(Inlet *inlet)
@@ -208,7 +208,10 @@ unsigned int Node::getNumberOfOutlets() const
 Inlet *Node::getInlet(const char *name) const
 {
     if (hasInlet(name))
-        return inlets_[name].get();
+    {
+        std::map<std::string, Inlet::ptr>::const_iterator iter = inlets_.find(std::string(name));
+        return ((*iter).second).get();
+    }
     else
         return 0; // FIXME
 }
@@ -216,7 +219,10 @@ Inlet *Node::getInlet(const char *name) const
 Outlet *Node::getOutlet(const char *name) const
 {
     if (hasOutlet(name))
-        return outlet_[name].get();
+    {
+        std::map<std::string, Outlet::ptr>::const_iterator iter = outlets_.find(std::string(name));
+        return ((*iter).second).get();
+    }
     else
         return 0; // FIXME
 }
@@ -224,7 +230,10 @@ Outlet *Node::getOutlet(const char *name) const
 Outlet::ptr Node::getOutletSharedPtr(const char *name) const throw(BadIndexException)
 {
     if (hasOutlet(name))
-        return outlet_[name];
+    {
+        std::map<std::string, Outlet::ptr>::const_iterator iter = outlets_.find(std::string(name));
+        return (*iter).second;
+    }
     else
     {
         std::ostringstream os;
@@ -308,11 +317,11 @@ std::vector<std::string> Node::getAttributesNames() const
     return ret;
 }
 
-bool Node::message(unsigned int inlet, const Message &message)
+bool Node::message(const char *inlet, const Message &message)
 {
-    if (inlet >= getNumberOfInlets())
+    if (inlet == 0)
     {
-        std::cerr << "Node::" << __FUNCTION__ << ": Inlet " << inlet << "too big for node." << std::endl;
+        std::cerr << "Error: Called " << __FUNCTION__ << "() with non-initialized inlet on node of type " << getTypeName() << ": " << message << std::endl;
         return false;
     }
     if (isInitiated())
@@ -328,7 +337,7 @@ bool Node::message(unsigned int inlet, const Message &message)
     }
 }
 
-void Node::output(unsigned int outlet, const Message &message) const throw(BadIndexException)
+void Node::output(const char *outlet, const Message &message) const throw(BadIndexException)
 {
     Outlet::ptr outlet_ptr = getOutletSharedPtr(outlet);
     outlet_ptr->trigger(message);

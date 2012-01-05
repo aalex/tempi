@@ -16,13 +16,13 @@ class DummyInletNode: public base::NopNode
             triggered_ = false;
             expected_ = false;
             last_value_was_ok_ = false;
-            addOutlet();
+            addOutlet("0", "");
         }
         bool triggered_;
         bool last_value_was_ok_;
         bool expected_;
     private:
-        virtual void processMessage(unsigned int inlet, const Message &message)
+        virtual void processMessage(const char *inlet, const Message &message)
         {
             triggered_ = true;
             bool value = message.getBoolean(0);
@@ -35,17 +35,17 @@ bool check_simple()
     base::NopNode a;
     base::NopNode b;
     DummyInletNode c;
-    if (! b.getInlets()[0].get()->connect(a.getOutlets()[0]))
+    if (! b.getInlets()[0].get()->connect(a.getOutlets()["0"]))
     {
         std::cout << "Could not connect a to b." << std::endl;
         return false;
     }
-    if (! c.getInlet(0)->connect(b.getOutlets()[0]))
+    if (! c.getInlet(0)->connect(b.getOutlets()["0"]))
     {
         std::cout << "Could not connect b to c." << std::endl;
         return false;
     }
-    Outlet *source = a.getOutlets()[0].get();
+    Outlet *source = a.getOutlets()["0"].get();
     Message message = Message("b", true);
     if (c.triggered_)
     {
@@ -65,12 +65,12 @@ bool check_simple()
         return false;
     }
 
-    if (! c.getInlet(0)->disconnect(b.getOutlets()[0]))
+    if (! c.getInlet(0)->disconnect(b.getOutlets()["0"]))
     {
         std::cout << "Could not disconnect b to c." << std::endl;
         return false;
     }
-    if (c.getInlet(0)->disconnect(b.getOutlets()[0]))
+    if (c.getInlet(0)->disconnect(b.getOutlets()["0"]))
     {
         std::cout << "Could disconnect b to c twice." << std::endl;
         return false;
