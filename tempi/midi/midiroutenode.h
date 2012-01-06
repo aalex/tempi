@@ -17,24 +17,32 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "tempi/midi/midilibrary.h"
-#include "tempi/midi/midireceivernode.h"
-#include "tempi/midi/midisendernode.h"
-#include "tempi/midi/midiroutenode.h"
-#include "tempi/utils.h"
-#include "tempi/nodefactory.h"
+/**
+ * @file
+ * The MidiRouterNode class.
+ */
+#ifndef __TEMPI_MIDI_MIDIROUTENODE_H__
+#define __TEMPI_MIDI_MIDIROUTENODE_H__
+
+#include "tempi/node.h"
 
 namespace tempi {
 namespace midi {
 
-void MidiLibrary::load(NodeFactory &factory, const char *prefix) const
+/**
+ * Node that routes MIDI messages according to their type.
+ */
+class MidiRouteNode : public Node
 {
-    using utils::concatenate;
-    factory.registerTypeT<MidiReceiverNode>(concatenate(prefix, "receive").c_str());
-    factory.registerTypeT<MidiSenderNode>(concatenate(prefix, "send").c_str());
-    factory.registerTypeT<MidiRouteNode>(concatenate(prefix, "route").c_str());
-}
+    public:
+        MidiRouteNode();
+    protected:
+        virtual void processMessage(unsigned int inlet, const Message &message);
+        // virtual void onAttributeChanged(const char *name, const Message &value);
+};
 
 } // end of namespace
 } // end of namespace
+
+#endif // ifndef
 

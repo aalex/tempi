@@ -56,8 +56,10 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     midi/midiinput.cpp \
     midi/midilibrary.cpp \
     midi/midireceivernode.cpp \
+    midi/midiroutenode.cpp \
     midi/midioutput.cpp \
     midi/midisendernode.cpp \
+    midi/midiutilities.cpp \
     node.cpp \
     nodefactory.cpp \
     osc/osclibrary.cpp \
@@ -118,8 +120,10 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     midi/midiinput.h \
     midi/midilibrary.h \
     midi/midireceivernode.h \
+    midi/midiroutenode.h \
     midi/midioutput.h \
     midi/midisendernode.h \
+    midi/midiutilities.h \
     node.h \
     nodefactory.h \
     nodetype.h \

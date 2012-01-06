@@ -24,37 +24,6 @@
 namespace tempi {
 namespace midi {
 
-static const unsigned char MIDINOTEOFF =       0x80; // channel, pitch, velocity
-static const unsigned char MIDINOTEON =        0x90; // channel, pitch, velocity
-static const unsigned char MIDICONTROLCHANGE = 0xb0; // channel, controller, value
-static const unsigned char MIDIPROGRAMCHANGE = 0xc0; // channel, value
-static const unsigned char MIDIPITCHBEND =     0xe0; // channel, value
-static const unsigned char MIDI_NOT_SUPPORTED = 0x00;
-
-static unsigned char getMidiEventType(const unsigned char first_byte)
-{
-    unsigned char type_code;
-    if (first_byte >= 0xf0)
-        type_code = first_byte;
-    else
-        type_code = first_byte & 0xf0;
-    unsigned char ret;
-    switch (type_code)
-    {
-        case MIDINOTEOFF:
-        case MIDINOTEON:
-        case MIDICONTROLCHANGE:
-        case MIDIPROGRAMCHANGE:
-        case MIDIPITCHBEND:
-            ret = type_code;
-            break;
-        default:
-            ret = MIDI_NOT_SUPPORTED;
-            break;
-    }
-    return ret;
-}
-
 bool MidiInput::isOpen() const
 {
     return opened_;
@@ -62,15 +31,6 @@ bool MidiInput::isOpen() const
 
 /**
  * Callback for incoming MIDI messages.  Called in its thread.
- *
- * We try to get the first MidiRule found for the given MIDI event.
- * (given its pitch, and if on or off)
- *  - NOTE_OFF_RULE: [s:action s:args]
- *  - NOTE_ON_RULE: [s:action s:args]
- *  - CONTROL_MAP_RULE [s:action i:value]
- *  - CONTROL_ON_RULE [s:action s:args]
- *  - CONTROL_OFF_RULE [s:action s:args]
- *  - MIDIPROGRAMCHANGE [s:action i:number]
  */
 void MidiInput::input_message_cb(double /* delta_time */, std::vector<unsigned char> *message, void *user_data)
 {
@@ -88,63 +48,6 @@ void MidiInput::input_message_cb(double /* delta_time */, std::vector<unsigned c
     for (iter = message->begin(); iter != message->end(); ++iter)
         result.appendUnsignedChar(*iter);
     context->pushMessage(result);
-
-    // if (message->size() <= 1)
-    //     return; // Don't support messages with only one byte or less.
-    // unsigned char midi_event_type = getMidiEventType(message->at(0));
-    // Message result;
-    // result.appendUnsignedChar(midi_event_type);
-    // switch (midi_event_type)
-    // {
-    //     case MIDINOTEON:
-    //     {
-    //         if (context->verbose_)
-    //             std::cout << "MIDINOTEON" << std::endl;
-    //         if (message->size() < 3)
-    //         {
-    //             std::cerr << "Note on message should have 4 params" << std::endl;
-    //             return;
-    //         }
-    //         int note_pitch = int(message->at(1));
-    //         int velocity = int(message->at(2));
-    //         result.appendInt(note_pitch);
-    //         result.appendInt(velocity);
-    //         break;
-    //     }
-    //     case MIDINOTEOFF:
-    //     {
-    //         if (context->verbose_)
-    //             std::cout << "MIDINOTEOFF" << std::endl;
-    //         int note_pitch = int(message->at(1));
-    //         result.appendInt(note_pitch);
-    //         //result.appendInt(0); // velocity
-    //         break;
-    //     }
-    //     case MIDICONTROLCHANGE:
-    //     {
-    //         int controller_number = int(message->at(1));
-    //         int control_value = int(message->at(2));
-    //         result.appendInt(controller_number);
-    //         result.appendInt(control_value);
-    //         break;
-    //     }
-    //     case MIDIPROGRAMCHANGE:
-    //     {
-    //         int program_number = int(message->at(0) & 0x0f);
-    //         result.appendInt(program_number);
-    //         break;
-    //     }
-    //     case MIDIPITCHBEND:
-    //     {
-    //         int val(message->at(2));
-    //         result.appendInt(val);
-    //         break;
-    //     }
-    //     default:
-    //         return;
-    //         break;
-    // }
-    // context->pushMessage(result);
 }
 
 void MidiInput::enumerateDevices() const

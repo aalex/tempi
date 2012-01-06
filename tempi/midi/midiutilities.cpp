@@ -17,24 +17,42 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "tempi/midi/midilibrary.h"
-#include "tempi/midi/midireceivernode.h"
-#include "tempi/midi/midisendernode.h"
-#include "tempi/midi/midiroutenode.h"
-#include "tempi/utils.h"
-#include "tempi/nodefactory.h"
+#include "tempi/midi/midiutilities.h"
 
 namespace tempi {
 namespace midi {
+namespace utilities {
 
-void MidiLibrary::load(NodeFactory &factory, const char *prefix) const
+unsigned char getMidiEventType(const unsigned char first_byte)
 {
-    using utils::concatenate;
-    factory.registerTypeT<MidiReceiverNode>(concatenate(prefix, "receive").c_str());
-    factory.registerTypeT<MidiSenderNode>(concatenate(prefix, "send").c_str());
-    factory.registerTypeT<MidiRouteNode>(concatenate(prefix, "route").c_str());
+    unsigned char type_code;
+    if (first_byte >= 0xf0)
+        type_code = first_byte; // Soem type codes use two bytes?
+    else
+        type_code = first_byte & 0xf0;
+    unsigned char ret;
+    switch (type_code)
+    {
+        case MIDINOTEOFF:
+        case MIDINOTEON:
+        case MIDICONTROLCHANGE:
+        case MIDIPROGRAMCHANGE:
+        case MIDIPITCHBEND:
+            ret = type_code;
+            break;
+        default:
+            ret = MIDI_NOT_SUPPORTED; // FIXME
+            break;
+    }
+    return ret;
 }
 
+unsigned char getChannelNumber(unsigned char firstByte)
+{
+    return (firstByte & 0x0F);
+}
+
+} // end of namespace
 } // end of namespace
 } // end of namespace
 
