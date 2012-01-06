@@ -39,15 +39,15 @@ static bool check_add()
 
     graph.tick(); // init the nodes
 
-    float left = 2.0f;
-    float right = 4.0f;
-    Message set_operand = Message("ssf", "set", "operand", left);
+    float right = 2.0f;
+    float left = 4.0f;
+    Message set_operand = Message("ssf", "set", "operand", right);
     graph.message("add0", 0, set_operand);
-    Message float_mess = Message("f", right);
+    Message float_mess = Message("f", left);
     graph.message("add0", 0, float_mess);
     if (VERBOSE)
     {
-        std::cout << "with values: " << right  << " + " << left << std::endl;
+        std::cout << "with values: " << left  << " + " << right << std::endl;
     }
 
 
@@ -94,15 +94,15 @@ static bool check_divide()
 
     graph.tick(); // init the nodes
 
-    float left = 2.0f;
-    float right = 4.0f;
-    Message set_operand = Message("ssf", "set", "operand", left);
+    float right = 2.0f;
+    float left = 4.0f;
+    Message set_operand = Message("ssf", "set", "operand", right);
     graph.message("div0", 0, set_operand);
-    Message float_mess = Message("f", right);
+    Message float_mess = Message("f", left);
     graph.message("div0", 0, float_mess);
     if (VERBOSE)
     {
-        std::cout << "with values: " << right  << " / " << left << std::endl;
+        std::cout << "with values: " << left  << " / " << right << std::endl;
     }
 
     // TODO when properties type will be dynamic and arguments deprecated
@@ -148,15 +148,15 @@ static bool check_equalsnot()
 
     graph.tick(); // init the nodes
 
-    float left = 2.0f;
-    float right = 3.0f;
-    Message set_operand = Message("ssf", "set", "operand", left);
+    float right = 2.0f;
+    float left = 3.0f;
+    Message set_operand = Message("ssf", "set", "operand", right);
     graph.message("iseq0", 0, set_operand);
-    Message float_mess = Message("f", right);
+    Message float_mess = Message("f", left);
     graph.message("iseq0", 0, float_mess);
     if (VERBOSE)
     {
-        std::cout << "with values: " << right  << " == " << left << std::endl;
+        std::cout << "with values: " << left  << " == " << right << std::endl;
     }
 
     // TODO when properties type will be dynamic and arguments deprecated
@@ -202,15 +202,15 @@ static bool check_isequal_false()
 
     graph.tick(); // init the nodes
 
-    float left = 2.0f;
-    float right = 3.0f;
-    Message set_operand = Message("ssf", "set", "operand", left);
+    float right = 2.0f;
+    float left = 3.0f;
+    Message set_operand = Message("ssf", "set", "operand", right);
     graph.message("iseq0", 0, set_operand);
-    Message float_mess = Message("f", right);
+    Message float_mess = Message("f", left);
     graph.message("iseq0", 0, float_mess);
     if (VERBOSE)
     {
-        std::cout << "with values: " << right  << " == " << left << std::endl;
+        std::cout << "with values: " << left  << " == " << right << std::endl;
     }
 
     // TODO when properties type will be dynamic and arguments deprecated
@@ -256,15 +256,15 @@ static bool check_isequal_true()
 
     graph.tick(); // init the nodes
 
-    float left = 2.0f;
     float right = 2.0f;
-    Message set_operand = Message("ssf", "set", "operand", left);
+    float left = 2.0f;
+    Message set_operand = Message("ssf", "set", "operand", right);
     graph.message("iseq0", 0, set_operand);
-    Message float_mess = Message("f", right);
+    Message float_mess = Message("f", left);
     graph.message("iseq0", 0, float_mess);
     if (VERBOSE)
     {
-        std::cout << "with values: " << right  << " == " << left << std::endl;
+        std::cout << "with values: " << left  << " == " << right << std::endl;
     }
 
     // TODO when properties type will be dynamic and arguments deprecated
@@ -310,15 +310,15 @@ static bool check_isgreater_false()
 
     graph.tick(); // init the nodes
 
-    float left = 2.0f;
     float right = 2.0f;
-    Message set_operand = Message("ssf", "set", "operand", left);
+    float left = 2.0f;
+    Message set_operand = Message("ssf", "set", "operand", right);
     graph.message("isgr0", 0, set_operand);
-    Message float_mess = Message("f", right);
+    Message float_mess = Message("f", left);
     graph.message("isgr0", 0, float_mess);
     if (VERBOSE)
     {
-        std::cout << "with values: " << right  << " > " << left << std::endl;
+        std::cout << "with values: " << left  << " > " << right << std::endl;
     }
     // TODO when properties type will be dynamic and arguments deprecated
     // float result = graph.getNode("any0").getProperty("value").getFloat(0);
@@ -362,15 +362,15 @@ static bool check_isgreater_true()
     //graph.connect("add0", 0, "any0", 0);
 
     graph.tick(); // init the nodes
-    float left = 2.0f;
-    float right = 3.0f;
-    Message set_operand = Message("ssf", "set", "operand", left);
+    float right = 2.0f;
+    float left = 3.0f;
+    Message set_operand = Message("ssf", "set", "operand", right);
     graph.message("isgr0", 0, set_operand);
-    Message float_mess = Message("f", right);
+    Message float_mess = Message("f", left);
     graph.message("isgr0", 0, float_mess);
     if (VERBOSE)
     {
-        std::cout << "with values: " << right  << " > " << left << std::endl;
+        std::cout << "with values: " << left  << " > " << right << std::endl;
     }
     // TODO when properties type will be dynamic and arguments deprecated
     // float result = graph.getNode("any0").getProperty("value").getFloat(0);
@@ -415,15 +415,15 @@ static bool check_isless_false()
 
     graph.tick(); // init the nodes
 
-    float left = 2.0f;
     float right = 2.0f;
-    Message set_operand = Message("ssf", "set", "operand", left);
+    float left = 2.0f;
+    Message set_operand = Message("ssf", "set", "operand", right);
     graph.message("isgr0", 0, set_operand);
-    Message float_mess = Message("f", right);
+    Message float_mess = Message("f", left);
     graph.message("isgr0", 0, float_mess);
     if (VERBOSE)
     {
-        std::cout << "with values: " << right  << " < " << left << std::endl;
+        std::cout << "with values: " << left  << " < " << right << std::endl;
     }
     // TODO when properties type will be dynamic and arguments deprecated
     // float result = graph.getNode("any0").getProperty("value").getFloat(0);
@@ -467,15 +467,15 @@ static bool check_isless_true()
     //graph.connect("add0", 0, "any0", 0);
 
     graph.tick(); // init the nodes
-    float left = 3.0f;
-    float right = 2.0f;
-    Message set_operand = Message("ssf", "set", "operand", left);
+    float right = 3.0f;
+    float left = 2.0f;
+    Message set_operand = Message("ssf", "set", "operand", right);
     graph.message("isgr0", 0, set_operand);
-    Message float_mess = Message("f", right);
+    Message float_mess = Message("f", left);
     graph.message("isgr0", 0, float_mess);
     if (VERBOSE)
     {
-        std::cout << "with values: " << right  << " < " << left << std::endl;
+        std::cout << "with values: " << left  << " < " << right << std::endl;
     }
     // TODO when properties type will be dynamic and arguments deprecated
     // float result = graph.getNode("any0").getProperty("value").getFloat(0);
@@ -519,15 +519,15 @@ static bool check_multiply()
 
     graph.tick(); // init the nodes
 
-    float left = 2.0f;
-    float right = 3.0f;
-    Message set_operand = Message("ssf", "set", "operand", left);
+    float right = 2.0f;
+    float left = 3.0f;
+    Message set_operand = Message("ssf", "set", "operand", right);
     graph.message("mult0", 0, set_operand);
-    Message float_mess = Message("f", right);
+    Message float_mess = Message("f", left);
     graph.message("mult0", 0, float_mess);
     if (VERBOSE)
     {
-        std::cout << "with values: " << right  << " * " << left << std::endl;
+        std::cout << "with values: " << left  << " * " << right << std::endl;
     }
 
     // TODO when properties type will be dynamic and arguments deprecated
@@ -573,15 +573,15 @@ static bool check_subtract()
 
     graph.tick(); // init the nodes
 
-    float left = 2.0f;
-    float right = 3.0f;
-    Message set_operand = Message("ssf", "set", "operand", left);
+    float right = 2.0f;
+    float left = 3.0f;
+    Message set_operand = Message("ssf", "set", "operand", right);
     graph.message("sub0", 0, set_operand);
-    Message float_mess = Message("f", right);
+    Message float_mess = Message("f", left);
     graph.message("sub0", 0, float_mess);
     if (VERBOSE)
     {
-        std::cout << "with values: " << right  << " - " << left << std::endl;
+        std::cout << "with values: " << left  << " - " << right << std::endl;
     }
 
     // TODO when properties type will be dynamic and arguments deprecated
