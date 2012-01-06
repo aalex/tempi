@@ -101,7 +101,7 @@ void EqualsNotNode::processMessage(unsigned int inlet, const Message &message)
     {
         float left_operand = message.getFloat(0);
         float right_operand = getAttribute("operand").getFloat(0);
-        Message result("f", left_operand != right_operand);
+        Message result("b", left_operand != right_operand);
         output(0, result);
     }
     else
