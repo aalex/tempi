@@ -117,6 +117,60 @@ static bool check_divide()
     return true;
 }
 
+static bool check_equalsnot()
+{
+    // Check we can instanciate it:
+    NodeFactory::ptr factory(new NodeFactory);
+    internals::loadInternals(factory);
+    Node::ptr add_obj = factory->create("math.!=");
+    if (add_obj.get() == 0)
+    {
+        std::cout << "IsEqualNode ptr is null" << std::endl;
+        return false;
+    }
+
+    // Check we can actually use it:
+    Graph graph(factory);
+    if (VERBOSE)
+        std::cout << "compare nodes for equality:" << std::endl;
+    graph.addNode("math.==", "iseq0");
+    if (VERBOSE)
+        std::cout << "connect nodes:" << std::endl;
+    // [print]
+    if (VERBOSE)
+    {
+        graph.addNode("base.print", "print0");
+        graph.connect("iseq0", 0, "print0", 0);
+    }
+    // TODO: store result in [any] or [appsink]
+    //graph.addNode("base.any", "any0");
+    //graph.connect("add0", 0, "any0", 0);
+
+    graph.tick(); // init the nodes
+
+    float left = 2.0f;
+    float right = 3.0f;
+    Message set_operand = Message("ssf", "set", "operand", left);
+    graph.message("iseq0", 0, set_operand);
+    Message float_mess = Message("f", right);
+    graph.message("iseq0", 0, float_mess);
+    if (VERBOSE)
+    {
+        std::cout << "with values: " << right  << " == " << left << std::endl;
+    }
+
+    // TODO when properties type will be dynamic and arguments deprecated
+    // float result = graph.getNode("any0").getProperty("value").getFloat(0);
+    // if ( != 4.0f)
+    // {
+    //     std::cout << "expected 4.0f in any0 but got "
+    // }
+
+    graph.tick();
+
+    return true;
+}
+
 static bool check_isequal_false()
 {
     // Check we can instanciate it:

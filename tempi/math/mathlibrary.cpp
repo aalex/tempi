@@ -28,6 +28,7 @@ void MathLibrary::load(NodeFactory &factory, const char *prefix) const
     using utils::concatenate;
     factory.registerTypeT<AddNode>(concatenate(prefix, "+").c_str());
     factory.registerTypeT<DivNode>(concatenate(prefix, "/").c_str());
+    factory.registerTypeT<EqualsNotNode>(concatenate(prefix, "!=").c_str());
     factory.registerTypeT<IsEqualNode>(concatenate(prefix, "==").c_str());
     factory.registerTypeT<IsGreaterNode>(concatenate(prefix, ">").c_str());
     factory.registerTypeT<IsLessNode>(concatenate(prefix, "<").c_str());
@@ -83,6 +84,28 @@ void DivNode::processMessage(unsigned int inlet, const Message &message)
     }
     else
         std::cerr << "DivNode::" << __FUNCTION__ << "(): Bad type for message " << message << std::endl;
+}
+
+EqualsNotNode::EqualsNotNode() :
+    Node()
+{
+    addOutlet();
+
+    Message operand = Message("f", 0.0f);
+    addAttribute("operand", operand);
+}
+
+void EqualsNotNode::processMessage(unsigned int inlet, const Message &message)
+{
+    if (message.typesMatch("f"))
+    {
+        float left_operand = message.getFloat(0);
+        float right_operand = getAttribute("operand").getFloat(0);
+        Message result("f", left_operand != right_operand);
+        output(0, result);
+    }
+    else
+        std::cerr << "SubtractNode::" << __FUNCTION__ << "(): Bad type for message " << message << std::endl;
 }
 
 IsGreaterNode::IsGreaterNode() :

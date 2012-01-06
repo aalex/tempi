@@ -71,6 +71,17 @@ class DivNode : public Node
 };
 
 /**
+ * The EqualsNotNode checks if two floats are not equal
+ */
+class EqualsNotNode : public Node
+{
+    public:
+        EqualsNotNode();
+    protected:
+        virtual void processMessage(unsigned int inlet, const Message &message);
+};
+
+/**
  * The IsGreaterNode checks if one float is greater than another. 
  */
 class IsGreaterNode : public Node
