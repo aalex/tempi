@@ -3,7 +3,7 @@ Tempi 0.1.8 (201?-??-??)
 This release is a developer snapshot in the 0.1 series.
 
 New features:
-* New node types: [math.+], [math.-], [math.<], [math.>], [math./], [math.*], [math.==]
+* New node types: [math.+], [math.-], [math.<], [math.>], [math./], [math.*], [math.==], [math.!=]
 * New node types: [midi.route]
 * Allow non type-strict attributes
 * Rename properties to attributes
