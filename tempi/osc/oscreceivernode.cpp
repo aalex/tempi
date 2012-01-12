@@ -27,7 +27,7 @@ namespace osc {
 OscReceiverNode::OscReceiverNode() :
     Node()
 {
-    addOutlet();
+    addOutlet("0");
     Message port = Message("i", 0);
     addAttribute("port", port);
 }
@@ -57,7 +57,7 @@ void OscReceiverNode::doTick()
     std::vector<Message>::iterator iter;
     for (iter = messages.begin(); iter != messages.end(); ++iter)
     {
-        output(0, *iter);
+        output("0", *iter);
     }
 }
 

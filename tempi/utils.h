@@ -25,15 +25,41 @@
 #define __TEMPI_UTILS_H__
 
 #include <string>
+#include "tempi/exceptions.h"
 
 namespace tempi {
 namespace utils {
 
+/**
+ * Checks if a strings begins with another one.
+ */
 bool stringBeginsWith(const char *text, const char *pattern);
+
+/**
+ * Checks if a strings matches another one.
+ */
 bool stringsMatch(const char *a, const char *b);
+
+/**
+ * Maps an int value to a new range.
+ */
 int map_int(int value, int istart, int istop, int ostart, int ostop);
+
+/**
+ * Maps a float value to a new range.
+ */
 float map_float(float value, float istart, float istop, float ostart, float ostop);
+
+/**
+ * Concatenates two strings together.
+ */
 std::string concatenate(const char *a, const char *b);
+
+/**
+ * Converts any type (int, etc.) to a string.
+ */
+template <typename T>
+std::string to_string(T value) throw(BadArgumentTypeException);
 
 } // end of namespace
 } // end of namespace

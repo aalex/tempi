@@ -160,7 +160,7 @@ bool App::addSender(const char *host, unsigned int port)
     Message mess = Message("si", host, port);
     node->setAttribute("host_port", mess);
 
-    graph_->connect("nop0", 0, name.c_str(), 0);
+    graph_->connect("nop0", "0", name.c_str(), "0");
     return true;
 }
 bool App::addReceiver(unsigned int port)
@@ -178,7 +178,7 @@ bool App::addReceiver(unsigned int port)
     Message mess = Message("i", port);
     node->setAttribute("port", mess);
 
-    graph_->connect(name.c_str(), 0, "nop0", 0);
+    graph_->connect(name.c_str(), "0", "nop0", "0");
     return true;
 }
 

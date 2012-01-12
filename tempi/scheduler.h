@@ -88,7 +88,7 @@ class Scheduler
         // */
         //bool makeSureLockIsAcquired() const;
     protected:
-        bool sendToAllGraphs(const Message &message);
+        //bool sendToAllGraphs(const Message &message);
         bool hasGraph(const char *name) const;
         bool tickGraphs();
         virtual ScopedLock::ptr doAcquireLock() = 0;

@@ -23,29 +23,17 @@
 namespace tempi {
 namespace math {
 
-void MathLibrary::load(NodeFactory &factory, const char *prefix) const
-{
-    using utils::concatenate;
-    factory.registerTypeT<AddNode>(concatenate(prefix, "+").c_str());
-    factory.registerTypeT<DivNode>(concatenate(prefix, "/").c_str());
-    factory.registerTypeT<EqualsNotNode>(concatenate(prefix, "!=").c_str());
-    factory.registerTypeT<IsEqualNode>(concatenate(prefix, "==").c_str());
-    factory.registerTypeT<IsGreaterNode>(concatenate(prefix, ">").c_str());
-    factory.registerTypeT<IsLessNode>(concatenate(prefix, "<").c_str());
-    factory.registerTypeT<SubtractNode>(concatenate(prefix, "-").c_str());
-    factory.registerTypeT<MultNode>(concatenate(prefix, "*").c_str());
-}
-
 AddNode::AddNode() :
     Node()
 {
-    addOutlet();
+    addInlet("0");
+    addOutlet("0");
 
     Message operand = Message("f", 0.0f);
     addAttribute("operand", operand);
 }
 
-void AddNode::processMessage(unsigned int inlet, const Message &message)
+void AddNode::processMessage(const char *inlet, const Message &message)
 {
     if (message.typesMatch("f"))
     {
@@ -55,7 +43,7 @@ void AddNode::processMessage(unsigned int inlet, const Message &message)
         Message result("f", left_operand + right_operand);
         //std::cout << "AddNode::" << __FUNCTION__ << ": " << left_operand
         //    << " + " << right_operand << " = " << result << std::endl;
-        output(0, result);
+        output("0", result);
     }
     else
         std::cerr << "AddNode::" << __FUNCTION__ << "(): Bad type for message " << message << std::endl;
@@ -64,13 +52,14 @@ void AddNode::processMessage(unsigned int inlet, const Message &message)
 DivNode::DivNode() :
     Node()
 {
-    addOutlet();
+    addInlet("0");
+    addOutlet("0");
 
     Message operand = Message("f", 0.0f);
     addAttribute("operand", operand);
 }
 
-void DivNode::processMessage(unsigned int inlet, const Message &message)
+void DivNode::processMessage(const char *inlet, const Message &message)
 {
     if (message.typesMatch("f"))
     {
@@ -80,7 +69,7 @@ void DivNode::processMessage(unsigned int inlet, const Message &message)
         Message result("f", left_operand / right_operand);
         //std::cout << "DivNode::" << __FUNCTION__ << ": " << left_operand
         //    << " + " << right_operand << " = " << result << std::endl;
-        output(0, result);
+        output("0", result);
     }
     else
         std::cerr << "DivNode::" << __FUNCTION__ << "(): Bad type for message " << message << std::endl;
@@ -89,20 +78,21 @@ void DivNode::processMessage(unsigned int inlet, const Message &message)
 EqualsNotNode::EqualsNotNode() :
     Node()
 {
-    addOutlet();
+    addInlet("0");
+    addOutlet("0");
 
     Message operand = Message("f", 0.0f);
     addAttribute("operand", operand);
 }
 
-void EqualsNotNode::processMessage(unsigned int inlet, const Message &message)
+void EqualsNotNode::processMessage(const char *inlet, const Message &message)
 {
     if (message.typesMatch("f"))
     {
         float left_operand = message.getFloat(0);
-        float right_operand = getAttribute("operand").getFloat(0);
+        float right_operand = getAttribute("operand")->getValue().getFloat(0);
         Message result("b", left_operand != right_operand);
-        output(0, result);
+        output("0", result);
     }
     else
         std::cerr << "SubtractNode::" << __FUNCTION__ << "(): Bad type for message " << message << std::endl;
@@ -111,13 +101,14 @@ void EqualsNotNode::processMessage(unsigned int inlet, const Message &message)
 IsGreaterNode::IsGreaterNode() :
     Node()
 {
-    addOutlet();
+    addInlet("0");
+    addOutlet("0");
 
     Message operand = Message("f", 0.0f);
     addAttribute("operand", operand);
 }
 
-void IsGreaterNode::processMessage(unsigned int inlet, const Message &message)
+void IsGreaterNode::processMessage(const char *inlet, const Message &message)
 {
     bool equal = false;
     if (message.typesMatch("f"))
@@ -129,7 +120,7 @@ void IsGreaterNode::processMessage(unsigned int inlet, const Message &message)
         Message result("b", equal);
         //std::cout << "IsGreaterNode::" << __FUNCTION__ << ": " << left_operand
         //    << " + " << right_operand << " = " << result << std::endl;
-        output(0, result);
+        output("0", result);
     }
     else
         std::cerr << "IsGreaterNode::" << __FUNCTION__ << "(): Bad type for message " << message << std::endl;
@@ -138,13 +129,14 @@ void IsGreaterNode::processMessage(unsigned int inlet, const Message &message)
 IsEqualNode::IsEqualNode() :
     Node()
 {
-    addOutlet();
+    addInlet("0");
+    addOutlet("0");
 
     Message operand = Message("f", 0.0f);
     addAttribute("operand", operand);
 }
 
-void IsEqualNode::processMessage(unsigned int inlet, const Message &message)
+void IsEqualNode::processMessage(const char *inlet, const Message &message)
 {
     bool equal = false;
     if (message.typesMatch("f"))
@@ -157,7 +149,7 @@ void IsEqualNode::processMessage(unsigned int inlet, const Message &message)
         Message result("b", equal);
         //std::cout << "IsEqualNode::" << __FUNCTION__ << ": " << left_operand
         //    << " + " << right_operand << " = " << result << std::endl;
-        output(0, result);
+        output("0", result);
     }
     else
         std::cerr << "IsEqualNode::" << __FUNCTION__ << "(): Bad type for message " << message << std::endl;
@@ -166,13 +158,14 @@ void IsEqualNode::processMessage(unsigned int inlet, const Message &message)
 IsLessNode::IsLessNode() :
     Node()
 {
-    addOutlet();
+    addInlet("0");
+    addOutlet("0");
 
     Message operand = Message("f", 0.0f);
     addAttribute("operand", operand);
 }
 
-void IsLessNode::processMessage(unsigned int inlet, const Message &message)
+void IsLessNode::processMessage(const char *inlet, const Message &message)
 {
     bool equal = false;
     if (message.typesMatch("f"))
@@ -184,7 +177,7 @@ void IsLessNode::processMessage(unsigned int inlet, const Message &message)
         Message result("b", equal);
         //std::cout << "IsLessNode::" << __FUNCTION__ << ": " << left_operand
         //    << " + " << right_operand << " = " << result << std::endl;
-        output(0, result);
+        output("0", result);
     }
     else
         std::cerr << "IsLessNode::" << __FUNCTION__ << "(): Bad type for message " << message << std::endl;
@@ -193,13 +186,14 @@ void IsLessNode::processMessage(unsigned int inlet, const Message &message)
 MultNode::MultNode() :
     Node()
 {
-    addOutlet();
+    addInlet("0");
+    addOutlet("0");
 
     Message operand = Message("f", 0.0f);
     addAttribute("operand", operand);
 }
 
-void MultNode::processMessage(unsigned int inlet, const Message &message)
+void MultNode::processMessage(const char *inlet, const Message &message)
 {
     if (message.typesMatch("f"))
     {
@@ -209,7 +203,7 @@ void MultNode::processMessage(unsigned int inlet, const Message &message)
         Message result("f", left_operand * right_operand);
         //std::cout << "MultNode::" << __FUNCTION__ << ": " << left_operand
         //    << " + " << right_operand << " = " << result << std::endl;
-        output(0, result);
+        output("0", result);
     }
     else
         std::cerr << "MultNode::" << __FUNCTION__ << "(): Bad type for message " << message << std::endl;
@@ -218,13 +212,14 @@ void MultNode::processMessage(unsigned int inlet, const Message &message)
 SubtractNode::SubtractNode() :
     Node()
 {
-    addOutlet();
+    addInlet("0");
+    addOutlet("0");
 
     Message operand = Message("f", 0.0f);
     addAttribute("operand", operand);
 }
 
-void SubtractNode::processMessage(unsigned int inlet, const Message &message)
+void SubtractNode::processMessage(const char *inlet, const Message &message)
 {
     if (message.typesMatch("f"))
     {
@@ -234,10 +229,23 @@ void SubtractNode::processMessage(unsigned int inlet, const Message &message)
         Message result("f", left_operand - right_operand);
         //std::cout << "AddNode::" << __FUNCTION__ << ": " << left_operand
         //    << " + " << right_operand << " = " << result << std::endl;
-        output(0, result);
+        output("0", result);
     }
     else
         std::cerr << "SubtractNode::" << __FUNCTION__ << "(): Bad type for message " << message << std::endl;
+}
+
+void MathLibrary::load(NodeFactory &factory, const char *prefix) const
+{
+    using utils::concatenate;
+    factory.registerTypeT<AddNode>(concatenate(prefix, "+").c_str());
+    factory.registerTypeT<DivNode>(concatenate(prefix, "/").c_str());
+    factory.registerTypeT<EqualsNotNode>(concatenate(prefix, "!=").c_str());
+    factory.registerTypeT<IsEqualNode>(concatenate(prefix, "==").c_str());
+    factory.registerTypeT<IsGreaterNode>(concatenate(prefix, ">").c_str());
+    factory.registerTypeT<IsLessNode>(concatenate(prefix, "<").c_str());
+    factory.registerTypeT<SubtractNode>(concatenate(prefix, "-").c_str());
+    factory.registerTypeT<MultNode>(concatenate(prefix, "*").c_str());
 }
 
 } // end of namespace

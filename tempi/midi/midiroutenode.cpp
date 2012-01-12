@@ -28,12 +28,13 @@ namespace midi {
 MidiRouteNode::MidiRouteNode() :
     Node()
 {
-    addOutlet();
+    addOutlet("0", "Outputs MIDI messages of a single event type.");
+    addInlet("0", "MIDI messages received here.");
 //    addAttribute("types", Message("s", "note"), "List of strings for MIDI event types. "
 //        "Valid values are \"note\" and \"control\".", false);
 }
 
-void MidiRouteNode::processMessage(unsigned int inlet, const Message &message)
+void MidiRouteNode::processMessage(const char *inlet, const Message &message)
 {
     using namespace utilities;
     if (! message.indexMatchesType(0, 'C'))
@@ -45,7 +46,7 @@ void MidiRouteNode::processMessage(unsigned int inlet, const Message &message)
     Message result;
     switch (midi_event_type)
     {
-        case MIDI_NOT_SUPPORTED:
+        case utilities::MIDI_NOT_SUPPORTED:
         {
             std::cerr << "Unsupported MIDI event type: " << message << std::endl;
             return;
@@ -107,7 +108,7 @@ void MidiRouteNode::processMessage(unsigned int inlet, const Message &message)
             break;
         }
     }
-    output(0, result);
+    output("0", result);
 }
 
 // void MidiRouteNode::onAttributeChanged(const char *name, const Message &value)

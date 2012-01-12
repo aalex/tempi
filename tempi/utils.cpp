@@ -19,6 +19,7 @@
 
 #include "tempi/utils.h"
 #include <algorithm> // min, max
+#include <boost/lexical_cast.hpp>
 #include <iostream>
 #include <string.h>
 
@@ -78,6 +79,19 @@ std::string concatenate(const char *a, const char *b)
     std::string ret(a);
     ret += b;
     return ret;
+}
+
+template <typename T>
+std::string to_string(T value) throw(BadArgumentTypeException)
+{
+    try
+    {
+        return boost::lexical_cast<std::string>(value);
+    }
+    catch (const boost::bad_lexical_cast &e)
+    {
+        throw BadArgumentTypeException(e.what());
+    }
 }
 
 } // end of namespace

@@ -19,15 +19,16 @@
 
 #include "tempi/base/appsinknode.h"
 
-namespace tempi { namespace base {
+namespace tempi {
+namespace base {
 
 AppSinkNode::AppSinkNode() :
     Node()
 {
-    addOutlet();
+    addOutlet("0");
 }
 
-void AppSinkNode::processMessage(unsigned int inlet, const Message &message)
+void AppSinkNode::processMessage(const char *inlet, const Message &message)
 {
     queue_.push(message);
 }

@@ -30,7 +30,7 @@ ReceiveNode::ReceiveNode() :
     addAttribute("symbol", receiveSymbol);
 }
 
-void ReceiveNode::processMessage(unsigned int inlet, const Message &message)
+void ReceiveNode::processMessage(const char *inlet, const Message &message)
 {
     // if (inlet == 0)
     //    output(message);

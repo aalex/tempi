@@ -29,6 +29,7 @@
 #include "tempi/sharedptr.h"
 #include "tempi/message.h"
 #include "tempi/outlet.h"
+#include <string>
 
 namespace tempi
 {
@@ -45,7 +46,7 @@ class Inlet
         typedef boost::signals2::signal<void (Inlet *sink, const Message&)> TriggeredSignal;
         // TODO: rename to ReceiveSlot
         typedef TriggeredSignal::slot_function_type TriggeredSlot;
-        Inlet();
+        Inlet(const char *name, const char *documentation="");
         bool connect(Outlet::ptr source);
         bool disconnect(Outlet::ptr source);
         bool isConnected(Outlet::ptr source);
@@ -56,9 +57,13 @@ class Inlet
             return on_triggered_signal_;
         }
         void disconnectAll();
+        std::string getName() const;
+        std::string getDocumentation() const;
     private:
         //typedef std::map<Outlet::ptr, std::tr1::shared_ptr<boost::signals2::scoped_connection> > OutletMap;
         //OutletMap sources_;
+        std::string name_;
+        std::string documentation_;
         typedef std::vector<Outlet::ptr> OutletsVec;
         OutletsVec sources_;
         TriggeredSignal on_triggered_signal_;

@@ -30,20 +30,23 @@ CounterNode::CounterNode() :
     Node(),
     increment_(1)
 {
-    addOutlet();
+    addOutlet("0", "Count.");
+    addInlet("0", "Bangs increase and output the count. Integers sets and outputs the count.");
     Message increment = Message("i", 1);
     addAttribute(PROP_INCREMENT, increment);
     Message count = Message("i", 0);
     addAttribute(PROP_COUNT, count);
 }
-void CounterNode::processMessage(unsigned int inlet, const Message &message)
+
+void CounterNode::processMessage(const char *inlet, const Message &message)
 {
+    // TODO: check if inlet == "0"
     // bang outputs and increments
     if (message.getTypes() == "")
     {
         int count = getAttributeValue(PROP_COUNT).getInt(0);
         int increment = getAttributeValue(PROP_INCREMENT).getInt(0);
-        output(0, getAttributeValue(PROP_COUNT));
+        output("0", getAttributeValue(PROP_COUNT));
         count += increment;
         setAttribute(PROP_COUNT, Message("i", count));
     }
@@ -52,7 +55,7 @@ void CounterNode::processMessage(unsigned int inlet, const Message &message)
     {
         count_ = message.getInt(0);
         setAttribute(PROP_COUNT, message);
-        output(0, getAttributeValue(PROP_COUNT));
+        output("0", getAttributeValue(PROP_COUNT));
     }
     else
     {

@@ -56,7 +56,7 @@ class AddNode : public Node
     public:
         AddNode();
     protected:
-        virtual void processMessage(unsigned int inlet, const Message &message);
+        virtual void processMessage(const char *inlet, const Message &message);
 };
 
 /**
@@ -67,7 +67,7 @@ class DivNode : public Node
     public:
         DivNode();
     protected:
-        virtual void processMessage(unsigned int inlet, const Message &message);
+        virtual void processMessage(const char *inlet, const Message &message);
 };
 
 /**
@@ -78,7 +78,7 @@ class EqualsNotNode : public Node
     public:
         EqualsNotNode();
     protected:
-        virtual void processMessage(unsigned int inlet, const Message &message);
+        virtual void processMessage(const char *inlet, const Message &message);
 };
 
 /**
@@ -89,7 +89,7 @@ class IsGreaterNode : public Node
     public:
         IsGreaterNode();
     protected:
-        virtual void processMessage(unsigned int inlet, const Message &message);
+        virtual void processMessage(const char *inlet, const Message &message);
 };
 
 /**
@@ -100,7 +100,7 @@ class IsEqualNode : public Node
     public:
         IsEqualNode();
     protected:
-        virtual void processMessage(unsigned int inlet, const Message &message);
+        virtual void processMessage(const char *inlet, const Message &message);
 };
 
 /**
@@ -111,7 +111,7 @@ class IsLessNode : public Node
     public:
         IsLessNode();
     protected:
-        virtual void processMessage(unsigned int inlet, const Message &message);
+        virtual void processMessage(const char *inlet, const Message &message);
 };
 
 /**
@@ -122,7 +122,7 @@ class MultNode : public Node
     public:
         MultNode();
     protected:
-        virtual void processMessage(unsigned int inlet, const Message &message);
+        virtual void processMessage(const char *inlet, const Message &message);
 };
 
 /**
@@ -133,7 +133,7 @@ class SubtractNode : public Node
     public:
         SubtractNode();
     protected:
-        virtual void processMessage(unsigned int inlet, const Message &message);
+        virtual void processMessage(const char *inlet, const Message &message);
 };
 
 } // end of namespace

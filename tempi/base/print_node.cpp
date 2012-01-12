@@ -29,6 +29,7 @@ PrintNode::PrintNode() :
     enabled_(true)
 {
     //addOutlet();
+    addInlet("0", "Print messages received from this inlet.");
 
     Message prefix_prop = Message("s", prefix_.c_str());
     addAttribute("prefix", prefix_prop);
@@ -37,7 +38,7 @@ PrintNode::PrintNode() :
     addAttribute("enabled", enabled_prop);
 }
 
-void PrintNode::processMessage(unsigned int inlet, const Message &message)
+void PrintNode::processMessage(const char *inlet, const Message &message)
 {
     if (enabled_)
         std::cout << prefix_ << message << std::endl;

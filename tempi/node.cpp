@@ -27,7 +27,7 @@ namespace tempi
 
 Node::Node()
 {
-    addInlet(); // all nodes have at least one inlet for properties
+    addInlet("attributes"); // all nodes have at least one inlet for attributes
 }
 
 bool Node::isInitiated() const
@@ -58,17 +58,17 @@ void Node::onInit()
     // pass
 }
 
-std::vector<Outlet::ptr> Node::getOutlets()
+std::map<std::string, Outlet::ptr> Node::getOutlets()
 {
     return outlets_;
 }
 
-void Node::onInletTriggered(Inlet *sink, const Message &message)
+void Node::onInletTriggered(Inlet *inlet, const Message &message)
 {
     //std::cout << __FUNCTION__ << std::endl;
-    unsigned int inlet = getInletIndex(sink);
     bool is_a_attribute = false;
-    if (inlet == 0 && message.getSize() >= 3)
+    // FIXME: the name of the "attributes" inlet should be a constant
+    if (inlet->getName() == "attributes" && message.getSize() >= 3)
     {
         // ArgumentType type0;
         // ArgumentType type1;
@@ -108,67 +108,52 @@ void Node::onInletTriggered(Inlet *sink, const Message &message)
     }
     if (! is_a_attribute)
     {
-        processMessage(inlet, message);
+        processMessage(inlet->getName().c_str(), message);
     }
 }
 
-unsigned int Node::getInletIndex(Inlet *sink) const throw(BadIndexException)
-{
-    unsigned int index = 0;
-    std::vector<Inlet::ptr>::const_iterator iter;
-    for (iter = inlets_.begin(); iter != inlets_.end(); ++iter)
-    {
-        if ((*iter).get() == sink)
-            return index;
-        ++index;
-    }
-    std::ostringstream os;
-    os << "Node(" << getTypeName() << ":" << getInstanceName() << ")::" << __FUNCTION__ << ": " << ": No such inlet pointer";
-    throw BadIndexException(os.str().c_str());
-}
-
-std::vector<Inlet::ptr> Node::getInlets()
+std::map<std::string, Inlet::ptr> Node::getInlets()
 {
     return inlets_;
 }
 
-bool Node::addOutlet(Outlet::ptr source)
+bool Node::addOutlet(Outlet::ptr outlet)
 {
-    if (! hasOutlet(source.get()))
+    if (! hasOutlet(outlet.get()))
     {
-        outlets_.push_back(source);
+        outlets_[outlet->getName()] = outlet;
         return true;
     }
     return false;
 }
 
-bool Node::addInlet(Inlet::ptr sink)
+bool Node::addInlet(Inlet::ptr inlet)
 {
-    if (! hasInlet(sink.get()))
+    if (! hasInlet(inlet.get()))
     {
-        inlets_.push_back(sink);
-        sink.get()->getOnTriggeredSignal().connect(boost::bind(&Node::onInletTriggered, this, _1, _2));
+        inlets_[inlet->getName()] = inlet;
+        inlet.get()->getOnTriggeredSignal().connect(boost::bind(&Node::onInletTriggered, this, _1, _2));
         return true;
     }
     return false;
 }
 
-bool Node::addInlet()
+bool Node::addInlet(const char *name, const char *documentation)
 {
-    return addInlet(Inlet::ptr(new Inlet()));
+    return addInlet(Inlet::ptr(new Inlet(name, documentation)));
 }
 
-bool Node::addOutlet()
+bool Node::addOutlet(const char *name, const char *documentation)
 {
-    return addOutlet(Outlet::ptr(new Outlet()));
+    return addOutlet(Outlet::ptr(new Outlet(name, documentation)));
 }
 
-bool Node::hasInlet(Inlet *sink)
+bool Node::hasInlet(Inlet *inlet)
 {
-    std::vector<Inlet::ptr>::iterator iter;
+    std::map<std::string, Inlet::ptr>::iterator iter;
     for (iter = inlets_.begin(); iter != inlets_.end(); ++iter)
     {
-        if ((*iter).get() == sink)
+        if ((*iter).second.get() == inlet)
         {
             return true;
         }
@@ -176,12 +161,22 @@ bool Node::hasInlet(Inlet *sink)
     return false;
 }
 
-bool Node::hasOutlet(Outlet *source)
+bool Node::hasInlet(const char *name) const
 {
-    std::vector<Outlet::ptr>::iterator iter;
+    return inlets_.find(std::string(name)) != inlets_.end();
+}
+
+bool Node::hasOutlet(const char *name) const
+{
+    return outlets_.find(std::string(name)) != outlets_.end();
+}
+
+bool Node::hasOutlet(Outlet *outlet)
+{
+    std::map<std::string, Outlet::ptr>::iterator iter;
     for (iter = outlets_.begin(); iter != outlets_.end(); ++iter)
     {
-        if ((*iter).get() == source)
+        if ((*iter).second.get() == outlet)
         {
             return true;
         }
@@ -208,38 +203,48 @@ unsigned int Node::getNumberOfInlets() const
 
 unsigned int Node::getNumberOfOutlets() const
 {
-    return inlets_.size();
+    return outlets_.size();
 }
 
-Inlet *Node::getInlet(unsigned int number) const
+Inlet *Node::getInlet(const char *name) const
 {
-    if (number >= getNumberOfInlets())
+    if (hasInlet(name))
     {
-        std::cout << "Node::" << __FUNCTION__ << ": Inlet " << number << "too big for node." << std::endl;
-        return 0;
+        std::map<std::string, Inlet::ptr>::const_iterator iter = inlets_.find(std::string(name));
+        return ((*iter).second).get();
     }
-    return inlets_[number].get();
+    else
+        return 0; // FIXME
 }
 
-Outlet *Node::getOutlet(unsigned int number) const
+Outlet *Node::getOutlet(const char *name) const
 {
-    if (number >= getNumberOfInlets())
+    if (hasOutlet(name))
     {
-        std::cout << "Node::" << __FUNCTION__ << ": Outlet " << number << "too big for node." << std::endl;
-        return 0;
+        std::map<std::string, Outlet::ptr>::const_iterator iter = outlets_.find(std::string(name));
+        return ((*iter).second).get();
     }
-    return outlets_[number].get();
+    else
+        return 0; // FIXME
 }
 
-Outlet::ptr Node::getOutletSharedPtr(unsigned int number) const throw(BadIndexException)
+Outlet::ptr Node::getOutletSharedPtr(const char *name) const throw(BadIndexException)
 {
-    if (number >= getNumberOfInlets())
+    if (name == 0)
+    {
+        std::cerr << "Node::getOutletSharedPtr(): NULL string is not valid.\n";
+    }
+    if (hasOutlet(name))
+    {
+        std::map<std::string, Outlet::ptr>::const_iterator iter = outlets_.find(std::string(name));
+        return (*iter).second;
+    }
+    else
     {
         std::ostringstream os;
-        os << "Node(" << getTypeName() << ":" << getInstanceName() << ")::" << __FUNCTION__ << ": " << ": Bad outlet index: " << number;
+        os << "Node(" << getTypeName() << ":" << getInstanceName() << ")::" << __FUNCTION__ << ": " << ": Bad outlet name: " << name;
         throw BadIndexException(os.str().c_str());
     }
-    return outlets_[number];
 }
 
 Attribute::ptr Node::getAttribute(const char *name) const throw(BadIndexException)
@@ -317,30 +322,36 @@ std::vector<std::string> Node::getAttributesNames() const
     return ret;
 }
 
-bool Node::message(unsigned int inlet, const Message &message)
+bool Node::message(const char *inlet, const Message &message)
 {
-    if (inlet >= getNumberOfInlets())
+    if (inlet == 0)
     {
-        std::cerr << "Node::" << __FUNCTION__ << ": Inlet " << inlet << "too big for node." << std::endl;
+        std::cerr << "Error: Called " << __FUNCTION__ << "() with null-string inlet on node of type " << getTypeName() << ": " << message << std::endl;
         return false;
     }
     if (isInitiated())
     {
         Inlet *inletPtr = getInlet(inlet);
+        if (inletPtr == 0)
+        {
+            std::cerr << "Error: Node::message(): Node of type " << getTypeName() << " has no inlet named " << inlet << "!!" << std::endl;
+            // : Called " << __FUNCTION__ << "() on Node of type " << getTypeName() << " via inlet " << inlet << " but could not find such an inlet. Message is: " << message << std::endl;
+            return false;
+        }
         inletPtr->trigger(message);
         return true;
     }
     else
     {
-        std::cerr << "Warning: Called " << __FUNCTION__ << "() on non-initialized Node of type " << getTypeName() << " in inlet " << inlet << ": " << message << std::endl;
+        std::cerr << "Warning: Called " << __FUNCTION__ << "() on null-string Node of type " << getTypeName() << " in inlet " << inlet << ": " << message << std::endl;
         return false;
     }
 }
 
-void Node::output(unsigned int outlet, const Message &message) const throw(BadIndexException)
+void Node::output(const char *outlet, const Message &message) const throw(BadIndexException)
 {
-    Outlet::ptr source = getOutletSharedPtr(outlet);
-    source->trigger(message);
+    Outlet::ptr outlet_ptr = getOutletSharedPtr(outlet);
+    outlet_ptr->trigger(message);
 }
 
 void Node::setTypeName(const char *typeName)
@@ -374,5 +385,4 @@ bool Node::handlesReceiveSymbol(const char *selector) const
 }
 
 } // end of namespace
-
 

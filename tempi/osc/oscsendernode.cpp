@@ -31,9 +31,10 @@ OscSenderNode::OscSenderNode() :
     host_port.appendString("localhost");
     host_port.appendInt(0);
     addAttribute("host_port", host_port);
+    addInlet("0", "Messages to send. First atom must be a string that is a valid OSC path.");
 }
 
-void OscSenderNode::processMessage(unsigned int inlet, const Message &message)
+void OscSenderNode::processMessage(const char *inlet, const Message &message)
 {
     // TODO: send osc message
     if (osc_sender_.get() == 0)

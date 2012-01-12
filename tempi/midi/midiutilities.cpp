@@ -27,7 +27,7 @@ unsigned char getMidiEventType(const unsigned char first_byte)
 {
     unsigned char type_code;
     if (first_byte >= 0xf0)
-        type_code = first_byte; // Soem type codes use two bytes?
+        type_code = first_byte; // Some type codes use two bytes?
     else
         type_code = first_byte & 0xf0;
     unsigned char ret;
