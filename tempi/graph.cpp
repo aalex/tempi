@@ -99,6 +99,12 @@ bool Graph::connect(const char *from, const char *outlet, const char *to, const 
         std::cerr << "Graph::" << __FUNCTION__ << ": Cannot find node " << to << "." << std::endl;
         return false;
     }
+
+    if (inlet == 0 || outlet == 0)
+    {
+        std::cerr << "Graph::" << __FUNCTION__ << ": Null inlet/outlet!!" << std::endl;
+        return false;
+    }
     if (! fromNode->hasOutlet(outlet))
     {
         std::cerr << "Graph::" << __FUNCTION__ << ": Outlet " << outlet << " not found in " << from << "." << std::endl;

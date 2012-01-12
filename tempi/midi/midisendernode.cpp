@@ -27,6 +27,7 @@ MidiSenderNode::MidiSenderNode() :
     Node()
 {
     //addOutlet("0");
+    addInlet("0", "Send MIDI received from this inlet.");
     Message port = Message("i", 0);
     addAttribute("port", port);
     midi_output_.reset(new MidiOutput);
