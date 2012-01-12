@@ -10,6 +10,7 @@ New features:
 * Rename sink to inlet, source to outlet
 * Add Message::prependMessage()
 * Remove node arguments: only attributes now.
+* Inlets and outlets are now named, not indexed.
 
 Bugs fixed:
 * (none)
