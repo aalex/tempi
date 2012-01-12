@@ -37,8 +37,8 @@ SamplerNode::SamplerNode() :
     Message playing = Message("b", false);
     addAttribute("playing", playing);
 
-    addInlet("0"); // messages to record
-    addOutlet("0"); // played back messages messages
+    addInlet("0", "Messages to record.");
+    addOutlet("0", "Played back messages.");
 }
 
 void SamplerNode::onAttributeChanged(const char *name, const Message &value)
