@@ -19,52 +19,44 @@
 
 /**
  * @file
- * The Sink class.
+ * The Outlet class.
  */
-#ifndef __TEMPI_SINK_H__
-#define __TEMPI_SINK_H__
+#ifndef __TEMPI_OUTLET_H__
+#define __TEMPI_OUTLET_H__
 
 #include <boost/signals2.hpp>
-#include <map>
 #include "tempi/sharedptr.h"
 #include "tempi/message.h"
-#include "tempi/source.h"
+#include <string>
 
 namespace tempi
 {
 
 /**
- * A Sink is a pad to which we can connect Source pads.
- * TODO: rename to Destination
+ * A Outlet is a pad that can be connected to Inlet pads.
  */
-class Sink
+class Outlet
 {
     public:
-        typedef std::tr1::shared_ptr<Sink> ptr;
-        // TODO: rename to ReceiveSignal
-        typedef boost::signals2::signal<void (Sink *sink, const Message&)> TriggeredSignal;
-        // TODO: rename to ReceiveSlot
-        typedef TriggeredSignal::slot_function_type TriggeredSlot;
-        Sink();
-        bool connect(Source::ptr source);
-        bool disconnect(Source::ptr source);
-        bool isConnected(Source::ptr source);
-        // TODO: rename to receive
+        typedef std::tr1::shared_ptr<Outlet> ptr;
+        typedef boost::signals2::signal<void (const Message&)> TriggeredSignal;
+        Outlet(const char *name, const char *documentation);
+        // TODO: return success
         void trigger(const Message &message);
         TriggeredSignal &getOnTriggeredSignal()
         {
             return on_triggered_signal_;
         }
-        void disconnectAll();
+        std::string getName() const;
+        std::string getDocumentation() const;
     private:
-        //typedef std::map<Source::ptr, std::tr1::shared_ptr<boost::signals2::scoped_connection> > SourceMap;
-        //SourceMap sources_;
-        typedef std::vector<Source::ptr> SourcesVec;
-        SourcesVec sources_;
-        TriggeredSignal on_triggered_signal_;
+         TriggeredSignal on_triggered_signal_;
+         std::string name_;
+         std::string documentation_;
 };
 
 } // end of namespace
 
 #endif // ifndef
+
 

@@ -65,9 +65,9 @@ class NodeFactory
          */
         bool hasType(const char *name);
         Node::ptr create(const char *name) throw(BadNodeTypeException);
-        // TODO: std::map<std::string name, Property> getProperties();
-        // TODO: std::map<std::string name, type_info> getPropertyTypes();
-        // TODO: type_info getPropertyType(std::string &name);
+        // TODO: std::map<std::string name, Attribute> getAttributes();
+        // TODO: std::map<std::string name, type_info> getAttributeTypes();
+        // TODO: type_info getAttributeType(std::string &name);
 
         std::map<std::string, AbstractNodeType::ptr> getEntries() const
         {

@@ -27,10 +27,11 @@
 
 #include "tempi/node.h"
 #include "tempi/sharedptr.h"
-#include "tempi/source.h"
-#include "tempi/sink.h"
+#include "tempi/outlet.h"
+#include "tempi/inlet.h"
 
-namespace tempi { namespace mapping {
+namespace tempi {
+namespace mapping {
 
 /**
  * A Filter is Node who has a sink and source and usually filters data.
@@ -40,11 +41,9 @@ class Filter : public Node
     public:
         Filter();
         virtual ~Filter() {}
-        Source *getOutlet();
-        Sink *getInlet();
     private:
         // Inherited from Node:
-        virtual void processMessage(unsigned int inlet, const Message &message);
+        virtual void processMessage(const char *name, const Message &message);
         // New virtual method:
         virtual Message filter(const Message &message) = 0;
 };

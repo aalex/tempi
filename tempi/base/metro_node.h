@@ -38,8 +38,8 @@ class MetroNode : public Node
     public:
         MetroNode();
     protected:
-        virtual void processMessage(unsigned int inlet, const Message &message) {}
-        virtual void onPropertyChanged(const char *name, const Message &value);
+        virtual void processMessage(const char *inlet, const Message &message) {}
+        virtual void onAttributeChanged(const char *name, const Message &value);
     private:
         Timer timer_;
         TimePosition interval_;

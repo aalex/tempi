@@ -1,3 +1,18 @@
+Tempi 0.1.8 (2012-01-12)
+------------------------
+This release is a developer snapshot in the 0.1 series.
+
+New features:
+* New node types: [math.+], [math.-], [math.<], [math.>], [math./], [math.*], [math.==], [math.!=]
+* New node types: [midi.route]
+* Allow non type-strict attributes
+* Rename properties to attributes
+* Rename sink to inlet, source to outlet
+* Add Message::prependMessage()
+* Remove node arguments: only attributes now.
+* Inlets and outlets are now named, not indexed.
+
+
 Tempi 0.1.6 (2011-12-19)
 ------------------------
 This release is a developer snapshot in the 0.1 series.

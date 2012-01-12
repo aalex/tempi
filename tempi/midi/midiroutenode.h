@@ -17,22 +17,32 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "tempi/source.h"
-#include <iostream>
+/**
+ * @file
+ * The MidiRouterNode class.
+ */
+#ifndef __TEMPI_MIDI_MIDIROUTENODE_H__
+#define __TEMPI_MIDI_MIDIROUTENODE_H__
 
-namespace tempi
-{
+#include "tempi/node.h"
 
-Source::Source()
-{
-    // pass
-}
+namespace tempi {
+namespace midi {
 
-void Source::trigger(const Message &message)
+/**
+ * Node that routes MIDI messages according to their type.
+ */
+class MidiRouteNode : public Node
 {
-    //std::cout << __FUNCTION__ << std::endl;
-    on_triggered_signal_(message);
-}
+    public:
+        MidiRouteNode();
+    protected:
+        virtual void processMessage(const char *inlet, const Message &message);
+        // virtual void onAttributeChanged(const char *name, const Message &value);
+};
 
 } // end of namespace
+} // end of namespace
+
+#endif // ifndef
 

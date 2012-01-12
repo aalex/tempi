@@ -27,10 +27,10 @@ ReceiveNode::ReceiveNode() :
 {
     Message receiveSymbol;
     receiveSymbol.appendString("");
-    addProperty("symbol", receiveSymbol);
+    addAttribute("symbol", receiveSymbol);
 }
 
-void ReceiveNode::processMessage(unsigned int inlet, const Message &message)
+void ReceiveNode::processMessage(const char *inlet, const Message &message)
 {
     // if (inlet == 0)
     //    output(message);
@@ -38,7 +38,7 @@ void ReceiveNode::processMessage(unsigned int inlet, const Message &message)
 
 std::string ReceiverNode::getReceiveSymbol() const
 {
-    return getProperty("symbol").getString(0);
+    return getAttributeValue("symbol").getString(0);
 }
 
 } // end of namespace

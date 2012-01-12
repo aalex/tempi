@@ -18,29 +18,25 @@
  */
 
 #include "tempi/mapping/filter.h"
+#include "tempi/utils.h"
 #include <iostream>
 
-namespace tempi { namespace mapping {
+namespace tempi {
+namespace mapping {
 
 Filter::Filter() :
     Node()
 {
-    addOutlet();
+    addInlet("0");
+    addOutlet("0");
 }
 
-Sink *Filter::getInlet()
+void Filter::processMessage(const char *inlet, const Message &message)
 {
-    return getInlets()[0].get();
-}
-
-Source *Filter::getOutlet()
-{
-    return getOutlets()[0].get();
-}
-
-void Filter::processMessage(unsigned int /* inlet */, const Message &message)
-{
-    getOutlet()->trigger(filter(message));
+    if (utils::stringsMatch(inlet, "0"))
+    {
+        getOutlet("0")->trigger(filter(message));
+    }
 }
 
 } // end of namespace

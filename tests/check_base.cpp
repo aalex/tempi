@@ -69,9 +69,9 @@ static bool checkMetro()
 
     if (VERBOSE)
         std::cout << "connect nodes:" << std::endl;
-    graph.connect("metro0", 0, "print0", 0);
-    graph.connect("metro0", 0, "counter0", 0);
-    graph.connect("counter0", 0, "any0", 0);
+    graph.connect("metro0", "0", "print0", "0");
+    graph.connect("metro0", "0", "counter0", "0");
+    graph.connect("counter0", "0", "any0", "0");
 
     graph.tick(); // init the nodes
 
@@ -81,17 +81,17 @@ static bool checkMetro()
     bool quiet = ! VERBOSE;
     Message disable_message = Message("ssb", "set", "enabled", false);
     if (quiet)
-        graph.message("print0", 0, disable_message);
+        graph.message("print0", "attributes", disable_message);
 
     // start metro
     if (VERBOSE)
         std::cout << "set metro interval:" << std::endl;
     Message interval_message = Message("ssi", "set", "interval", 100);
-    graph.message("metro0", 0, interval_message);
+    graph.message("metro0", "attributes", interval_message);
     if (VERBOSE)
         std::cout << "start metro:" << std::endl;
     Message start_message = Message("ssb", "set", "running", true);
-    graph.message("metro0", 0, start_message);
+    graph.message("metro0", "attributes", start_message);
 
     Timer timer;
     while (true)
@@ -118,8 +118,8 @@ static bool checkMetro()
         //return false;
     }
     if (VERBOSE)
-        std::cout << "count = counter0->getProperty\"count\".getInt(0);" << std::endl;
-    int count = counter0->getProperty("count").getInt(0);
+        std::cout << "count = counter0->getAttributeValue(\"count\").getInt(0);" << std::endl;
+    int count = counter0->getAttributeValue("count").getInt(0);
     if (count < 10)
     {
         std::cout << "[counter] Bad count: expect 10 but got " << count << std::endl;
@@ -134,7 +134,7 @@ static bool checkMetro()
         //return true; // FIXME
         return false;
     }
-//     int value = any0->getProperty("value").getInt(0);
+//     int value = any0->getAttributeValue("value").getInt(0);
 //     if (value < 10)
 //     {
 //         std::cout << "[any] Bad count: expect 10 but got " << value << std::endl;
@@ -169,6 +169,20 @@ static bool check_all_loaded()
     return true;
 }
 
+/**
+ * checks base.any
+ */
+static bool check_any()
+{
+    NodeFactory::ptr factory(new NodeFactory);
+    internals::loadInternals(factory);
+    Graph graph(factory); // FIXME: smart ptr or not for factory?
+    graph.addNode("base.any", "any0");
+    Node::ptr any0 = graph.getNode("any0");
+    any0->setAttribute("value", Message("f", 3.14159f));
+    return true;
+}
+
 int main(int argc, char **argv)
 {
     if (! checkMetro())
@@ -178,6 +192,8 @@ int main(int argc, char **argv)
     if (! checkPrepend())
         return 1;
     if (! check_all_loaded())
+        return 1;
+    if (! check_any())
         return 1;
     return 0;
 }

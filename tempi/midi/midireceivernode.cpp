@@ -26,13 +26,13 @@ namespace midi {
 MidiReceiverNode::MidiReceiverNode() :
     Node()
 {
-    addOutlet();
+    addOutlet("0");
     Message port = Message("i", 0);
-    addProperty("port", port);
+    addAttribute("port", port);
     midi_input_.reset(new MidiInput);
 }
 
-void MidiReceiverNode::onPropertyChanged(const char *name, const Message &value)
+void MidiReceiverNode::onAttributeChanged(const char *name, const Message &value)
 {
     //std::cout << "MidiReceiverNode::" << __FUNCTION__ << "(" << name << ", " << value << ")" << std::endl;
     static std::string key("port");
@@ -54,7 +54,7 @@ void MidiReceiverNode::doTick()
     std::vector<Message>::iterator iter;
     for (iter = messages.begin(); iter != messages.end(); ++iter)
     {
-        output(0, *iter);
+        output("0", *iter);
     }
 }
 

@@ -33,6 +33,7 @@ libtempi_@TEMPI_API_VERSION@_la_includedir = $(includedir)/tempi-$(TEMPI_API_VER
 ## and the variable name derived from that.
 ## PLEASE KEEP THEM IN ALPHABETICAL ORDER
 libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
+    attribute.cpp \
     base/anynode.cpp \
     base/appsinknode.cpp \
     base/baselibrary.cpp \
@@ -50,12 +51,15 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     internals.cpp \
     mapping/slide.cpp \
     mapping/slidefilter.cpp \
+    math/mathlibrary.cpp \
     message.cpp \
     midi/midiinput.cpp \
     midi/midilibrary.cpp \
     midi/midireceivernode.cpp \
+    midi/midiroutenode.cpp \
     midi/midioutput.cpp \
     midi/midisendernode.cpp \
+    midi/midiutilities.cpp \
     node.cpp \
     nodefactory.cpp \
     osc/osclibrary.cpp \
@@ -75,8 +79,8 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     sampler/score.cpp \
     sampler/track.cpp \
     scheduler.cpp \
-    sink.cpp \
-    source.cpp \
+    inlet.cpp \
+    outlet.cpp \
     table/table.cpp \
     table/table_player.cpp \
     table/table_writer.cpp \
@@ -88,6 +92,7 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
 
 ## PLEASE KEEP THEM IN ALPHABETICAL ORDER
 libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
+    attribute.h \
     base/anynode.h \
     base/appsinknode.h \
     base/baselibrary.h \
@@ -110,12 +115,15 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     mapping/average.h \
     mapping/slide.h \
     mapping/slidefilter.h \
+    math/mathlibrary.h \
     message.h \
     midi/midiinput.h \
     midi/midilibrary.h \
     midi/midireceivernode.h \
+    midi/midiroutenode.h \
     midi/midioutput.h \
     midi/midisendernode.h \
+    midi/midiutilities.h \
     node.h \
     nodefactory.h \
     nodetype.h \
@@ -138,8 +146,8 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     sampler/track.h \
     scheduler.h \
     sharedptr.h \
-    sink.h \
-    source.h \
+    inlet.h \
+    outlet.h \
     table/table.h \
     table/table_player.h \
     table/table_writer.h \

@@ -20,16 +20,19 @@
 #include "tempi/midi/midilibrary.h"
 #include "tempi/midi/midireceivernode.h"
 #include "tempi/midi/midisendernode.h"
+#include "tempi/midi/midiroutenode.h"
 #include "tempi/utils.h"
 #include "tempi/nodefactory.h"
 
-namespace tempi { namespace midi {
+namespace tempi {
+namespace midi {
 
 void MidiLibrary::load(NodeFactory &factory, const char *prefix) const
 {
     using utils::concatenate;
     factory.registerTypeT<MidiReceiverNode>(concatenate(prefix, "receive").c_str());
     factory.registerTypeT<MidiSenderNode>(concatenate(prefix, "send").c_str());
+    factory.registerTypeT<MidiRouteNode>(concatenate(prefix, "route").c_str());
 }
 
 } // end of namespace

@@ -1,4 +1,4 @@
-/*
+ /*
  * Copyright (C) 2011 Alexandre Quessy
  * 
  * This file is part of Tempi.
@@ -19,39 +19,40 @@
 
 /**
  * @file
- * The Source class.
+ * The Attribute class
  */
-#ifndef __TEMPI_SOURCE_H__
-#define __TEMPI_SOURCE_H__
 
-#include <boost/signals2.hpp>
-#include "tempi/sharedptr.h"
+#ifndef __TEMPI_ATTRIBUTE_H__
+#define __TEMPI_ATTRIBUTE_H__
+
+#include <iostream>
+#include <string>
 #include "tempi/message.h"
+#include "tempi/sharedptr.h"
 
-namespace tempi
-{
+namespace tempi {
 
 /**
- * A Source is a pad that can be connected to Sink pads.
+ * An Attribute is used to store info in a Node and to control its behaviour.
  */
-class Source
+class Attribute
 {
     public:
-        typedef std::tr1::shared_ptr<Source> ptr;
-        typedef boost::signals2::signal<void (const Message&)> TriggeredSignal;
-        Source();
-        // TODO: return success
-        void trigger(const Message &message);
-        TriggeredSignal &getOnTriggeredSignal()
-        {
-            return on_triggered_signal_;
-        }
+        typedef std::tr1::shared_ptr<Attribute> ptr;
+        Attribute(const char *name, const Message &value, const char *doc, bool type_strict=true);
+        std::string getName() const;
+        std::string getDocumentation() const;
+        const Message &getValue();
+        bool setValue(const Message &value);
+        bool isTypeStrict() const;
     private:
-         TriggeredSignal on_triggered_signal_;
+        std::string name_;
+        Message value_;
+        std::string documentation_;
+        bool type_strict_;
 };
 
 } // end of namespace
 
 #endif // ifndef
-
 

@@ -22,6 +22,7 @@
 #include "tempi/library.h"
 #include "tempi/osc/osclibrary.h"
 #include "tempi/base/baselibrary.h"
+#include "tempi/math/mathlibrary.h"
 #include "tempi/midi/midilibrary.h"
 #include "tempi/sampler/samplerlibrary.h"
 
@@ -35,6 +36,7 @@ bool loadInternals(NodeFactory &factory)
     loadLibrary<midi::MidiLibrary>(factory, "midi.");
     loadLibrary<osc::OscLibrary>(factory, "osc.");
     loadLibrary<sampler::SamplerLibrary>(factory, "sampler.");
+    loadLibrary<math::MathLibrary>(factory, "math.");
     return true;
 }
 

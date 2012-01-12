@@ -18,41 +18,31 @@
  */
 
 #include "tempi/base/anynode.h"
+#include "tempi/utils.h"
 
-namespace tempi { namespace base {
+namespace tempi {
+namespace base {
 
 AnyNode::AnyNode() :
-    Node(),
-    value_("")
+    Node()
 {
-//    Message value = Message();
-//    addProperty("value", value);
-    addOutlet();
+    addAttribute("value", Message(), "Holds any message to store.", false);
+    addOutlet("0", "Value.");
+    addInlet("0", "Bang to output value. Any other message will set and output value.");
 }
 
-void AnyNode::onSetArguments(const Message &message)
+void AnyNode::processMessage(const char *inlet, const Message &message)
 {
-//    setProperty("value", message);
-//    std::cout << "AnyNode::" << __FUNCTION__ << std::endl;
-    Message v = message;
-    value_ = v;
-//    std::cout << "done" << std::endl;
-}
-
-void AnyNode::processMessage(unsigned int inlet, const Message &message)
-{
-//    std::cout << "AnyNode::" << __FUNCTION__ << std::endl;
-    // bang outputs the value.
-    // A new message replaces the value and 
-    if (message.getTypes() != "")
+    if (message.getTypes() == "") // bang only outputs the value
     {
-        Message v = message;
-        value_ = v;
+        // pass
     }
-        //setProperty("value", message);
-    if (inlet == 0)
-        output(0, value_);
-//    std::cout << "done" << std::endl;
+    else // any message with some type tags sets the value and outputs it
+    {
+        setAttribute("value", message);
+    }
+    if (utils::stringsMatch(inlet, "0"))
+        output("0", getAttributeValue("value"));
 }
 
 } // end of namespace

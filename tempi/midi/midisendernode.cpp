@@ -26,13 +26,14 @@ namespace midi {
 MidiSenderNode::MidiSenderNode() :
     Node()
 {
-    addOutlet();
+    //addOutlet("0");
+    addInlet("0", "Send MIDI received from this inlet.");
     Message port = Message("i", 0);
-    addProperty("port", port);
+    addAttribute("port", port);
     midi_output_.reset(new MidiOutput);
 }
 
-void MidiSenderNode::onPropertyChanged(const char *name, const Message &value)
+void MidiSenderNode::onAttributeChanged(const char *name, const Message &value)
 {
     //std::cout << "MidiSenderNode::" << __FUNCTION__ << "(" << name << ", " << value << ")" << std::endl;
     static std::string key("port");
@@ -45,7 +46,7 @@ void MidiSenderNode::onPropertyChanged(const char *name, const Message &value)
 
 // TODO: output the list of devices upon query
 
-void MidiSenderNode::processMessage(unsigned int inlet, const Message &message)
+void MidiSenderNode::processMessage(const char *inlet, const Message &message)
 {
     if (midi_output_->isOpen())
     {

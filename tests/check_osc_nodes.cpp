@@ -43,7 +43,7 @@ static bool check_oscsender_node()
         {
             std::cout << "Set property host_port to " << host_port << std::endl;
         }
-        sender0->setProperty("host_port", host_port);
+        sender0->setAttribute("host_port", host_port);
     }
     catch (const BadIndexException &e)
     {
@@ -57,7 +57,7 @@ static bool check_oscsender_node()
     }
 
     Message m = Message("sfsi", "/hello", 3.14159f, "spam", 2);
-    if (! graph.message("sender0", 0, m))
+    if (! graph.message("sender0", "0", m))
         return fail("Failed to message sender0");
     if (VERBOSE)
         std::cout << "Sent " << m << std::endl;

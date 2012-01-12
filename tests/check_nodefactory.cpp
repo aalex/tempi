@@ -14,11 +14,11 @@ class FooNode: public Node
         {
             if (VERBOSE)
                 std::cout << "Create a FooNode" << std::endl;
-            addInlet();
-            addOutlet();
+            addInlet("0", "");
+            addOutlet("0", "");
         }
     private:
-        virtual void processMessage(unsigned int inlet, const Message &message) {}
+        virtual void processMessage(const char *inlet, const Message &message) {}
 };
 
 class BarNode: public Node
@@ -27,13 +27,13 @@ class BarNode: public Node
         BarNode() :
             Node()
         {
-            addInlet();
-            addOutlet();
+            addInlet("0", "");
+            addOutlet("0", "");
             if (VERBOSE)
                 std::cout << "Create a BarNode" << std::endl;
         }
     private:
-        virtual void processMessage(unsigned int inlet, const Message &message) {}
+        virtual void processMessage(const char *inlet, const Message &message) {}
 };
 
 bool check_nodefactory()
@@ -75,8 +75,8 @@ bool check_nodefactory()
     bar->init();
 
     Message message;
-    foo->getInlet(0)->trigger(message);
-    bar->getInlet(0)->trigger(message);
+    foo->getInlet("0")->trigger(message);
+    bar->getInlet("0")->trigger(message);
     return true;
 }
 
@@ -128,47 +128,47 @@ bool check_print()
 
     graph.tick(); // call init() on each node
 
-    graph.connect("nop0", 0, "nop1", 0);
-    graph.connect("nop1", 0, "print0", 0);
-    graph.connect("nop1", 0, "sampler0", 0);
-    graph.connect("sampler0", 0, "print1", 0);
+    graph.connect("nop0", "0", "nop1", "0");
+    graph.connect("nop1", "0", "print0", "0");
+    graph.connect("nop1", "0", "sampler0", "0");
+    graph.connect("sampler0", "0", "print1", "0");
 
     // disable print
     Message disable_message = Message("ssb", "set", "enabled", false);
     bool quiet = ! VERBOSE;
     if (quiet)
     {
-        graph.message("print0", 0, disable_message);
-        graph.message("print1", 0, disable_message);
+        graph.message("print0", "attributes", disable_message);
+        graph.message("print1", "attributes", disable_message);
     }
     // change prefix
     //FIXME: both [print] objects have same value for prefix property.
     Message prefix0_message = Message("sss", "set", "prefix", "recording: ");
-    graph.message("print0", 0, prefix0_message);
+    graph.message("print0", "attributes", prefix0_message);
     Message prefix1_message = Message("sss", "set", "prefix", "playback: ");
-    graph.message("print1", 0, prefix1_message);
+    graph.message("print1", "attributes", prefix1_message);
     //std::cout << "sampler0 has n inlets: " << graph.getNode("sampler0")->getNumberOfInlets() << std::endl;
     // enables the sampler
-    // FIXME: property inlet in hard-coded to 0 in Node
+    // FIXME: property inlet in hard-coded to attributes in Node
     Message playing = Message("ssb", "set", "playing", true);
-    graph.message("sampler0", 0, playing);
+    graph.message("sampler0", "attributes", playing);
     Message recording = Message("ssb", "set", "recording", true);
-    graph.message("sampler0", 0, recording);
+    graph.message("sampler0", "attributes", recording);
     // print something (or not is disabled)
     Message fis_message = Message("fis", 3.14159f, 2, "hello");
-    graph.message("nop0", 0, fis_message);
+    graph.message("nop0", "attributes", fis_message);
     graph.tick();
-    graph.message("nop0", 0, fis_message);
+    graph.message("nop0", "attributes", fis_message);
     graph.tick();
 
     recording.setBoolean(2, false);
-    graph.message("sampler0", 0, recording);
+    graph.message("sampler0", "attributes", recording);
     playing.setBoolean(2, false);
-    graph.message("sampler0", 0, playing);
+    graph.message("sampler0", "attributes", playing);
     playing.setBoolean(2, true);
-    graph.message("sampler0", 0, playing);
+    graph.message("sampler0", "attributes", playing);
     recording = Message("ssb", "set", "recording", true);
-    graph.message("sampler0", 0, recording);
+    graph.message("sampler0", "attributes", recording);
 
     for (int i = 0; i < 10; ++i)
     {

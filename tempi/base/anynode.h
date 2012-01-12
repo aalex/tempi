@@ -26,7 +26,8 @@
 
 #include "tempi/node.h"
 
-namespace tempi { namespace base {
+namespace tempi {
+namespace base {
 
 /**
  * The AnyNode stores message and outputs them when it receives an empty message. (bang)
@@ -36,10 +37,7 @@ class AnyNode : public Node
     public:
         AnyNode();
     protected:
-        virtual void processMessage(unsigned int inlet, const Message &message);
-        virtual void onSetArguments(const Message &message);
-    private:
-        Message value_;
+        virtual void processMessage(const char *inlet, const Message &message);
 };
 
 } // end of namespace

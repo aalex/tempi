@@ -24,9 +24,9 @@
 #include <boost/tuple/tuple.hpp>
 #include <iostream>
 #include <vector>
-#include "tempi/source.h"
+#include "tempi/outlet.h"
 #include "tempi/message.h"
-#include "tempi/sink.h"
+#include "tempi/inlet.h"
 #include "tempi/node.h"
 #include "tempi/sharedptr.h"
 #include "tempi/nodefactory.h"
@@ -42,13 +42,13 @@ class Graph
     public:
         typedef std::tr1::shared_ptr<Graph> ptr;
         /**
-         * Tuple containing the name of the source node, outlet number, name of sink node, inlet number.
+         * Tuple containing the name of the source node, outlet name, name of sink node, inlet name.
          */
-        typedef boost::tuple<std::string, unsigned int, std::string, unsigned int> Connection;
+        typedef boost::tuple<std::string, std::string, std::string, std::string> Connection;
         Graph(NodeFactory::ptr factory);
         Graph();
         bool addNode(const char *type, const char *name);
-        bool message(const char *node, unsigned int inlet, const Message &message);
+        bool message(const char *node, const char *inlet, const Message &message);
         /**
          * This method allows dynamic patching of a Graph.
          * Message not start with "__tempi__" are sent to receive symbols in the Graph. See the tempi::base::ReceiveNode class which allows to receive messages starting by a receive symbol. (selector)
@@ -57,12 +57,12 @@ class Graph
          * - ,ssisi: connect [from] [outlet] [to] [inlet]
          * - ,sss: addNode [type] [name]
          * - ,ss: deleteNode [name]
-         * - ,ss...: setNodeProperty [nodeName] [prop] ...
+         * - ,ss...: setNodeAttribute [nodeName] [prop] ...
          */
-        bool handleMessage(const Message &message);
-        bool connect(const char *from, unsigned int outlet, const char *to, unsigned int inlet);
-        bool disconnect(const char *from, unsigned int outlet, const char *to, unsigned int inlet);
-        bool isConnected(const char *from, unsigned int outlet, const char *to, unsigned int inlet);
+        //bool handleMessage(const Message &message);
+        bool connect(const char *from, const char *outlet, const char *to, const char *inlet);
+        bool disconnect(const char *from, const char *outlet, const char *to, const char *inlet);
+        bool isConnected(const char *from, const char *outlet, const char *to, const char *inlet);
         Node::ptr getNode(const char *name) const;
         std::vector<std::string> getNodeNames() const;
         bool hasNode(const char *name) const;
@@ -76,7 +76,7 @@ class Graph
          */
         std::vector<Connection> getAllConnections(); // TODO: const
         // TODO: store all connections in a vector
-        bool setNodeProperty(const char *nodeName, const char *propertyName, const Message &value);
+        bool setNodeAttribute(const char *nodeName, const char *attributeName, const Message &value);
     private:
         typedef std::map<std::string, Node::ptr> NodesMapType;
         typedef std::vector<Connection> ConnectionVec;
@@ -84,13 +84,14 @@ class Graph
         NodesMapType nodes_;
         void disconnectAllConnectedTo(const char *name);
         void disconnectAllConnectedFrom(const char *name);
-        std::vector<Connection> getAllConnectedTo(const char *name, unsigned int inlet); // TODO: const
-        std::vector<Connection> getAllConnectedFrom(const char *name, unsigned int inlet); // TODO: const
+        std::vector<Connection> getAllConnectedTo(const char *name, const char *inlet); // TODO: const
+        std::vector<Connection> getAllConnectedFrom(const char *name, const char *outlet); // TODO: const
         std::vector<Connection> getAllConnectedTo(const char *name); // TODO: const
         std::vector<Connection> getAllConnectedFrom(const char *name); // TODO: const
-        //void onInletTriggered(Source *source, boost::any data);
+        std::vector<Connection> connections_;
+        //void onInletTriggered(Outlet *source, boost::any data);
         // TODO: store connections to decrease complexity
-        bool handleTempiMessage(const Message &message);
+        //bool handleTempiMessage(const Message &message);
 };
 
 // not a good idea:
