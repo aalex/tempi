@@ -9,7 +9,8 @@ using namespace tempi;
 //static const bool VERBOSE = true;
 static const bool VERBOSE = false;
 
-static bool check_op(const char *op, float left, float right, float expected)
+template <typename T>
+static bool check_op(const char *op, float left, float right, T expected)
 {
     // Check that we can create the given node type.
     NodeFactory::ptr factory(new NodeFactory);
@@ -56,7 +57,11 @@ static bool check_op(const char *op, float left, float right, float expected)
     }
     graph.tick();
 
-    float result = graph.getNode("any0")->getAttribute("value")->getValue().getFloat(0);
+    T result;
+    if (typeid(T) == typeid(float))
+        result = graph.getNode("any0")->getAttribute("value")->getValue().getFloat(0);
+    else if (typeid(T) == typeid(bool))
+        result = graph.getNode("any0")->getAttribute("value")->getValue().getBoolean(0);
     bool ret = (result == expected);
     if (! ret)
     {
@@ -69,10 +74,10 @@ int main(int argc, char **argv)
 {
     std::string add = std::string("math.+");
     std::string divide= std::string("math./");
-    //std::string equal = std::string("math.==");
-    //std::string notequal = std::string("math.!=");
-    //std::string greater = std::string("math.>");
-    //std::string less = std::string("math.<");
+    std::string equal = std::string("math.==");
+    std::string notequal = std::string("math.!=");
+    std::string greater = std::string("math.>");
+    std::string less = std::string("math.<");
     std::string multiply = std::string("math.*");
     std::string subtract = std::string("math.-");
 
@@ -80,14 +85,14 @@ int main(int argc, char **argv)
         return 1;
     if (! check_op(divide.c_str(), 8.0f, 4.0f, 2.0f))
         return 1;
-    //if (! check_op(equal.c_str(), 1.0f, 1.0f, true))
-    //    return 1;
-    // if (! check_op(notequal.c_str(), 1.0f, 0.0f))
-    //     return 1;
-    // if (! check_op(greater.c_str(), 4.0f, 2.0f))
-    //     return 1;
-    // if (! check_op(less.c_str(), 1.0f, 2.0f))
-    //     return 1;
+    if (! check_op(equal.c_str(), 1.0f, 1.0f, true))
+        return 1;
+    if (! check_op(notequal.c_str(), 1.0f, 0.0f, true))
+        return 1;
+    if (! check_op(greater.c_str(), 4.0f, 2.0f, true))
+        return 1;
+    if (! check_op(less.c_str(), 1.0f, 2.0f, true))
+        return 1;
     if (! check_op(multiply.c_str(), 2.0f, 2.0f, 4.0f))
         return 1;
     if (! check_op(subtract.c_str(), 2.0f, 2.0f, 0.0f))
