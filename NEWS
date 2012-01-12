@@ -1,4 +1,4 @@
-Tempi 0.1.8 (201?-??-??)
+Tempi 0.1.8 (2012-01-12)
 ------------------------
 This release is a developer snapshot in the 0.1 series.
 
@@ -11,9 +11,6 @@ New features:
 * Add Message::prependMessage()
 * Remove node arguments: only attributes now.
 * Inlets and outlets are now named, not indexed.
-
-Bugs fixed:
-* (none)
 
 
 Tempi 0.1.6 (2011-12-19)
