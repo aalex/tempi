@@ -66,10 +66,15 @@ void DivNode::processMessage(const char *inlet, const Message &message)
         float left_operand = message.getFloat(0);
         float right_operand = getAttribute("operand")->getValue().getFloat(0);
 
-        Message result("f", left_operand / right_operand);
-        //std::cout << "DivNode::" << __FUNCTION__ << ": " << left_operand
-        //    << " + " << right_operand << " = " << result << std::endl;
-        output("0", result);
+        if (right_operand == 0.0f)
+            output("0", Message("f", 0.0f));
+        else
+        {
+            Message result("f", left_operand / right_operand);
+            //std::cout << "DivNode::" << __FUNCTION__ << ": " << left_operand
+            //    << " + " << right_operand << " = " << result << std::endl;
+            output("0", result);
+        }
     }
     else
         std::cerr << "DivNode::" << __FUNCTION__ << "(): Bad type for message " << message << std::endl;
