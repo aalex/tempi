@@ -76,6 +76,11 @@ bool Graph::message(const char *node, const char *inlet, const Message &message)
         std::cerr << "Graph::" << __FUNCTION__ << ": No such node: " << node << std::endl;
         return false;
     }
+    else if (inlet == 0)
+    {
+        std::cerr << "Graph::" << __FUNCTION__ << ": Null inlet string name ! " << std::endl;
+        return false;
+    }
     return nodePtr->message(inlet, message);
 }
 

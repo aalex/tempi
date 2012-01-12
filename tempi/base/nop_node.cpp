@@ -25,7 +25,8 @@ namespace tempi { namespace base {
 NopNode::NopNode() :
     Node()
 {
-    addOutlet("0");
+    addOutlet("0", "The default outlet.");
+    addInlet("0", "The default inlet.");
 }
 
 void NopNode::processMessage(const char *inlet, const Message &message)

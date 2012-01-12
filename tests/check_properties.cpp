@@ -15,6 +15,8 @@ class DummyNode : public Node
         {
             Message message_a = Message("ifs", 1, 3.14159f, "foo");
             addAttribute("hello", message_a);
+            addInlet("0");
+            addOutlet("0");
         }
         bool triggered_;
     private:
@@ -37,7 +39,7 @@ class DummyNode : public Node
 static bool check_properties()
 {
     DummyNode n;
-    n.init();
+    n.init(); // XXX Very important. Won't work if not called!!
 
     Message message_b;
     message_b.appendInt(2);
@@ -73,7 +75,7 @@ static bool check_properties()
 
     Message set_message = Message("ssifs", "set", "hello", 3, 9.124351f, "qweqweqweqw");
     n.triggered_ = false;
-    n.getInlet("0")->trigger(set_message);
+    n.getInlet("attributes")->trigger(set_message);
     if (VERBOSE)
     {
         std::cout << n.triggered_ << std::endl;

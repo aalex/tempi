@@ -330,7 +330,7 @@ bool Node::message(const char *inlet, const Message &message)
         Inlet *inletPtr = getInlet(inlet);
         if (inletPtr == 0)
         {
-            std::cerr << "Error: Node of type " << getTypeName() << "has no inlet named " << inlet << "!!" << std::endl;
+            std::cerr << "Error: Node::message(): Node of type " << getTypeName() << " has no inlet named " << inlet << "!!" << std::endl;
             // : Called " << __FUNCTION__ << "() on Node of type " << getTypeName() << " via inlet " << inlet << " but could not find such an inlet. Message is: " << message << std::endl;
             return false;
         }
