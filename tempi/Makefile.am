@@ -79,6 +79,7 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     sampler/score.cpp \
     sampler/track.cpp \
     scheduler.cpp \
+    serializer.cpp \
     inlet.cpp \
     outlet.cpp \
     table/table.cpp \
@@ -145,6 +146,7 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     sampler/score.h \
     sampler/track.h \
     scheduler.h \
+    serializer.h \
     sharedptr.h \
     inlet.h \
     outlet.h \
