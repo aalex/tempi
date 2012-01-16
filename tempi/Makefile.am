@@ -7,6 +7,9 @@ AM_CXXFLAGS = \
     -I$(top_srcdir)/tempi
 
 AM_LIBS = \
+	$(BOOST_FILESYSTEM_LIB) \
+	$(BOOST_LIBS)  \
+	$(BOOST_SYSTEM_LIB) \
     $(BOOST_LDFLAGS) \
     $(BOOST_THREAD_LIB) \
     $(LIBLO_LIBS) \

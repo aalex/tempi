@@ -25,36 +25,37 @@
 #define __TEMPI_SERIALIZER_H__
 
 #include "tempi/graph.h"
+#include <string>
 
 namespace tempi
 {
 
 namespace serializer
 {
-    const char * const ROOT_NODE = "tempi";
-    const char * const SOFTWARE_VERSION_ATTR = "version";
-    const char * const DEFAULT_FILE_NAME = "project.xml";
 
-    const char * const GRAPHS_NODE = "graphs";
-    const char * const GRAPH_NODE = "graph";
-    const char * const GRAPH_ID_ATTR = "id";
+const char * const ROOT_NODE = "tempi";
+const char * const SOFTWARE_VERSION_ATTR = "version";
+const char * const DEFAULT_FILE_NAME = "project.xml";
 
-    const char * const NODES_NODE = "nodes";
-    const char * const NODE_NODE = "node";
-    const char * const NODE_ID_PROPERTY = "id";
-    const char * const NODE_CLASS_PROPERTY = "class";
+const char * const GRAPHS_NODE = "graphs";
+const char * const GRAPH_NODE = "graph";
+const char * const GRAPH_ID_ATTR = "id";
 
-    const char * const ATTRIBUTES_NODE = "attributes";
-    const char * const ATTRIBUTE_NODE = "attribute";
-    const char * const ATTRIBUTE_NAME_PROPERTY = "name";
+const char * const NODES_NODE = "nodes";
+const char * const NODE_NODE = "node";
+const char * const NODE_ID_PROPERTY = "id";
+const char * const NODE_CLASS_PROPERTY = "class";
 
-    const char * const CONNECTIONS_NODE = "connections";
-    const char * const CONNECTION_NODE = "connection";
-    const char * const CONNECTION_FROM_PROPERTY = "from";
-    const char * const CONNECTION_TO_PROPERTY = "to";
-    const char * const CONNECTION_OUTLET_PROPERTY = "outlet";
-    const char * const CONNECTION_INLET_PROPERTY = "inlet";
-}
+//const char * const ATTRIBUTES_NODE = "attributes";
+const char * const ATTRIBUTE_NODE = "attribute";
+const char * const ATTRIBUTE_NAME_PROPERTY = "name";
+
+const char * const CONNECTIONS_NODE = "connections";
+const char * const CONNECTION_NODE = "connection";
+const char * const CONNECTION_FROM_PROPERTY = "from";
+const char * const CONNECTION_TO_PROPERTY = "to";
+const char * const CONNECTION_OUTLET_PROPERTY = "outlet";
+const char * const CONNECTION_INLET_PROPERTY = "inlet";
 
 /**
  * Saves and loads graphs and other stuff.
@@ -75,6 +76,7 @@ class Serializer
         static bool createDirectory(const char *dirname);
 };
 
+} // end of namespace
 } // end of namespace
 
 #endif // ifndef
