@@ -50,7 +50,8 @@ xmlNode *seek_child_named(xmlNode *parent, const std::string &name);
 
 bool node_name_is(xmlNode *node, const std::string &name)
 {
-    return (node->type == XML_ELEMENT_NODE && node->name && (xmlStrcmp(node->name, XMLSTR name.c_str()) == 0));
+    return (node->type == XML_ELEMENT_NODE && node->name && 
+        (xmlStrcmp(node->name, XMLSTR name.c_str()) == 0));
 }
 
 /** Returns a pointer to the XML child with the given name
@@ -84,7 +85,7 @@ bool Serializer::save(Graph &graph, const char *filename)
     xmlDocSetRootElement(doc, root_node);
     xmlNewProp(root_node, XMLSTR SOFTWARE_VERSION_ATTR, XMLSTR PACKAGE_VERSION);
     // "graphs" node
-    xmlNodePtr graphs_node = xmlNewChild(root_node, NULL, XMLSTR GRAPHS_NODE, NULL); // No text contents
+    xmlNodePtr graphs_node = xmlNewChild(root_node, NULL, XMLSTR GRAPHS_NODE, NULL);
     // "graph" node:
     xmlNodePtr graph_node = xmlNewChild(graphs_node, NULL, XMLSTR GRAPH_NODE, NULL);
     // TODO: add Graph name attribute
@@ -98,56 +99,71 @@ bool Serializer::save(Graph &graph, const char *filename)
         xmlNewProp(node_node, XMLSTR NODE_ID_PROPERTY, XMLSTR (*iter).c_str());
         Node::ptr node = graph.getNode((*iter).c_str());
         // node type attribute
-        xmlNewProp(node_node, XMLSTR NODE_CLASS_PROPERTY, XMLSTR node->getTypeName().c_str());
+        xmlNewProp(node_node, XMLSTR NODE_CLASS_PROPERTY, 
+            XMLSTR node->getTypeName().c_str());
         // node attributes nodes
         std::vector<std::string> attribute_names = node->getAttributesNames();
         std::vector<std::string>::const_iterator iter2;
         for (iter2 = attribute_names.begin(); iter2 != attribute_names.end(); ++iter2)
         {
-            xmlNodePtr attr_node = xmlNewChild(node_node, NULL, XMLSTR ATTRIBUTE_NODE, NULL);
-            xmlNewProp(attr_node, XMLSTR ATTRIBUTE_NAME_PROPERTY, XMLSTR (*iter2).c_str());
+            xmlNodePtr attr_node = xmlNewChild(node_node, NULL, 
+                XMLSTR ATTRIBUTE_NODE, NULL);
+            xmlNewProp(attr_node, XMLSTR ATTRIBUTE_NAME_PROPERTY, 
+                XMLSTR (*iter2).c_str());
             Message attr_value = node->getAttributeValue((*iter2).c_str());
             for (unsigned int i = 0; i < attr_value.getSize(); ++i)
             {
                 ArgumentType atom_type_char;
                 attr_value.getArgumentType(i, atom_type_char);
-                std::string atom_type = boost::lexical_cast<std::string>((char) atom_type_char);
+                std::string atom_type = boost::lexical_cast<std::string>(
+                    (char) atom_type_char);
                 std::string atom_value;
                 switch (atom_type_char)
                 {
                     case BOOLEAN:
-                        atom_value = boost::lexical_cast<std::string>(attr_value.getBoolean(i));
+                        atom_value = boost::lexical_cast<std::string>(
+                            attr_value.getBoolean(i));
                         break;
                     case CHAR:
-                        atom_value = boost::lexical_cast<std::string>(attr_value.getChar(i));
+                        atom_value = boost::lexical_cast<std::string>(
+                            attr_value.getChar(i));
                         break;
                     case UNSIGNED_CHAR:
-                        atom_value = boost::lexical_cast<std::string>(attr_value.getUnsignedChar(i));
+                        atom_value = boost::lexical_cast<std::string>(
+                            attr_value.getUnsignedChar(i));
                         break;
                     case DOUBLE:
-                        atom_value = boost::lexical_cast<std::string>(attr_value.getDouble(i));
+                        atom_value = boost::lexical_cast<std::string>(
+                            attr_value.getDouble(i));
                         break;
                     case FLOAT:
-                        atom_value = boost::lexical_cast<std::string>(attr_value.getFloat(i));
+                        atom_value = boost::lexical_cast<std::string>(
+                            attr_value.getFloat(i));
                         break;
                     case INT:
-                        atom_value = boost::lexical_cast<std::string>(attr_value.getInt(i));
+                        atom_value = boost::lexical_cast<std::string>(
+                            attr_value.getInt(i));
                         break;
                     case LONG:
-                        atom_value = boost::lexical_cast<std::string>(attr_value.getLong(i));
+                        atom_value = boost::lexical_cast<std::string>(
+                            attr_value.getLong(i));
                         break;
                     case STRING:
                         atom_value = attr_value.getString(i);
                         break;
                     case POINTER:
-                        atom_value = boost::lexical_cast<std::string>(attr_value.getPointer(i));
+                        atom_value = boost::lexical_cast<std::string>(
+                            attr_value.getPointer(i));
                         break;
                     default:
-                        std::cerr << __FILE__ << " " << __FUNCTION__ <<  ": Unsupported type tag: " << atom_type_char << std::endl;
+                        std::cerr << __FILE__ << " " << __FUNCTION__ <<
+                            ": Unsupported type tag: " << atom_type_char <<
+                            std::endl;
                         atom_value = "UNSUPPORTED";
                         break;
                 } // end of switch/case
-                xmlNodePtr atom_node = xmlNewChild(attr_node, NULL, XMLSTR atom_type.c_str(), XMLSTR atom_value.c_str());
+                xmlNodePtr atom_node = xmlNewChild(attr_node, NULL, 
+                    XMLSTR atom_type.c_str(), XMLSTR atom_value.c_str());
             } // for atoms
         } // for attributes
     } // for nodes
@@ -157,7 +173,8 @@ bool Serializer::save(Graph &graph, const char *filename)
     std::vector<Graph::Connection>::const_iterator iter4;
     for (iter4 = connections.begin(); iter4 != connections.end(); ++iter4)
     {
-        xmlNodePtr connection_node = xmlNewChild(graph_node, NULL, XMLSTR CONNECTION_NODE, NULL);
+        xmlNodePtr connection_node = xmlNewChild(graph_node, NULL,
+            XMLSTR CONNECTION_NODE, NULL);
 
         Graph::Connection conn = (*iter4);
         std::string from = boost::lexical_cast<std::string>(conn.get<0>());
@@ -165,17 +182,22 @@ bool Serializer::save(Graph &graph, const char *filename)
         std::string to = boost::lexical_cast<std::string>(conn.get<2>());
         std::string inlet = boost::lexical_cast<std::string>(conn.get<3>());
 
-        xmlNewProp(connection_node, XMLSTR CONNECTION_FROM_PROPERTY, XMLSTR from.c_str());
-        xmlNewProp(connection_node, XMLSTR CONNECTION_OUTLET_PROPERTY, XMLSTR outlet.c_str());
-        xmlNewProp(connection_node, XMLSTR CONNECTION_TO_PROPERTY, XMLSTR to.c_str());
-        xmlNewProp(connection_node, XMLSTR CONNECTION_INLET_PROPERTY, XMLSTR inlet.c_str());
+        xmlNewProp(connection_node, XMLSTR CONNECTION_FROM_PROPERTY,
+            XMLSTR from.c_str());
+        xmlNewProp(connection_node, XMLSTR CONNECTION_OUTLET_PROPERTY,
+            XMLSTR outlet.c_str());
+        xmlNewProp(connection_node, XMLSTR CONNECTION_TO_PROPERTY,
+            XMLSTR to.c_str());
+        xmlNewProp(connection_node, XMLSTR CONNECTION_INLET_PROPERTY,
+            XMLSTR inlet.c_str());
     }
 
     // Save document to file
     xmlSaveFormatFileEnc(filename, doc, "UTF-8", 1);
     //if (config_->get_verbose())
     std::cout << "Saved the graph to " << filename << std::endl;
-    // Free the document + global variables that may have been allocated by the parser.
+    // Free the document + global variables that may have been
+    // allocated by the parser.
     xmlFreeDoc(doc);
     xmlCleanupParser();
     return true;
