@@ -130,14 +130,14 @@ bool Graph::connect(const char *from, const char *outlet, const char *to, const 
 
 bool Graph::isConnected(const char *from, const char *outlet, const char *to, const char *inlet)
 {
-    if (hasNode(from))
+    if (! hasNode(from))
     {
-        std::cerr << "Graph::" << __FUNCTION__ << ": Cannot find node " << from << "." << std::endl;
+        std::cerr << "Graph::" << __FUNCTION__ << ": Cannot find node \"" << from << "\"." << std::endl;
         return false;
     }
-    if (hasNode(to))
+    if (! hasNode(to))
     {
-        std::cerr << "Graph::" << __FUNCTION__ << ": Cannot find node " << to << "." << std::endl;
+        std::cerr << "Graph::" << __FUNCTION__ << ": Cannot find node \"" << to << "\"." << std::endl;
         return false;
     }
     std::vector<Connection>::const_iterator iter;
