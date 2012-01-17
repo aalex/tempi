@@ -74,7 +74,7 @@ class Graph
         /**
          * Returns all connections in this graph.
          */
-        std::vector<Connection> getAllConnections(); // TODO: const
+        const std::vector<Connection> getAllConnections() const; // TODO: const
         // TODO: store all connections in a vector
         bool setNodeAttribute(const char *nodeName, const char *attributeName, const Message &value);
     private:
