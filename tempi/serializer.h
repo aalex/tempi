@@ -64,17 +64,30 @@ class Serializer
 {
     public:
         Serializer();
-        /** Not implemented! */
+        /** 
+         * Saves a graph to an XML file.
+         * @return success
+         */
         static bool save(Graph &graph, const char *filename);
-        /** Not implemented! */
+        /** 
+         * Loads a graph from an XML file.
+         * @return success
+         */
         static bool load(Graph &graph, const char *filename);
-        /** Checks if a file exists. */
+        /**
+         * Checks if a file exists.
+         * @return success
+         */
         static bool fileExists(const char *filename);
-        /** Not implemented! */
-        static bool isADirectory(const char *dirname);
-        /** Creates a directory */
+        /**
+         * Creates a directory, if it does not exist.
+         * @return success
+         */
         static bool createDirectory(const char *dirname);
 };
+
+        // TODO: isADirectory
+        // static bool isADirectory(const char *dirname);
 
 } // end of namespace
 } // end of namespace

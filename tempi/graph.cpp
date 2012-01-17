@@ -90,13 +90,13 @@ bool Graph::connect(const char *from, const char *outlet, const char *to, const 
     if (fromNode.get() == 0)
     {
 
-        std::cerr << "Graph::" << __FUNCTION__ << ": Cannot find node " << from << "." << std::endl;
+        std::cerr << "Graph::" << __FUNCTION__ << ": Cannot find node \"" << from << "\"." << std::endl;
         return false;
     }
     Node::ptr toNode = getNode(to);
     if (toNode.get() == 0)
     {
-        std::cerr << "Graph::" << __FUNCTION__ << ": Cannot find node " << to << "." << std::endl;
+        std::cerr << "Graph::" << __FUNCTION__ << ": Cannot find node \"" << to << "\"." << std::endl;
         return false;
     }
 

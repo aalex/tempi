@@ -205,7 +205,213 @@ bool Serializer::save(Graph &graph, const char *filename)
 
 bool Serializer::load(Graph &graph, const char *filename)
 {
-    return false; // not implemented
+    bool verbose = true;
+    // parse the file and get the DOM tree
+    xmlDoc *doc = xmlReadFile(filename, NULL, 0);
+    if (doc == NULL)
+    {
+        printf("error: could not parse file %s\n", filename);
+        return false;
+    }
+    else if (verbose)
+    {
+        std::cout << "Loading project file " << filename << std::endl;
+    }
+    xmlNode *root = xmlDocGetRootElement(doc);
+
+    // GRAPHS:
+    xmlNode *graphs_node = seek_child_named(root, GRAPHS_NODE);
+    if (graphs_node != NULL)
+    {
+        if (verbose)
+            std::cout << "graphs\n";
+        for (xmlNode *graph_node = graphs_node->children;
+            graph_node;
+            graph_node = graph_node->next)
+        {
+            // is a graph:
+            if (node_name_is(graph_node, GRAPH_NODE))
+            {
+                if (verbose)
+                    std::cout << "* graph\n";
+                // NODES:
+                xmlNode *nodes_node = seek_child_named(graph_node, NODES_NODE);
+                if (nodes_node != NULL)
+                {
+                    // for each node:
+                    for (xmlNode *node_node = nodes_node->children;
+                        node_node;
+                        node_node = node_node->next)
+                    {
+                        // is a node:
+                        if (node_name_is(node_node, NODE_NODE))
+                        {
+                            xmlChar *node_type = xmlGetProp(node_node, 
+                                XMLSTR NODE_CLASS_PROPERTY);
+                            xmlChar *node_name = xmlGetProp(node_node, 
+                                XMLSTR NODE_ID_PROPERTY);
+                            if (verbose)
+                                std::cout << "  * node " << node_name << " of type " << node_type << std::endl;
+                            if (node_type != NULL && node_name != NULL)
+                            {
+                                graph.addNode((char *) node_type, (char *) node_name);
+                                // TODO: load attributes
+                                // ATTRIBUTES:
+                                for (xmlNode *attribute_node = node_node->children;
+                                    attribute_node;
+                                    attribute_node = attribute_node->next)
+                                {
+                                    Message attr_value;
+                                    // is an attribute:
+                                    if (node_name_is(attribute_node, ATTRIBUTE_NODE))
+                                    {
+                                        xmlChar *attr_name = xmlGetProp(attribute_node,
+                                            XMLSTR ATTRIBUTE_NAME_PROPERTY);
+                                        std::cout << "   * attr " << attr_name << std::endl;
+                                        // for each atom:
+                                        for (xmlNode *atom_node =
+                                            attribute_node->children;
+                                            atom_node;
+                                            atom_node = atom_node->next)
+                                        {
+                                            // get atom type:
+                                            ArgumentType atom_typetag = static_cast<ArgumentType>('\0');
+                                            xmlChar *tmp_atom_value = xmlNodeGetContent(
+                                                atom_node);
+                                            std::string atom_value = std::string((char *) tmp_atom_value);
+                                            xmlFree(tmp_atom_value);
+                                            if (atom_node->type == XML_ELEMENT_NODE
+                                                && atom_node->name)
+                                            {
+                                                std::string tmp_typetag =
+                                                    std::string(
+                                                        (char *) atom_node->name);
+                                                    if (tmp_typetag.size() == 1)
+                                                    {
+                                                        atom_typetag = static_cast<ArgumentType>(tmp_typetag[0]);
+                                                    } // size
+                                                    else
+                                                    {
+                                                        std::cerr << "Atom typetags should be only one char. Got " << tmp_typetag << std::endl;
+                                                    }
+            // begin odd indentation block:
+            // begin odd indentation block:
+            // begin odd indentation block:
+            // begin odd indentation block:
+            try
+            {
+                switch (atom_typetag)
+                {
+                    case BOOLEAN:
+                        attr_value.appendBoolean(
+                            boost::lexical_cast<bool>(atom_value));
+                        break;
+                    case CHAR:
+                        attr_value.appendChar(
+                            boost::lexical_cast<char>(atom_value));
+                        break;
+                    case UNSIGNED_CHAR:
+                        attr_value.appendUnsignedChar(
+                            boost::lexical_cast<unsigned char>(atom_value));
+                        break;
+                    case DOUBLE:
+                        attr_value.appendDouble(
+                            boost::lexical_cast<double>(atom_value));
+                        break;
+                    case FLOAT:
+                        attr_value.appendFloat(
+                            boost::lexical_cast<float>(atom_value));
+                        break;
+                    case INT:
+                        attr_value.appendInt(
+                            boost::lexical_cast<int>(atom_value));
+                        break;
+                    case LONG:
+                        attr_value.appendLong(
+                            boost::lexical_cast<unsigned long long>(atom_value));
+                        break;
+                    case STRING:
+                        attr_value.appendString(atom_value.c_str());
+                        break;
+                    case POINTER:
+                    default:
+                        std::cerr << "ERROR: " << __FILE__ << ":" << __LINE__ << " " << __FUNCTION__ <<
+                            ": Unsupported type tag: " << (char) atom_typetag <<
+                            std::endl;
+                        break;
+                } // switch typetag
+                if (verbose)
+                    std::cout << "    * atom " << (char) atom_typetag << ":" <<  atom_value  << std::endl;
+            } catch (const boost::bad_lexical_cast &e)
+            {
+                std::cerr << __FILE__ << " " << __FUNCTION__ << e.what() << std::endl;
+            }
+            // end of odd indentation block
+            // end of odd indentation block
+            // end of odd indentation block
+            // end of odd indentation block
+                                            } // if ok
+                                        } // for each atom
+                                        xmlFree(attr_name);
+
+                                    } // is an attribute
+                                } // each child of node
+                            }
+                            xmlFree(node_type);
+                            xmlFree(node_name);
+                        } // is a node
+                    } // for each node
+                } // is a set of nodes
+
+                graph.tick(); // FIXME this is annoying
+
+                if (verbose)
+                {
+                    std::cout << "The Graph is now:\n";
+                    std::cout << graph << std::endl;
+                }
+
+                // CONNECTIONS:
+                xmlNode *connections_node = seek_child_named(root, CONNECTIONS_NODE);
+                if (connections_node != NULL)
+                {
+                    // for each connection:
+                    for (xmlNode *connection_node = connections_node->children;
+                        connection_node; connection_node = connection_node->next)
+                    {
+                        // is a connection:
+                        if (node_name_is(connection_node, CONNECTION_NODE))
+                        {
+                            xmlChar *from = xmlGetProp(connection_node,
+                                XMLSTR CONNECTION_FROM_PROPERTY);
+                            xmlChar *outlet = xmlGetProp(connection_node,
+                                XMLSTR CONNECTION_OUTLET_PROPERTY);
+                            xmlChar *to = xmlGetProp(connection_node,
+                                XMLSTR CONNECTION_TO_PROPERTY);
+                            xmlChar *inlet = xmlGetProp(connection_node,
+                                XMLSTR CONNECTION_INLET_PROPERTY);
+                            if (from != NULL && outlet != NULL
+                                && to != NULL && inlet != NULL)
+                            {
+                                if (verbose)
+                                    std::cout << "Connect " << from << ":" << outlet << " -> " << to << ":" << inlet << std::endl;
+                                graph.connect((char *) from, (char *) outlet, (char *) to, (char *) inlet);
+                            }
+                            xmlFree(from);
+                            xmlFree(outlet);
+                            xmlFree(to);
+                            xmlFree(inlet);
+                        } // is a connection
+                    } // for each connection
+                } // is a set of connections
+            } // is a graph
+        } // for each graph
+    } // is a set of graphs
+
+    // Free the document + global variables that may have been allocated by the parser.
+    xmlFreeDoc(doc);
+    xmlCleanupParser();
+    return true;
 }
 
 bool Serializer::fileExists(const char *filename)
@@ -215,10 +421,10 @@ bool Serializer::fileExists(const char *filename)
     return fs::exists(path);
 }
 
-bool Serializer::isADirectory(const char *dirname)
-{
-    return false; // not implemented
-}
+// bool Serializer::isADirectory(const char *dirname)
+// {
+//     return false; // not implemented
+// }
 
 bool Serializer::createDirectory(const char *dirname)
 {

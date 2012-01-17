@@ -12,21 +12,43 @@ static bool check_save()
 {
     NodeFactory::ptr factory = NodeFactory::ptr(new NodeFactory);
     internals::loadInternals(factory);
-    Graph graph(factory);
-    graph.addNode("base.metro", "metro0");
-    graph.addNode("base.print", "print0");
-    graph.tick();
+    Graph::ptr graph(new Graph(factory));
+    graph->addNode("base.metro", "metro0");
+    graph->addNode("base.print", "print0");
+    graph->tick();
 
-    graph.connect("metro0", "0", "print0", "0");
-    graph.message("print0", "attributes", Message("ssb", "set", "enabled", false));
+    graph->connect("metro0", "0", "print0", "0");
+    graph->message("print0", "attributes", Message("ssb", "set", "enabled", false));
+    graph->message("metro0", "attributes", Message("ssi", "set", "interval", 1000));
 
-    graph.tick();
+    graph->tick();
 
     std::string file_name("/tmp/tempi-example-graph.xml");
     if (VERBOSE)
         std::cout << "Saving to " << file_name << std::endl;
     serializer::Serializer saver;
-    saver.save(graph, file_name.c_str());
+    saver.save(*graph, file_name.c_str());
+
+    graph.reset(new Graph(factory));
+    saver.load(*graph, file_name.c_str());
+    if (! graph->hasNode("metro0"))
+    {
+        std::cout << "Could not load metro0\n";
+        return false;
+    }
+
+    if (! graph->isConnected("metro0", "0", "print0", "0"))
+    {
+        std::cout << "Could not load connection between metro0 and print0\n";
+        return false;
+    }
+
+    Node::ptr metro0 = graph->getNode("metro0");
+    if (metro0->getAttributeValue("interval").getInt(0) != 1000)
+    {
+        std::cout << "metro0's interval should be 1000\n";
+        return false;
+    }
     return true;
 }
 
