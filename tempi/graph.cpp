@@ -90,13 +90,13 @@ bool Graph::connect(const char *from, const char *outlet, const char *to, const 
     if (fromNode.get() == 0)
     {
 
-        std::cerr << "Graph::" << __FUNCTION__ << ": Cannot find node " << from << "." << std::endl;
+        std::cerr << "Graph::" << __FUNCTION__ << ": Cannot find node \"" << from << "\"." << std::endl;
         return false;
     }
     Node::ptr toNode = getNode(to);
     if (toNode.get() == 0)
     {
-        std::cerr << "Graph::" << __FUNCTION__ << ": Cannot find node " << to << "." << std::endl;
+        std::cerr << "Graph::" << __FUNCTION__ << ": Cannot find node \"" << to << "\"." << std::endl;
         return false;
     }
 
@@ -125,19 +125,21 @@ bool Graph::connect(const char *from, const char *outlet, const char *to, const 
         return false;
     }
     connections_.push_back(Connection(std::string(from), std::string(outlet), std::string(to), std::string(inlet)));
+    //std::cout << "Graph." << __FUNCTION__ << "(): Connect "
+    //    << from << ":" << outlet << " -> " << to << ":" << inlet << std::endl;
     return true;
 }
 
 bool Graph::isConnected(const char *from, const char *outlet, const char *to, const char *inlet)
 {
-    if (hasNode(from))
+    if (! hasNode(from))
     {
-        std::cerr << "Graph::" << __FUNCTION__ << ": Cannot find node " << from << "." << std::endl;
+        std::cerr << "Graph::" << __FUNCTION__ << ": Cannot find node \"" << from << "\"." << std::endl;
         return false;
     }
-    if (hasNode(to))
+    if (! hasNode(to))
     {
-        std::cerr << "Graph::" << __FUNCTION__ << ": Cannot find node " << to << "." << std::endl;
+        std::cerr << "Graph::" << __FUNCTION__ << ": Cannot find node \"" << to << "\"." << std::endl;
         return false;
     }
     std::vector<Connection>::const_iterator iter;
@@ -284,7 +286,7 @@ void Graph::disconnectAllConnectedFrom(const char *name)
     }
 }
 
-std::vector<Graph::Connection> Graph::getAllConnections()
+const std::vector<Graph::Connection> Graph::getAllConnections() const
 {
     return connections_;
 }
@@ -425,10 +427,24 @@ std::vector<std::string> Graph::getNodeNames() const
 std::ostream &operator<<(std::ostream &os, const Graph &graph)
 {
     os << "Graph:" << std::endl;
+    os << " Nodes:" << std::endl;
     std::vector<std::string> nodes = graph.getNodeNames();
     std::vector<std::string>::const_iterator iter;
     for (iter = nodes.begin(); iter != nodes.end(); ++iter)
         os << " * " << (*iter) << std::endl;
+
+    std::vector<Graph::Connection> connections = graph.getAllConnections();
+    std::vector<Graph::Connection>::const_iterator iter2;
+    if (connections.size() == 0)
+        os << " No Connections." << std::endl;
+    else
+        os << " Connections:" << std::endl;
+    for (iter2 = connections.begin(); iter2 != connections.end(); ++iter2)
+    {
+        Graph::Connection conn = (*iter2);
+        os << " * " << conn.get<0>() << ":" << conn.get<1>() <<
+            " ->" << conn.get<2>() << ":" << conn.get<3>() << std::endl;
+    }
     return os;
 }
 

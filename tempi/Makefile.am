@@ -7,6 +7,9 @@ AM_CXXFLAGS = \
     -I$(top_srcdir)/tempi
 
 AM_LIBS = \
+	$(BOOST_FILESYSTEM_LIB) \
+	$(BOOST_LIBS)  \
+	$(BOOST_SYSTEM_LIB) \
     $(BOOST_LDFLAGS) \
     $(BOOST_THREAD_LIB) \
     $(LIBLO_LIBS) \
@@ -79,6 +82,7 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     sampler/score.cpp \
     sampler/track.cpp \
     scheduler.cpp \
+    serializer.cpp \
     inlet.cpp \
     outlet.cpp \
     table/table.cpp \
@@ -145,6 +149,7 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     sampler/score.h \
     sampler/track.h \
     scheduler.h \
+    serializer.h \
     sharedptr.h \
     inlet.h \
     outlet.h \

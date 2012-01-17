@@ -154,7 +154,6 @@ if test "x${ax_cv_boost_signals}" = "xno" ; then
 	AC_MSG_ERROR([missing package: libboost-signals-dev])
 fi
 
-#Set LIBLO with pkg-config
 PKG_CHECK_MODULES(LIBLO, liblo, have_liblo=true, have_liblo=false)
 if test "x${have_liblo}" = "xfalse" ; then
     AC_MSG_ERROR([Missing liblo])
@@ -165,10 +164,10 @@ if test "x${ax_cv_boost_program_options}" = "xno" ; then
 	AC_MSG_ERROR([missing package: libboost-program-options-dev])
 fi
 
-dnl AX_BOOST_FILESYSTEM
-dnl if test "x${ax_cv_boost_filesystem}" = "xno" ; then
-dnl 	AC_MSG_ERROR([missing package: libboost-filesystem-dev])
-dnl fi
+AX_BOOST_FILESYSTEM
+if test "x${ax_cv_boost_filesystem}" = "xno" ; then
+	AC_MSG_ERROR([missing package: libboost-filesystem-dev])
+fi
 
 AX_BOOST_THREAD
 if test "x${ax_cv_boost_thread}" = "xno" ; then
@@ -180,10 +179,11 @@ dnl if test "x${ax_cv_boost_date_time}" = "xno" ; then
 dnl 	AC_MSG_ERROR([missing package: libboost-date-time-dev])
 dnl fi
 dnl 
-dnl AX_BOOST_SYSTEM
-dnl if test "x${ax_cv_boost_system}" = "xno" ; then
-dnl 	AC_MSG_ERROR([missing package: libboost-system-dev])
-dnl fi
+
+AX_BOOST_SYSTEM
+if test "x${ax_cv_boost_system}" = "xno" ; then
+	AC_MSG_ERROR([missing package: libboost-system-dev])
+fi
 
 CFLAGS+=" -Wall -Wextra -Wfatal-errors -Werror "
 
@@ -197,8 +197,6 @@ if test $cross_compiling = no; then
 else
     HELP2MAN=:
 fi
-
-dnl TODO: check for Boost
 
 # Override the template file name of the generated .pc file, so that there
 # is no need to rename the template file when the API version changes.

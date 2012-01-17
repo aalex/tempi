@@ -43,6 +43,7 @@ namespace tempi
  */
 typedef enum
 {
+    INVALID = 0,
     BOOLEAN = 'b',
     CHAR = 'c',
     UNSIGNED_CHAR = 'C',
