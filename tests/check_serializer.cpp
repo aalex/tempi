@@ -31,6 +31,7 @@ static bool check_save()
 
     graph.reset(new Graph(factory));
     saver.load(*graph, file_name.c_str());
+    graph->tick(); // FIXME
     if (! graph->hasNode("metro0"))
     {
         std::cout << "Could not load metro0\n";
@@ -39,7 +40,7 @@ static bool check_save()
 
     if (! graph->isConnected("metro0", "0", "print0", "0"))
     {
-        std::cout << "Could not load connection between metro0 and print0\n";
+        std::cout << "Could not load connection between metro0:0 and print0:0\n";
         return false;
     }
 
