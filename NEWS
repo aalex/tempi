@@ -3,7 +3,7 @@ Tempi 0.1.10 (2012-??-??)
 This release is a developer snapshot in the 0.1 series.
 
 New features:
-* (none)
+* Save and load Graph to and from XML.
 
 Bugs fixed:
 * (none)
