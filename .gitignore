@@ -52,6 +52,9 @@ prototypes/midilooper-gui/run
 prototypes/midilooper-gui/signals_to_messages
 prototypes/modules/main
 prototypes/nodefactory
+prototypes/oscblob/blobreceiver
+prototypes/oscblob/blobsender
+prototypes/oscblob/check_array
 prototypes/phoenix/findif
 prototypes/tuples
 prototypes/va_list/var_types
@@ -92,4 +95,5 @@ tests/check_version
 !prototypes/midi/Makefile
 !prototypes/midilooper-gui/Makefile
 !prototypes/modules/Makefile
+!prototypes/oscblob/Makefile
 
