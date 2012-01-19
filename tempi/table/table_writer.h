@@ -1,4 +1,4 @@
-o/*
+/*
  * Copyright (C) 2011 Alexandre Quessy
  * Copyright (C) 2011 Michal Seta
  * Copyright (C) 2012 Nicolas Bouillot
