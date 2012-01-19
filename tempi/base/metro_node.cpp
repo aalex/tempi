@@ -20,7 +20,8 @@
 
 #include "tempi/base/metro_node.h"
 
-namespace tempi { namespace base {
+namespace tempi {
+namespace base {
 
 MetroNode::MetroNode() :
     Node()
@@ -47,7 +48,6 @@ void MetroNode::onAttributeChanged(const char *name, const Message &value)
             startMetro(); // we restart it anyways
     }
 }
-
 
 void MetroNode::startMetro()
 {

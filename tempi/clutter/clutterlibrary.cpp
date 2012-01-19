@@ -18,39 +18,19 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * @file
- * The TableWriter class.
- */
-#ifndef __TEMPI_TABLE_WRITER_H__
-#define __TEMPI_TABLE_WRITER_H__
-
-#include "tempi/table/table.h"
-#include "tempi/message.h"
+#include "tempi/clutter/clutterlibrary.h"
+#include "tempi/clutter/clutterstagenode.h"
+#include "tempi/utils.h"
 
 namespace tempi {
-namespace table {
+namespace clutter {
 
-/**
- * A TableWriter writes events to a Table.
- */
-class TableWriter
+void ClutterLibrary::load(NodeFactory &factory, const char *prefix) const
 {
-    public:
-        TableWriter(Table *track);
-        void setTable(Table *track);
-        Table *getTable();
-        /**
-         * Adds an event to the table.
-         */
-        bool write(unsigned int index, const Message &message);
-        bool append(const Message &message);
-    private:
-        Table *table_;
-};
+    using utils::concatenate;
+    factory.registerTypeT<TempiClutterStageNode>(concatenate(prefix, "stage").c_str());
+}
 
 } // end of namespace
 } // end of namespace
-
-#endif // ifndef
 

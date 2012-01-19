@@ -20,33 +20,27 @@
 
 /**
  * @file
- * The TableWriter class.
+ * The ClutterLibrary class.
  */
-#ifndef __TEMPI_TABLE_WRITER_H__
-#define __TEMPI_TABLE_WRITER_H__
+#ifndef __TEMPI_CLUTTERLIBRARY_H__
+#define __TEMPI_CLUTTERLIBRARY_H__
 
-#include "tempi/table/table.h"
-#include "tempi/message.h"
+#include "tempi/library.h"
 
-namespace tempi {
-namespace table {
+namespace tempi { 
 
 /**
- * A TableWriter writes events to a Table.
+ * @namespace tempi::clutter
+ *
+ * Clutter Tempi node types.
  */
-class TableWriter
+
+namespace clutter {
+
+class ClutterLibrary : public Library
 {
     public:
-        TableWriter(Table *track);
-        void setTable(Table *track);
-        Table *getTable();
-        /**
-         * Adds an event to the table.
-         */
-        bool write(unsigned int index, const Message &message);
-        bool append(const Message &message);
-    private:
-        Table *table_;
+        virtual void load(NodeFactory &factory, const char *prefix) const;
 };
 
 } // end of namespace
