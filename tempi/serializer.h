@@ -26,6 +26,7 @@
 #define __TEMPI_SERIALIZER_H__
 
 #include "tempi/graph.h"
+#include "tempi/sharedptr.h"
 #include <string>
 
 namespace tempi
@@ -64,6 +65,7 @@ const char * const CONNECTION_INLET_PROPERTY = "inlet";
 class Serializer
 {
     public:
+        typedef std::tr1::shared_ptr<Serializer> ptr;
         Serializer();
         /** 
          * Saves a graph to an XML file.

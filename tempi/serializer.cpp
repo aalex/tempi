@@ -287,8 +287,13 @@ bool Serializer::load(Graph &graph, const char *filename)
                                             switch (atom_typetag)
                                             {
                                                 case BOOLEAN:
-                                                    attr_value.appendBoolean(
-                                                        boost::lexical_cast<bool>(atom_value));
+                                                    if (atom_value == "0")
+                                                        attr_value.appendBoolean(false);
+                                                    else
+                                                        attr_value.appendBoolean(true);
+                                                    //std::cout << "got bool " << attr_value << "\n";
+                                                    //attr_value.appendBoolean(
+                                                    //    boost::lexical_cast<bool>(atom_value));
                                                     break;
                                                 case CHAR:
                                                     attr_value.appendChar(
@@ -335,6 +340,7 @@ bool Serializer::load(Graph &graph, const char *filename)
                                         }
                                     } // is atom node
                                 } // for each atom
+                                graph.setNodeAttribute((char *) node_name, (char *) attr_name, attr_value);
                                 xmlFree(attr_name);
                             } // is an attribute
                         } // each child of node
