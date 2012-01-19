@@ -75,7 +75,7 @@ Worker::Worker(TempiClutterStageNode *node) :
 
 /**
  * Custom handler for the signals in the ClutterScript.
- * Slots are turned into tempi::Message instances
+ * Slots are turned into Message instances
  */
 static void tempi_clutter_connect_signals(
     ClutterScript *script,
@@ -113,7 +113,7 @@ static void tempi_clutter_connect_signals(
     // connect the signal to our generic callback:
     if (! g_signal_connect(object, signal_name, G_CALLBACK(tempi_clutter_event_cb), conn.get()))
     {
-        g_error("%s: Couldn't connect to signal %s", __FUNCTION__, signal_name);
+        g_critical("%s: Couldn't connect to signal %s", __FUNCTION__, signal_name);
     }
 }
 
@@ -270,7 +270,7 @@ void TempiClutterStageNode::processMessage(const char *inlet, const Message &mes
 // TODO: implement onAttributeChanged
 void TempiClutterStageNode::onAttributeChanged(const char *name, const Message &value) {}
 
-// static bool tempi_clutter_set_obj_property(GObject *object, const char *name, const tempi::Message &value)
+// static bool tempi_clutter_set_obj_property(GObject *object, const char *name, const Message &value)
 // {
 //     GParamSpec **pspecs, **p;
 //     guint i = 0;

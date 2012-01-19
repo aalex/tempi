@@ -99,7 +99,7 @@ class TempiClutterStageNode : public Node
         /**
          * Called from the Clutter thread.
          */
-        void onMessageFromStage(const tempi::Message &message);
+        void onMessageFromStage(const Message &message);
     protected:
         virtual void processMessage(const char *inlet, const Message &message);
         virtual void onAttributeChanged(const char *name, const Message &value);
