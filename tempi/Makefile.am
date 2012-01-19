@@ -1,5 +1,6 @@
 AM_CXXFLAGS = \
     $(BOOST_CPPFLAGS) \
+	$(CLUTTER_CFLAGS) \
     $(LIBLO_CFLAGS) \
     $(LIBXML_CFLAGS) \
     $(STK_CXXFLAGS) \
@@ -12,6 +13,8 @@ AM_LIBS = \
 	$(BOOST_SYSTEM_LIB) \
     $(BOOST_LDFLAGS) \
     $(BOOST_THREAD_LIB) \
+	$(CLUTTER_LIBS) \
+	$(GLIB_LIBS) \
     $(LIBLO_LIBS) \
     $(LIBXML_LIBS) \
     $(STK_LIBS)
@@ -45,7 +48,8 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     base/nop_node.cpp \
     base/prependnode.cpp \
     base/print_node.cpp \
-    base/receivenode.h \
+    clutter/clutterlibrary.cpp \
+    clutter/clutterstagenode.cpp \
     mapping/filter.cpp \
     fsm/rule.cpp \
     fsm/state.cpp \
@@ -94,6 +98,9 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     threadedscheduler.cpp \
 	utils.cpp
 
+# TODO base/receivenode.cpp
+# TODO base/receivenode.h
+
 ## PLEASE KEEP THEM IN ALPHABETICAL ORDER
 libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     attribute.h \
@@ -105,7 +112,8 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     base/nop_node.h \
     base/prependnode.h \
     base/print_node.h \
-    base/receivenode.h \
+    clutter/clutterlibrary.h \
+    clutter/clutterstagenode.h \
     concurrentqueue.h \
     exceptions.h \
     mapping/filter.h \
