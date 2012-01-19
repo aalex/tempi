@@ -4,10 +4,10 @@
 
 int main(int argc, char* argv[])
 {
-    arma::mat a = arma::randu<arma::mat>(4, 5);
-    arma::mat b = arma::randu<arma::mat>(4, 5);
+    arma::mat a = arma::zeros<arma::mat>(160, 120);
+    arma::mat b = a.submat(80, 60, 90, 70); // x1, y1, x2, y2
   
-    std::cout << a * arma::trans(b) << std::endl;
+    std::cout << b << std::endl;
     return 0;
 }
 
