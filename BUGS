@@ -1,4 +1,4 @@
 Tempi known bugs
 ================
-* [base.metro] : interval is not respected
+* [base.metro] : does not start right away when created with running = true
 
