@@ -71,15 +71,15 @@ void ThreadedScheduler::run(unsigned int sleep_interval_ms)
 {
     float ms = sleep_interval_ms;
     boost::posix_time::milliseconds sleepTime(ms);
-    std::cout << "ThreadedScheduler: started, will work every "
-        << ms << " ms"
-        << std::endl;
+    //std::cout << "ThreadedScheduler: started, will work every "
+    //    << ms << " ms"
+    //    << std::endl;
     while (should_be_running_)
     {
         tick();
         boost::this_thread::sleep(sleepTime);
     }
-    std::cout << "ThreadedScheduler: completed" << std::endl;
+    //std::cout << "ThreadedScheduler: completed" << std::endl;
 }
 
 //void ThreadedScheduler::handlePoppedMessage(const Message &message)
