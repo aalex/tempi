@@ -71,7 +71,8 @@ static gboolean tempi_clutter_event_cb(ClutterActor *actor, gpointer user_data)
 
 Worker::Worker(TempiClutterStageNode *node) :
     tempiNode_(node)
-{}
+{
+}
 
 /**
  * Custom handler for the signals in the ClutterScript.
@@ -129,10 +130,11 @@ static void on_stage_destroyed(gpointer *user_data)
 
 TempiClutterStageNode::TempiClutterStageNode()
 {
-    // TODO: add inlet
-    // TODO: add stage-size attribute
-    // TODO: add script-file-name attribute
     startClutterThread();
+    //TODO: addInlet();    
+    //TODO: addOutlet();    
+    addAttribute("script", Message("s", ""), "JSON file to load with ClutterScript.");
+    addAttribute("size", Message("ii", 640, 480), "Size of the ClutterStage.");
 }
 
 TempiClutterStageNode::~TempiClutterStageNode()
@@ -149,11 +151,14 @@ void TempiClutterStageNode::startClutterThread()
 bool StageManager::initStage()
 {
     stage_ = clutter_stage_get_default();
-    clutter_actor_set_size(stage_, 640, 480); // TODO: make stage size a property
+
+    float width = (float) getAttribute("size").getInt(0);
+    float height =(float) getAttribute("size").getInt(1);
+    clutter_actor_set_size(stage_, width, height);
     clutter_stage_set_color(CLUTTER_STAGE(stage_), &black);
     g_signal_connect(stage_, "destroy", G_CALLBACK(on_stage_destroyed), (gpointer) this);
 
-    std::string filename("gui.json"); // TODO: make filename a property
+    std::string filename = getAttribute("script").getString(0);
 
     GError *error = NULL;
     /* load JSON from a file */
@@ -304,6 +309,12 @@ void TempiClutterStageNode::onAttributeChanged(const char *name, const Message &
 //     g_object_thaw_notify (G_OBJECT (settings));
 //     g_free (pspecs); 
 // }
+//
+
+Message StageManager::getAttribute(const char *name)
+{
+    return tempiNode_->getAttributeValue(name);
+}
 
 } // end of namespace
 } // end of namespace

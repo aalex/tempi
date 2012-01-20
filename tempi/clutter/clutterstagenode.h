@@ -71,6 +71,7 @@ class StageManager
         TempiClutterStageNode *tempiNode_;
         ClutterActor *stage_;
         bool clutterInitOk_;
+        Message getAttribute(const char *name);
         //bool initClutter();
 };
 
