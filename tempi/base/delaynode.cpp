@@ -55,16 +55,27 @@ void DelayNode::processMessage(const char *inlet, const Message &message)
 
 void DelayNode::doTick()
 {
+    using timeposition::from_ms;
+    using timeposition::to_ms;
     int count = 0;
     TimePosition now = timer_.now();
-    TimePosition thresh = now - timeposition::from_ms(
+    // std::cout << "delay " << getAttributeValue("delay").getLong(0) << std::endl;
+    TimePosition delay = from_ms(
         (unsigned long long) getAttributeValue("delay").getLong(0));
+    TimePosition thresh = now - delay;
+
+    // std::cout << "delay =  " << to_ms(delay) << std::endl;
+    // std::cout << "now =    " << to_ms(now) << std::endl;
+    // std::cout << "thresh = " << to_ms(thresh) << std::endl;
+
     std::vector<Event>::const_iterator iter;
     for (iter = events_.begin(); iter != events_.end(); ++iter)
     {
         TimePosition pos = (*iter).get<0>();
+        //std::cout << __FUNCTION__ << " " << pos << " <= " << thresh << std::endl;
         if (pos <= thresh)
         {
+            //std::cout << "output " << pos << " " << (*iter).get<1>() << std::endl;
             output("0", (*iter).get<1>());
             count++;
         }
