@@ -41,37 +41,45 @@ void RouteNode::processMessage(const char *inlet, const Message &message)
 
 void RouteNode::onAttributeChanged(const char *name, const Message &value)
 {
+    std::vector<std::string> new_outlets;
+
     std::vector<std::string>::const_iterator iter;
     for (iter = selectors_.begin(); iter != selectors_.end(); selectors_ ++)
     {
         //TODO: removeOutlet((*iter).c_str());
     }
-    selectors_.clear();
     unsigned int size = value.size();
     for (unsigned int i = 0; i < size; ++i)
     {
         if (value.indexMatchesType(i, 's'))
         {
             std::string s = value.getString(i);
-            if (selectors_.find(s) != selectors_.end())
+            if (hasOutlet(s.c_str() && selectors_.find(s) != selectors_.end()))
             {
-                if (hasInlet(s.c_str()))
-                {
-                    std::cerr << "RouteNode::" << __FUNCTION__ << "(): Already got inlet with that name: " << s << std::endl;
-                }
-                else
-                    selectors_.push_back(s);
+                std::cerr << "RouteNode::" << __FUNCTION__ << "(): Already got outlet with that name: " << s << std::endl;
             }
             else
-                std::cerr << "RouteNode::" << __FUNCTION__ << "(): Already got selector " << s << std::endl;
-
+                new_outlets.push_back(s);
         }
     }
-
+    // remote outlets that should no longer be there:
     std::vector<std::string>::const_iterator iter;
-    for (iter = selectors_.begin(); iter != selectors_.end(); selectors_ ++)
+    for (iter = selectors_.begin(); iter != selectors_.end(); iter ++)
     {
-        addOutlet((*iter).c_str(), "Output for the message starting with that string.");
+        if (new_outlets.find((*iter)) == new_outlets.end())
+        {
+            selectors_.erase(selectors_.find((*iter)));
+            removeOutlet((*iter).c_str());
+        }
+    }
+    // add outlets that should be there:
+    for (iter = new_outlets.begin(); iter != new_outlets.end(); iter ++)
+    {
+        if (selectors_.find((*iter)) != selectors_.end())
+        {
+            selectors_.push_back((*iter));
+            addOutlet((*iter).c_str(), "Output for the message starting with a string of the same name.");
+        }
     }
 }
 

@@ -125,6 +125,8 @@ class Node
          * Adds a outlet.
          */
         bool addOutlet(Outlet::ptr outlet);
+
+        bool removeOutlet(const char *name);
         /**
          * Adds a inlet.
          */

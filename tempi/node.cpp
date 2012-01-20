@@ -494,5 +494,16 @@ NodeSignal::ptr Node::getSignal(const char *name) throw(BadIndexException)
     }
 }
 
+bool Node::removeOutlet(const char *name)
+{
+    std::string nameStr(name);
+    if (hasOutlet(name))
+    {
+        outlets_.erase(outlets_.find(nameStr));
+        return true;
+    }
+    return false;
+}
+
 } // end of namespace
 
