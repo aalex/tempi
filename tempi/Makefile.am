@@ -71,6 +71,7 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     midi/midiutilities.cpp \
     node.cpp \
     nodefactory.cpp \
+    nodesignal.cpp \
     osc/osclibrary.cpp \
     osc/oscreceiver.cpp \
     osc/oscreceivernode.cpp \
@@ -142,6 +143,7 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     midi/midiutilities.h \
     node.h \
     nodefactory.h \
+    nodesignal.h \
     nodetype.h \
     osc/osclibrary.h \
     osc/oscreceiver.h \

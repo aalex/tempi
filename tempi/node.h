@@ -31,11 +31,17 @@
 #include "tempi/exceptions.h"
 #include "tempi/inlet.h"
 #include "tempi/message.h"
+#include "tempi/nodesignal.h"
 #include "tempi/outlet.h"
 #include "tempi/sharedptr.h"
 
 namespace tempi
 {
+
+const char * const INLET_CREATED_SIGNAL = "__create_inlet__";
+const char * const INLET_DELETED_SIGNAL = "__delete_inlet__";
+const char * const OUTLET_CREATED_SIGNAL = "__create_outlet__";
+const char * const OUTLET_DELETED_SIGNAL = "__delete_outlet__";
 
 /**
  * A Node is something that element that can be connected to and from other elements.
@@ -82,10 +88,11 @@ class Node
         std::string getAttributeType(const char *name);
         std::vector<std::string> getAttributesNames() const;
         //
-        // TODO: signals:
-        // typedef boost::signals2::signal<void(Message)> Signal;
-        // std::map<std::string, Signal> getSignals();
-        // type_info *getSignalType(std::string signal);
+        // signals:
+        std::map<std::string, NodeSignal::ptr> getSignals();
+        NodeSignal::ptr getSignal(const char *name) throw(BadIndexException);
+        bool hasSignal(const char *name);
+
         void setTypeName(const char *typeName);
         const std::string &getTypeName() const;
         void setInstanceName(const char *instanceName);
@@ -105,6 +112,7 @@ class Node
         void enableHandlingReceiveSymbol(const char *selector);
         virtual void onHandleReceive(const char *selector, const Message &message)
         {}
+        bool addSignal(NodeSignal::ptr signal);
         /**
          * Adds a outlet.
          */
@@ -145,6 +153,7 @@ class Node
         std::map<std::string, Outlet::ptr> outlets_;
         std::map<std::string, Attribute::ptr> attributes_;
         std::map<std::string, Inlet::ptr> inlets_;
+        std::map<std::string, NodeSignal::ptr> signals_;
         std::string typeName_;
         std::string instanceName_;
         std::string handledReceiveSymbol_;

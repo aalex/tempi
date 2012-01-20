@@ -55,7 +55,10 @@ Node::ptr NodeFactory::create(const char *name) throw(BadNodeTypeException)
     //std::cout << "NodeFactory::" << __FUNCTION__ << "(" << name << ")" << std::endl;
     std::string nameString(name);
     AbstractNodeType *nodeType = entries_[nameString].get();
-    return Node::ptr(nodeType->create());
+
+    Node::ptr node(nodeType->create());
+    node->setTypeName(name);
+    return node;
 }
 
 bool NodeFactory::hasType(const char *name)

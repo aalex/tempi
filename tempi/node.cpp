@@ -28,6 +28,19 @@ namespace tempi
 
 Node::Node()
 {
+    //TODO: __attr__ and __log__ ?
+    //std::cout << __FUNCTION__ << "()" << std::endl;
+
+    // XXX: Add Signals BEFORE adding inlets/outlets!
+    addSignal(NodeSignal::ptr(new NodeSignal(OUTLET_DELETED_SIGNAL,
+        "Triggered when an outlet is deleted. Arguments are: the name of this node, the name of the outlet.", "ss")));
+    addSignal(NodeSignal::ptr(new NodeSignal(INLET_DELETED_SIGNAL,
+        "Triggered when an inlet is deleted. Arguments are: the name of this node, the name of the inlet.", "ss")));
+    addSignal(NodeSignal::ptr(new NodeSignal(OUTLET_CREATED_SIGNAL,
+        "Triggered when an outlet is created. Arguments are: the name of this node, the name of the outlet.", "ss")));
+    addSignal(NodeSignal::ptr(new NodeSignal(INLET_CREATED_SIGNAL,
+        "Triggered when an inlet is created. Arguments are: the name of this node, the name of the inlet.", "ss")));
+
     addInlet("attributes", "Set attribute value with (s:\"set\", s:name, ...)"); // all nodes have at least one inlet for attributes
     //addAttribute("log-level", Message("i", 1), "How much [1-5] to print debug info in the console. 1=ERROR, 2=CRITICAL, 3=WARNING, 4=INFO, 5=DEBUG");
 }
@@ -147,6 +160,16 @@ bool Node::addOutlet(Outlet::ptr outlet)
     if (! hasOutlet(outlet.get()))
     {
         outlets_[outlet->getName()] = outlet;
+        try
+        {
+            getSignal(OUTLET_CREATED_SIGNAL)->trigger(
+                Message("ss", getInstanceName().c_str(), outlet->getName().c_str()));
+        }
+        catch (const BadIndexException &e)
+        {
+            std::cerr << "In " << __FUNCTION__ << std::endl;
+            std::cerr << e.what() << std::endl;
+        }
         return true;
     }
     return false;
@@ -158,6 +181,16 @@ bool Node::addInlet(Inlet::ptr inlet)
     {
         inlets_[inlet->getName()] = inlet;
         inlet.get()->getOnTriggeredSignal().connect(boost::bind(&Node::onInletTriggered, this, _1, _2));
+        try
+        {
+            getSignal(INLET_CREATED_SIGNAL)->trigger(
+                Message("ss", getInstanceName().c_str(), inlet->getName().c_str()));
+        }
+        catch (const BadIndexException &e)
+        {
+            std::cerr << "In " << __FUNCTION__ << std::endl;
+            std::cerr << e.what() << std::endl;
+        }
         return true;
     }
     return false;
@@ -417,6 +450,48 @@ std::string Node::getDocumentation() const
 void Node::setDocumentation(const char *documentation)
 {
     documentation_ = std::string(documentation);
+}
+
+bool Node::addSignal(NodeSignal::ptr signal)
+{
+    if (hasSignal(signal->getName().c_str()))
+    {
+        std::cerr << __FILE__ << ":" << __FUNCTION__ << "(): Already has signal " << signal->getName() << std::endl;
+        return false;
+    }
+    else
+    {
+        //std::cout << "Add signal " << signal->getName() << std::endl;
+        signals_[signal->getName()] = signal;
+    }
+}
+
+bool Node::hasSignal(const char *name)
+{
+    return signals_.find(std::string(name)) != signals_.end();
+}
+
+std::map<std::string, NodeSignal::ptr> Node::getSignals()
+{
+    return signals_;
+}
+
+NodeSignal::ptr Node::getSignal(const char *name) throw(BadIndexException)
+{
+    if (hasSignal(name))
+        return signals_[std::string(name)];
+    else
+    {
+        std::ostringstream os;
+        os << "Node(" << getTypeName() << ":" << getInstanceName() << ")::" << __FUNCTION__ << ": " << ": Bad signal name: " << name;
+        os << ". Signals are: ";
+        std::map<std::string, NodeSignal::ptr>::const_iterator iter;
+        for (iter = signals_.begin(); iter != signals_.end(); ++iter)
+        {
+            os << (*iter).second->getName() << " ";
+        }
+        throw BadIndexException(os.str().c_str());
+    }
 }
 
 } // end of namespace
