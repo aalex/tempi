@@ -118,7 +118,7 @@ bool TempiInspect::printClass(const std::string &name)
                 cout << attr->getName() << endl;
                 print_n_times(attr->getName().size(), "~");
                 cout << endl;
-                cout << attr->getDocumentation() << endl;
+                cout << "Documentation: " <<  attr->getDocumentation() << endl;
                 if (attr->isTypeStrict())
                     cout << "Type: " << attr->getValue().getTypes() << endl;
                 else

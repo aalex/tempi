@@ -37,6 +37,9 @@
 namespace tempi
 {
 
+const char * const ATTRIBUTES_INLET = "__attr__";
+const char * const ATTRIBUTE_LOG = "__log__";
+
 /**
  * A Node is something that element that can be connected to and from other elements.
  * All nodes have at least one inlet for setting properties. (using ,ss... "set" "name" ...)

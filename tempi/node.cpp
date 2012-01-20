@@ -28,8 +28,9 @@ namespace tempi
 
 Node::Node()
 {
-    addInlet("attributes", "Set attribute value with (s:\"set\", s:name, ...)"); // all nodes have at least one inlet for attributes
-    //addAttribute("log-level", Message("i", 1), "How much [1-5] to print debug info in the console. 1=ERROR, 2=CRITICAL, 3=WARNING, 4=INFO, 5=DEBUG");
+    addInlet(ATTRIBUTES_INLET, "Set attribute value with (s:\"set\", s:name, ...)"); // all nodes have at least one inlet for attributes
+    // TODO: intercept ATTRIBUTE_LOG when set to make sure it's in the right range.
+    addAttribute(ATTRIBUTE_LOG, Message("i", 1), "How much [1-5] to print debug info in the console. 1=ERROR, 2=CRITICAL, 3=WARNING, 4=INFO, 5=DEBUG");
 }
 
 bool Node::isInitiated() const
@@ -71,8 +72,7 @@ void Node::onInletTriggered(Inlet *inlet, const Message &message)
 {
     //std::cout << __FUNCTION__ << std::endl;
     bool is_a_attribute = false;
-    // FIXME: the name of the "attributes" inlet should be a constant
-    if (inlet->getName() == "attributes" && message.getSize() >= 3)
+    if (inlet->getName() == ATTRIBUTES_INLET && message.getSize() >= 3)
     {
         // ArgumentType type0;
         // ArgumentType type1;
