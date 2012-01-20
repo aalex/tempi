@@ -2,7 +2,8 @@ man_MANS = tempi-draw.1 osc-forward.1 midilooper.1
 EXTRA_DIST = $(man_MANS) \
    man-midilooper.txt \
    man-osc-forward.txt \
-   man-tempi-draw.txt
+   man-tempi-draw.txt \
+   man-tempi-launch.txt
 
 MAINTAINERCLEANFILES = $(man_MANS)
 
@@ -20,4 +21,7 @@ osc-forward.1: $(top_srcdir)/src/osc-forward/main.cpp $(common_mandeps) $(top_sr
 	$(HELP2MAN) --include=man-osc-forward.txt --name="osc-forward" --no-info $(top_builddir)/src/osc-forward/osc-forward -o $@
 
 tempi-draw.1: $(top_srcdir)/src/tempi-draw/main.cpp $(common_mandeps) $(top_srcdir)/man/man-tempi-draw.txt
+	$(HELP2MAN) --include=man-tempi-draw.txt --name="tempi-draw" --no-info $(top_builddir)/src/tempi-draw/tempi-draw -o $@
+
+tempi-launch.1: $(top_srcdir)/src/tempi-launch/main.cpp $(common_mandeps) $(top_srcdir)/man/man-tempi-launch.txt
 	$(HELP2MAN) --include=man-tempi-draw.txt --name="tempi-draw" --no-info $(top_builddir)/src/tempi-draw/tempi-draw -o $@

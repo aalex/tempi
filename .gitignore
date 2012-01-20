@@ -63,6 +63,7 @@ src/midilooper/midilooper
 src/midilooper/threadedscheduler
 src/osc-forward/osc-forward
 src/tempi-draw/tempi-draw
+src/tempi-launch/tempi-launch
 tempi-*.tar.gz
 tempi/config.h
 tempi/config.h.in

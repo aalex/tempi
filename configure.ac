@@ -208,7 +208,7 @@ AC_CONFIG_FILES([
         src/midilooper/Makefile
         src/osc-forward/Makefile
         src/tempi-draw/Makefile
-        src/tempi/Makefile
+        src/tempi-launch/Makefile
         tests/Makefile
         doxyfile 
         data/Makefile

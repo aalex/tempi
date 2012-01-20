@@ -23,4 +23,4 @@ See http://tempi.toonloop.com
 Copyright (c) 2011 Alexandre Quessy <alexandre@quessy.net>
 
 [SEE ALSO]
-osc-forward(1), midilooper(1)
+osc-forward(1), midilooper(1), tempi-launch(1)

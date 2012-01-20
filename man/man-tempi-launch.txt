@@ -1,0 +1,20 @@
+[DESCRIPTION]
+Launches a Tempi graph reading XML files as input.
+
+[INTERACTIVE USAGE]
+Press control-c in the terminal window to quit.
+
+[AUTHOR]
+Alexandre Quessy
+
+[HISTORY]
+2012 - Written by Alexandre Quessy
+
+[REPORTING BUGS]
+See http://tempi.toonloop.com
+
+[COPYRIGHT]
+Copyright (c) 2012 Alexandre Quessy <alexandre@quessy.net>
+
+[SEE ALSO]
+osc-forward(1), midilooper(1), tempi-draw(1)
