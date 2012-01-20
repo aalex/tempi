@@ -6,5 +6,5 @@ cd $(dirname $0)
 # FIXME:Tue Nov  2 13:22:13 EDT 2010: tmatth
 # This is a hack to workaround a Clutter bug with certain video drivers.
 # Confirmed on Intel, reported on NVidia and ATI as well.
-CLUTTER_VBLANK=none ./src/tempi $@
+CLUTTER_VBLANK=none ./src/tempi-launch/tempi-launch $@
 
