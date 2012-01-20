@@ -29,7 +29,7 @@ namespace tempi
 Node::Node()
 {
     addInlet("attributes", "Set attribute value with (s:\"set\", s:name, ...)"); // all nodes have at least one inlet for attributes
-    addAttribute("verbose", Message("b", false), "Print debug info in the console.");
+    //addAttribute("log-level", Message("i", 1), "How much [1-5] to print debug info in the console. 1=ERROR, 2=CRITICAL, 3=WARNING, 4=INFO, 5=DEBUG");
 }
 
 bool Node::isInitiated() const
