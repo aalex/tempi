@@ -1,4 +1,4 @@
-man_MANS = tempi-draw.1 osc-forward.1 midilooper.1 
+man_MANS = tempi-draw.1 osc-forward.1 midilooper.1 tempi-launch.1
 EXTRA_DIST = $(man_MANS) \
    man-midilooper.txt \
    man-osc-forward.txt \
@@ -24,4 +24,4 @@ tempi-draw.1: $(top_srcdir)/src/tempi-draw/main.cpp $(common_mandeps) $(top_srcd
 	$(HELP2MAN) --include=man-tempi-draw.txt --name="tempi-draw" --no-info $(top_builddir)/src/tempi-draw/tempi-draw -o $@
 
 tempi-launch.1: $(top_srcdir)/src/tempi-launch/main.cpp $(common_mandeps) $(top_srcdir)/man/man-tempi-launch.txt
-	$(HELP2MAN) --include=man-tempi-draw.txt --name="tempi-draw" --no-info $(top_builddir)/src/tempi-draw/tempi-draw -o $@
+	$(HELP2MAN) --include=man-tempi-launch.txt --name="tempi-launch" --no-info $(top_builddir)/src/tempi-launch/tempi-launch -o $@
