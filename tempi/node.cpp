@@ -385,5 +385,15 @@ bool Node::handlesReceiveSymbol(const char *selector) const
     return handledReceiveSymbol_ == selector;
 }
 
+std::string Node::getDocumentation() const
+{
+    return documentation_;
+}
+
+void Node::setDocumentation(const char *documentation)
+{
+    documentation_ = std::string(documentation);
+}
+
 } // end of namespace
 

@@ -100,6 +100,7 @@ class Node
         }
         bool hasInlet(const char *name) const;
         bool hasOutlet(const char *name) const;
+        std::string getDocumentation() const;
     protected:
         void enableHandlingReceiveSymbol(const char *selector);
         virtual void onHandleReceive(const char *selector, const Message &message)
@@ -138,6 +139,7 @@ class Node
          * (for initiating sockets, files, user interfaces, etc.)
          */
         virtual void onInit();
+        void setDocumentation(const char *documentation);
     private:
         bool initiated_;
         std::map<std::string, Outlet::ptr> outlets_;
@@ -146,6 +148,7 @@ class Node
         std::string typeName_;
         std::string instanceName_;
         std::string handledReceiveSymbol_;
+        std::string documentation_;
         // TODO: return success
         // TODO: add unsigned int inlet_number
 };
