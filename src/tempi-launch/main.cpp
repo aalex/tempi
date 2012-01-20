@@ -168,7 +168,11 @@ int TempiLauncher::parse_options(int argc, char **argv)
     po::variables_map options;
     try
     {
-        po::store(po::parse_command_line(argc, argv, desc), options);
+        // all positional options should be translated into "file" options
+        po::positional_options_description p;
+        p.add("file", -1);
+        po::store(po::command_line_parser(argc, argv).
+            options(desc).positional(p).run(), options);
         po::notify(options);
     }
     catch (const po::error &e)
