@@ -19,6 +19,7 @@
  */
 
 #include "tempi/base/metro_node.h"
+#include "tempi/timeposition.h"
 
 namespace tempi {
 namespace base {
@@ -30,7 +31,7 @@ MetroNode::MetroNode() :
     addAttribute("running", running);
 
     Message interval = Message("i", 1000);
-    addAttribute("interval", interval); // ms
+    addAttribute("interval", interval, "Interval in milliseconds."); // ms
 
     addOutlet("0");
 }
@@ -56,13 +57,14 @@ void MetroNode::startMetro()
 
 void MetroNode::doTick()
 {
+    using timeposition::from_ms;
     //std::cout << "MetroNode::" << __FUNCTION__ << " running:" << getAttributeValue("running").getBoolean(0) << std::endl;
     if (getAttributeValue("running").getBoolean(0))
     {
         TimePosition interval = timeposition::from_ms((unsigned long long) getAttributeValue("interval").getInt(0));
         TimePosition elapsed = timer_.elapsed();
         //std::cout << "MetroNode::" << __FUNCTION__ << " interval:" << interval << " elapsed:" << elapsed << std::endl;
-        if (elapsed >= interval)
+        if (elapsed >= from_ms(interval))
         {
             Message message = Message(""); // bang
             output("0", message);
