@@ -4,9 +4,15 @@ This release is a developer snapshot in the 0.1 series.
 
 New features:
 * Save and load Graph to and from XML.
+* New node types: [base.delay]
+* New utilities: tempi-launch, tempi-inspect
 
 Bugs fixed:
-* (none)
+* Fix calculation in ms <-> ns conversion 
+* Fix timing in [base.metro]
+
+In progress:
+* [clutter.stage]
 
 
 Tempi 0.1.8 (2012-01-12)
