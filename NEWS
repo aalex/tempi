@@ -4,7 +4,7 @@ This release is a developer snapshot in the 0.1 series.
 
 New features:
 * Save and load Graph to and from XML.
-* New node types: [base.delay]
+* New node types: [base.delay], [base.spigot]
 * New utilities: tempi-launch, tempi-inspect
 
 Bugs fixed:
