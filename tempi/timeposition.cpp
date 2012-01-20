@@ -28,12 +28,12 @@ namespace timeposition
 
 TimePosition from_ms(unsigned long long ms)
 {
-    return ms * 1000L;
+    return ms * NS_PER_MS;
 }
 
 unsigned long long to_ms(TimePosition time_pos)
 {
-    return time_pos / 1000L;
+    return time_pos / NS_PER_MS;
 }
 
 } // end of namespace

@@ -37,6 +37,12 @@ typedef unsigned long long TimePosition;
 namespace timeposition
 {
 
+static const unsigned long long NS_PER_MS = 1000000L;
+
+/**
+ * Converts ms to ns.
+ * @return ms * 1000000
+ */
 TimePosition from_ms(unsigned long long ms);
 unsigned long long to_ms(TimePosition time_pos);
 
