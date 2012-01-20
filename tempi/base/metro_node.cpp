@@ -40,13 +40,17 @@ void MetroNode::onAttributeChanged(const char *name, const Message &value)
 {
     const static std::string running("running");
 //  const static std::string interval("interval");
-//    std::cout << "MetroNode::" << __FUNCTION__ << ": " << name << " = " << value << std::endl;
+    //std::cout << "MetroNode::" << __FUNCTION__ << ": " << name << " = " << value << std::endl;
     if (running == name)
     {
         if (value.getBoolean(0))
+        {
+            Message message = Message(""); // bang
+            output("0", message);
             startMetro();
-        else
-            startMetro(); // we restart it anyways
+        }
+        //else
+        //    startMetro(); // we restart it anyways
     }
 }
 
@@ -58,15 +62,17 @@ void MetroNode::startMetro()
 void MetroNode::doTick()
 {
     using timeposition::from_ms;
+    using timeposition::to_ms;
     //std::cout << "MetroNode::" << __FUNCTION__ << " running:" << getAttributeValue("running").getBoolean(0) << std::endl;
     if (getAttributeValue("running").getBoolean(0))
     {
-        TimePosition interval = timeposition::from_ms((unsigned long long) getAttributeValue("interval").getInt(0));
+        TimePosition interval = from_ms((unsigned long long) getAttributeValue("interval").getInt(0));
         TimePosition elapsed = timer_.elapsed();
-        //std::cout << "MetroNode::" << __FUNCTION__ << " interval:" << interval << " elapsed:" << elapsed << std::endl;
-        if (elapsed >= from_ms(interval))
+        //std::cout << "MetroNode::" << __FUNCTION__ << " interval:" << to_ms(interval) << " elapsed:" << elapsed << std::endl;
+        if (elapsed >= interval)
         {
             Message message = Message(""); // bang
+            //std::cout << "TICK" << std::endl;
             output("0", message);
             timer_.reset();
         }
