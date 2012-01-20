@@ -26,6 +26,7 @@
 #include "tempi/base/metro_node.h"
 #include "tempi/base/nop_node.h"
 #include "tempi/base/print_node.h"
+#include "tempi/base/spigotnode.h"
 #include "tempi/utils.h"
 
 namespace tempi { namespace base {
@@ -40,6 +41,7 @@ void BaseLibrary::load(NodeFactory &factory, const char *prefix) const
     factory.registerTypeT<CounterNode>(concatenate(prefix, "counter").c_str());
     factory.registerTypeT<DelayNode>(concatenate(prefix, "delay").c_str());
     factory.registerTypeT<AppSinkNode>(concatenate(prefix, "appsink").c_str());
+    factory.registerTypeT<SpigotNode>(concatenate(prefix, "spigot").c_str());
 }
 
 } // end of namespace
