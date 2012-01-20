@@ -28,7 +28,8 @@ namespace tempi
 
 Node::Node()
 {
-    addInlet("attributes"); // all nodes have at least one inlet for attributes
+    addInlet("attributes", "Set attribute value with (s:\"set\", s:name, ...)"); // all nodes have at least one inlet for attributes
+    //addAttribute("log-level", Message("i", 1), "How much [1-5] to print debug info in the console. 1=ERROR, 2=CRITICAL, 3=WARNING, 4=INFO, 5=DEBUG");
 }
 
 bool Node::isInitiated() const
@@ -49,6 +50,8 @@ bool Node::init()
         {
             // Updates properties, etc.
             onAttributeChanged((*iter).first.c_str(), (*iter).second->getValue());
+            // add an inlet for each attribute
+            addInlet((*iter).first.c_str(), (*iter).second->getDocumentation().c_str());
         }
         return true;
     }
@@ -105,6 +108,27 @@ void Node::onInletTriggered(Inlet *inlet, const Message &message)
                     std::cerr << "Node(" << getTypeName() << ":" << getInstanceName() << ")::" << __FUNCTION__ << ": " << e.what();
                 }
             }
+        }
+    }
+
+    if (is_a_attribute)
+        return;
+    
+    // Attribute inlet:
+    std::map<std::string, Attribute::ptr>::const_iterator iter;
+    for (iter = attributes_.begin(); iter != attributes_.end(); ++iter)
+    {
+        if (inlet->getName() == (*iter).first)
+        {
+            try
+            {
+                setAttribute(inlet->getName().c_str(), message);
+            }
+            catch (const BadArgumentTypeException &e)
+            {
+                std::cerr << "Node(" << getTypeName() << ":" << getInstanceName() << ")::" << __FUNCTION__ << ": " << e.what();
+            }
+            is_a_attribute = true;
         }
     }
     if (! is_a_attribute)
@@ -383,6 +407,16 @@ void Node::enableHandlingReceiveSymbol(const char *selector)
 bool Node::handlesReceiveSymbol(const char *selector) const
 {
     return handledReceiveSymbol_ == selector;
+}
+
+std::string Node::getDocumentation() const
+{
+    return documentation_;
+}
+
+void Node::setDocumentation(const char *documentation)
+{
+    documentation_ = std::string(documentation);
 }
 
 } // end of namespace

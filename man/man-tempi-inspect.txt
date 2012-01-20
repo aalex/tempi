@@ -1,8 +1,5 @@
 [DESCRIPTION]
-Launches a Tempi graph reading XML files as input.
-
-[INTERACTIVE USAGE]
-Press control-c in the terminal window to quit.
+Tool to print documentation from Tempi.
 
 [AUTHOR]
 Alexandre Quessy
@@ -17,4 +14,4 @@ See http://tempi.toonloop.com
 Copyright (c) 2012 Alexandre Quessy <alexandre@quessy.net>
 
 [SEE ALSO]
-osc-forward(1), midilooper(1), tempi-draw(1), tempi-inspect(1)
+osc-forward(1), midilooper(1), tempi-draw(1), tempi-launch(1)
