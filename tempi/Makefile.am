@@ -44,6 +44,7 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     base/appsinknode.cpp \
     base/baselibrary.cpp \
     base/counternode.cpp \
+    base/delaynode.cpp \
     base/metro_node.cpp \
     base/nop_node.cpp \
     base/prependnode.cpp \
@@ -108,6 +109,7 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     base/appsinknode.h \
     base/baselibrary.h \
     base/counternode.h \
+    base/delaynode.h \
     base/metro_node.h \
     base/nop_node.h \
     base/prependnode.h \

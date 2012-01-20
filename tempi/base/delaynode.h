@@ -18,25 +18,39 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @file
+ * The DelayNode class.
+ */
+#ifndef __TEMPI_BASE_DELAYNODE_H__
+#define __TEMPI_BASE_DELAYNODE_H__
+
+#include "tempi/node.h"
+#include "tempi/timer.h"
 #include "tempi/timeposition.h"
+#include <boost/tuple/tuple.hpp>
 
-namespace tempi
-{
+namespace tempi {
+namespace base {
 
-namespace timeposition
+/**
+ * The DelayNode stores message and outputs them later after a given delay.
+ */
+class DelayNode : public Node
 {
-
-TimePosition from_ms(unsigned long long ms)
-{
-    return ms * NS_PER_MS;
-}
-
-unsigned long long to_ms(TimePosition time_pos)
-{
-    return time_pos / NS_PER_MS;
-}
+    public:
+        DelayNode();
+    protected:
+        virtual void processMessage(const char *inlet, const Message &message);
+        virtual void doTick();
+    private:
+        typedef boost::tuple<TimePosition, Message> Event;
+        std::vector<Event> events_;
+        Timer timer_; // only for its now() method
+};
 
 } // end of namespace
-
 } // end of namespace
+
+#endif // ifndef
 

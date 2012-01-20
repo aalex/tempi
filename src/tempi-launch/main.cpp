@@ -37,16 +37,16 @@
 namespace po = boost::program_options;
 
 // String constants:
-static const char *PROGRAM_NAME = "tempi";
+static const char *PROGRAM_NAME = "tempi-launch";
 
 /**
- * The TempiApp class manages the tempi::Graph
+ * The TempiLauncher class is the tempi-launch application.
  */
-class TempiApp
+class TempiLauncher
 {
     public:
-        TempiApp();
-        ~TempiApp();
+        TempiLauncher();
+        ~TempiLauncher();
         /**
          * Return -1 if it's ok to run the program, or retuns 0 or 1 if we should terminate it.
          * Call this begore launching the app.
@@ -56,10 +56,7 @@ class TempiApp
          * Creates the tempi::Graph, and the ClutterStage
          */
         bool launch();
-        /**
-         * Polls the tempi::Graph.
-         */
-        bool poll();
+        bool getVerbose() const;
     private:
         std::string fileName_;
         bool graph_ok_;
@@ -70,42 +67,33 @@ class TempiApp
         bool setupGraph();
 };
 
-TempiApp::TempiApp() :
+TempiLauncher::TempiLauncher() :
     verbose_(false),
     graph_ok_(false)
 {
 }
 
-TempiApp::~TempiApp()
+bool TempiLauncher::getVerbose() const
+{
+    return verbose_;
+}
+
+TempiLauncher::~TempiLauncher()
 {
     if (engine_.get() != 0)
     {
         if (verbose_)
-            std::cout << "Waiting for Scheduler's thread to join." << std::endl;
+            std::cout << __FUNCTION__ << "(): Waiting for Scheduler's thread to join." << std::endl;
         engine_->stop();
     }
 }
 
-bool TempiApp::poll()
-{
-    if (graph_ok_)
-    {
-        //engine_->tick();
-        return true;
-    }
-    else
-    {
-        std::cerr << "TempiApp::" << __FUNCTION__ << "(): Error: must call launch() first.\n";
-        return false;
-    }
-}
-
-bool TempiApp::setupGraph()
+bool TempiLauncher::setupGraph()
 {
     using tempi::Message;
     if (graph_ok_)
     {
-        std::cerr << "TempiApp::" << __FUNCTION__ << ": already called.\n";
+        std::cerr << "TempiLauncher::" << __FUNCTION__ << ": already called.\n";
         return false;
     }
 
@@ -124,8 +112,8 @@ bool TempiApp::setupGraph()
     engine_.reset(new tempi::ThreadedScheduler);
     engine_->start(5); // time precision in ms
     // TODO: make time precision configurable
-    if (verbose_)
-        std::cout << (*engine_.get()) << std::endl;
+    //if (verbose_)
+    //    std::cout << (*engine_.get()) << std::endl;
     tempi::ScopedLock::ptr lock = engine_->acquireLock();
     if (verbose_)
         std::cout << "Create Graph\n";
@@ -145,13 +133,14 @@ bool TempiApp::setupGraph()
     }
     if (verbose_)
         std::cout << "Loaded " << fileName_ << std::endl;
+    return true;
 }
 
-bool TempiApp::launch()
+bool TempiLauncher::launch()
 {
     if (graph_ok_)
     {
-        std::cerr << "TempiApp::" << __FUNCTION__ << "(): Already called\n";
+        std::cerr << "TempiLauncher::" << __FUNCTION__ << "(): Already called\n";
         return false;
     }
     else
@@ -167,7 +156,7 @@ bool TempiApp::launch()
     }
 }
 
-int TempiApp::parse_options(int argc, char **argv)
+int TempiLauncher::parse_options(int argc, char **argv)
 {
     po::options_description desc("Options");
     desc.add_options()
@@ -179,7 +168,11 @@ int TempiApp::parse_options(int argc, char **argv)
     po::variables_map options;
     try
     {
-        po::store(po::parse_command_line(argc, argv, desc), options);
+        // all positional options should be translated into "file" options
+        po::positional_options_description p;
+        p.add("file", -1);
+        po::store(po::command_line_parser(argc, argv).
+            options(desc).positional(p).run(), options);
         po::notify(options);
     }
     catch (const po::error &e)
@@ -209,18 +202,17 @@ int TempiApp::parse_options(int argc, char **argv)
 
 static gboolean on_idle(gpointer data)
 {
-    //if (verbose_)
-    //    std::cout << "Loaded " << fileName_ << std::endl;
-    // std::cout << __FUNCTION__ << std::endl;
-    TempiApp *app = (TempiApp *) data;
-    app->poll();
-    return TRUE;
+    TempiLauncher *app = (TempiLauncher *) data;
+    (void) app;
+    //if (app->getVerbose())
+    //   std::cout << __FUNCTION__ << std::endl;
+    return TRUE; // stay registered
 }
 
 int main(int argc, char *argv[])
 {
     int ret;
-    TempiApp app;
+    TempiLauncher app;
     try
     {
         ret = app.parse_options(argc, argv);
@@ -236,12 +228,19 @@ int main(int argc, char *argv[])
 
     bool ok = app.launch();
     if (! ok)
+    {
+        std::cerr << "Error calling app.launch()\n";
         return 1;
+    }
 
+    g_thread_init(NULL);
     GMainLoop *mainLoop = g_main_loop_new(NULL, FALSE);
     g_idle_add(on_idle, (gpointer) &app);
+    if (app.getVerbose())
+        std::cout << "Run main loop.\n";
     g_main_loop_run(mainLoop);
 
+    g_main_loop_unref(mainLoop);
     return 0;
 }
 

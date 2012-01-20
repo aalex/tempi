@@ -22,6 +22,7 @@
 #include "tempi/base/appsinknode.h"
 #include "tempi/base/baselibrary.h"
 #include "tempi/base/counternode.h"
+#include "tempi/base/delaynode.h"
 #include "tempi/base/metro_node.h"
 #include "tempi/base/nop_node.h"
 #include "tempi/base/print_node.h"
@@ -37,6 +38,7 @@ void BaseLibrary::load(NodeFactory &factory, const char *prefix) const
     factory.registerTypeT<MetroNode>(concatenate(prefix, "metro").c_str());
     factory.registerTypeT<AnyNode>(concatenate(prefix, "any").c_str());
     factory.registerTypeT<CounterNode>(concatenate(prefix, "counter").c_str());
+    factory.registerTypeT<DelayNode>(concatenate(prefix, "delay").c_str());
     factory.registerTypeT<AppSinkNode>(concatenate(prefix, "appsink").c_str());
 }
 

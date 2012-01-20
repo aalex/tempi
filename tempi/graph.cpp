@@ -404,12 +404,12 @@ bool Graph::setNodeAttribute(const char *nodeName, const char *attributeName, co
     }
     catch (const BadIndexException &e)
     {
-        std::cerr << "Graph::" << __FUNCTION__ << ": " << e.what();
+        std::cerr << "Graph::" << __FUNCTION__ << ": " << e.what() << std::endl;;
         return false;
     }
     catch (const BadArgumentTypeException &e)
     {
-        std::cerr << "Graph::" << __FUNCTION__ << ": " << e.what();
+        std::cerr << "Graph::" << __FUNCTION__ << ": " << e.what() << std::endl;;
         return false;
     }
 }

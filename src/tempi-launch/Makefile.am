@@ -1,5 +1,5 @@
 bin_PROGRAMS = \
-	tempi
+	tempi-launch
 
 AM_CXXFLAGS = \
 	$(BOOST_CPPFLAGS) \
@@ -19,7 +19,8 @@ LDADD = \
 	$(top_builddir)/tempi/libtempi-@TEMPI_API_VERSION@.la
 
 tempi_CXXFLAGS = $(AM_CXXFLAGS)
-tempi_LDADD = $(LDADD)
+tempi_launch_LDADD = $(LDADD)
 
-tempi_SOURCES = \
+tempi_launch_SOURCES = \
 	main.cpp
+
