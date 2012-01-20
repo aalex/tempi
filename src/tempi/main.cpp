@@ -60,6 +60,7 @@ class TempiApp
          * Polls the tempi::Graph.
          */
         bool poll();
+        bool getVerbose() const;
     private:
         std::string fileName_;
         bool graph_ok_;
@@ -76,12 +77,17 @@ TempiApp::TempiApp() :
 {
 }
 
+bool TempiApp::getVerbose() const
+{
+    return verbose_;
+}
+
 TempiApp::~TempiApp()
 {
     if (engine_.get() != 0)
     {
         if (verbose_)
-            std::cout << "Waiting for Scheduler's thread to join." << std::endl;
+            std::cout << __FUNCTION__ << "(): Waiting for Scheduler's thread to join." << std::endl;
         engine_->stop();
     }
 }
@@ -124,8 +130,8 @@ bool TempiApp::setupGraph()
     engine_.reset(new tempi::ThreadedScheduler);
     engine_->start(5); // time precision in ms
     // TODO: make time precision configurable
-    if (verbose_)
-        std::cout << (*engine_.get()) << std::endl;
+    //if (verbose_)
+    //    std::cout << (*engine_.get()) << std::endl;
     tempi::ScopedLock::ptr lock = engine_->acquireLock();
     if (verbose_)
         std::cout << "Create Graph\n";
@@ -145,6 +151,7 @@ bool TempiApp::setupGraph()
     }
     if (verbose_)
         std::cout << "Loaded " << fileName_ << std::endl;
+    return true;
 }
 
 bool TempiApp::launch()
@@ -209,12 +216,12 @@ int TempiApp::parse_options(int argc, char **argv)
 
 static gboolean on_idle(gpointer data)
 {
-    //if (verbose_)
-    //    std::cout << "Loaded " << fileName_ << std::endl;
-    // std::cout << __FUNCTION__ << std::endl;
     TempiApp *app = (TempiApp *) data;
+    //if (app->getVerbose())
+    //   std::cout << __FUNCTION__ << std::endl;
+
     app->poll();
-    return TRUE;
+    return TRUE; // stay registered
 }
 
 int main(int argc, char *argv[])
@@ -236,12 +243,19 @@ int main(int argc, char *argv[])
 
     bool ok = app.launch();
     if (! ok)
+    {
+        std::cerr << "Error calling app.launch()\n";
         return 1;
+    }
 
+    g_thread_init(NULL);
     GMainLoop *mainLoop = g_main_loop_new(NULL, FALSE);
     g_idle_add(on_idle, (gpointer) &app);
+    if (app.getVerbose())
+        std::cout << "Run main loop.\n";
     g_main_loop_run(mainLoop);
 
+    g_main_loop_unref(mainLoop);
     return 0;
 }
 
