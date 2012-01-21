@@ -237,8 +237,10 @@ bool Serializer::load(Graph &graph, const char *filename)
             { // for each node:
                 if (node_name_is(node_node, NODE_NODE))
                 { // is a node
+                    // TODO: check if it has the property
                     xmlChar *node_type = xmlGetProp(node_node, 
                         XMLSTR NODE_CLASS_PROPERTY);
+                    // TODO: check if it has the property
                     xmlChar *node_name = xmlGetProp(node_node, 
                         XMLSTR NODE_ID_PROPERTY);
                     if (verbose)
@@ -246,7 +248,6 @@ bool Serializer::load(Graph &graph, const char *filename)
                     if (node_type != NULL && node_name != NULL)
                     { // node has name
                         graph.addNode((char *) node_type, (char *) node_name);
-                        // TODO: load attributes
                         // ATTRIBUTES:
                         for (xmlNode *attribute_node = node_node->children;
                             attribute_node;

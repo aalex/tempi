@@ -20,6 +20,7 @@
 
 #include <iostream>
 #include "tempi/base/prependnode.h"
+#include "tempi/utils.h"
 
 namespace tempi {
 namespace base {
@@ -29,12 +30,20 @@ PrependNode::PrependNode() :
 {
     addAttribute("value", Message(), "Holds any message to prepend.", false);
     addOutlet("0");
+    addInlet("0");
 }
 
 void PrependNode::processMessage(const char *inlet, const Message &message)
 {
+    if (! utils::stringsMatch(inlet, "0"))
+        return;
     Message ret = message;
-    ret.prependMessage(getAttributeValue("value"));
+    //std::cout << "[prepend]: " << getAttributeValue("value") << " " << message << std::endl;
+    if (getAttributeValue("value").getTypes() != "")
+    {
+        ret.prependMessage(getAttributeValue("value"));
+    }
+    //std::cout << "[prepend]: " << " result is " << ret << std::endl;
     output("0", ret);
 }
 

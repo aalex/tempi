@@ -49,6 +49,7 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     base/nop_node.cpp \
     base/prependnode.cpp \
     base/print_node.cpp \
+    base/routenode.cpp \
     base/spigotnode.cpp \
     clutter/clutterlibrary.cpp \
     clutter/clutterstagenode.cpp \
@@ -116,6 +117,7 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     base/nop_node.h \
     base/prependnode.h \
     base/print_node.h \
+    base/routenode.h \
     base/spigotnode.h \
     clutter/clutterlibrary.h \
     clutter/clutterstagenode.h \

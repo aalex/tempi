@@ -22,8 +22,8 @@
  * @file
  * The RouteNode class.
  */
-#ifndef __TEMPI_BASE_PREPENDNODE_H__
-#define __TEMPI_BASE_PREPENDNODE_H__
+#ifndef __TEMPI_BASE_ROUTENODE_H__
+#define __TEMPI_BASE_ROUTENODE_H__
 
 #include "tempi/node.h"
 #include <vector>
