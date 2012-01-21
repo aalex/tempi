@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tempi version="0.1.9">
+  <graph>
+    <node id="metro0" class="base.metro">
+      <attribute name="interval"><i>1000</i></attribute>
+      <attribute name="running"><b>1</b></attribute>
+    </node>
+    <node id="prepend_foo" class="base.prepend">
+      <attribute name="value"><s>foo</s></attribute>
+    </node>
+    <node id="prepend_bar" class="base.prepend">
+      <attribute name="value"><s>bar</s></attribute>
+    </node>
+    <node id="route0" class="base.route">
+      <attribute name="selectors">
+        <s>foo</s>
+        <s>bar</s>
+      </attribute>
+    </node>
+    <node id="print_foo" class="base.print">
+      <attribute name="prefix"><s>foo: </s></attribute>
+      <attribute name="enabled"><b>1</b></attribute>
+    </node>
+    <node id="print_bar" class="base.print">
+      <attribute name="prefix"><s>bar: </s></attribute>
+      <attribute name="enabled"><b>1</b></attribute>
+    </node>
+    <connection from="metro0" outlet="0" to="prepend_foo" inlet="0"/>
+    <connection from="metro0" outlet="0" to="prepend_bar" inlet="0"/>
+    <connection from="prepend_foo" outlet="0" to="route0" inlet="0"/>
+    <connection from="prepend_bar" outlet="0" to="route0" inlet="0"/>
+    <!-- <connection from="prepend_foo" outlet="0" to="print_foo" inlet="0"/> -->
+    <connection from="route0" outlet="foo" to="print_foo" inlet="0"/>
+    <connection from="route0" outlet="bar" to="print_bar" inlet="0"/>
+  </graph>
+</tempi>
