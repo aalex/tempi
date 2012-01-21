@@ -54,6 +54,16 @@ void RouteNode::processMessage(const char *inlet, const Message &message)
     }
 }
 
+// static void print_outlets(const std::map<std::string, Outlet::ptr> &outlets)
+// {
+//     std::cout << "Outlets:\n";
+//     std::map<std::string, Outlet::ptr>::const_iterator iter;
+//     for (iter = outlets.begin(); iter != outlets.end(); ++iter)
+//     {
+//         std::cout << " * " << (*iter).first << std::endl;
+//     }
+// }
+
 void RouteNode::onAttributeChanged(const char *name, const Message &value)
 {
     if (! utils::stringsMatch("selectors", name))
@@ -72,7 +82,7 @@ void RouteNode::onAttributeChanged(const char *name, const Message &value)
             }
             else
             {
-                std::cout << "[route] add outlet " << s << std::endl;
+                //std::cout << "[route] add outlet " << s << " to new_outlets" << std::endl;
                 new_outlets.push_back(s);
             }
         }
@@ -81,22 +91,24 @@ void RouteNode::onAttributeChanged(const char *name, const Message &value)
     std::vector<std::string>::const_iterator iter;
     for (iter = selectors_.begin(); iter != selectors_.end(); iter ++)
     {
-        if (utils::find_in_vector<std::string>(new_outlets, (*iter)))
+        if (! utils::find_in_vector<std::string>(new_outlets, (*iter)))
         {
             selectors_.erase(std::find(selectors_.begin(), selectors_.end(), (*iter)));
             removeOutlet((*iter).c_str());
+            //std::cout << "[route]: rm outlet " << (*iter) << std::endl;
         }
     }
     // add outlets that should be there:
     for (iter = new_outlets.begin(); iter != new_outlets.end(); iter ++)
     {
-        if (utils::find_in_vector<std::string>(selectors_, (*iter)))
+        if (! utils::find_in_vector<std::string>(selectors_, (*iter)))
         {
             selectors_.push_back((*iter));
-            std::cout << "[route]: add outlet " << (*iter) << std::endl;
+            //std::cout << "[route]: add outlet " << (*iter) << std::endl;
             addOutlet((*iter).c_str(), "Output for the message starting with a string of the same name.");
         }
     }
+    //print_outlets(getOutlets());
 }
 
 } // end of namespace
