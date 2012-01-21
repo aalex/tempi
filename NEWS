@@ -4,8 +4,11 @@ This release is a developer snapshot in the 0.1 series.
 
 New features:
 * Save and load Graph to and from XML.
-* New node types: [base.delay], [base.spigot]
+* New node types: [base.delay], [base.spigot], [base.route], [base.prepend]
 * New utilities: tempi-launch, tempi-inspect
+* Add Node::removeOutlet
+* Add NodeSignal
+* rename "attributes" inlet to "__attr__"
 
 Bugs fixed:
 * Fix calculation in ms <-> ns conversion 
