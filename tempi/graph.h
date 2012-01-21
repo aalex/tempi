@@ -85,6 +85,9 @@ class Graph
         NodesMapType nodes_;
         void disconnectAllConnectedTo(const char *name);
         void disconnectAllConnectedFrom(const char *name);
+        void disconnectAllConnectedTo(const char *name, const char *inlet);
+        void disconnectAllConnectedFrom(const char *name, const char *outlet);
+        void disconnectMany(ConnectionVec &connections);
         std::vector<Connection> getAllConnectedTo(const char *name, const char *inlet); // TODO: const
         std::vector<Connection> getAllConnectedFrom(const char *name, const char *outlet); // TODO: const
         std::vector<Connection> getAllConnectedTo(const char *name); // TODO: const
@@ -93,6 +96,8 @@ class Graph
         //void onInletTriggered(Outlet *source, boost::any data);
         // TODO: store connections to decrease complexity
         //bool handleTempiMessage(const Message &message);
+        void onInletDeleted(const Message &message);
+        void onOutletDeleted(const Message &message);
 };
 
 // not a good idea:

@@ -48,6 +48,7 @@ class Inlet
         // TODO: rename to ReceiveSlot
         typedef TriggeredSignal::slot_function_type TriggeredSlot;
         Inlet(const char *name, const char *documentation="");
+        ~Inlet();
         bool connect(Outlet::ptr source);
         bool disconnect(Outlet::ptr source);
         bool isConnected(Outlet::ptr source);

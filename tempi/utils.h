@@ -26,6 +26,8 @@
 #define __TEMPI_UTILS_H__
 
 #include <string>
+#include <vector>
+#include <algorithm>
 #include "tempi/exceptions.h"
 
 namespace tempi {
@@ -61,6 +63,12 @@ std::string concatenate(const char *a, const char *b);
  */
 template <typename T>
 std::string to_string(T value) throw(BadArgumentTypeException);
+
+template <typename T>
+bool find_in_vector(std::vector<T> &vec, const T &value)
+{
+    return std::find(vec.begin(), vec.end(), value) != vec.end();
+}
 
 } // end of namespace
 } // end of namespace

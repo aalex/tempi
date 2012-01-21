@@ -545,10 +545,24 @@ std::ostream &operator<<(std::ostream &os, const Message &message)
 
 void Message::prependMessage(const Message &message)
 {
-    for (unsigned int i = message.getSize(); i >= 0; --i)
+    if (message.getSize() == 0L)
+    {
+        //std::cout << __FUNCTION__ << " empty message. nothing to append\n";
+        return;
+    }
+    for (unsigned int i = message.getSize() - 1; i >= 0; --i)
     {
         ArgumentType type;
-        message.getArgumentType(i, type);
+        //std::cout << __FUNCTION__ << " " << i << std::endl;
+        try
+        {
+            message.getArgumentType(i, type);
+        }
+        catch (const BadIndexException &e)
+        {
+            std::cerr << __FUNCTION__ << " " << e.what() << std::endl;
+            //throw (e);
+        }
         switch (type)
         {
             case BOOLEAN:
@@ -573,9 +587,11 @@ void Message::prependMessage(const Message &message)
                 prependString(message.getString(i).c_str());
                 break;
             default:
-                std::cerr << "Node::PrependMessage: Unknow type of atom: " << type << std::endl;
+                std::cerr << "Message::" << __FUNCTION__ << "(): Unknow type of atom: " << type << std::endl;
                 break;
         }
+        if (i == 0L)
+            break; // FIXME
     }
 }
 

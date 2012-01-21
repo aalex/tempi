@@ -31,6 +31,12 @@ Inlet::Inlet(const char *name, const char *documentation)
     documentation_ = std::string(documentation);
 }
 
+Inlet::~Inlet()
+{
+    // just in case.
+    disconnectAll();
+}
+
 bool Inlet::connect(Outlet::ptr source)
 {
     if (! isConnected(source))

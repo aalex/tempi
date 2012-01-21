@@ -97,11 +97,12 @@ bool Serializer::save(Graph &graph, const char *filename)
     for (iter = node_names.begin(); iter != node_names.end(); ++iter)
     {
         xmlNodePtr node_node = xmlNewChild(graph_node, NULL, XMLSTR NODE_NODE, NULL);
-        xmlNewProp(node_node, XMLSTR NODE_ID_PROPERTY, XMLSTR (*iter).c_str());
-        Node::ptr node = graph.getNode((*iter).c_str());
         // node type attribute
+        Node::ptr node = graph.getNode((*iter).c_str());
         xmlNewProp(node_node, XMLSTR NODE_CLASS_PROPERTY, 
             XMLSTR node->getTypeName().c_str());
+        // and its id
+        xmlNewProp(node_node, XMLSTR NODE_ID_PROPERTY, XMLSTR (*iter).c_str());
         // node attributes nodes
         std::vector<std::string> attribute_names = node->getAttributesNames();
         std::vector<std::string>::const_iterator iter2;
@@ -236,8 +237,10 @@ bool Serializer::load(Graph &graph, const char *filename)
             { // for each node:
                 if (node_name_is(node_node, NODE_NODE))
                 { // is a node
+                    // TODO: check if it has the property
                     xmlChar *node_type = xmlGetProp(node_node, 
                         XMLSTR NODE_CLASS_PROPERTY);
+                    // TODO: check if it has the property
                     xmlChar *node_name = xmlGetProp(node_node, 
                         XMLSTR NODE_ID_PROPERTY);
                     if (verbose)
@@ -245,7 +248,6 @@ bool Serializer::load(Graph &graph, const char *filename)
                     if (node_type != NULL && node_name != NULL)
                     { // node has name
                         graph.addNode((char *) node_type, (char *) node_name);
-                        // TODO: load attributes
                         // ATTRIBUTES:
                         for (xmlNode *attribute_node = node_node->children;
                             attribute_node;

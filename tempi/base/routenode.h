@@ -18,35 +18,36 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <iostream>
-#include "tempi/base/prependnode.h"
-#include "tempi/utils.h"
+/**
+ * @file
+ * The RouteNode class.
+ */
+#ifndef __TEMPI_BASE_ROUTENODE_H__
+#define __TEMPI_BASE_ROUTENODE_H__
+
+#include "tempi/node.h"
+#include <vector>
+#include <string>
 
 namespace tempi {
 namespace base {
 
-PrependNode::PrependNode() :
-    Node()
+/**
+ * The RouteNode routes messages to its different outlets according to the first string in each message.
+ */
+class RouteNode : public Node
 {
-    addAttribute("value", Message(), "Holds any message to prepend.", false);
-    addOutlet("0");
-    addInlet("0");
-}
-
-void PrependNode::processMessage(const char *inlet, const Message &message)
-{
-    if (! utils::stringsMatch(inlet, "0"))
-        return;
-    Message ret = message;
-    //std::cout << "[prepend]: " << getAttributeValue("value") << " " << message << std::endl;
-    if (getAttributeValue("value").getTypes() != "")
-    {
-        ret.prependMessage(getAttributeValue("value"));
-    }
-    //std::cout << "[prepend]: " << " result is " << ret << std::endl;
-    output("0", ret);
-}
+    public:
+        RouteNode();
+    protected:
+        virtual void processMessage(const char *inlet, const Message &message);
+        virtual void onAttributeChanged(const char *name, const Message &value);
+    private:
+        std::vector<std::string> selectors_;
+};
 
 } // end of namespace
 } // end of namespace
+
+#endif // ifndef
 
