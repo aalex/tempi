@@ -75,7 +75,7 @@ static bool check_properties()
 
     Message set_message = Message("ssifs", "set", "hello", 3, 9.124351f, "qweqweqweqw");
     n.triggered_ = false;
-    n.getInlet("attributes")->trigger(set_message);
+    n.getInlet("__attr__")->trigger(set_message);
     if (VERBOSE)
     {
         std::cout << n.triggered_ << std::endl;

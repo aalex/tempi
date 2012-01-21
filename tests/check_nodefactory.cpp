@@ -138,37 +138,37 @@ bool check_print()
     bool quiet = ! VERBOSE;
     if (quiet)
     {
-        graph.message("print0", "attributes", disable_message);
-        graph.message("print1", "attributes", disable_message);
+        graph.message("print0", "__attr__", disable_message);
+        graph.message("print1", "__attr__", disable_message);
     }
     // change prefix
     //FIXME: both [print] objects have same value for prefix property.
     Message prefix0_message = Message("sss", "set", "prefix", "recording: ");
-    graph.message("print0", "attributes", prefix0_message);
+    graph.message("print0", "__attr__", prefix0_message);
     Message prefix1_message = Message("sss", "set", "prefix", "playback: ");
-    graph.message("print1", "attributes", prefix1_message);
+    graph.message("print1", "__attr__", prefix1_message);
     //std::cout << "sampler0 has n inlets: " << graph.getNode("sampler0")->getNumberOfInlets() << std::endl;
     // enables the sampler
-    // FIXME: property inlet in hard-coded to attributes in Node
+    // FIXME: property inlet in hard-coded to __attr__ in Node
     Message playing = Message("ssb", "set", "playing", true);
-    graph.message("sampler0", "attributes", playing);
+    graph.message("sampler0", "__attr__", playing);
     Message recording = Message("ssb", "set", "recording", true);
-    graph.message("sampler0", "attributes", recording);
+    graph.message("sampler0", "__attr__", recording);
     // print something (or not is disabled)
     Message fis_message = Message("fis", 3.14159f, 2, "hello");
-    graph.message("nop0", "attributes", fis_message);
+    graph.message("nop0", "__attr__", fis_message);
     graph.tick();
-    graph.message("nop0", "attributes", fis_message);
+    graph.message("nop0", "__attr__", fis_message);
     graph.tick();
 
     recording.setBoolean(2, false);
-    graph.message("sampler0", "attributes", recording);
+    graph.message("sampler0", "__attr__", recording);
     playing.setBoolean(2, false);
-    graph.message("sampler0", "attributes", playing);
+    graph.message("sampler0", "__attr__", playing);
     playing.setBoolean(2, true);
-    graph.message("sampler0", "attributes", playing);
+    graph.message("sampler0", "__attr__", playing);
     recording = Message("ssb", "set", "recording", true);
-    graph.message("sampler0", "attributes", recording);
+    graph.message("sampler0", "__attr__", recording);
 
     for (int i = 0; i < 10; ++i)
     {

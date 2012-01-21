@@ -45,7 +45,7 @@ static bool check_op(const char *op, float left, float right, T expected)
     if (VERBOSE)
         std::cout << "set operand: " << std::endl;
     Message set_operand = Message("ssf", "set", "operand", right);
-    graph.message("op0", "attributes", set_operand);
+    graph.message("op0", "__attr__", set_operand);
     if (VERBOSE)
         std::cout << "send float to hot inlet : " << std::endl;
     Message float_mess = Message("f", left);

@@ -81,17 +81,17 @@ static bool checkMetro()
     bool quiet = ! VERBOSE;
     Message disable_message = Message("ssb", "set", "enabled", false);
     if (quiet)
-        graph.message("print0", "attributes", disable_message);
+        graph.message("print0", "__attr__", disable_message);
 
     // start metro
     if (VERBOSE)
         std::cout << "set metro interval:" << std::endl;
     Message interval_message = Message("ssi", "set", "interval", 100);
-    graph.message("metro0", "attributes", interval_message);
+    graph.message("metro0", "__attr__", interval_message);
     if (VERBOSE)
         std::cout << "start metro:" << std::endl;
     Message start_message = Message("ssb", "set", "running", true);
-    graph.message("metro0", "attributes", start_message);
+    graph.message("metro0", "__attr__", start_message);
 
     Timer timer;
     while (true)
