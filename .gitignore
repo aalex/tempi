@@ -51,10 +51,12 @@ prototypes/midi/midiprobe
 prototypes/midilooper-gui/run
 prototypes/midilooper-gui/signals_to_messages
 prototypes/modules/main
+prototypes/matrix_type/blobreceiver
+prototypes/matrix_type/blobsender
+prototypes/matrix_type/check_array
+prototypes/matrix_type/matrix
+prototypes/matrix_type/proto_armadillo
 prototypes/nodefactory
-prototypes/oscblob/blobreceiver
-prototypes/oscblob/blobsender
-prototypes/oscblob/check_array
 prototypes/phoenix/findif
 prototypes/tuples
 prototypes/va_list/var_types
@@ -97,5 +99,5 @@ tests/check_version
 !prototypes/midi/Makefile
 !prototypes/midilooper-gui/Makefile
 !prototypes/modules/Makefile
-!prototypes/oscblob/Makefile
+!prototypes/matrix_type/Makefile
 
