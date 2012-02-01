@@ -37,6 +37,9 @@ typedef unsigned long long TimePosition;
 namespace timeposition
 {
 
+/**
+ * Number of nanoseconds in a millisecond. (one million, of course)
+ */
 static const unsigned long long NS_PER_MS = 1000000L;
 
 /**

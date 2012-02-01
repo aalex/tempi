@@ -64,6 +64,9 @@ std::string concatenate(const char *a, const char *b);
 template <typename T>
 std::string to_string(T value) throw(BadArgumentTypeException);
 
+/**
+ * Checks if a value is in a vector.
+ */
 template <typename T>
 bool find_in_vector(std::vector<T> &vec, const T &value)
 {

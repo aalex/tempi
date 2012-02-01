@@ -38,9 +38,21 @@ class Timer
 {
     public:
         Timer();
+        /**
+         * Returns how many nanoseconds elapsed since start.
+         */
         TimePosition elapsed();
+        /**
+         * Sets the start time to now.
+         */
         void reset();
+        /**
+         * Returns the time now.
+         */
         TimePosition now();
+        /**
+         * Sets the time now.
+         */
         bool setPosition(TimePosition position);
     private:
         TimePosition start_tick_;

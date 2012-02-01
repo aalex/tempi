@@ -40,11 +40,35 @@ class Attribute
 {
     public:
         typedef std::tr1::shared_ptr<Attribute> ptr;
+        /**
+         * Creates an Attribute with a given name, initial value and documentation string.
+         * @param name Name for this Attribute
+         * @param value Initial value.
+         * @param doc Documentation string.
+         * @param type_strict Whether or not this Attribute's value is type-strict. (false if its type can change)
+         */
         Attribute(const char *name, const Message &value, const char *doc, bool type_strict=true);
+        /**
+         * Returns the name of this Attribute.
+         */
         std::string getName() const;
+        /**
+         * Returns the documentation string of this Attribute.
+         */
         std::string getDocumentation() const;
+        /**
+         * Returns the value string of this Attribute.
+         */
         const Message &getValue();
+        /**
+         * Sets the value string of this Attribute.
+         * @return False if the type tag of the value is wrong, and this Attribute is type-strict.
+         */
         bool setValue(const Message &value);
+        /**
+         * Checks if this attribute is type-strict.
+         * If it is type-strict, one can only set its value to another value with the same type tags.
+         */
         bool isTypeStrict() const;
     private:
         std::string name_;

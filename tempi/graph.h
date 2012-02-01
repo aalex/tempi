@@ -46,9 +46,25 @@ class Graph
          * Tuple containing the name of the source node, outlet name, name of sink node, inlet name.
          */
         typedef boost::tuple<std::string, std::string, std::string, std::string> Connection;
+        /**
+         * Creates a Graph that can create node with the given NodeFactory.
+         */
         Graph(NodeFactory::ptr factory);
+        /**
+         * Creates a Graph with an empty NodeFactory.
+         */
         Graph();
+        // TODO: rename to createNode
+        /**
+         * Creates a Node of a given type name in this Graph.
+         */
         bool addNode(const char *type, const char *name);
+        /**
+         * Sends a message to a given Node inlet in this Graph.
+         * @param node Name of the Node.
+         * @param inlet Name of the inlet of that Node.
+         * @param message Message to send.
+         */
         bool message(const char *node, const char *inlet, const Message &message);
         /**
          * This method allows dynamic patching of a Graph.
@@ -61,12 +77,34 @@ class Graph
          * - ,ss...: setNodeAttribute [nodeName] [prop] ...
          */
         //bool handleMessage(const Message &message);
+        /**
+         * Connects the outlet of a node in this Graph, to the inlet of another node in this Graph.
+         */
         bool connect(const char *from, const char *outlet, const char *to, const char *inlet);
+        /**
+         * Disconnects the outlet of a node in this Graph, from the inlet of another node in this Graph.
+         */
         bool disconnect(const char *from, const char *outlet, const char *to, const char *inlet);
+        /**
+         * Checks if a given outlet is connected to a given inlet.
+         */
         bool isConnected(const char *from, const char *outlet, const char *to, const char *inlet);
+        /**
+         * Retrieves a Node in this Graph.
+         */
         Node::ptr getNode(const char *name) const;
+        /**
+         * Returns the list of Node names in this Graph.
+         */
         std::vector<std::string> getNodeNames() const;
+        /**
+         * Checks if a given named Node is in this Graph.
+         */
         bool hasNode(const char *name) const;
+        /**
+         * Triggers whatever timed action need to be done in this Graph.
+         * Also calls Node::init() for each Node if not called.
+         */
         void tick();
         /**
          * Deletes a node after disconnecting all its outlets and inlets.
@@ -76,7 +114,9 @@ class Graph
          * Returns all connections in this graph.
          */
         const std::vector<Connection> getAllConnections() const; // TODO: const
-        // TODO: store all connections in a vector
+        /**
+         * Sets the value of a given named attribute of a named Node in this Graph.
+         */
         bool setNodeAttribute(const char *nodeName, const char *attributeName, const Message &value);
     private:
         typedef std::map<std::string, Node::ptr> NodesMapType;

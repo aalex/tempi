@@ -55,7 +55,14 @@ class Node
         typedef std::tr1::shared_ptr<Node> ptr;
         Node();
         virtual ~Node() {}
+        /**
+         * Initializes the Node.
+         * Should be called when one ticks its parent Graph.
+         */
         bool init();
+        /**
+         * Returns whether or not this node's init() has been called.
+         */
         bool isInitiated() const;
         /**
          * Returns all its outlets.
@@ -65,9 +72,23 @@ class Node
          * Returns all its inlets.
          */
         std::map<std::string, Inlet::ptr> getInlets();
+        /**
+         * Returns the number of inlets this node has.
+         */
         unsigned int getNumberOfInlets() const;
+        /**
+         * Returns the number of outlets this node has.
+         */
         unsigned int getNumberOfOutlets() const;
+        /**
+         * Sends a message to a given inlet of this node.
+         * @param inlet Name of the inlet to send a message to.
+         * @param message Message to send.
+         */
         bool message(const char *inlet, const Message &message);
+        /**
+         * Retrieves an inlet of this Node.
+         */
         Inlet *getInlet(const char *name) const;
         // TODO: deprecate getOutlet?
         Outlet *getOutlet(const char *name) const;
@@ -79,7 +100,14 @@ class Node
         // TODO: properties:
         // std::map<std::string, Message> getAttributes();
         Attribute::ptr getAttribute(const char *name) const throw(BadIndexException);
+        /**
+         * Returns the value of a given named attribute of this Node.
+         */
         const Message &getAttributeValue(const char *name) const throw(BadIndexException);
+        /**
+         * Checks if this node has a given named attribute.
+         * @return True if this node has such an attribute.
+         */
         bool hasAttribute(const char *name) const;
         /**
          * Sets a attribute value.
@@ -87,17 +115,37 @@ class Node
          * WARNING: if the value has not changed, it won't call onAttributeChanged.
          */
         void setAttribute(const char *name, const Message &value) throw(BadIndexException, BadArgumentTypeException);
+        /**
+         * Returns the type for a given named attribute.
+         */
         std::string getAttributeType(const char *name);
+        /**
+         * Return the list of all the attributes names for this Node.
+         * Note that some attributes can appear/disappear at run time.
+         */
         std::vector<std::string> getAttributesNames() const;
         //
         // signals:
         std::map<std::string, NodeSignal::ptr> getSignals();
         NodeSignal::ptr getSignal(const char *name) throw(BadIndexException);
         bool hasSignal(const char *name);
-
+        /**
+         * Sets the type name for this Node.
+         * WARNING: This should be only called by the NodeFactory.
+         */
         void setTypeName(const char *typeName);
+        /**
+         * Gets the type name for this Node.
+         */
         const std::string &getTypeName() const;
+        /**
+         * Sets the instance name for this Node.
+         * WARNING: Should only be called by its parent Graph.
+         */
         void setInstanceName(const char *instanceName);
+        /**
+         * Gets the instance name for this Node.
+         */
         const std::string &getInstanceName() const;
         bool handlesReceiveSymbol(const char *selector) const;
         bool handleReceive(const char *selector, const Message &message)
@@ -107,8 +155,21 @@ class Node
             onHandleReceive(selector, message);
             return true;
         }
+        /**
+         * Checks if this Node has an inlet with the given name.
+         * @param name Name of the inlet to look for.
+         * @return True if it has it.
+         */
         bool hasInlet(const char *name) const;
+        /**
+         * Checks if this Node has an outlet with the given name.
+         * @param name Name of the outlet to look for.
+         * @return True if it has it.
+         */
         bool hasOutlet(const char *name) const;
+        /**
+         * Gets the documentation string for this Node type.
+         */
         std::string getDocumentation() const;
     protected:
         void enableHandlingReceiveSymbol(const char *selector);
@@ -116,24 +177,33 @@ class Node
         {}
         bool addSignal(NodeSignal::ptr signal);
         /**
-         * Adds a outlet.
+         * Adds an outlet.
          */
         bool addOutlet(const char *name, const char *documentation="");
         /**
-         * Adds a inlet.
+         * Adds an inlet.
          */
         bool addInlet(const char *name, const char *documentation="");
         /**
-         * Adds a outlet.
+         * Adds an outlet.
          */
         bool addOutlet(Outlet::ptr outlet);
 
+        /**
+         * Removes an outlet.
+         */
         bool removeOutlet(const char *name);
         /**
-         * Adds a inlet.
+         * Adds an inlet.
          */
         bool addInlet(Inlet::ptr inlet);
+        /**
+         * Adds an attribute.
+         */
         void addAttribute(const char *name, const Message &value, const char *doc="", bool type_strict=true) throw(BadIndexException);
+        /**
+         * Outputs a Message through the given outlet.
+         */
         void output(const char *outlet, const Message &message) const throw(BadIndexException);
         virtual void onAttributeChanged(const char *name, const Message &value)
         {}
@@ -151,6 +221,9 @@ class Node
          * (for initiating sockets, files, user interfaces, etc.)
          */
         virtual void onInit();
+        /**
+         * Sets the documentation string for this node type.
+         */
         void setDocumentation(const char *documentation);
     private:
         bool initiated_;

@@ -48,7 +48,15 @@ class Outlet
         {
             return on_triggered_signal_;
         }
+        /**
+         * Returns the name of this outlet.
+         * Each Node should take care of naming its outlets.
+         */
         std::string getName() const;
+        /**
+         * Returns the documentation of this outlet.
+         * Each Node should take care of documenting its outlets.
+         */
         std::string getDocumentation() const;
     private:
          TriggeredSignal on_triggered_signal_;
