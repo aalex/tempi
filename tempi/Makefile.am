@@ -73,11 +73,13 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     node.cpp \
     nodefactory.cpp \
     nodesignal.cpp \
+    object.cpp \
     osc/osclibrary.cpp \
     osc/oscreceiver.cpp \
     osc/oscreceivernode.cpp \
     osc/oscsender.cpp \
     osc/oscsendernode.cpp \
+    pad.cpp \
     sampler/samplerlibrary.cpp \
     sampler/loopingplayback.cpp \
     sampler/marker.cpp \
@@ -168,7 +170,9 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     serializer.h \
     sharedptr.h \
     inlet.h \
+    object.h \
     outlet.h \
+    pad.h \
     table/table.h \
     table/table_player.h \
     table/table_writer.h \
