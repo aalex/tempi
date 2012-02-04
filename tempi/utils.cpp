@@ -22,6 +22,7 @@
 #include <algorithm> // min, max
 #include <boost/lexical_cast.hpp>
 #include <iostream>
+#include <boost/lexical_cast.hpp>
 #include <string.h>
 
 namespace tempi {
@@ -93,6 +94,125 @@ std::string to_string(T value) throw(BadArgumentTypeException)
     {
         throw BadArgumentTypeException(e.what());
     }
+}
+
+void appendArgumentFromString(Message &message, const char *atom_value, ArgumentType type)
+    throw(BadArgumentTypeException)
+{
+    try
+    {
+        switch (type)
+        {
+            case BOOLEAN:
+                if (atom_value == "0")
+                    message.appendBoolean(false);
+                else
+                    message.appendBoolean(true);
+                break;
+            case CHAR:
+                message.appendChar(
+                    boost::lexical_cast<char>(atom_value));
+                break;
+            case UNSIGNED_CHAR:
+                message.appendUnsignedChar(
+                    boost::lexical_cast<unsigned char>(atom_value));
+                break;
+            case DOUBLE:
+                message.appendDouble(
+                    boost::lexical_cast<double>(atom_value));
+                break;
+            case FLOAT:
+                message.appendFloat(
+                    boost::lexical_cast<float>(atom_value));
+                break;
+            case INT:
+                message.appendInt(
+                    boost::lexical_cast<int>(atom_value));
+                break;
+            case LONG:
+                message.appendLong(
+                    boost::lexical_cast<unsigned long long>(atom_value));
+                break;
+            case STRING:
+                message.appendString(atom_value);
+                break;
+            case POINTER:
+            default:
+                {
+                    std::ostringstream os;
+                    os << "ERROR: " << __FUNCTION__ << 
+                        ": Unsupported type tag to unserialize: " <<
+                        (char) type;
+                    throw BadArgumentTypeException(os.str().c_str());
+                }
+                break;
+        } // switch typetag
+    }
+    catch (const boost::bad_lexical_cast &e)
+    {
+        std::ostringstream os;
+        os << "ERROR: " << __FUNCTION__ << 
+            ": Bad value \"" << atom_value << "\" to unserialize for type tag \"" << type << "\". " << e.what();
+        throw BadArgumentTypeException(os.str().c_str());
+    }
+}
+
+std::string argumentToString(const Message &message, unsigned int index)
+    throw(BadArgumentTypeException, BadIndexException)
+{
+    if (index >= message.getSize())
+    {
+        std::ostringstream os;
+        os << __FUNCTION__ << ": Invalid index " << index << " in message " << message;
+        throw BadIndexException(os.str().c_str());
+    }
+    ArgumentType atom_type;
+    message.getArgumentType(index, atom_type);
+    switch (atom_type)
+    {
+        case BOOLEAN:
+            return boost::lexical_cast<std::string>(
+                message.getBoolean(index));
+            break;
+        case CHAR:
+            return boost::lexical_cast<std::string>(
+                message.getChar(index));
+            break;
+        case UNSIGNED_CHAR:
+            return boost::lexical_cast<std::string>(
+                message.getUnsignedChar(index));
+            break;
+        case DOUBLE:
+            return boost::lexical_cast<std::string>(
+                message.getDouble(index));
+            break;
+        case FLOAT:
+            return boost::lexical_cast<std::string>(
+                message.getFloat(index));
+            break;
+        case INT:
+            return boost::lexical_cast<std::string>(
+                message.getInt(index));
+            break;
+        case LONG:
+            return boost::lexical_cast<std::string>(
+                message.getLong(index));
+            break;
+        case STRING:
+            return message.getString(index);
+            break;
+        case POINTER:
+            return boost::lexical_cast<std::string>(
+                message.getPointer(index));
+            break;
+        default:
+            {
+                std::ostringstream os;
+                os << __FUNCTION__ << ": Unsupported atom type \"" << atom_type << "\" to serialize at index " << index << " " << atom_type;
+                throw BadArgumentTypeException(os.str().c_str());
+            }
+            break;
+    } // end of switch/case
 }
 
 } // end of namespace
