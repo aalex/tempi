@@ -29,6 +29,7 @@
 #include <vector>
 #include <algorithm>
 #include "tempi/exceptions.h"
+#include "tempi/message.h"
 
 namespace tempi {
 namespace utils {
@@ -72,6 +73,18 @@ bool find_in_vector(std::vector<T> &vec, const T &value)
 {
     return std::find(vec.begin(), vec.end(), value) != vec.end();
 }
+
+/**
+ * Serializes a given argument from a Message.
+ */
+std::string argumentToString(const Message &message, unsigned int index)
+    throw(BadArgumentTypeException, BadIndexException);
+
+/**
+ * Appends an argument to the given Message parsing a serialized string, if valid.
+ */
+void appendArgumentFromString(Message &message, const char *atom_value, ArgumentType type)
+    throw(BadArgumentTypeException);
 
 } // end of namespace
 } // end of namespace

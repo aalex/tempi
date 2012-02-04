@@ -20,12 +20,14 @@
 
 #include "tempi/serializer.h"
 #include "tempi/config.h"
+#include "tempi/utils.h"
 #include <boost/lexical_cast.hpp>
 #include <boost/filesystem.hpp>
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 #include <stdio.h> // for snprintf
 #include <string>
+#include <sstream>
 #include <vector>
 
 #ifndef XMLSTR
@@ -43,6 +45,20 @@ namespace serializer
  * @return success or not.
  */
 bool node_name_is(xmlNode *node, const std::string &name);
+
+/**
+ * Converts a char to a string.
+ */
+std::string char_to_string(char c);
+
+std::string char_to_string(char c)
+{
+    std::stringstream ss;
+    ss << c;
+    std::string s;
+    ss >> s;
+    return s;
+}
 
 /** Returns a pointer to the XML child with the given name
  * @return A pointer to the data, not a copy of it.
@@ -115,57 +131,20 @@ bool Serializer::save(Graph &graph, const char *filename)
             Message attr_value = node->getAttributeValue((*iter2).c_str());
             for (unsigned int i = 0; i < attr_value.getSize(); ++i)
             {
+                std::string atom_value;
                 ArgumentType atom_type_char;
                 attr_value.getArgumentType(i, atom_type_char);
-                std::string atom_type = boost::lexical_cast<std::string>(
-                    (char) atom_type_char);
-                std::string atom_value;
-                switch (atom_type_char)
+                std::string atom_type = char_to_string(atom_type_char);
+                try
                 {
-                    case BOOLEAN:
-                        atom_value = boost::lexical_cast<std::string>(
-                            attr_value.getBoolean(i));
-                        break;
-                    case CHAR:
-                        atom_value = boost::lexical_cast<std::string>(
-                            attr_value.getChar(i));
-                        break;
-                    case UNSIGNED_CHAR:
-                        atom_value = boost::lexical_cast<std::string>(
-                            attr_value.getUnsignedChar(i));
-                        break;
-                    case DOUBLE:
-                        atom_value = boost::lexical_cast<std::string>(
-                            attr_value.getDouble(i));
-                        break;
-                    case FLOAT:
-                        atom_value = boost::lexical_cast<std::string>(
-                            attr_value.getFloat(i));
-                        break;
-                    case INT:
-                        atom_value = boost::lexical_cast<std::string>(
-                            attr_value.getInt(i));
-                        break;
-                    case LONG:
-                        atom_value = boost::lexical_cast<std::string>(
-                            attr_value.getLong(i));
-                        break;
-                    case STRING:
-                        atom_value = attr_value.getString(i);
-                        break;
-                    case POINTER:
-                        atom_value = boost::lexical_cast<std::string>(
-                            attr_value.getPointer(i));
-                        break;
-                    default:
-                        std::cerr << __FILE__ << " " << __FUNCTION__ <<
-                            ": Unsupported type tag: " << atom_type_char <<
-                            std::endl;
-                        atom_value = "UNSUPPORTED";
-                        break;
-                } // end of switch/case
-                xmlNodePtr atom_node = xmlNewChild(attr_node, NULL, 
-                    XMLSTR atom_type.c_str(), XMLSTR atom_value.c_str());
+                    atom_value = utils::argumentToString(attr_value, i);
+                    xmlNodePtr atom_node = xmlNewChild(attr_node, NULL, 
+                        XMLSTR atom_type.c_str(), XMLSTR atom_value.c_str());
+                }
+                catch (const BadArgumentTypeException &e)
+                {
+                    std::cerr << e.what() << std::endl;
+                }
             } // for atoms
         } // for attributes
     } // for nodes
@@ -281,64 +260,20 @@ bool Serializer::load(Graph &graph, const char *filename)
                                         } // size
                                         else
                                         {
-                                            std::cerr << "Atom typetags should be only one char. Got "
-                                                << tmp_typetag << std::endl;
+                                            std::cerr << "Atom typetags should be only one char. Got " <<
+                                                tmp_typetag << std::endl;
                                         }
                                         try
                                         {
-                                            switch (atom_typetag)
-                                            {
-                                                case BOOLEAN:
-                                                    if (atom_value == "0")
-                                                        attr_value.appendBoolean(false);
-                                                    else
-                                                        attr_value.appendBoolean(true);
-                                                    //std::cout << "got bool " << attr_value << "\n";
-                                                    //attr_value.appendBoolean(
-                                                    //    boost::lexical_cast<bool>(atom_value));
-                                                    break;
-                                                case CHAR:
-                                                    attr_value.appendChar(
-                                                        boost::lexical_cast<char>(atom_value));
-                                                    break;
-                                                case UNSIGNED_CHAR:
-                                                    attr_value.appendUnsignedChar(
-                                                        boost::lexical_cast<unsigned char>(atom_value));
-                                                    break;
-                                                case DOUBLE:
-                                                    attr_value.appendDouble(
-                                                        boost::lexical_cast<double>(atom_value));
-                                                    break;
-                                                case FLOAT:
-                                                    attr_value.appendFloat(
-                                                        boost::lexical_cast<float>(atom_value));
-                                                    break;
-                                                case INT:
-                                                    attr_value.appendInt(
-                                                        boost::lexical_cast<int>(atom_value));
-                                                    break;
-                                                case LONG:
-                                                    attr_value.appendLong(
-                                                        boost::lexical_cast<unsigned long long>(atom_value));
-                                                    break;
-                                                case STRING:
-                                                    attr_value.appendString(atom_value.c_str());
-                                                    break;
-                                                case POINTER:
-                                                default:
-                                                    std::cerr << "ERROR: " << __FILE__ << ":" << __LINE__
-                                                        << " " << __FUNCTION__
-                                                        << ": Unsupported type tag: " << (char) atom_typetag
-                                                        << std::endl;
-                                                    break;
-                                            } // switch typetag
+                                            utils::appendArgumentFromString(attr_value, atom_value.c_str(), atom_typetag);
                                             if (verbose)
-                                                std::cout << "    * atom " << (char) atom_typetag << ":"
-                                                    <<  atom_value  << std::endl;
+                                                std::cout << "    * atom " <<
+                                                    (char) atom_typetag << ":" <<
+                                                    atom_value  << std::endl;
                                         }
-                                        catch (const boost::bad_lexical_cast &e)
+                                        catch (const BadArgumentTypeException &e)
                                         {
-                                            std::cerr << __FILE__ << " " << __FUNCTION__ << e.what() << std::endl;
+                                            std::cerr << __FILE__ << ": " << __FUNCTION__ << " " << e.what() << std::endl;
                                         }
                                     } // is atom node
                                 } // for each atom
