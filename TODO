@@ -3,14 +3,14 @@ To do in Tempi
 
 To do for 0.1.8
 ---------------
-* Move nodes to tempi-plugins-base // FIXME: header files are not installed in subdirectories, but flat
+* move tests to tempi/tests and plugins-base/tests
+* Move nodes to plugins-base // FIXME: header files are not installed in subdirectories, but flat
 * Node::listInlets()
 * Node::listOutlets()
-* Graph: handle inlet/outlet deletion
 
 To do for 0.2
 -------------
-* list/configure MIDI ports by their ALSA ID, not an index
+* (WONTFIX) list/configure MIDI ports by their ALSA ID, not an index
 * midilooper: multitrack sequencer with GUI
 * Bugfix: Message.*(...): avoid segfault if length does not match
 * Bugfix: Message.*(...): avoid segfault if types do not match
@@ -18,13 +18,7 @@ To do for 0.2
 * FilterNode.filter should return a const&
 * Each scheduler should access some tracks
 * Each scheduler should access some state machines
-* Graph::load(fileName)
-* Graph::save(fileName)
-* Node::addInlet (i18n doc)
 * Node::addMethod (i18n doc)
-* Node::addOutlet (i18n doc)
-* Node::addProperty (i18n doc, allow non type strict)
-* Node::listProperties()
 * Scheduler::deleteGraph()
 * Score::load(fileName)
 * Score::save(fileName)
@@ -32,11 +26,8 @@ To do for 0.2
 * tempi::LIST
 * [mapping.curve]
 * [midi.closenote]
-* [base.prepend]
 * [base.receive]
-* [base.route]
 * [base.send]
-* [base.spigot]
 * [base.timer]
 * [sampler.reader]
 * [sampler.score]
@@ -55,7 +46,6 @@ To do for 0.4
 * Application: Write a basic node editor.
 * [mapping.*] should be provided a typetag argument. (and support types fdi)
 * [base.converttype]
-* [base.delay]
 * [base.trigger]
 * [base.typematches]
 * [base.python]
@@ -96,7 +86,7 @@ To do for 0.6
 * All nodes should have a verbose attribute
 * Implement Node::error, which triggers a signal that the Graph catches.
 * Feature: Many OSC sender/receiver with the same host+port should share the same OSC sender. Use a map of tuple<ip,port> to shared_ptr<OscSender>.
-* Bugfix: Prevent from recursion by throwing a RecursionException upon output triggered twice. No?
+* Bugfix: Prevent from recursion by throwing a RecursionException upon output triggered twice.
 * Create a timeline Clutter actor.
 * Create a graph editor Clutter actor.
 
