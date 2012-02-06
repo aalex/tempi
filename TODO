@@ -33,8 +33,13 @@ To do for 0.2
 * Score::save(fileName)
 * tempi::MATRIX
 * tempi::LIST
-* [mapping.curve]
 * [base.prepend]
+* [mapping.curve]
+* [midi.closenote]
+* [midi.route.control]
+* [midi.route.controls]
+* [midi.route.note]
+* [midi.route.notes]
 * [base.receive]
 * [base.route]
 * [base.send]
