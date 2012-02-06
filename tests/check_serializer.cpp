@@ -18,8 +18,8 @@ static bool check_save()
     graph->tick();
 
     graph->connect("metro0", "0", "print0", "0");
-    graph->message("print0", "attributes", Message("ssb", "set", "enabled", false));
-    graph->message("metro0", "attributes", Message("ssi", "set", "interval", 1000));
+    graph->message("print0", "__attr__", Message("ssb", "set", "enabled", false));
+    graph->message("metro0", "__attr__", Message("ssi", "set", "interval", 1000));
 
     graph->tick();
 
