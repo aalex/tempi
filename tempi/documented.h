@@ -19,57 +19,49 @@
  */
 
 /**
- * The Object class.
+ * The Documented class.
  */
 
-#ifndef __TEMPI_OBJECT_H__
-#define __TEMPI_OBJECT_H__
+#ifndef __TEMPI_DOCUMENTED_H__
+#define __TEMPI_DOCUMENTED_H__
 
 #include <string>
+#include "tempi/namedobject.h"
 
 namespace tempi
 {
 
 /**
- * An Object is a generic Tempi entity that has a name and some documentation attached to it.
+ * An Documented is a generic Tempi entity that has a name and some documentation attached to it.
  */
-class Object
+class Documented : public NamedObject
 {
     public:
         /**
          * Constructor.
          */
-        Object(
+        Documented(
             const char *name = "",
             const char *short_documentation = "",
             const char *long_documentation = "");
         /**
-         * Returns the name of this Object.
-         */
-        std::string getName() const;
-        /**
-         * Returns the short documentation string of this Object.
+         * Returns the short documentation string of this Documented.
          */
         std::string getShortDocumentation() const;
         /**
-         * Returns the long documentation string of this Object.
+         * Returns the long documentation string of this Documented.
          */
         std::string getLongDocumentation() const;
     protected:
         /**
-         * Sets the name of this Object.
-         */
-        std::string setName(const char *name);
-        /**
-         * Sets the short documentation string of this Object.
+         * Sets the short documentation string of this Documented.
          */
         std::string setShortDocumentation(const char *short_documentation);
         /**
-         * Sets the long documentation string of this Object.
+         * Sets the long documentation string of this Documented.
          */
         std::string setLongDocumentation(const char *long_documentation);
     private:
-        std::string name_;
         std::string short_documentation_;
         std::string long_documentation_;
 };

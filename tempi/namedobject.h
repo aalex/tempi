@@ -19,37 +19,50 @@
  */
 
 /**
- * @file
- * The Pad class.
+ * The Named class.
  */
-#ifndef __TEMPI_PAD_H__
-#define __TEMPI_PAD_H__
 
-#include <boost/signals2.hpp>
-#include "tempi/entity.h"
-#include "tempi/message.h"
+#ifndef __TEMPI_NAMEDOBJECT_H__
+#define __TEMPI_NAMEDOBJECT_H__
+
+#include <string>
+#include <tr1/memory>
 
 namespace tempi
 {
 
 /**
- * A Pad is something that can be connected to something else.
+ * An NamedObject is an object that has a name.
  */
-class Pad : public Entity
+class NamedObject
 {
     public:
-        typedef boost::signals2::signal<void (const Message&)> TriggeredSignal;
-        Pad(const char *name,
-            const char *short_documentation,
-            const char *long_documentation);
-        void trigger(const Message &message);
-        TriggeredSignal &getOnTriggeredSignal();
+        /**
+         * Shared pointer to a NamedObject.
+         */
+        typedef std::tr1::shared_ptr<NamedObject> ptr;
+        /**
+         * Constructor.
+         */
+        NamedObject(const char *name = "");
+        /**
+         * Returns the name of this Documented.
+         */
+        std::string getName() const;
+//    protected:
+        /**
+         * Sets the name of this Documented.
+         */
+        std::string setName(const char *name);
+        /**
+         * A virtual destructor makes this class polymorphic.
+         */
+        virtual ~NamedObject() {}
     private:
-        TriggeredSignal on_triggered_signal_;
+        std::string name_;
 };
 
 } // end of namespace
 
 #endif // ifndef
-
 

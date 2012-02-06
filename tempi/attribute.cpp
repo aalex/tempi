@@ -23,22 +23,11 @@
 
 namespace tempi {
 
-Attribute::Attribute(const char *name, const Message &value, const char *doc, bool type_strict)
+Attribute::Attribute(const char *name, const Message &value, const char *doc, bool type_strict) :
+    Documented(name, doc, "")
 {
     value_ = value;
-    name_ = std::string(name);
-    documentation_ = std::string(documentation_);
     type_strict_ = type_strict;
-}
-
-std::string Attribute::getName() const
-{
-    return name_;
-}
-
-std::string Attribute::getDocumentation() const
-{
-    return documentation_;
 }
 
 const Message &Attribute::getValue()

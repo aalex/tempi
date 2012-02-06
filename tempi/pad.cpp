@@ -24,7 +24,7 @@ namespace tempi
 {
 
 Pad::Pad(const char *name, const char *short_documentation, const char *long_documentation) :
-    Object(name, short_documentation, long_documentation)
+    Entity(name, short_documentation, long_documentation)
 {
 }
 

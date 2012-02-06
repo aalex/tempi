@@ -31,7 +31,7 @@ SpigotNode::SpigotNode() :
     addAttribute("pass", Message("b", true), "Let messages flow or not.");
     addInlet("0");
     addOutlet("0");
-    setDocumentation("Lets messages flow through it or not.");
+    setShortDocumentation("Lets messages flow through it or not.");
 }
 
 void SpigotNode::processMessage(const char *inlet, const Message &message)

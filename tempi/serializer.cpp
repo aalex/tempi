@@ -120,7 +120,7 @@ bool Serializer::save(Graph &graph, const char *filename)
         // and its id
         xmlNewProp(node_node, XMLSTR NODE_ID_PROPERTY, XMLSTR (*iter).c_str());
         // node attributes nodes
-        std::vector<std::string> attribute_names = node->getAttributesNames();
+        std::vector<std::string> attribute_names = node->listAttributes();
         std::vector<std::string>::const_iterator iter2;
         for (iter2 = attribute_names.begin(); iter2 != attribute_names.end(); ++iter2)
         {

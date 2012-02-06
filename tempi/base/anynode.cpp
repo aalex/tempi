@@ -40,7 +40,7 @@ void AnyNode::processMessage(const char *inlet, const Message &message)
     }
     else // any message with some type tags sets the value and outputs it
     {
-        setAttribute("value", message);
+        setAttributeValue("value", message);
     }
     if (utils::stringsMatch(inlet, "0"))
         output("0", getAttributeValue("value"));

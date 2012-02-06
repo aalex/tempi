@@ -18,48 +18,24 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "tempi/object.h"
+#include "tempi/namedobject.h"
 
 namespace tempi
 {
 
-Object::Object(
-    const char *name,
-    const char *short_documentation,
-    const char *long_documentation
+NamedObject::NamedObject(
+    const char *name
     ) :
-    name_(std::string(name)),
-    short_documentation_(std::string(short_documentation)),
-    long_documentation_(std::string(long_documentation))
+    name_(std::string(name))
 {
 }
 
-std::string Object::getName() const
+std::string NamedObject::getName() const
 {
     return name_;
 }
 
-std::string Object::getShortDocumentation() const
-{
-    return short_documentation_;
-}
-
-std::string Object::getLongDocumentation() const
-{
-    return long_documentation_;
-}
-
-std::string Object::setShortDocumentation(const char *short_documentation)
-{
-    short_documentation_ = std::string(short_documentation);
-}
-
-std::string Object::setLongDocumentation(const char *long_documentation)
-{
-    long_documentation_ = std::string(long_documentation);
-}
-
-std::string Object::setName(const char *name)
+std::string NamedObject::setName(const char *name)
 {
     name_ = std::string(name);
 }

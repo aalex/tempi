@@ -45,7 +45,10 @@ class NodeSignal
          * Creates a new NodeSignal with wildcard type. (its message can have any types arguments in it)
          */
         NodeSignal(const char *name, const char *doc);
-        ~NodeSignal();
+        /**
+         * A virtual destructor makes this class polymorphic.
+         */
+        virtual ~NodeSignal();
         /**
          * Returns the name of the signal.
          */

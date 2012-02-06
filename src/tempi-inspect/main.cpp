@@ -102,7 +102,7 @@ bool TempiInspect::printClass(const std::string &name)
         print_n_times(node->getTypeName().size(), "=");
         cout << "=" << endl;
         cout << endl;
-        cout << node->getDocumentation() << endl;
+        cout << node->getShortDocumentation() << endl;
         cout << endl;
 
         // --------------------------------- Attributes ------------
@@ -110,15 +110,15 @@ bool TempiInspect::printClass(const std::string &name)
         cout << "----------" << endl;
         cout << endl;
         {
-            vector<string> attributes = node->getAttributesNames();
+            vector<string> attributes = node->listAttributes();
             vector<string>::const_iterator iter;
             for (iter = attributes.begin(); iter != attributes.end(); ++iter)
             {
-                Attribute::ptr attr = node->getAttribute((*iter).c_str());
+                Attribute* attr = node->getAttribute((*iter).c_str());
                 cout << attr->getName() << endl;
                 print_n_times(attr->getName().size(), "~");
                 cout << endl;
-                cout << "Documentation: " <<  attr->getDocumentation() << endl;
+                cout << "Documentation: " <<  attr->getShortDocumentation() << endl;
                 if (attr->isTypeStrict())
                     cout << "Type: " << attr->getValue().getTypes() << endl;
                 else

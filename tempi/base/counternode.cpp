@@ -49,13 +49,13 @@ void CounterNode::processMessage(const char *inlet, const Message &message)
         int increment = getAttributeValue(PROP_INCREMENT).getInt(0);
         output("0", getAttributeValue(PROP_COUNT));
         count += increment;
-        setAttribute(PROP_COUNT, Message("i", count));
+        setAttributeValue(PROP_COUNT, Message("i", count));
     }
     // int replaces the value and outputs
     else if (message.getTypes() == "i")
     {
         count_ = message.getInt(0);
-        setAttribute(PROP_COUNT, message);
+        setAttributeValue(PROP_COUNT, message);
         output("0", getAttributeValue(PROP_COUNT));
     }
     else

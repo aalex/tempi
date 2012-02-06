@@ -30,7 +30,7 @@ RouteNode::RouteNode() :
 {
     addAttribute("selectors", Message(), "List of string that first atom must match in order to be output via the corresponding outlet.", false);
     addInlet("0");
-    setDocumentation("The RouteNode routes messages to its different outlets according to the first string in each message.");
+    setShortDocumentation("The RouteNode routes messages to its different outlets according to the first string in each message.");
 }
 
 void RouteNode::processMessage(const char *inlet, const Message &message)
