@@ -1,11 +1,12 @@
 /*
  * Copyright (C) 2011 Alexandre Quessy
- * 
+ * Copyright (C) 2011 Michal Seta
+ * Copyright (C) 2012 Nicolas Bouillot
+ *
  * This file is part of Tempi.
- * 
- * Tempi is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
+ *
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of, either version 3 of the License, or
  * (at your option) any later version.
  * 
  * Tempi is distributed in the hope that it will be useful,
@@ -20,16 +21,19 @@
 #include "tempi/midi/midilibrary.h"
 #include "tempi/midi/midireceivernode.h"
 #include "tempi/midi/midisendernode.h"
+#include "tempi/midi/midiroutenode.h"
 #include "tempi/utils.h"
 #include "tempi/nodefactory.h"
 
-namespace tempi { namespace midi {
+namespace tempi {
+namespace midi {
 
 void MidiLibrary::load(NodeFactory &factory, const char *prefix) const
 {
     using utils::concatenate;
     factory.registerTypeT<MidiReceiverNode>(concatenate(prefix, "receive").c_str());
     factory.registerTypeT<MidiSenderNode>(concatenate(prefix, "send").c_str());
+    factory.registerTypeT<MidiRouteNode>(concatenate(prefix, "route").c_str());
 }
 
 } // end of namespace

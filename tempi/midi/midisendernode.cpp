@@ -1,11 +1,12 @@
 /*
  * Copyright (C) 2011 Alexandre Quessy
- * 
+ * Copyright (C) 2011 Michal Seta
+ * Copyright (C) 2012 Nicolas Bouillot
+ *
  * This file is part of Tempi.
- * 
- * Tempi is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
+ *
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of, either version 3 of the License, or
  * (at your option) any later version.
  * 
  * Tempi is distributed in the hope that it will be useful,
@@ -26,13 +27,14 @@ namespace midi {
 MidiSenderNode::MidiSenderNode() :
     Node()
 {
-    addOutlet();
+    //addOutlet("0");
+    addInlet("0", "Send MIDI received from this inlet.");
     Message port = Message("i", 0);
-    addProperty("port", port);
+    addAttribute("port", port);
     midi_output_.reset(new MidiOutput);
 }
 
-void MidiSenderNode::onPropertyChanged(const char *name, const Message &value)
+void MidiSenderNode::onAttributeChanged(const char *name, const Message &value)
 {
     //std::cout << "MidiSenderNode::" << __FUNCTION__ << "(" << name << ", " << value << ")" << std::endl;
     static std::string key("port");
@@ -45,7 +47,7 @@ void MidiSenderNode::onPropertyChanged(const char *name, const Message &value)
 
 // TODO: output the list of devices upon query
 
-void MidiSenderNode::processMessage(unsigned int inlet, const Message &message)
+void MidiSenderNode::processMessage(const char *inlet, const Message &message)
 {
     if (midi_output_->isOpen())
     {

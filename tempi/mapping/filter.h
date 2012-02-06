@@ -1,11 +1,12 @@
 /*
  * Copyright (C) 2011 Alexandre Quessy
- * 
+ * Copyright (C) 2011 Michal Seta
+ * Copyright (C) 2012 Nicolas Bouillot
+ *
  * This file is part of Tempi.
- * 
- * Tempi is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
+ *
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of, either version 3 of the License, or
  * (at your option) any later version.
  * 
  * Tempi is distributed in the hope that it will be useful,
@@ -27,10 +28,11 @@
 
 #include "tempi/node.h"
 #include "tempi/sharedptr.h"
-#include "tempi/source.h"
-#include "tempi/sink.h"
+#include "tempi/outlet.h"
+#include "tempi/inlet.h"
 
-namespace tempi { namespace mapping {
+namespace tempi {
+namespace mapping {
 
 /**
  * A Filter is Node who has a sink and source and usually filters data.
@@ -40,11 +42,9 @@ class Filter : public Node
     public:
         Filter();
         virtual ~Filter() {}
-        Source *getOutlet();
-        Sink *getInlet();
     private:
         // Inherited from Node:
-        virtual void processMessage(unsigned int inlet, const Message &message);
+        virtual void processMessage(const char *name, const Message &message);
         // New virtual method:
         virtual Message filter(const Message &message) = 0;
 };

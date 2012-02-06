@@ -1,11 +1,12 @@
 /*
  * Copyright (C) 2011 Alexandre Quessy
- * 
+ * Copyright (C) 2011 Michal Seta
+ * Copyright (C) 2012 Nicolas Bouillot
+ *
  * This file is part of Tempi.
- * 
- * Tempi is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
+ *
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of, either version 3 of the License, or
  * (at your option) any later version.
  * 
  * Tempi is distributed in the hope that it will be useful,
@@ -19,6 +20,7 @@
 
 #include "tempi/sampler/samplernode.h"
 #include "tempi/message.h"
+#include "tempi/utils.h"
 #include <vector>
 
 namespace tempi {
@@ -31,16 +33,16 @@ SamplerNode::SamplerNode() :
     player_(new Player(region_))
 {
     Message recording = Message("b", false);
-    addProperty("recording", recording);
+    addAttribute("recording", recording);
 
     Message playing = Message("b", false);
-    addProperty("playing", playing);
+    addAttribute("playing", playing);
 
-    addInlet(); // messages to record
-    addOutlet(); // played back messages messages
+    addInlet("0", "Messages to record.");
+    addOutlet("0", "Played back messages.");
 }
 
-void SamplerNode::onPropertyChanged(const char *name, const Message &value)
+void SamplerNode::onAttributeChanged(const char *name, const Message &value)
 {
     const static std::string playing("playing");
     const static std::string recording("recording");
@@ -63,7 +65,7 @@ void SamplerNode::play(bool enabled)
 
 void SamplerNode::doTick()
 {
-    if (getProperty("playing").getBoolean(0))
+    if (getAttributeValue("playing").getBoolean(0))
     {
         std::vector<Message> messages;
         bool ok = player_->read(messages);
@@ -71,7 +73,7 @@ void SamplerNode::doTick()
         {
             std::vector<Message>::const_iterator iter;
             for (iter = messages.begin(); iter != messages.end(); ++iter)
-                output(0, (*iter));
+                output("0", (*iter));
         }
     }
 }
@@ -89,11 +91,11 @@ void SamplerNode::record(bool enabled)
     }
 }
 
-void SamplerNode::processMessage(unsigned int inlet, const Message &message)
+void SamplerNode::processMessage(const char *inlet, const Message &message)
 {
-    bool rec = getProperty("recording").getBoolean(0);
-    static unsigned int record_inlet = 0;
-    if (inlet == record_inlet)
+    bool rec = getAttributeValue("recording").getBoolean(0);
+    static const char *record_inlet = "0";
+    if (utils::stringsMatch(inlet, record_inlet))
     {
         if (rec)
         {

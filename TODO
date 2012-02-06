@@ -4,16 +4,13 @@ To do in Tempi
 To do for 0.1.8
 ---------------
 * Move nodes to tempi-plugins-base // FIXME: header files are not installed in subdirectories, but flat
-* Node: remove arguments
-* Node: dynamic type properties
-* Node: rename property to attribute
-* named inlets/outlets, not numbered
 * Node::listInlets()
 * Node::listOutlets()
-* list/configure MIDI ports by their ALSA ID, not an index
+* Graph: handle inlet/outlet deletion
 
 To do for 0.2
 -------------
+* list/configure MIDI ports by their ALSA ID, not an index
 * midilooper: multitrack sequencer with GUI
 * Bugfix: Message.*(...): avoid segfault if length does not match
 * Bugfix: Message.*(...): avoid segfault if types do not match
@@ -33,6 +30,8 @@ To do for 0.2
 * Score::save(fileName)
 * tempi::MATRIX
 * tempi::LIST
+* [mapping.curve]
+* [midi.closenote]
 * [base.prepend]
 * [mapping.curve]
 * [midi.closenote]
@@ -66,13 +65,6 @@ To do for 0.4
 * [base.trigger]
 * [base.typematches]
 * [base.python]
-* [math.*]
-* [math.+]
-* [math.-]
-* [math./]
-* [math.<]
-* [math.==]
-* [math.>]
 * [math.clip]
 * [math.rsqrt]
 * [math.sqrt]

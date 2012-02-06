@@ -1,5 +1,6 @@
 AM_CXXFLAGS = \
     $(BOOST_CPPFLAGS) \
+	$(CLUTTER_CFLAGS) \
     $(LIBLO_CFLAGS) \
     $(LIBXML_CFLAGS) \
     $(STK_CXXFLAGS) \
@@ -7,8 +8,13 @@ AM_CXXFLAGS = \
     -I$(top_srcdir)/tempi
 
 AM_LIBS = \
+	$(BOOST_FILESYSTEM_LIB) \
+	$(BOOST_LIBS)  \
+	$(BOOST_SYSTEM_LIB) \
     $(BOOST_LDFLAGS) \
     $(BOOST_THREAD_LIB) \
+	$(CLUTTER_LIBS) \
+	$(GLIB_LIBS) \
     $(LIBLO_LIBS) \
     $(LIBXML_LIBS) \
     $(STK_LIBS)
@@ -33,15 +39,20 @@ libtempi_@TEMPI_API_VERSION@_la_includedir = $(includedir)/tempi-$(TEMPI_API_VER
 ## and the variable name derived from that.
 ## PLEASE KEEP THEM IN ALPHABETICAL ORDER
 libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
+    attribute.cpp \
     base/anynode.cpp \
     base/appsinknode.cpp \
     base/baselibrary.cpp \
     base/counternode.cpp \
+    base/delaynode.cpp \
     base/metro_node.cpp \
     base/nop_node.cpp \
     base/prependnode.cpp \
     base/print_node.cpp \
-    base/receivenode.h \
+    base/routenode.cpp \
+    base/spigotnode.cpp \
+    clutter/clutterlibrary.cpp \
+    clutter/clutterstagenode.cpp \
     mapping/filter.cpp \
     fsm/rule.cpp \
     fsm/state.cpp \
@@ -50,14 +61,18 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     internals.cpp \
     mapping/slide.cpp \
     mapping/slidefilter.cpp \
+    math/mathlibrary.cpp \
     message.cpp \
     midi/midiinput.cpp \
     midi/midilibrary.cpp \
     midi/midireceivernode.cpp \
+    midi/midiroutenode.cpp \
     midi/midioutput.cpp \
     midi/midisendernode.cpp \
+    midi/midiutilities.cpp \
     node.cpp \
     nodefactory.cpp \
+    nodesignal.cpp \
     osc/osclibrary.cpp \
     osc/oscreceiver.cpp \
     osc/oscreceivernode.cpp \
@@ -75,8 +90,9 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     sampler/score.cpp \
     sampler/track.cpp \
     scheduler.cpp \
-    sink.cpp \
-    source.cpp \
+    serializer.cpp \
+    inlet.cpp \
+    outlet.cpp \
     table/table.cpp \
     table/table_player.cpp \
     table/table_writer.cpp \
@@ -86,17 +102,25 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     threadedscheduler.cpp \
 	utils.cpp
 
+# TODO base/receivenode.cpp
+# TODO base/receivenode.h
+
 ## PLEASE KEEP THEM IN ALPHABETICAL ORDER
 libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
+    attribute.h \
     base/anynode.h \
     base/appsinknode.h \
     base/baselibrary.h \
     base/counternode.h \
+    base/delaynode.h \
     base/metro_node.h \
     base/nop_node.h \
     base/prependnode.h \
     base/print_node.h \
-    base/receivenode.h \
+    base/routenode.h \
+    base/spigotnode.h \
+    clutter/clutterlibrary.h \
+    clutter/clutterstagenode.h \
     concurrentqueue.h \
     exceptions.h \
     mapping/filter.h \
@@ -110,14 +134,18 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     mapping/average.h \
     mapping/slide.h \
     mapping/slidefilter.h \
+    math/mathlibrary.h \
     message.h \
     midi/midiinput.h \
     midi/midilibrary.h \
     midi/midireceivernode.h \
+    midi/midiroutenode.h \
     midi/midioutput.h \
     midi/midisendernode.h \
+    midi/midiutilities.h \
     node.h \
     nodefactory.h \
+    nodesignal.h \
     nodetype.h \
     osc/osclibrary.h \
     osc/oscreceiver.h \
@@ -137,9 +165,10 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     sampler/score.h \
     sampler/track.h \
     scheduler.h \
+    serializer.h \
     sharedptr.h \
-    sink.h \
-    source.h \
+    inlet.h \
+    outlet.h \
     table/table.h \
     table/table_player.h \
     table/table_writer.h \

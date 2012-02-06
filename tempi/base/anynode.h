@@ -1,11 +1,12 @@
 /*
  * Copyright (C) 2011 Alexandre Quessy
- * 
+ * Copyright (C) 2011 Michal Seta
+ * Copyright (C) 2012 Nicolas Bouillot
+ *
  * This file is part of Tempi.
- * 
- * Tempi is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
+ *
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of, either version 3 of the License, or
  * (at your option) any later version.
  * 
  * Tempi is distributed in the hope that it will be useful,
@@ -26,7 +27,8 @@
 
 #include "tempi/node.h"
 
-namespace tempi { namespace base {
+namespace tempi {
+namespace base {
 
 /**
  * The AnyNode stores message and outputs them when it receives an empty message. (bang)
@@ -36,10 +38,7 @@ class AnyNode : public Node
     public:
         AnyNode();
     protected:
-        virtual void processMessage(unsigned int inlet, const Message &message);
-        virtual void onSetArguments(const Message &message);
-    private:
-        Message value_;
+        virtual void processMessage(const char *inlet, const Message &message);
 };
 
 } // end of namespace

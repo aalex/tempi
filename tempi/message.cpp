@@ -1,11 +1,12 @@
 /*
  * Copyright (C) 2011 Alexandre Quessy
- * 
+ * Copyright (C) 2011 Michal Seta
+ * Copyright (C) 2012 Nicolas Bouillot
+ *
  * This file is part of Tempi.
- * 
- * Tempi is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
+ *
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of, either version 3 of the License, or
  * (at your option) any later version.
  * 
  * Tempi is distributed in the hope that it will be useful,
@@ -540,6 +541,58 @@ std::ostream &operator<<(std::ostream &os, const Message &message)
     }
     os << ")";
     return os;
+}
+
+void Message::prependMessage(const Message &message)
+{
+    if (message.getSize() == 0L)
+    {
+        //std::cout << __FUNCTION__ << " empty message. nothing to append\n";
+        return;
+    }
+    for (unsigned int i = message.getSize() - 1; i >= 0; --i)
+    {
+        ArgumentType type;
+        //std::cout << __FUNCTION__ << " " << i << std::endl;
+        try
+        {
+            message.getArgumentType(i, type);
+        }
+        catch (const BadIndexException &e)
+        {
+            std::cerr << __FUNCTION__ << " " << e.what() << std::endl;
+            //throw (e);
+        }
+        switch (type)
+        {
+            case BOOLEAN:
+                prependBoolean(message.getBoolean(i));
+                break;
+            case CHAR:
+                prependChar(message.getChar(i));
+                break;
+            case DOUBLE:
+                prependDouble(message.getDouble(i));
+                break;
+            case FLOAT:
+                prependFloat(message.getFloat(i));
+                break;
+            case INT:
+                prependInt(message.getInt(i));
+                break;
+            case LONG:
+                prependLong(message.getLong(i));
+                break;
+            case STRING:
+                prependString(message.getString(i).c_str());
+                break;
+            default:
+                std::cerr << "Message::" << __FUNCTION__ << "(): Unknow type of atom: " << type << std::endl;
+                break;
+        }
+        if (i == 0L)
+            break; // FIXME
+    }
 }
 
 } // end of namespace

@@ -1,11 +1,12 @@
 /*
  * Copyright (C) 2011 Alexandre Quessy
- * 
+ * Copyright (C) 2011 Michal Seta
+ * Copyright (C) 2012 Nicolas Bouillot
+ *
  * This file is part of Tempi.
- * 
- * Tempi is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
+ *
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of, either version 3 of the License, or
  * (at your option) any later version.
  * 
  * Tempi is distributed in the hope that it will be useful,
@@ -18,35 +19,40 @@
  */
 
 #include "tempi/base/metro_node.h"
+#include "tempi/timeposition.h"
 
-namespace tempi { namespace base {
+namespace tempi {
+namespace base {
 
 MetroNode::MetroNode() :
     Node()
 {
     Message running = Message("b", false);
-    addProperty("running", running);
+    addAttribute("running", running);
 
     Message interval = Message("i", 1000);
-    addProperty("interval", interval); // ms
+    addAttribute("interval", interval, "Interval in milliseconds."); // ms
 
-    addOutlet();
+    addOutlet("0");
 }
 
-void MetroNode::onPropertyChanged(const char *name, const Message &value)
+void MetroNode::onAttributeChanged(const char *name, const Message &value)
 {
     const static std::string running("running");
 //  const static std::string interval("interval");
-//    std::cout << "MetroNode::" << __FUNCTION__ << ": " << name << " = " << value << std::endl;
+    //std::cout << "MetroNode::" << __FUNCTION__ << ": " << name << " = " << value << std::endl;
     if (running == name)
     {
         if (value.getBoolean(0))
+        {
+            Message message = Message(""); // bang
+            output("0", message);
             startMetro();
-        else
-            startMetro(); // we restart it anyways
+        }
+        //else
+        //    startMetro(); // we restart it anyways
     }
 }
-
 
 void MetroNode::startMetro()
 {
@@ -55,16 +61,19 @@ void MetroNode::startMetro()
 
 void MetroNode::doTick()
 {
-    //std::cout << "MetroNode::" << __FUNCTION__ << " running:" << getProperty("running").getBoolean(0) << std::endl;
-    if (getProperty("running").getBoolean(0))
+    using timeposition::from_ms;
+    using timeposition::to_ms;
+    //std::cout << "MetroNode::" << __FUNCTION__ << " running:" << getAttributeValue("running").getBoolean(0) << std::endl;
+    if (getAttributeValue("running").getBoolean(0))
     {
-        TimePosition interval = timeposition::from_ms((unsigned long long) getProperty("interval").getInt(0));
+        TimePosition interval = from_ms((unsigned long long) getAttributeValue("interval").getInt(0));
         TimePosition elapsed = timer_.elapsed();
-        //std::cout << "MetroNode::" << __FUNCTION__ << " interval:" << interval << " elapsed:" << elapsed << std::endl;
+        //std::cout << "MetroNode::" << __FUNCTION__ << " interval:" << to_ms(interval) << " elapsed:" << elapsed << std::endl;
         if (elapsed >= interval)
         {
             Message message = Message(""); // bang
-            output(0, message);
+            //std::cout << "TICK" << std::endl;
+            output("0", message);
             timer_.reset();
         }
     }

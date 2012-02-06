@@ -13,16 +13,16 @@ class DummyNode: public Node
         DummyNode() :
             Node()
         {
-            addInlet();
-            addOutlet();
+            addInlet("0", "");
+            addOutlet("0", "");
         }
     private:
-        virtual void processMessage(unsigned int inlet, const Message &message)
+        virtual void processMessage(const char *inlet, const Message &message)
         {
             if (VERBOSE)
                 std::cout << "DummyNode::" << __FUNCTION__ << ": " << message << std::endl;
             Message out = message;
-            getOutlet(0)->trigger(out);
+            getOutlet("0")->trigger(out);
         }
 };
 
@@ -49,13 +49,13 @@ bool check_node_factory()
     if (! graph.addNode("dummy", "dummy4"))
         return fail("Failed to add dummy4");
 
-    if (! graph.connect("dummy0", 0, "dummy1", 0))
+    if (! graph.connect("dummy0", "0", "dummy1", "0"))
         return fail("Failed to connect dummy0 to dummy1");
-    if (! graph.connect("dummy0", 0, "dummy2", 0))
+    if (! graph.connect("dummy0", "0", "dummy2", "0"))
         return fail("Failed to connect dummy0 to dummy2");
-    if (! graph.connect("dummy2", 0, "dummy3", 0))
+    if (! graph.connect("dummy2", "0", "dummy3", "0"))
         return fail("Failed to connect dummy2 to dummy3");
-    if (! graph.connect("dummy2", 0, "dummy4", 0))
+    if (! graph.connect("dummy2", "0", "dummy4", "0"))
         return fail("Failed to connect dummy2 to dummy4");
 
     for (int i = 0; i < 10; ++i)
@@ -68,7 +68,7 @@ bool check_node_factory()
 //     }
 
     Message message = Message("fis", 3.14159f, 2, "hello");
-    graph.message("dummy0", 0, message);
+    graph.message("dummy0", "0", message);
     return true;
 }
 

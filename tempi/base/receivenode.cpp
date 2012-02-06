@@ -1,11 +1,12 @@
 /*
  * Copyright (C) 2011 Alexandre Quessy
- * 
+ * Copyright (C) 2011 Michal Seta
+ * Copyright (C) 2012 Nicolas Bouillot
+ *
  * This file is part of Tempi.
- * 
- * Tempi is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
+ *
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of, either version 3 of the License, or
  * (at your option) any later version.
  * 
  * Tempi is distributed in the hope that it will be useful,
@@ -27,10 +28,10 @@ ReceiveNode::ReceiveNode() :
 {
     Message receiveSymbol;
     receiveSymbol.appendString("");
-    addProperty("symbol", receiveSymbol);
+    addAttribute("symbol", receiveSymbol);
 }
 
-void ReceiveNode::processMessage(unsigned int inlet, const Message &message)
+void ReceiveNode::processMessage(const char *inlet, const Message &message)
 {
     // if (inlet == 0)
     //    output(message);
@@ -38,7 +39,7 @@ void ReceiveNode::processMessage(unsigned int inlet, const Message &message)
 
 std::string ReceiverNode::getReceiveSymbol() const
 {
-    return getProperty("symbol").getString(0);
+    return getAttributeValue("symbol").getString(0);
 }
 
 } // end of namespace

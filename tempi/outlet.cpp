@@ -1,11 +1,12 @@
 /*
  * Copyright (C) 2011 Alexandre Quessy
- * 
+ * Copyright (C) 2011 Michal Seta
+ * Copyright (C) 2012 Nicolas Bouillot
+ *
  * This file is part of Tempi.
- * 
- * Tempi is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
+ *
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of, either version 3 of the License, or
  * (at your option) any later version.
  * 
  * Tempi is distributed in the hope that it will be useful,
@@ -17,21 +18,32 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "tempi/source.h"
+#include "tempi/outlet.h"
 #include <iostream>
 
 namespace tempi
 {
 
-Source::Source()
+Outlet::Outlet(const char *name, const char *documentation)
 {
-    // pass
+    name_ = std::string(name);
+    documentation_ = std::string(documentation);
 }
 
-void Source::trigger(const Message &message)
+void Outlet::trigger(const Message &message)
 {
     //std::cout << __FUNCTION__ << std::endl;
     on_triggered_signal_(message);
+}
+
+std::string Outlet::getName() const
+{
+    return name_;
+}
+
+std::string Outlet::getDocumentation() const
+{
+    return documentation_;
 }
 
 } // end of namespace

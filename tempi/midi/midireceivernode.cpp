@@ -1,11 +1,12 @@
 /*
  * Copyright (C) 2011 Alexandre Quessy
- * 
+ * Copyright (C) 2011 Michal Seta
+ * Copyright (C) 2012 Nicolas Bouillot
+ *
  * This file is part of Tempi.
- * 
- * Tempi is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
+ *
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of, either version 3 of the License, or
  * (at your option) any later version.
  * 
  * Tempi is distributed in the hope that it will be useful,
@@ -26,13 +27,13 @@ namespace midi {
 MidiReceiverNode::MidiReceiverNode() :
     Node()
 {
-    addOutlet();
+    addOutlet("0");
     Message port = Message("i", 0);
-    addProperty("port", port);
+    addAttribute("port", port);
     midi_input_.reset(new MidiInput);
 }
 
-void MidiReceiverNode::onPropertyChanged(const char *name, const Message &value)
+void MidiReceiverNode::onAttributeChanged(const char *name, const Message &value)
 {
     //std::cout << "MidiReceiverNode::" << __FUNCTION__ << "(" << name << ", " << value << ")" << std::endl;
     static std::string key("port");
@@ -54,7 +55,7 @@ void MidiReceiverNode::doTick()
     std::vector<Message>::iterator iter;
     for (iter = messages.begin(); iter != messages.end(); ++iter)
     {
-        output(0, *iter);
+        output("0", *iter);
     }
 }
 

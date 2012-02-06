@@ -1,11 +1,12 @@
 /*
  * Copyright (C) 2011 Alexandre Quessy
- * 
+ * Copyright (C) 2011 Michal Seta
+ * Copyright (C) 2012 Nicolas Bouillot
+ *
  * This file is part of Tempi.
- * 
- * Tempi is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
+ *
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of, either version 3 of the License, or
  * (at your option) any later version.
  * 
  * Tempi is distributed in the hope that it will be useful,
@@ -30,29 +31,32 @@ CounterNode::CounterNode() :
     Node(),
     increment_(1)
 {
-    addOutlet();
+    addOutlet("0", "Count.");
+    addInlet("0", "Bangs increase and output the count. Integers sets and outputs the count.");
     Message increment = Message("i", 1);
-    addProperty(PROP_INCREMENT, increment);
+    addAttribute(PROP_INCREMENT, increment);
     Message count = Message("i", 0);
-    addProperty(PROP_COUNT, count);
+    addAttribute(PROP_COUNT, count);
 }
-void CounterNode::processMessage(unsigned int inlet, const Message &message)
+
+void CounterNode::processMessage(const char *inlet, const Message &message)
 {
+    // TODO: check if inlet == "0"
     // bang outputs and increments
     if (message.getTypes() == "")
     {
-        int count = getProperty(PROP_COUNT).getInt(0);
-        int increment = getProperty(PROP_INCREMENT).getInt(0);
-        output(0, getProperty(PROP_COUNT));
+        int count = getAttributeValue(PROP_COUNT).getInt(0);
+        int increment = getAttributeValue(PROP_INCREMENT).getInt(0);
+        output("0", getAttributeValue(PROP_COUNT));
         count += increment;
-        setProperty(PROP_COUNT, Message("i", count));
+        setAttribute(PROP_COUNT, Message("i", count));
     }
     // int replaces the value and outputs
     else if (message.getTypes() == "i")
     {
         count_ = message.getInt(0);
-        setProperty(PROP_COUNT, message);
-        output(0, getProperty(PROP_COUNT));
+        setAttribute(PROP_COUNT, message);
+        output("0", getAttributeValue(PROP_COUNT));
     }
     else
     {
@@ -60,7 +64,7 @@ void CounterNode::processMessage(unsigned int inlet, const Message &message)
     }
 }
 
-void CounterNode::onPropertyChanged(const char *name, const Message &value)
+void CounterNode::onAttributeChanged(const char *name, const Message &value)
 {
     if (utils::stringsMatch("increment", name))
     {

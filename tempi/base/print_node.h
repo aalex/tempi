@@ -1,11 +1,12 @@
 /*
  * Copyright (C) 2011 Alexandre Quessy
- * 
+ * Copyright (C) 2011 Michal Seta
+ * Copyright (C) 2012 Nicolas Bouillot
+ *
  * This file is part of Tempi.
- * 
- * Tempi is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
+ *
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of, either version 3 of the License, or
  * (at your option) any later version.
  * 
  * Tempi is distributed in the hope that it will be useful,
@@ -38,8 +39,8 @@ class PrintNode : public Node
     public:
         PrintNode();
     protected:
-        virtual void processMessage(unsigned int inlet, const Message &message);
-        virtual void onPropertyChanged(const char *name, const Message &value);
+        virtual void processMessage(const char *inlet, const Message &message);
+        virtual void onAttributeChanged(const char *name, const Message &value);
     private:
         std::string prefix_;
         bool enabled_;

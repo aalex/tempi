@@ -1,11 +1,12 @@
 /*
  * Copyright (C) 2011 Alexandre Quessy
- * 
+ * Copyright (C) 2011 Michal Seta
+ * Copyright (C) 2012 Nicolas Bouillot
+ *
  * This file is part of Tempi.
- * 
- * Tempi is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
+ *
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of, either version 3 of the License, or
  * (at your option) any later version.
  * 
  * Tempi is distributed in the hope that it will be useful,
@@ -25,15 +26,65 @@
 #define __TEMPI_UTILS_H__
 
 #include <string>
+#include <vector>
+#include <algorithm>
+#include "tempi/exceptions.h"
+#include "tempi/message.h"
 
 namespace tempi {
 namespace utils {
 
+/**
+ * Checks if a strings begins with another one.
+ */
 bool stringBeginsWith(const char *text, const char *pattern);
+
+/**
+ * Checks if a strings matches another one.
+ */
 bool stringsMatch(const char *a, const char *b);
+
+/**
+ * Maps an int value to a new range.
+ */
 int map_int(int value, int istart, int istop, int ostart, int ostop);
+
+/**
+ * Maps a float value to a new range.
+ */
 float map_float(float value, float istart, float istop, float ostart, float ostop);
+
+/**
+ * Concatenates two strings together.
+ */
 std::string concatenate(const char *a, const char *b);
+
+/**
+ * Converts any type (int, etc.) to a string.
+ */
+template <typename T>
+std::string to_string(T value) throw(BadArgumentTypeException);
+
+/**
+ * Checks if a value is in a vector.
+ */
+template <typename T>
+bool find_in_vector(std::vector<T> &vec, const T &value)
+{
+    return std::find(vec.begin(), vec.end(), value) != vec.end();
+}
+
+/**
+ * Serializes a given argument from a Message.
+ */
+std::string argumentToString(const Message &message, unsigned int index)
+    throw(BadArgumentTypeException, BadIndexException);
+
+/**
+ * Appends an argument to the given Message parsing a serialized string, if valid.
+ */
+void appendArgumentFromString(Message &message, const char *atom_value, ArgumentType type)
+    throw(BadArgumentTypeException);
 
 } // end of namespace
 } // end of namespace

@@ -1,0 +1,4 @@
+Tempi known bugs
+================
+* [base.metro] : does not start right away when created with running = true
+

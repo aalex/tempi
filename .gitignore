@@ -15,11 +15,13 @@ Makefile
 Makefile.in
 aclocal.m4
 autom4te.cache/
+confdefs.h
 config.guess
 config.log
 config.status
 config.sub
 configure
+conftest.c
 depcomp
 doxyfile
 doxyfile.stamp
@@ -46,7 +48,14 @@ prototypes/fusion/vec
 prototypes/kinect/freedraw
 prototypes/midi/alsalist
 prototypes/midi/midiprobe
+prototypes/midilooper-gui/run
+prototypes/midilooper-gui/signals_to_messages
 prototypes/modules/main
+prototypes/matrix_type/blobreceiver
+prototypes/matrix_type/blobsender
+prototypes/matrix_type/check_array
+prototypes/matrix_type/matrix
+prototypes/matrix_type/proto_armadillo
 prototypes/nodefactory
 prototypes/phoenix/findif
 prototypes/tuples
@@ -56,6 +65,8 @@ src/midilooper/midilooper
 src/midilooper/threadedscheduler
 src/osc-forward/osc-forward
 src/tempi-draw/tempi-draw
+src/tempi-inspect/tempi-inspect
+src/tempi-launch/tempi-launch
 tempi-*.tar.gz
 tempi/config.h
 tempi/config.h.in
@@ -68,12 +79,14 @@ tests/check_base
 tests/check_fsm
 tests/check_graph
 tests/check_libraries
+tests/check_math
 tests/check_message
 tests/check_node
 tests/check_nodefactory
 tests/check_osc
 tests/check_osc_nodes
 tests/check_properties
+tests/check_serializer
 tests/check_slide
 tests/check_table
 tests/check_timer
@@ -84,5 +97,7 @@ tests/check_version
 # negations:
 !prototypes/kinect/Makefile
 !prototypes/midi/Makefile
+!prototypes/midilooper-gui/Makefile
 !prototypes/modules/Makefile
+!prototypes/matrix_type/Makefile
 

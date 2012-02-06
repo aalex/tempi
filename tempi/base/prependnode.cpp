@@ -1,11 +1,12 @@
 /*
  * Copyright (C) 2011 Alexandre Quessy
- * 
+ * Copyright (C) 2011 Michal Seta
+ * Copyright (C) 2012 Nicolas Bouillot
+ *
  * This file is part of Tempi.
- * 
- * Tempi is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
+ *
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of, either version 3 of the License, or
  * (at your option) any later version.
  * 
  * Tempi is distributed in the hope that it will be useful,
@@ -19,57 +20,31 @@
 
 #include <iostream>
 #include "tempi/base/prependnode.h"
+#include "tempi/utils.h"
 
-namespace tempi { namespace base {
+namespace tempi {
+namespace base {
 
 PrependNode::PrependNode() :
-    Node(),
-    prefix_()
+    Node()
 {
-    addOutlet();
+    addAttribute("value", Message(), "Holds any message to prepend.", false);
+    addOutlet("0");
+    addInlet("0");
 }
 
-void PrependNode::processMessage(unsigned int inlet, const Message &message)
+void PrependNode::processMessage(const char *inlet, const Message &message)
 {
+    if (! utils::stringsMatch(inlet, "0"))
+        return;
     Message ret = message;
-    for (unsigned int i = prefix_.getSize(); i >= 0; --i)
+    //std::cout << "[prepend]: " << getAttributeValue("value") << " " << message << std::endl;
+    if (getAttributeValue("value").getTypes() != "")
     {
-        ArgumentType type;
-        prefix_.getArgumentType(i, type);
-        switch (type)
-        {
-            case BOOLEAN:
-                ret.prependBoolean(prefix_.getBoolean(i));
-                break;
-            case CHAR:
-                ret.prependBoolean(prefix_.getBoolean(i));
-                break;
-            case DOUBLE:
-                ret.prependDouble(prefix_.getDouble(i));
-                break;
-            case FLOAT:
-                ret.prependFloat(prefix_.getFloat(i));
-                break;
-            case INT:
-                ret.prependInt(prefix_.getInt(i));
-                break;
-            case LONG:
-                ret.prependLong(prefix_.getLong(i));
-                break;
-            case STRING:
-                ret.prependString(prefix_.getString(i).c_str());
-                break;
-            default:
-                std::cerr << "base::PrependNode: Unknow type of atom: " << type << std::endl;
-                break;
-        }
+        ret.prependMessage(getAttributeValue("value"));
     }
-    output(0, ret);
-}
-
-void PrependNode::onSetArguments(const Message &message)
-{
-    prefix_ = message;
+    //std::cout << "[prepend]: " << " result is " << ret << std::endl;
+    output("0", ret);
 }
 
 } // end of namespace

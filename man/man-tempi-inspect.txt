@@ -1,0 +1,17 @@
+[DESCRIPTION]
+Tool to print documentation from Tempi.
+
+[AUTHOR]
+Alexandre Quessy
+
+[HISTORY]
+2012 - Written by Alexandre Quessy
+
+[REPORTING BUGS]
+See http://tempi.toonloop.com
+
+[COPYRIGHT]
+Copyright (c) 2012 Alexandre Quessy <alexandre@quessy.net>
+
+[SEE ALSO]
+osc-forward(1), midilooper(1), tempi-draw(1), tempi-launch(1)
