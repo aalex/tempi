@@ -10,6 +10,7 @@ To do for 0.1.8
 
 To do for 0.2
 -------------
+* Handle objects renaming
 * (WONTFIX) list/configure MIDI ports by their ALSA ID, not an index
 * midilooper: multitrack sequencer with GUI
 * Bugfix: Message.*(...): avoid segfault if length does not match
