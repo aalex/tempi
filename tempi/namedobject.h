@@ -53,7 +53,7 @@ class NamedObject
         /**
          * Sets the name of this Documented.
          */
-        std::string setName(const char *name);
+        void setName(const char *name);
         /**
          * A virtual destructor makes this class polymorphic.
          */

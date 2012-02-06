@@ -35,7 +35,7 @@ std::string NamedObject::getName() const
     return name_;
 }
 
-std::string NamedObject::setName(const char *name)
+void NamedObject::setName(const char *name)
 {
     name_ = std::string(name);
 }
