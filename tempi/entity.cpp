@@ -91,6 +91,7 @@ void Entity::newAttribute(Attribute* attribute)
     throw(BadIndexException)
 {
     attributes_.add(NamedObject::ptr(dynamic_cast<NamedObject*>(attribute)));
+    // deletes the NamedObject* if name is already taken
 }
 
 std::vector<std::string> Entity::listAttributes() const
@@ -112,6 +113,7 @@ void Entity::addSignal(NodeSignal* signal) // TODO: rename to newSignal?
         throw(BadIndexException("Null pointer!")); // FIXME: throw another exception type
     }
     signals_.add(NamedObject::ptr(dynamic_cast<NamedObject*>(signal)));
+    // deletes the NamedObject* if name is already taken
 }
 
 std::vector<std::string> Entity::listSignals() const

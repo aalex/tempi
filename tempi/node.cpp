@@ -35,13 +35,13 @@ Node::Node()
     //std::cout << __FUNCTION__ << "()" << std::endl;
 
     addSignal(new NodeSignal(OUTLET_DELETED_SIGNAL,
-        "Triggered when an outlet is deleted. Arguments are: the name of this node, the name of the outlet.", "ss"));
+        "Triggered when an outlet is deleted. Arguments are: the name of this node, the name of the outlet.", "TODO", "ss"));
     addSignal(new NodeSignal(INLET_DELETED_SIGNAL,
-        "Triggered when an inlet is deleted. Arguments are: the name of this node, the name of the inlet.", "ss"));
+        "Triggered when an inlet is deleted. Arguments are: the name of this node, the name of the inlet.", "TODO", "ss"));
     addSignal(new NodeSignal(OUTLET_CREATED_SIGNAL,
-        "Triggered when an outlet is created. Arguments are: the name of this node, the name of the outlet.", "ss"));
+        "Triggered when an outlet is created. Arguments are: the name of this node, the name of the outlet.", "TODO", "ss"));
     addSignal(new NodeSignal(INLET_CREATED_SIGNAL,
-        "Triggered when an inlet is created. Arguments are: the name of this node, the name of the inlet.", "ss"));
+        "Triggered when an inlet is created. Arguments are: the name of this node, the name of the inlet.", "TODO", "ss"));
 
     addInlet(ATTRIBUTES_INLET, "Set attribute value with (s:\"set\", s:name, ...)"); // all nodes have at least one inlet for attributes
     //addAttribute("log-level", Message("i", 1), "How much [1-5] to print debug info in the console. 1=ERROR, 2=CRITICAL, 3=WARNING, 4=INFO, 5=DEBUG");
