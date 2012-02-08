@@ -153,17 +153,12 @@ bool TempiInspect::printClass(const std::string &name)
     {
         Node::ptr node = factory_.create(name.c_str());
         node->init();
-        //node->tick();
-
-        // NODE TYPE NAME
-        // ==============
-        //cout << endl << endl;
         cout << "Node Type [" << name << "]" << endl;
         cout << "===========";
         print_n_times(node->getTypeName().size(), "=");
         cout << "=";
-        cout << endl; // after =========
-        cout << endl; // after =========
+        cout << endl;
+        cout << endl;
         if (node->getShortDocumentation() != "")
             cout << node->getShortDocumentation(); // << endl;
         else
@@ -171,10 +166,6 @@ bool TempiInspect::printClass(const std::string &name)
         cout << endl;
         cout << endl;
 
-        // --------------------------------- Attributes ------------
-        //cout << "Attributes" << endl;
-        //cout << "----------" << endl;
-        //cout << endl;
         {
             if (node->listAttributes().size() == 0)
                 cout << "(No attributes)" << endl;
@@ -186,29 +177,20 @@ bool TempiInspect::printClass(const std::string &name)
                 {
                     Attribute* attr = node->getAttribute((*iter).c_str());
                     cout << "* Attribute \"" << attr->getName() << "\" : ";
-                    //cout << attr->getName() << endl;
-                    //print_n_times(attr->getName().size(), "~");
-                    //cout << endl; // after the ~~~~~
                     if (attr->isTypeStrict())
-                        cout << "(Type: " << attr->getValue().getTypes() << ")"; // << endl;
+                        cout << "(Type: " << attr->getValue().getTypes() << ")";
                     else
-                        cout << "(variable type)"; //  << endl;
+                        cout << "(variable type)";
                     cout << " ";
                     if (attr->getShortDocumentation() != "")
-                        cout << attr->getShortDocumentation(); // << endl;
+                        cout << attr->getShortDocumentation();
                     else
-                        cout << "(attribute not documented) "; // << endl;
-                    cout << "Default value: " << attr->getValue();// << endl;
+                        cout << "(attribute not documented) ";
+                    cout << "Default value: " << attr->getValue();
                     cout << endl;
                 }
             }
         }
-        //cout << endl;
-        // --------------------------------- Inlets ------------
-        //cout << "Inlets" << endl;
-        //cout << "------" << endl;
-        //cout << endl;
-        //cout << "All inlets::" << endl << endl;
         if (node->getInlets().size() == 0)
             cout << "(No inlet)" << endl;
         else
@@ -224,12 +206,6 @@ bool TempiInspect::printClass(const std::string &name)
                     cout << "(Not documented)" << endl;
             }
         }
-        // cout << endl;
-        // --------------------------------- Outlets ------------
-        // cout << "Outlets" << endl;
-        // cout << "------" << endl;
-        // cout << endl;
-        //cout << "All outlets::" << endl << endl;
         if (node->getOutlets().size() == 0)
             cout << "(No outlet)" << endl;
         else
@@ -246,8 +222,6 @@ bool TempiInspect::printClass(const std::string &name)
             }
         }
         cout << endl;
-        // -----------------------------------------------------
-        //cout << endl;
     }
     else
         std::cerr << "No such node type: \"" << name << "\"" << std::endl;
@@ -306,7 +280,7 @@ int TempiInspect::parse_options(int argc, char **argv)
     po::variables_map options;
     try
     {
-        // all positional options should be translated into "file" options
+        // all positional options should be translated into "keyword" options
         po::positional_options_description p;
         p.add("keyword", -1);
         po::store(po::command_line_parser(argc, argv).
