@@ -18,34 +18,38 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "tempi/attribute.h"
-#include <iostream>
+/**
+ * @file
+ * The Pad class.
+ */
+#ifndef __TEMPI_PAD_H__
+#define __TEMPI_PAD_H__
 
-namespace tempi {
+#include <boost/signals2.hpp>
+#include "tempi/entity.h"
+#include "tempi/message.h"
 
-Attribute::Attribute(const char *name, const Message &value, const char *doc, bool type_strict) :
-    Documented(name, doc, "")
+namespace tempi
 {
-    value_ = value;
-    type_strict_ = type_strict;
-}
 
-const Message &Attribute::getValue()
+/**
+ * A Pad is something that can be connected to something else.
+ */
+class Pad : public Entity
 {
-    return value_;
-}
-
-bool Attribute::setValue(const Message &value)
-{
-    // TODO: check here if same type or not
-    value_ = value;
-    return true;
-}
-
-bool Attribute::isTypeStrict() const
-{
-    return type_strict_;
-}
+    public:
+        typedef boost::signals2::signal<void (const Message&)> TriggeredSignal;
+        Pad(const char *name,
+            const char *short_documentation,
+            const char *long_documentation);
+        void trigger(const Message &message);
+        TriggeredSignal &getOnTriggeredSignal();
+    private:
+        TriggeredSignal on_triggered_signal_;
+};
 
 } // end of namespace
+
+#endif // ifndef
+
 

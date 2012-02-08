@@ -18,33 +18,24 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "tempi/attribute.h"
-#include <iostream>
+#include "tempi/pad.h"
 
-namespace tempi {
-
-Attribute::Attribute(const char *name, const Message &value, const char *doc, bool type_strict) :
-    Documented(name, doc, "")
+namespace tempi
 {
-    value_ = value;
-    type_strict_ = type_strict;
+
+Pad::Pad(const char *name, const char *short_documentation, const char *long_documentation) :
+    Entity(name, short_documentation, long_documentation)
+{
 }
 
-const Message &Attribute::getValue()
+void Pad::trigger(const Message &message)
 {
-    return value_;
+    on_triggered_signal_(message);
 }
 
-bool Attribute::setValue(const Message &value)
+Pad::TriggeredSignal &Pad::getOnTriggeredSignal()
 {
-    // TODO: check here if same type or not
-    value_ = value;
-    return true;
-}
-
-bool Attribute::isTypeStrict() const
-{
-    return type_strict_;
+    return on_triggered_signal_;
 }
 
 } // end of namespace

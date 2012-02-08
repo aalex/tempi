@@ -18,33 +18,26 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "tempi/attribute.h"
-#include <iostream>
+#include "tempi/namedobject.h"
 
-namespace tempi {
-
-Attribute::Attribute(const char *name, const Message &value, const char *doc, bool type_strict) :
-    Documented(name, doc, "")
+namespace tempi
 {
-    value_ = value;
-    type_strict_ = type_strict;
+
+NamedObject::NamedObject(
+    const char *name
+    ) :
+    name_(std::string(name))
+{
 }
 
-const Message &Attribute::getValue()
+std::string NamedObject::getName() const
 {
-    return value_;
+    return name_;
 }
 
-bool Attribute::setValue(const Message &value)
+void NamedObject::setName(const char *name)
 {
-    // TODO: check here if same type or not
-    value_ = value;
-    return true;
-}
-
-bool Attribute::isTypeStrict() const
-{
-    return type_strict_;
+    name_ = std::string(name);
 }
 
 } // end of namespace

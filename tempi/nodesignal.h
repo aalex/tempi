@@ -27,12 +27,13 @@
 
 #include <boost/signals2.hpp>
 #include "tempi/message.h"
+#include "tempi/documented.h"
 #include "tempi/sharedptr.h"
 
 namespace tempi
 {
 
-class NodeSignal
+class NodeSignal : public Documented
 {
     public:
         typedef std::tr1::shared_ptr<NodeSignal> ptr;
@@ -40,25 +41,22 @@ class NodeSignal
         /**
          * Creates a new NodeSignal with messages of a specific type.
          */
-        NodeSignal(const char *name, const char *doc, const char *type);
+        NodeSignal(const char *name, const char *short_documentation,
+            const char *long_documentation, const char *type);
         /**
          * Creates a new NodeSignal with wildcard type. (its message can have any types arguments in it)
          */
-        NodeSignal(const char *name, const char *doc);
-        ~NodeSignal();
+        NodeSignal(const char *name, const char *short_documentation,
+            const char *long_documentation);
         /**
-         * Returns the name of the signal.
+         * A virtual destructor makes this class polymorphic.
          */
-        std::string getName() const;
+        virtual ~NodeSignal();
         /**
          * Returns the type tags of the messages triggered by this signal.
          * An asterisk ("*") means it can be of any type.
          */
         std::string getType() const;
-        /**
-         * Returns the documentation string for this signal.
-         */
-        std::string getDocumentation() const;
         /**
          * Returns the boost::signals2::signal<void(Message)>
          */
@@ -75,8 +73,6 @@ class NodeSignal
          */
         bool trigger(const Message &message);
     private:
-        std::string name_;
-        std::string doc_;
         std::string type_;
         bool type_strict_;
         Signal signal_;

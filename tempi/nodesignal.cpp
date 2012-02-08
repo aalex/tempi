@@ -25,16 +25,21 @@
 namespace tempi
 {
 
-NodeSignal::NodeSignal(const char *name, const char *doc, const char *type) :
-    name_(name),
-    doc_(doc),
+NodeSignal::NodeSignal(
+        const char *name,
+        const char *short_documentation,
+        const char *long_documentation,
+        const char *type) :
+    Documented(name, short_documentation, long_documentation),
     type_(type),
     type_strict_(true)
 {}
 
-NodeSignal::NodeSignal(const char *name, const char *doc) :
-    name_(name),
-    doc_(doc),
+NodeSignal::NodeSignal(
+        const char *name, 
+        const char *short_documentation,
+        const char *long_documentation) :
+    Documented(name, short_documentation, long_documentation),
     type_("*"),
     type_strict_(false)
 {}
@@ -47,16 +52,6 @@ bool NodeSignal::isTypeStrict() const
 NodeSignal::~NodeSignal()
 {
     signal_.disconnect_all_slots();
-}
-
-std::string NodeSignal::getName() const
-{
-    return name_;
-}
-
-std::string NodeSignal::getDocumentation() const
-{
-    return doc_;
 }
 
 std::string NodeSignal::getType() const

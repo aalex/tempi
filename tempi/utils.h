@@ -86,6 +86,11 @@ std::string argumentToString(const Message &message, unsigned int index)
 void appendArgumentFromString(Message &message, const char *atom_value, ArgumentType type)
     throw(BadArgumentTypeException);
 
+/**
+ * Simply converts a char to a string.
+ */
+std::string charToString(const char c);
+
 } // end of namespace
 } // end of namespace
 

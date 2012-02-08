@@ -30,16 +30,17 @@
 #include <string>
 #include "tempi/message.h"
 #include "tempi/sharedptr.h"
+#include "tempi/documented.h"
 
 namespace tempi {
 
 /**
  * An Attribute is used to store info in a Node and to control its behaviour.
  */
-class Attribute
+class Attribute : public Documented
 {
     public:
-        typedef std::tr1::shared_ptr<Attribute> ptr;
+        //typedef std::tr1::shared_ptr<Attribute> ptr;
         /**
          * Creates an Attribute with a given name, initial value and documentation string.
          * @param name Name for this Attribute
@@ -48,14 +49,6 @@ class Attribute
          * @param type_strict Whether or not this Attribute's value is type-strict. (false if its type can change)
          */
         Attribute(const char *name, const Message &value, const char *doc, bool type_strict=true);
-        /**
-         * Returns the name of this Attribute.
-         */
-        std::string getName() const;
-        /**
-         * Returns the documentation string of this Attribute.
-         */
-        std::string getDocumentation() const;
         /**
          * Returns the value string of this Attribute.
          */
@@ -71,9 +64,7 @@ class Attribute
          */
         bool isTypeStrict() const;
     private:
-        std::string name_;
         Message value_;
-        std::string documentation_;
         bool type_strict_;
 };
 

@@ -1,6 +1,6 @@
 AM_CXXFLAGS = \
     $(BOOST_CPPFLAGS) \
-	$(CLUTTER_CFLAGS) \
+    $(CLUTTER_CFLAGS) \
     $(LIBLO_CFLAGS) \
     $(LIBXML_CFLAGS) \
     $(STK_CXXFLAGS) \
@@ -8,13 +8,13 @@ AM_CXXFLAGS = \
     -I$(top_srcdir)/tempi
 
 AM_LIBS = \
-	$(BOOST_FILESYSTEM_LIB) \
-	$(BOOST_LIBS)  \
-	$(BOOST_SYSTEM_LIB) \
+    $(BOOST_FILESYSTEM_LIB) \
+    $(BOOST_LIBS)  \
+    $(BOOST_SYSTEM_LIB) \
     $(BOOST_LDFLAGS) \
     $(BOOST_THREAD_LIB) \
-	$(CLUTTER_LIBS) \
-	$(GLIB_LIBS) \
+    $(CLUTTER_LIBS) \
+    $(GLIB_LIBS) \
     $(LIBLO_LIBS) \
     $(LIBXML_LIBS) \
     $(STK_LIBS)
@@ -53,6 +53,7 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     base/spigotnode.cpp \
     clutter/clutterlibrary.cpp \
     clutter/clutterstagenode.cpp \
+    documented.cpp \
     mapping/filter.cpp \
     fsm/rule.cpp \
     fsm/state.cpp \
@@ -70,14 +71,17 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     midi/midioutput.cpp \
     midi/midisendernode.cpp \
     midi/midiutilities.cpp \
+    namedobject.cpp \
     node.cpp \
     nodefactory.cpp \
     nodesignal.cpp \
+    entity.cpp \
     osc/osclibrary.cpp \
     osc/oscreceiver.cpp \
     osc/oscreceivernode.cpp \
     osc/oscsender.cpp \
     osc/oscsendernode.cpp \
+    pad.cpp \
     sampler/samplerlibrary.cpp \
     sampler/loopingplayback.cpp \
     sampler/marker.cpp \
@@ -100,7 +104,7 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     timeposition.cpp \
     timer.cpp \
     threadedscheduler.cpp \
-	utils.cpp
+    utils.cpp
 
 # TODO base/receivenode.cpp
 # TODO base/receivenode.h
@@ -122,6 +126,7 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     clutter/clutterlibrary.h \
     clutter/clutterstagenode.h \
     concurrentqueue.h \
+    documented.h \
     exceptions.h \
     mapping/filter.h \
     fsm/rule.h \
@@ -143,6 +148,8 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     midi/midioutput.h \
     midi/midisendernode.h \
     midi/midiutilities.h \
+    namedobject.h \
+    namedobjectmap.h \
     node.h \
     nodefactory.h \
     nodesignal.h \
@@ -168,7 +175,9 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     serializer.h \
     sharedptr.h \
     inlet.h \
+    entity.h \
     outlet.h \
+    pad.h \
     table/table.h \
     table/table_player.h \
     table/table_writer.h \

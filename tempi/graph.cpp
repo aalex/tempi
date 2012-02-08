@@ -55,7 +55,7 @@ bool Graph::addNode(const char *type, const char *name)
             std::cerr << "Graph::" << __FUNCTION__ << ": Invalid pointer to Node." << std::endl;
             return false;
         }
-        node->setInstanceName(name);
+        node->setName(name);
         nodes_[name] = node;
 
         try

@@ -34,6 +34,7 @@
 #include "tempi/nodesignal.h"
 #include "tempi/outlet.h"
 #include "tempi/sharedptr.h"
+#include "tempi/entity.h"
 
 namespace tempi
 {
@@ -49,7 +50,7 @@ const char * const OUTLET_DELETED_SIGNAL = "__delete_outlet__";
  * A Node is something that element that can be connected to and from other elements.
  * All nodes have at least one inlet for setting properties. (using ,ss... "set" "name" ...)
  */
-class Node
+class Node : public Entity
 {
     public:
         typedef std::tr1::shared_ptr<Node> ptr;
@@ -75,11 +76,11 @@ class Node
         /**
          * Returns the number of inlets this node has.
          */
-        unsigned int getNumberOfInlets() const;
+        unsigned int getNumberOfInlets() const; // TODO: deprecate
         /**
          * Returns the number of outlets this node has.
          */
-        unsigned int getNumberOfOutlets() const;
+        unsigned int getNumberOfOutlets() const; // TODO: deprecate
         /**
          * Sends a message to a given inlet of this node.
          * @param inlet Name of the inlet to send a message to.
@@ -97,38 +98,6 @@ class Node
          * Triggers whatever time-dependent events. Calleds by the Graph.
          */
         void tick();
-        // TODO: properties:
-        // std::map<std::string, Message> getAttributes();
-        Attribute::ptr getAttribute(const char *name) const throw(BadIndexException);
-        /**
-         * Returns the value of a given named attribute of this Node.
-         */
-        const Message &getAttributeValue(const char *name) const throw(BadIndexException);
-        /**
-         * Checks if this node has a given named attribute.
-         * @return True if this node has such an attribute.
-         */
-        bool hasAttribute(const char *name) const;
-        /**
-         * Sets a attribute value.
-         * You can also do this by sending a message in the form s:"set" s:name ...
-         * WARNING: if the value has not changed, it won't call onAttributeChanged.
-         */
-        void setAttribute(const char *name, const Message &value) throw(BadIndexException, BadArgumentTypeException);
-        /**
-         * Returns the type for a given named attribute.
-         */
-        std::string getAttributeType(const char *name);
-        /**
-         * Return the list of all the attributes names for this Node.
-         * Note that some attributes can appear/disappear at run time.
-         */
-        std::vector<std::string> getAttributesNames() const;
-        //
-        // signals:
-        std::map<std::string, NodeSignal::ptr> getSignals();
-        NodeSignal::ptr getSignal(const char *name) throw(BadIndexException);
-        bool hasSignal(const char *name);
         /**
          * Sets the type name for this Node.
          * WARNING: This should be only called by the NodeFactory.
@@ -138,15 +107,21 @@ class Node
          * Gets the type name for this Node.
          */
         const std::string &getTypeName() const;
-        /**
-         * Sets the instance name for this Node.
-         * WARNING: Should only be called by its parent Graph.
-         */
-        void setInstanceName(const char *instanceName);
-        /**
-         * Gets the instance name for this Node.
-         */
-        const std::string &getInstanceName() const;
+        ///**
+        // * Sets the instance name for this Node.
+        // * WARNING: Should only be called by its parent Graph.
+        // */
+        //void setInstanceName(const char *instanceName) // TODO:deprecate
+        //{
+        //    setName(instanceName);
+        //}
+        ///**
+        // * Gets the instance name for this Node.
+        // */
+        //std::string getInstanceName() const // TODO:deprecate
+        //{
+        //    return getName();
+        //}
         bool handlesReceiveSymbol(const char *selector) const;
         bool handleReceive(const char *selector, const Message &message)
         {
@@ -167,15 +142,10 @@ class Node
          * @return True if it has it.
          */
         bool hasOutlet(const char *name) const;
-        /**
-         * Gets the documentation string for this Node type.
-         */
-        std::string getDocumentation() const;
     protected:
         void enableHandlingReceiveSymbol(const char *selector);
         virtual void onHandleReceive(const char *selector, const Message &message)
         {}
-        bool addSignal(NodeSignal::ptr signal);
         /**
          * Adds an outlet.
          */
@@ -188,7 +158,6 @@ class Node
          * Adds an outlet.
          */
         bool addOutlet(Outlet::ptr outlet);
-
         /**
          * Removes an outlet.
          */
@@ -199,14 +168,16 @@ class Node
         bool addInlet(Inlet::ptr inlet);
         /**
          * Adds an attribute.
+         * TODO: remove this
          */
-        void addAttribute(const char *name, const Message &value, const char *doc="", bool type_strict=true) throw(BadIndexException);
+        void addAttribute(const char *name, const Message &value, const char *doc="", bool type_strict=true) throw(BadIndexException)
+        {
+            newAttribute(new Attribute(name, value, doc, type_strict));
+        }
         /**
          * Outputs a Message through the given outlet.
          */
         void output(const char *outlet, const Message &message) const throw(BadIndexException);
-        virtual void onAttributeChanged(const char *name, const Message &value)
-        {}
         // TODO: make private:
         void onInletTriggered(Inlet *inlet, const Message &message);
         // TODO: make private:
@@ -221,20 +192,13 @@ class Node
          * (for initiating sockets, files, user interfaces, etc.)
          */
         virtual void onInit();
-        /**
-         * Sets the documentation string for this node type.
-         */
-        void setDocumentation(const char *documentation);
     private:
         bool initiated_;
         std::map<std::string, Outlet::ptr> outlets_;
-        std::map<std::string, Attribute::ptr> attributes_;
         std::map<std::string, Inlet::ptr> inlets_;
-        std::map<std::string, NodeSignal::ptr> signals_;
         std::string typeName_;
         std::string instanceName_;
         std::string handledReceiveSymbol_;
-        std::string documentation_;
         // TODO: return success
         // TODO: add unsigned int inlet_number
 };
