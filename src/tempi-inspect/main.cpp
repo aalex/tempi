@@ -75,7 +75,7 @@ class TempiInspect
     private:
         bool verbose_;
         bool all_;
-        std::string keyword_;
+        std::vector<std::string> keywords_;
         tempi::NodeFactory factory_;
         void printAll();
         void printListOfTypes();
@@ -255,13 +255,15 @@ bool TempiInspect::run()
         printAll();
     else
     {
-        if (keyword_ == "")
+        if (keywords_.size() == 0)
         {
             printListOfTypes();
         }
         else
         {
-            printClass(keyword_);
+            std::vector<std::string>::const_iterator iter;
+            for (iter = keywords_.begin(); iter != keywords_.end(); ++iter)
+                printClass((*iter));
         }
     }
     return true;
@@ -273,7 +275,7 @@ int TempiInspect::parse_options(int argc, char **argv)
     desc.add_options()
         ("help,h", "Show this help message and exit")
         ("version", "Show program's version number and exit")
-        ("keyword,k", po::value<std::string>()->default_value(""), "Sets the keyword to look for in Tempi's documentation")
+        ("keywords,k", po::value<std::vector<std::string> >(&keywords_)->multitoken(), "Sets the node type names to look for in Tempi's documentation. There can be many.")
         ("verbose,v", po::bool_switch(), "Enables a verbose output")
         ("all,a", po::bool_switch(), "Prints detailed info for all node types")
         ;
@@ -282,7 +284,7 @@ int TempiInspect::parse_options(int argc, char **argv)
     {
         // all positional options should be translated into "keyword" options
         po::positional_options_description p;
-        p.add("keyword", -1);
+        p.add("keywords", -1);
         po::store(po::command_line_parser(argc, argv).
             options(desc).positional(p).run(), options);
         po::notify(options);
@@ -296,7 +298,6 @@ int TempiInspect::parse_options(int argc, char **argv)
 
     verbose_ = options["verbose"].as<bool>();
     all_ = options["all"].as<bool>();
-    keyword_ = options["keyword"].as<std::string>();
     // Options that makes the program exit:
     if (options.count("help"))
     {
@@ -308,8 +309,8 @@ int TempiInspect::parse_options(int argc, char **argv)
         std::cout << PROGRAM_NAME << " " << PACKAGE_VERSION << std::endl;
         return 0;
     }
-    if (verbose_)
-        std::cout << "Looking for keyword \"" << keyword_ << "\"..." << std::endl;
+    //if (verbose_)
+    //    std::cout << "Looking for keyword \"" << keyword_ << "\"..." << std::endl;
     return -1;
 }
 
