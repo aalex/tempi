@@ -215,6 +215,11 @@ std::string argumentToString(const Message &message, unsigned int index)
     } // end of switch/case
 }
 
+std::string charToString(const char c)
+{
+    return boost::lexical_cast<std::string>(c);
+}
+
 } // end of namespace
 } // end of namespace
 

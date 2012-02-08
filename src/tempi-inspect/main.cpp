@@ -28,6 +28,7 @@
 #include "tempi/internals.h"
 #include "tempi/outlet.h"
 #include "tempi/inlet.h"
+#include "tempi/utils.h"
 #include <boost/lexical_cast.hpp>
 #include <boost/program_options.hpp>
 #include <iostream>
@@ -50,7 +51,7 @@ typedef enum
 
 // static functions:
 static void print_n_times(unsigned int num, const char *text);
-static void print_title(const char *text, TitleLevel level);
+static void print_title(const std::string &text, TitleLevel level);
 static void print_line_if_not_empty(const std::string &text);
 static void print_bullet_line_if_not_empty(const std::string &text);
 
@@ -84,6 +85,7 @@ static void print_title(const std::string &text, TitleLevel level)
 {
     using std::cout;
     using std::endl;
+
     char character = '=';
     switch (level)
     {
@@ -99,8 +101,9 @@ static void print_title(const std::string &text, TitleLevel level)
         default:
             std::cerr << "Invalid title level" << std::endl;
     }
+    cout << endl;
     cout << text << endl;
-    print_n_times(text.size(), std::string((const char) character).c_str());
+    print_n_times(text.size(), utils::charToString(character).c_str());
     cout << character;
     cout << endl;
     cout << endl;
@@ -162,15 +165,16 @@ bool TempiInspect::printClass(const std::string &name)
         cout << endl; // after =========
         cout << endl; // after =========
         if (node->getShortDocumentation() != "")
-            cout << node->getShortDocumentation() << endl;
+            cout << node->getShortDocumentation(); // << endl;
         else
-            cout << "(Not documented)" << endl;
-        //cout << endl;
+            cout << "(node type not documented)"; // << endl;
+        cout << endl;
+        cout << endl;
 
         // --------------------------------- Attributes ------------
-        cout << "Attributes" << endl;
-        cout << "----------" << endl;
-        cout << endl;
+        //cout << "Attributes" << endl;
+        //cout << "----------" << endl;
+        //cout << endl;
         {
             if (node->listAttributes().size() == 0)
                 cout << "(No attributes)" << endl;
@@ -181,27 +185,29 @@ bool TempiInspect::printClass(const std::string &name)
                 for (iter = attributes.begin(); iter != attributes.end(); ++iter)
                 {
                     Attribute* attr = node->getAttribute((*iter).c_str());
-                    cout << attr->getName() << endl;
-                    print_n_times(attr->getName().size(), "~");
-                    cout << endl; // after the ~~~~~
-                    if (attr->getShortDocumentation() != "")
-                        cout << attr->getShortDocumentation() << endl;
-                    else
-                        cout << "(Not documented)" << endl;
+                    cout << "* Attribute \"" << attr->getName() << "\" : ";
+                    //cout << attr->getName() << endl;
+                    //print_n_times(attr->getName().size(), "~");
+                    //cout << endl; // after the ~~~~~
                     if (attr->isTypeStrict())
-                        cout << "Type: " << attr->getValue().getTypes() << endl;
+                        cout << "(Type: " << attr->getValue().getTypes() << ")"; // << endl;
                     else
-                        cout << "Type: This attribute has a *variable type*." << endl;
-                    cout << "Default value: " << attr->getValue() << endl;
-                    //cout << endl;
+                        cout << "(variable type)"; //  << endl;
+                    cout << " ";
+                    if (attr->getShortDocumentation() != "")
+                        cout << attr->getShortDocumentation(); // << endl;
+                    else
+                        cout << "(attribute not documented) "; // << endl;
+                    cout << "Default value: " << attr->getValue();// << endl;
+                    cout << endl;
                 }
             }
         }
         //cout << endl;
         // --------------------------------- Inlets ------------
-        cout << "Inlets" << endl;
-        cout << "------" << endl;
-        cout << endl;
+        //cout << "Inlets" << endl;
+        //cout << "------" << endl;
+        //cout << endl;
         //cout << "All inlets::" << endl << endl;
         if (node->getInlets().size() == 0)
             cout << "(No inlet)" << endl;
@@ -211,18 +217,18 @@ bool TempiInspect::printClass(const std::string &name)
             map<string, Inlet::ptr>::const_iterator iter;
             for (iter = inlets.begin(); iter != inlets.end(); ++iter)
             {
-                cout << "* Inlet \"" << (*iter).first << "\":";
+                cout << "* Inlet \"" << (*iter).first << "\" : ";
                 if (((*iter).second).get()->getDocumentation() != "")
                     cout << ((*iter).second).get()->getDocumentation() << endl;
                 else
                     cout << "(Not documented)" << endl;
             }
         }
-        //cout << endl;
+        // cout << endl;
         // --------------------------------- Outlets ------------
-        cout << "Outlets" << endl;
-        cout << "------" << endl;
-        cout << endl;
+        // cout << "Outlets" << endl;
+        // cout << "------" << endl;
+        // cout << endl;
         //cout << "All outlets::" << endl << endl;
         if (node->getOutlets().size() == 0)
             cout << "(No outlet)" << endl;
@@ -232,14 +238,14 @@ bool TempiInspect::printClass(const std::string &name)
             map<string, Outlet::ptr>::const_iterator iter;
             for (iter = outlets.begin(); iter != outlets.end(); ++iter)
             {
-                cout << "* Outlet \"" << (*iter).first << "\":";
+                cout << "* Outlet \"" << (*iter).first << "\" : ";
                 if (((*iter).second).get()->getDocumentation() != "")
                     cout << ((*iter).second).get()->getDocumentation() << endl;
                 else
                     cout << "(Not documented)" << endl;
             }
         }
-        //cout << endl;
+        cout << endl;
         // -----------------------------------------------------
         //cout << endl;
     }
@@ -249,7 +255,7 @@ bool TempiInspect::printClass(const std::string &name)
 
 void TempiInspect::printListOfTypes()
 {
-    print_title(std::string("Tempi types:", FIRST));
+    print_title(std::string("Tempi types:"), FIRST);
     std::map<std::string, AbstractNodeType::ptr>::const_iterator iter;
     std::map<std::string, AbstractNodeType::ptr> entries = factory_.getEntries();
     for (iter = entries.begin(); iter != entries.end(); ++iter)
@@ -260,7 +266,7 @@ void TempiInspect::printListOfTypes()
 
 void TempiInspect::printAll()
 {
-    print_title(std::string("Tempi types:", FIRST));
+    print_title(std::string("Tempi types:"), FIRST);
     std::map<std::string, AbstractNodeType::ptr>::const_iterator iter;
     std::map<std::string, AbstractNodeType::ptr> entries = factory_.getEntries();
     for (iter = entries.begin(); iter != entries.end(); ++iter)
