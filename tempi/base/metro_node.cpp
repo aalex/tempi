@@ -27,13 +27,14 @@ namespace base {
 MetroNode::MetroNode() :
     Node()
 {
+    this->setShortDocumentation("Sends an empty message every n milliseconds.");
     Message running = Message("b", false);
-    addAttribute("running", running);
+    this->addAttribute("running", running, "Whether it's ticking or not.");
 
     Message interval = Message("i", 1000);
-    addAttribute("interval", interval, "Interval in milliseconds."); // ms
+    this->addAttribute("interval", interval, "Interval in milliseconds."); // ms
 
-    addOutlet("0");
+    this->addOutlet("0");
 }
 
 void MetroNode::onAttributeChanged(const char *name, const Message &value)
@@ -47,7 +48,7 @@ void MetroNode::onAttributeChanged(const char *name, const Message &value)
         {
             Message message = Message(""); // bang
             output("0", message);
-            startMetro();
+            this->startMetro();
         }
         //else
         //    startMetro(); // we restart it anyways
@@ -73,7 +74,7 @@ void MetroNode::doTick()
         {
             Message message = Message(""); // bang
             //std::cout << "TICK" << std::endl;
-            output("0", message);
+            this->output("0", message);
             timer_.reset();
         }
     }

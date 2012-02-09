@@ -28,9 +28,10 @@ namespace base {
 PrependNode::PrependNode() :
     Node()
 {
+    setShortDocumentation("Prepends some atoms to a message");
     addAttribute("value", Message(), "Holds any message to prepend.", false);
-    addOutlet("0");
-    addInlet("0");
+    addOutlet("0", "Resulting messages with prepent atoms.");
+    addInlet("0", "Incoming messages.");
 }
 
 void PrependNode::processMessage(const char *inlet, const Message &message)

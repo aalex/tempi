@@ -32,11 +32,12 @@ SamplerNode::SamplerNode() :
     recorder_(new Recorder(region_)),
     player_(new Player(region_))
 {
+    setShortDocumentation("Contains a Region, a Recorder and a Player to loop data samples.");
     Message recording = Message("b", false);
-    addAttribute("recording", recording);
+    addAttribute("recording", recording, "Currently recording or not.");
 
     Message playing = Message("b", false);
-    addAttribute("playing", playing);
+    addAttribute("playing", playing, "Currently playing or not.");
 
     addInlet("0", "Messages to record.");
     addOutlet("0", "Played back messages.");

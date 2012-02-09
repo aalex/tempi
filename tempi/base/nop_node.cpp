@@ -26,13 +26,14 @@ namespace tempi { namespace base {
 NopNode::NopNode() :
     Node()
 {
-    addOutlet("0", "The default outlet.");
-    addInlet("0", "The default inlet.");
+    this->setShortDocumentation("Does no operation on a message, and just passes it to its outlet.");
+    this->addOutlet("0", "The default outlet.");
+    this->addInlet("0", "The default inlet.");
 }
 
 void NopNode::processMessage(const char *inlet, const Message &message)
 {
-    output("0", message);
+    this->output("0", message);
 }
 
 } // end of namespace

@@ -120,7 +120,8 @@ MidiInput::MidiInput() :
 
 MidiInput::~MidiInput()
 {
-    delete midi_in_;
+    if (midi_in_)
+        delete midi_in_;
 }
 
 bool MidiInput::open(unsigned int port)

@@ -27,8 +27,9 @@ namespace math {
 AddNode::AddNode() :
     Node()
 {
-    addInlet("0");
-    addOutlet("0");
+    setShortDocumentation("Outputs the addition of two floats together.");
+    addInlet("0", "Incoming float.");
+    addOutlet("0", "Resulting float.");
 
     Message operand = Message("f", 0.0f);
     addAttribute("operand", operand);
@@ -53,8 +54,9 @@ void AddNode::processMessage(const char *inlet, const Message &message)
 DivNode::DivNode() :
     Node()
 {
-    addInlet("0");
-    addOutlet("0");
+    setShortDocumentation("Outputs the division of one float by another.");
+    addInlet("0", "Incoming float.");
+    addOutlet("0", "Resulting float.");
 
     Message operand = Message("f", 0.0f);
     addAttribute("operand", operand);
@@ -84,8 +86,9 @@ void DivNode::processMessage(const char *inlet, const Message &message)
 EqualsNotNode::EqualsNotNode() :
     Node()
 {
-    addInlet("0");
-    addOutlet("0");
+    setShortDocumentation("Outputs whether two floats are equal or not.");
+    addInlet("0", "Incoming float.");
+    addOutlet("0", "Boolean result.");
 
     Message operand = Message("f", 0.0f);
     addAttribute("operand", operand);
@@ -107,8 +110,9 @@ void EqualsNotNode::processMessage(const char *inlet, const Message &message)
 IsGreaterNode::IsGreaterNode() :
     Node()
 {
-    addInlet("0");
-    addOutlet("0");
+    setShortDocumentation("Outputs whether the incoming float is greather than another value or not.");
+    addInlet("0", "Incoming float.");
+    addOutlet("0", "Boolean result.");
 
     Message operand = Message("f", 0.0f);
     addAttribute("operand", operand);
@@ -135,8 +139,9 @@ void IsGreaterNode::processMessage(const char *inlet, const Message &message)
 IsEqualNode::IsEqualNode() :
     Node()
 {
-    addInlet("0");
-    addOutlet("0");
+    setShortDocumentation("Outputs whether the incoming float is equal to another value or not.");
+    addInlet("0", "Incoming float.");
+    addOutlet("0", "Boolean result.");
 
     Message operand = Message("f", 0.0f);
     addAttribute("operand", operand);
@@ -164,8 +169,9 @@ void IsEqualNode::processMessage(const char *inlet, const Message &message)
 IsLessNode::IsLessNode() :
     Node()
 {
-    addInlet("0");
-    addOutlet("0");
+    setShortDocumentation("Outputs whether the incoming float is less than another value or not.");
+    addInlet("0", "Incoming float.");
+    addOutlet("0", "Boolean result.");
 
     Message operand = Message("f", 0.0f);
     addAttribute("operand", operand);
@@ -192,11 +198,12 @@ void IsLessNode::processMessage(const char *inlet, const Message &message)
 MultNode::MultNode() :
     Node()
 {
-    addInlet("0");
-    addOutlet("0");
+    setShortDocumentation("Outputs the multiplication of an incoming float and another float.");
+    addInlet("0", "Incoming float.");
+    addOutlet("0", "Resulting float.");
 
     Message operand = Message("f", 0.0f);
-    addAttribute("operand", operand);
+    addAttribute("operand", operand, "The right operand in the operation.");
 }
 
 void MultNode::processMessage(const char *inlet, const Message &message)
@@ -218,11 +225,12 @@ void MultNode::processMessage(const char *inlet, const Message &message)
 SubtractNode::SubtractNode() :
     Node()
 {
-    addInlet("0");
-    addOutlet("0");
+    setShortDocumentation("Outputs the subtraction of an incoming float and another float.");
+    addInlet("0", "Incoming float.");
+    addOutlet("0", "Resulting float.");
 
     Message operand = Message("f", 0.0f);
-    addAttribute("operand", operand);
+    addAttribute("operand", operand, "The right operand in the operation.");
 }
 
 void SubtractNode::processMessage(const char *inlet, const Message &message)

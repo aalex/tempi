@@ -27,9 +27,10 @@ namespace base {
 AnyNode::AnyNode() :
     Node()
 {
+    setShortDocumentation("Stores message and outputs them when it receives an empty message. (bang)");
     addAttribute("value", Message(), "Holds any message to store.", false);
-    addOutlet("0", "Value.");
-    addInlet("0", "Bang to output value. Any other message will set and output value.");
+    addOutlet("0", "Outputs the stored value when inlet 0 is banged.");
+    addInlet("0", "Bang to output value. Any other type of message will set and output value.");
 }
 
 void AnyNode::processMessage(const char *inlet, const Message &message)

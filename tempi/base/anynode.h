@@ -20,7 +20,7 @@
 
 /**
  * @file
- * The NopNode class.
+ * The AnyNode class.
  */
 #ifndef __TEMPI_BASE_ANYNODE_H__
 #define __TEMPI_BASE_ANYNODE_H__

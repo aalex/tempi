@@ -31,12 +31,13 @@ CounterNode::CounterNode() :
     Node(),
     increment_(1)
 {
+    setShortDocumentation("Counts from its start value, incrementing or decrementing the count when it gets a bang.");
     addOutlet("0", "Count.");
     addInlet("0", "Bangs increase and output the count. Integers sets and outputs the count.");
     Message increment = Message("i", 1);
     addAttribute(PROP_INCREMENT, increment);
     Message count = Message("i", 0);
-    addAttribute(PROP_COUNT, count);
+    addAttribute(PROP_COUNT, count, "Current count value.");
 }
 
 void CounterNode::processMessage(const char *inlet, const Message &message)

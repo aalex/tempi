@@ -28,9 +28,10 @@ MidiSenderNode::MidiSenderNode() :
     Node()
 {
     //addOutlet("0");
-    addInlet("0", "Send MIDI received from this inlet.");
+    setShortDocumentation("Sends MIDI messages to a single device.");
+    addInlet("0", "Send MIDI received from this inlet. (list of unsigned characters)");
     Message port = Message("i", 0);
-    addAttribute("port", port);
+    addAttribute("port", port, "STK MIDI device index.");
     midi_output_.reset(new MidiOutput);
 }
 

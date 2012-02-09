@@ -29,8 +29,10 @@ namespace midi {
 MidiRouteNode::MidiRouteNode() :
     Node()
 {
-    addOutlet("0", "Outputs MIDI messages of a single event type.");
-    addInlet("0", "MIDI messages received here.");
+    setShortDocumentation("Routes MIDI messages according to their type.");
+    addOutlet("0", "Prepends MIDI messages (converted to integers) by their type name. (\"note\", \"control\" or \"pitch_bend\")");
+    //Outputs MIDI messages of a single event type.");
+    addInlet("0", "You must send MIDI messages to this inlet. (list of unsigned characters)");
 //    addAttribute("types", Message("s", "note"), "List of strings for MIDI event types. "
 //        "Valid values are \"note\" and \"control\".", false);
 }
