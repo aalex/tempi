@@ -165,7 +165,6 @@ bool TempiInspect::printClass(const std::string &name)
             cout << "(node type not documented)"; // << endl;
         cout << endl;
         cout << endl;
-
         {
             if (node->listAttributes().size() == 0)
                 cout << "(No attributes)" << endl;
@@ -185,7 +184,8 @@ bool TempiInspect::printClass(const std::string &name)
                     if (attr->getShortDocumentation() != "")
                         cout << attr->getShortDocumentation();
                     else
-                        cout << "(attribute not documented) ";
+                        cout << "(attribute not documented)";
+                    cout << " ";
                     cout << "Default value: " << attr->getValue();
                     cout << endl;
                 }
