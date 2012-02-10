@@ -1,21 +1,35 @@
+Tempi release notes
+===================
+
 Tempi 0.1.10 (2012-??-??)
 -------------------------
 This release is a developer snapshot in the 0.1 series.
 
 New features:
+
 * Save and load Graph to and from XML.
+* Add examples: route.xml, counter.xml, etc.
 * New node types: [base.delay], [base.spigot], [base.route], [base.prepend]
 * New utilities: tempi-launch, tempi-inspect
 * Add Node::removeOutlet
-* Add NodeSignal
+* Add NodeSignal (especially for when deleting a pad)
 * rename "attributes" inlet to "__attr__"
+* more doc for many nodes
+* Add abstract classes: Pad, NamedObject, DocumentedObject, NamedObjectMap
+* Add utils::argumentToString and utils::appendArgumentFromString
 
 Bugs fixed:
+
 * Fix calculation in ms <-> ns conversion 
 * Fix timing in [base.metro]
 
 In progress:
+
 * [clutter.stage]
+
+To do
+
+* Entity::setLogLevel(), getLogLevel()
 
 
 Tempi 0.1.8 (2012-01-12)
