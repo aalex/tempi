@@ -31,7 +31,7 @@ OscSenderNode::OscSenderNode() :
     Message host_port;
     host_port.appendString("localhost");
     host_port.appendInt(0);
-    addAttribute("host_port", host_port);
+    addAttribute("host_port", host_port, "IP and port number to send to");
     addInlet("0", "Messages to send. First atom must be a string that is a valid OSC path.");
 }
 
