@@ -40,7 +40,7 @@ class NamedObject
         /**
          * Shared pointer to a NamedObject.
          */
-        typedef std::tr1::shared_ptr<NamedObject> ptr;
+        //typedef std::tr1::shared_ptr<NamedObject> ptr;
         /**
          * Constructor.
          */

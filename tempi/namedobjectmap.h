@@ -45,12 +45,12 @@ template <typename T>
 class NamedObjectMap
 {
     public:
-        //typedef std::map<std::string, std::tr1::shared_ptr<T> >;
-        //typedef std::tr1::shared_ptr<NamedObjectMap> ptr;
+        typedef std::tr1::shared_ptr<T> T_ptr;
+        typedef std::map<std::string, T_ptr> MapType;
         /**
          * Adds a named object to this map.
          */
-        void add(std::tr1::shared_ptr<T> entity)
+        void add(T_ptr entity)
             throw(BadIndexException)
         {
             if (entity.get() == 0)
@@ -81,7 +81,7 @@ class NamedObjectMap
         std::vector<std::string> listNames() const
         {
             std::vector<std::string> ret;
-            std::map<std::string, std::tr1::shared_ptr<T> >::const_iterator iter;
+            MapType::const_iterator iter;
             for (iter = objects_.begin(); iter != objects_.end(); ++iter)
                 ret.push_back((*iter).first);
             return ret;
@@ -100,25 +100,25 @@ class NamedObjectMap
                 os << "ERROR in NamedObjectMap::" << __FUNCTION__ << ": Map doesn't have an entity named " << name;
                 throw (BadIndexException(os.str().c_str()));
             }
-            std::map<std::string, std::tr1::shared_ptr<T> >::iterator iter = objects_.find(std::string(name));
+            MapType::iterator iter = objects_.find(std::string(name));
             objects_.erase(iter);
         }
         /**
          * Retrieves a named object in this map.
          */
-        std::tr1::shared_ptr<T> get(const char *name) const
+        T_ptr get(const char *name) const
             throw(BadIndexException)
         {
             if (name == 0)
                 throwNullStringException(__FUNCTION__);
-            std::map<std::string, std::tr1::shared_ptr<T> >::const_iterator iter =
+            MapType::const_iterator iter =
                 objects_.find(std::string(name));
             if (iter == objects_.end())
             {
                 std::ostringstream os;
                 os << "ERROR in NamedObjectMap::" << __FUNCTION__ << ": Map doesn't have an entity named \"" << name << "\".";
                 os << " Names are: ";
-                std::map<std::string, std::tr1::shared_ptr<T> >::const_iterator iter2;
+                MapType::const_iterator iter2;
                 for (iter2 = objects_.begin(); iter2 != objects_.end(); ++iter2)
                 {
                     if (iter2 != objects_.begin())
@@ -137,7 +137,7 @@ class NamedObjectMap
                 os << "ERROR in NamedObjectMap::" << method_name << ": Got a null string as a NamedObject name.";
                 throw (BadIndexException(os.str().c_str()));
         }
-        std::map<std::string, std::tr1::shared_ptr<T> > objects_;
+        MapType objects_;
 };
 
 } // end of namespace
