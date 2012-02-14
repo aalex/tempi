@@ -121,8 +121,8 @@ class Entity : public Documented
         void addSignal(NodeSignal* signal)
             throw(BadIndexException);
     private:
-        NamedObjectMap attributes_;
-        NamedObjectMap signals_;
+        NamedObjectMap<Attribute> attributes_;
+        NamedObjectMap<NodeSignal> signals_;
 };
 
 } // end of namespace

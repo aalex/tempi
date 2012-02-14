@@ -38,18 +38,19 @@ namespace tempi
 {
 
 /**
- * Map containing named NamedObject instances.
- * T must be a shared_ptr to a child of NamedObject.
+ * Map containing named instances of children of NamedObject.
+ * T must be a child of NamedObject.
  */
-//template <typename T>
+template <typename T>
 class NamedObjectMap
 {
     public:
-        typedef std::tr1::shared_ptr<NamedObjectMap> ptr;
+        //typedef std::map<std::string, std::tr1::shared_ptr<T> >;
+        //typedef std::tr1::shared_ptr<NamedObjectMap> ptr;
         /**
          * Adds a named object to this map.
          */
-        void add(NamedObject::ptr entity)
+        void add(std::tr1::shared_ptr<T> entity)
             throw(BadIndexException)
         {
             if (entity.get() == 0)
@@ -80,7 +81,7 @@ class NamedObjectMap
         std::vector<std::string> listNames() const
         {
             std::vector<std::string> ret;
-            MapType::const_iterator iter;
+            std::map<std::string, std::tr1::shared_ptr<T> >::const_iterator iter;
             for (iter = objects_.begin(); iter != objects_.end(); ++iter)
                 ret.push_back((*iter).first);
             return ret;
@@ -99,25 +100,25 @@ class NamedObjectMap
                 os << "ERROR in NamedObjectMap::" << __FUNCTION__ << ": Map doesn't have an entity named " << name;
                 throw (BadIndexException(os.str().c_str()));
             }
-            MapType::iterator iter = objects_.find(std::string(name));
+            std::map<std::string, std::tr1::shared_ptr<T> >::iterator iter = objects_.find(std::string(name));
             objects_.erase(iter);
         }
         /**
          * Retrieves a named object in this map.
          */
-        NamedObject::ptr get(const char *name) const
+        std::tr1::shared_ptr<T> get(const char *name) const
             throw(BadIndexException)
         {
             if (name == 0)
                 throwNullStringException(__FUNCTION__);
-            MapType::const_iterator iter =
+            std::map<std::string, std::tr1::shared_ptr<T> >::const_iterator iter =
                 objects_.find(std::string(name));
             if (iter == objects_.end())
             {
                 std::ostringstream os;
                 os << "ERROR in NamedObjectMap::" << __FUNCTION__ << ": Map doesn't have an entity named \"" << name << "\".";
                 os << " Names are: ";
-                MapType::const_iterator iter2;
+                std::map<std::string, std::tr1::shared_ptr<T> >::const_iterator iter2;
                 for (iter2 = objects_.begin(); iter2 != objects_.end(); ++iter2)
                 {
                     if (iter2 != objects_.begin())
@@ -129,7 +130,6 @@ class NamedObjectMap
             return (*iter).second;
         }
     private:
-        typedef std::map<std::string, NamedObject::ptr> MapType;
         void throwNullStringException(const char *method_name) const
             throw(BadIndexException)
         {
@@ -137,7 +137,7 @@ class NamedObjectMap
                 os << "ERROR in NamedObjectMap::" << method_name << ": Got a null string as a NamedObject name.";
                 throw (BadIndexException(os.str().c_str()));
         }
-        MapType objects_;
+        std::map<std::string, std::tr1::shared_ptr<T> > objects_;
 };
 
 } // end of namespace

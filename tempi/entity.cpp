@@ -35,13 +35,13 @@ Entity::Entity(
 Attribute* Entity::getAttribute(const char *name) const
     throw(BadIndexException)
 {
-    return dynamic_cast<Attribute*>(attributes_.get(name).get());
+    return attributes_.get(name).get();
 }
 
 NodeSignal* Entity::getSignal(const char *name) const
     throw(BadIndexException)
 {
-    return dynamic_cast<NodeSignal*>(signals_.get(name).get());
+    return signals_.get(name).get();
 }
 
 const Message &Entity::getAttributeValue(const char *name) const
@@ -90,7 +90,7 @@ bool Entity::hasAttribute(const char *name) const
 void Entity::newAttribute(Attribute* attribute)
     throw(BadIndexException)
 {
-    attributes_.add(NamedObject::ptr(dynamic_cast<NamedObject*>(attribute)));
+    attributes_.add(Attribute::ptr(attribute));
     // deletes the NamedObject* if name is already taken
 }
 
@@ -112,7 +112,7 @@ void Entity::addSignal(NodeSignal* signal) // TODO: rename to newSignal?
     {
         throw(BadIndexException("Null pointer!")); // FIXME: throw another exception type
     }
-    signals_.add(NamedObject::ptr(dynamic_cast<NamedObject*>(signal)));
+    signals_.add(NodeSignal::ptr(signal));
     // deletes the NamedObject* if name is already taken
 }
 

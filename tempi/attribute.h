@@ -40,7 +40,7 @@ namespace tempi {
 class Attribute : public Documented
 {
     public:
-        //typedef std::tr1::shared_ptr<Attribute> ptr;
+        typedef std::tr1::shared_ptr<Attribute> ptr;
         /**
          * Creates an Attribute with a given name, initial value and documentation string.
          * @param name Name for this Attribute
