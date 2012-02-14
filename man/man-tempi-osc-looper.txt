@@ -1,0 +1,30 @@
+[DESCRIPTION]
+Loops OSC messages.
+
+[SYNOPSIS]
+tempi-osc-looper [options]
+
+[INTERACTIVE USAGE]
+To start/stop recording, press the space bar.
+
+Press control-q to quit.
+
+[EXAMPLES]
+To print OSC messages received from port 10000 and send them on port 11000:
+
+ tempi-osc-looper -i 10000 -o 11000 -v
+
+[AUTHOR]
+Alexandre Quessy
+
+[HISTORY]
+2012 - Written by Alexandre Quessy
+
+[REPORTING BUGS]
+See http://tempi.toonloop.com
+
+[COPYRIGHT]
+Copyright (c) 2012 Alexandre Quessy <alexandre@quessy.net>
+
+[SEE ALSO]
+osc-forward(1), tempi-draw(1), tempi-launch(1), tempi-inspect(1), midilooper(1)
