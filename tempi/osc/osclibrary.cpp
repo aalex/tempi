@@ -29,7 +29,7 @@ void OscLibrary::load(NodeFactory &factory, const char *prefix) const
 {
     using utils::concatenate;
     factory.registerTypeT<OscReceiverNode>(concatenate(prefix, "receive").c_str());
-    factory.registerTypeT<OscReceiverNode>(concatenate(prefix, "send").c_str());
+    factory.registerTypeT<OscSenderNode>(concatenate(prefix, "send").c_str());
 }
 
 } // end of namespace
