@@ -7,7 +7,7 @@ To do for 0.2
 * Move nodes to plugins-base // FIXME: header files are not installed in subdirectories, but flat
 * Node::listInlets()
 * Node::listOutlets()
-* Fix segfault MidiReceiverNode::~MidiReceiverNode. (try with tempi-inspect midi.receive)
+* Fix segfault in Node destructor, which have data memebers, such as in ~MidiReceiverNode and ~OscReceiverNode. (try with tempi-inspect midi.receive, or tempi-osc-looper)
 * Handle objects renaming
 * (WONTFIX) list/configure MIDI ports by their ALSA ID, not an index
 * midilooper: multitrack sequencer with GUI

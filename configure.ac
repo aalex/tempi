@@ -210,6 +210,7 @@ AC_CONFIG_FILES([
         src/tempi-draw/Makefile
         src/tempi-inspect/Makefile
         src/tempi-launch/Makefile
+        src/tempi-osc-looper/Makefile
         tests/Makefile
         doxyfile 
         data/Makefile

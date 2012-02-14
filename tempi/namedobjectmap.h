@@ -115,7 +115,15 @@ class NamedObjectMap
             if (iter == objects_.end())
             {
                 std::ostringstream os;
-                os << "ERROR in NamedObjectMap::" << __FUNCTION__ << ": Map doesn't have an entity named " << name;
+                os << "ERROR in NamedObjectMap::" << __FUNCTION__ << ": Map doesn't have an entity named \"" << name << "\".";
+                os << " Names are: ";
+                MapType::const_iterator iter2;
+                for (iter2 = objects_.begin(); iter2 != objects_.end(); ++iter2)
+                {
+                    if (iter2 != objects_.begin())
+                        os << " ";
+                    os << (*iter2).first;
+                }
                 throw (BadIndexException(os.str().c_str()));
             }
             return (*iter).second;

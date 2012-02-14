@@ -3,5 +3,6 @@ SUBDIRS = \
     osc-forward \
     tempi-draw \
     tempi-inspect \
-    tempi-launch
+    tempi-launch \
+    tempi-osc-looper
 

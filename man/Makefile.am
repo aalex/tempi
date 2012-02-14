@@ -3,6 +3,7 @@ man_MANS = \
 	osc-forward.1 \
 	midilooper.1 \
 	tempi-launch.1 \
+	tempi-osc-looper.1 \
 	tempi-inspect.1
 
 EXTRA_DIST = $(man_MANS) \
@@ -10,6 +11,7 @@ EXTRA_DIST = $(man_MANS) \
    man-osc-forward.txt \
    man-tempi-draw.txt \
    man-tempi-launch.txt \
+   man-tempi-osc-looper.txt \
    man-tempi-inspect.txt
 
 MAINTAINERCLEANFILES = $(man_MANS)
@@ -35,3 +37,7 @@ tempi-launch.1: $(top_srcdir)/src/tempi-launch/main.cpp $(common_mandeps) $(top_
 
 tempi-inspect.1: $(top_srcdir)/src/tempi-inspect/main.cpp $(common_mandeps) $(top_srcdir)/man/man-tempi-inspect.txt
 	$(HELP2MAN) --include=man-tempi-inspect.txt --name="tempi-inspect" --no-info $(top_builddir)/src/tempi-inspect/tempi-inspect -o $@
+
+tempi-osc-looper.1: $(top_srcdir)/src/tempi-osc-looper/main.cpp $(common_mandeps) $(top_srcdir)/man/man-tempi-osc-looper.txt
+	$(HELP2MAN) --include=man-tempi-osc-looper.txt --name="tempi-osc-looper" --no-info $(top_builddir)/src/tempi-osc-looper/tempi-osc-looper -o $@
+

@@ -8,6 +8,7 @@
 *.so
 *.swp
 *~
+*.patch
 .deps/
 .dirstamp
 .libs/
@@ -67,6 +68,7 @@ src/osc-forward/osc-forward
 src/tempi-draw/tempi-draw
 src/tempi-inspect/tempi-inspect
 src/tempi-launch/tempi-launch
+src/tempi-osc-looper/tempi-osc-looper
 tempi-*.tar.gz
 tempi/config.h
 tempi/config.h.in
