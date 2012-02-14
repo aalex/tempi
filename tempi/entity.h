@@ -48,6 +48,11 @@ class Entity : public Documented
             const char *name = "",
             const char *short_documentation = "",
             const char *long_documentation = "");
+        
+        /**
+         * A virtual destructor makes this class polymorphic.
+         */
+        virtual ~Entity() {}
         /**
          * Retrieves a Signal.
          */

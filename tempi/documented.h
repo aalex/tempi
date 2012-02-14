@@ -44,6 +44,7 @@ class Documented : public NamedObject
             const char *name = "",
             const char *short_documentation = "",
             const char *long_documentation = "");
+        virtual ~Documented() {}
         /**
          * Returns the short documentation string of this Documented.
          */

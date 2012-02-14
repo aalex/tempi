@@ -14,7 +14,7 @@ class DummyNode : public Node
             triggered_(false)
         {
             Message message_a = Message("ifs", 1, 3.14159f, "foo");
-            addAttribute("hello", message_a);
+            addAttribute(Attribute::ptr(new Attribute("hello", message_a)));
             addInlet("0");
             addOutlet("0");
         }
