@@ -412,13 +412,17 @@ bool Graph::setNodeAttribute(const char *nodeName, const char *attributeName, co
     catch (const BadIndexException &e)
     {
         std::cerr << "BadIndexException in ";
-        std::cerr << "Graph::" << __FUNCTION__ << ": " << e.what() << std::endl;;
+        std::cerr << "Graph::" << __FUNCTION__ << "(" <<
+            nodeName << ", " << attributeName << ", " << value
+            << "): " << e.what() << std::endl;;
         return false;
     }
     catch (const BadArgumentTypeException &e)
     {
         std::cerr << "BadArgumentTypeException in ";
-        std::cerr << "Graph::" << __FUNCTION__ << ": " << e.what() << std::endl;;
+        std::cerr << "Graph::" << __FUNCTION__ << "(" <<
+            nodeName << ", " << attributeName << ", " << value
+            << "): " << e.what() << std::endl;;
         return false;
     }
 }
