@@ -81,7 +81,7 @@ class NamedObjectMap
         std::vector<std::string> listNames() const
         {
             std::vector<std::string> ret;
-            MapType::const_iterator iter;
+            typename MapType::const_iterator iter;
             for (iter = objects_.begin(); iter != objects_.end(); ++iter)
                 ret.push_back((*iter).first);
             return ret;
@@ -100,7 +100,7 @@ class NamedObjectMap
                 os << "ERROR in NamedObjectMap::" << __FUNCTION__ << ": Map doesn't have an entity named " << name;
                 throw (BadIndexException(os.str().c_str()));
             }
-            MapType::iterator iter = objects_.find(std::string(name));
+            typename MapType::iterator iter = objects_.find(std::string(name));
             objects_.erase(iter);
         }
         /**
@@ -111,14 +111,14 @@ class NamedObjectMap
         {
             if (name == 0)
                 throwNullStringException(__FUNCTION__);
-            MapType::const_iterator iter =
+            typename MapType::const_iterator iter =
                 objects_.find(std::string(name));
             if (iter == objects_.end())
             {
                 std::ostringstream os;
                 os << "ERROR in NamedObjectMap::" << __FUNCTION__ << ": Map doesn't have an entity named \"" << name << "\".";
                 os << " Names are: ";
-                MapType::const_iterator iter2;
+                typename MapType::const_iterator iter2;
                 for (iter2 = objects_.begin(); iter2 != objects_.end(); ++iter2)
                 {
                     if (iter2 != objects_.begin())
