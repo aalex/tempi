@@ -47,6 +47,8 @@ class NamedObjectMap
     public:
         typedef std::tr1::shared_ptr<T> T_ptr;
         typedef std::map<std::string, T_ptr> MapType;
+        typedef typename MapType::const_iterator ConstIter;
+        typedef typename MapType::iterator Iter;
         /**
          * Adds a named object to this map.
          */
@@ -81,7 +83,7 @@ class NamedObjectMap
         std::vector<std::string> listNames() const
         {
             std::vector<std::string> ret;
-            typename MapType::const_iterator iter;
+            ConstIter iter;
             for (iter = objects_.begin(); iter != objects_.end(); ++iter)
                 ret.push_back((*iter).first);
             return ret;
@@ -100,7 +102,7 @@ class NamedObjectMap
                 os << "ERROR in NamedObjectMap::" << __FUNCTION__ << ": Map doesn't have an entity named " << name;
                 throw (BadIndexException(os.str().c_str()));
             }
-            typename MapType::iterator iter = objects_.find(std::string(name));
+            Iter iter = objects_.find(std::string(name));
             objects_.erase(iter);
         }
         /**
@@ -111,14 +113,13 @@ class NamedObjectMap
         {
             if (name == 0)
                 throwNullStringException(__FUNCTION__);
-            typename MapType::const_iterator iter =
-                objects_.find(std::string(name));
+            ConstIter iter = objects_.find(std::string(name));
             if (iter == objects_.end())
             {
                 std::ostringstream os;
                 os << "ERROR in NamedObjectMap::" << __FUNCTION__ << ": Map doesn't have an entity named \"" << name << "\".";
                 os << " Names are: ";
-                typename MapType::const_iterator iter2;
+                ConstIter iter2;
                 for (iter2 = objects_.begin(); iter2 != objects_.end(); ++iter2)
                 {
                     if (iter2 != objects_.begin())
