@@ -30,7 +30,7 @@ OscReceiverNode::OscReceiverNode() :
 {
     addOutlet("0");
     Message port = Message("i", 0);
-    addAttribute("port", port);
+    addAttribute(Attribute::ptr(new Attribute("port", port, "Receive OSC messages on this port number.")));
 }
 
 void OscReceiverNode::onAttributeChanged(const char *name, const Message &value)

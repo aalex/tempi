@@ -87,10 +87,10 @@ bool Entity::hasAttribute(const char *name) const
     return attributes_.has(name);
 }
 
-void Entity::newAttribute(Attribute* attribute)
+void Entity::addAttribute(Attribute::ptr attribute)
     throw(BadIndexException)
 {
-    attributes_.add(Attribute::ptr(attribute));
+    attributes_.add(attribute);
     // deletes the NamedObject* if name is already taken
 }
 
@@ -105,14 +105,14 @@ bool Entity::hasSignal(const char *name) const
     return signals_.has(name);
 }
 
-void Entity::addSignal(NodeSignal* signal) // TODO: rename to newSignal?
+void Entity::addSignal(NodeSignal::ptr signal) // TODO: rename to newSignal?
     throw(BadIndexException)
 {
-    if (signal == 0)
+    if (signal.get() == 0)
     {
         throw(BadIndexException("Null pointer!")); // FIXME: throw another exception type
     }
-    signals_.add(NodeSignal::ptr(signal));
+    signals_.add(signal);
     // deletes the NamedObject* if name is already taken
 }
 

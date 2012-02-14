@@ -170,10 +170,10 @@ class Node : public Entity
          * Adds an attribute.
          * TODO: remove this
          */
-        void addAttribute(const char *name, const Message &value, const char *doc="", bool type_strict=true) throw(BadIndexException)
-        {
-            newAttribute(new Attribute(name, value, doc, type_strict));
-        }
+        // void addAttribute(const char *name, const Message &value, const char *doc="", bool type_strict=true) throw(BadIndexException)
+        // {
+        //     addAttribute(Attribute::ptr(new Attribute(name, value, doc, type_strict)));
+        // }
         /**
          * Outputs a Message through the given outlet.
          */

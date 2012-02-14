@@ -30,7 +30,7 @@ MidiReceiverNode::MidiReceiverNode() :
     setShortDocumentation("Receives MIDI messages from a single device.");
     addOutlet("0", "MIDI messages (unsigned characters) flow through this outlet.");
     Message port = Message("i", 0);
-    addAttribute("port", port, "STK MIDI device index.");
+    addAttribute(Attribute::ptr(new Attribute("port", port, "STK MIDI device index.")));
     midi_input_.reset(new MidiInput);
 }
 

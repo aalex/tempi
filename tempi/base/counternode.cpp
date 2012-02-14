@@ -35,9 +35,9 @@ CounterNode::CounterNode() :
     addOutlet("0", "Count.");
     addInlet("0", "Bangs increase and output the count. Integers sets and outputs the count.");
     Message increment = Message("i", 1);
-    addAttribute(PROP_INCREMENT, increment);
+    addAttribute(Attribute::ptr(new Attribute(PROP_INCREMENT, increment)));
     Message count = Message("i", 0);
-    addAttribute(PROP_COUNT, count, "Current count value.");
+    addAttribute(Attribute::ptr(new Attribute(PROP_COUNT, count, "Current count value.")));
 }
 
 void CounterNode::processMessage(const char *inlet, const Message &message)

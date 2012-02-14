@@ -48,7 +48,7 @@ class Attribute : public Documented
          * @param doc Documentation string.
          * @param type_strict Whether or not this Attribute's value is type-strict. (false if its type can change)
          */
-        Attribute(const char *name, const Message &value, const char *doc, bool type_strict=true);
+        Attribute(const char *name, const Message &value, const char *short_doc="", bool type_strict=true);
         /**
          * Returns the value string of this Attribute.
          */

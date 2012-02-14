@@ -33,10 +33,10 @@ PrintNode::PrintNode() :
     addInlet("0", "Print messages received from this inlet.");
 
     Message prefix_prop = Message("s", prefix_.c_str());
-    addAttribute("prefix", prefix_prop);
+    addAttribute(Attribute::ptr(new Attribute("prefix", prefix_prop, "Prefix when printing incoming messages to the console.")));
 
     Message enabled_prop = Message("b", enabled_);
-    addAttribute("enabled", enabled_prop);
+    addAttribute(Attribute::ptr(new Attribute("enabled", enabled_prop)));
 }
 
 void PrintNode::processMessage(const char *inlet, const Message &message)

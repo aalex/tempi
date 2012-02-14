@@ -28,7 +28,7 @@ ReceiveNode::ReceiveNode() :
 {
     Message receiveSymbol;
     receiveSymbol.appendString("");
-    addAttribute("symbol", receiveSymbol);
+    addAttribute(Attribute::ptr(new Attribute("symbol", receiveSymbol, "Receive symbol")));
 }
 
 void ReceiveNode::processMessage(const char *inlet, const Message &message)

@@ -27,7 +27,7 @@ namespace base {
 DelayNode::DelayNode() :
     Node()
 {
-    addAttribute("delay", Message("l", 0), "Delay in milliseconds. All messages will be delayed by that much.");
+    addAttribute(Attribute::ptr(new Attribute("delay", Message("l", 0), "Delay in milliseconds. All messages will be delayed by that much.")));
     addInlet("0", "Any message will be sent from outlet 0 after a given delay.");
     addInlet("clear", "Clears all the stored messages.");
     addOutlet("0", "Delayed messages. Save as those received from inlet 0, but later.");

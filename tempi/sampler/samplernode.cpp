@@ -34,10 +34,10 @@ SamplerNode::SamplerNode() :
 {
     setShortDocumentation("Contains a Region, a Recorder and a Player to loop data samples.");
     Message recording = Message("b", false);
-    addAttribute("recording", recording, "Currently recording or not.");
+    addAttribute(Attribute::ptr(new Attribute("recording", recording, "Currently recording or not.")));
 
     Message playing = Message("b", false);
-    addAttribute("playing", playing, "Currently playing or not.");
+    addAttribute(Attribute::ptr(new Attribute("playing", playing, "Currently playing or not.")));
 
     addInlet("0", "Messages to record.");
     addOutlet("0", "Played back messages.");

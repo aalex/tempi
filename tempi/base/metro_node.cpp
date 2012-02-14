@@ -29,10 +29,10 @@ MetroNode::MetroNode() :
 {
     this->setShortDocumentation("Sends an empty message every n milliseconds.");
     Message running = Message("b", false);
-    this->addAttribute("running", running, "Whether it's ticking or not.");
+    this->addAttribute(Attribute::ptr(new Attribute("running", running, "Whether it's ticking or not.")));
 
     Message interval = Message("i", 1000);
-    this->addAttribute("interval", interval, "Interval in milliseconds."); // ms
+    this->addAttribute(Attribute::ptr(new Attribute("interval", interval, "Interval in milliseconds."))); // ms
 
     this->addOutlet("0");
 }

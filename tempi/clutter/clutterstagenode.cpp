@@ -133,8 +133,8 @@ TempiClutterStageNode::TempiClutterStageNode()
     startClutterThread();
     //TODO: addInlet();    
     //TODO: addOutlet();    
-    addAttribute("script", Message("s", ""), "JSON file to load with ClutterScript.");
-    addAttribute("size", Message("ii", 640, 480), "Size of the ClutterStage.");
+    addAttribute(Attribute::ptr(new Attribute("script", Message("s", ""), "JSON file to load with ClutterScript.")));
+    addAttribute(Attribute::ptr(new Attribute("size", Message("ii", 640, 480), "Size of the ClutterStage.")));
 }
 
 TempiClutterStageNode::~TempiClutterStageNode()

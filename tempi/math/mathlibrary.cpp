@@ -32,7 +32,7 @@ AddNode::AddNode() :
     addOutlet("0", "Resulting float.");
 
     Message operand = Message("f", 0.0f);
-    addAttribute("operand", operand);
+    addAttribute(Attribute::ptr(new Attribute("operand", operand)));
 }
 
 void AddNode::processMessage(const char *inlet, const Message &message)
@@ -59,7 +59,7 @@ DivNode::DivNode() :
     addOutlet("0", "Resulting float.");
 
     Message operand = Message("f", 0.0f);
-    addAttribute("operand", operand);
+    addAttribute(Attribute::ptr(new Attribute("operand", operand)));
 }
 
 void DivNode::processMessage(const char *inlet, const Message &message)
@@ -91,7 +91,7 @@ EqualsNotNode::EqualsNotNode() :
     addOutlet("0", "Boolean result.");
 
     Message operand = Message("f", 0.0f);
-    addAttribute("operand", operand);
+    addAttribute(Attribute::ptr(new Attribute("operand", operand)));
 }
 
 void EqualsNotNode::processMessage(const char *inlet, const Message &message)
@@ -115,7 +115,7 @@ IsGreaterNode::IsGreaterNode() :
     addOutlet("0", "Boolean result.");
 
     Message operand = Message("f", 0.0f);
-    addAttribute("operand", operand);
+    addAttribute(Attribute::ptr(new Attribute("operand", operand)));
 }
 
 void IsGreaterNode::processMessage(const char *inlet, const Message &message)
@@ -144,7 +144,7 @@ IsEqualNode::IsEqualNode() :
     addOutlet("0", "Boolean result.");
 
     Message operand = Message("f", 0.0f);
-    addAttribute("operand", operand);
+    addAttribute(Attribute::ptr(new Attribute("operand", operand)));
 }
 
 void IsEqualNode::processMessage(const char *inlet, const Message &message)
@@ -174,7 +174,7 @@ IsLessNode::IsLessNode() :
     addOutlet("0", "Boolean result.");
 
     Message operand = Message("f", 0.0f);
-    addAttribute("operand", operand);
+    addAttribute(Attribute::ptr(new Attribute("operand", operand)));
 }
 
 void IsLessNode::processMessage(const char *inlet, const Message &message)
@@ -203,7 +203,7 @@ MultNode::MultNode() :
     addOutlet("0", "Resulting float.");
 
     Message operand = Message("f", 0.0f);
-    addAttribute("operand", operand, "The right operand in the operation.");
+    addAttribute(Attribute::ptr(new Attribute("operand", operand, "The right operand in the operation.")));
 }
 
 void MultNode::processMessage(const char *inlet, const Message &message)
@@ -230,7 +230,7 @@ SubtractNode::SubtractNode() :
     addOutlet("0", "Resulting float.");
 
     Message operand = Message("f", 0.0f);
-    addAttribute("operand", operand, "The right operand in the operation.");
+    addAttribute(Attribute::ptr(new Attribute("operand", operand, "The right operand in the operation.")));
 }
 
 void SubtractNode::processMessage(const char *inlet, const Message &message)

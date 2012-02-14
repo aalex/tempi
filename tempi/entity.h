@@ -113,12 +113,12 @@ class Entity : public Documented
         /**
          * Adds an attribute to this Entity.
          */
-        void newAttribute(Attribute* attribute)
+        void addAttribute(Attribute::ptr attribute)
             throw(BadIndexException);
         /**
          * Adds a signal to this Entity.
          */
-        void addSignal(NodeSignal* signal)
+        void addSignal(NodeSignal::ptr signal)
             throw(BadIndexException);
     private:
         NamedObjectMap<Attribute> attributes_;
