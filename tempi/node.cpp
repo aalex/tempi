@@ -171,7 +171,7 @@ bool Node::addOutlet(Outlet::ptr outlet)
         }
         catch (const BadIndexException &e)
         {
-            std::cerr << "In " << __FUNCTION__ << std::endl;
+            std::cerr << "In Node::" << __FUNCTION__ << ": already got such and outlet: " << std::endl;
             std::cerr << e.what() << std::endl;
         }
         return true;

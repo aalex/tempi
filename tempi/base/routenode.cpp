@@ -104,7 +104,7 @@ void RouteNode::onAttributeChanged(const char *name, const Message &value)
         if (! utils::find_in_vector<std::string>(selectors_, (*iter)))
         {
             selectors_.push_back((*iter));
-            //std::cout << "[route]: add outlet " << (*iter) << std::endl;
+            std::cout << "[route]: add outlet " << (*iter) << std::endl;
             addOutlet((*iter).c_str(), "Output for the message starting with a string of the same name.");
         }
     }
