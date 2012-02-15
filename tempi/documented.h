@@ -57,11 +57,11 @@ class Documented : public NamedObject
         /**
          * Sets the short documentation string of this Documented.
          */
-        std::string setShortDocumentation(const char *short_documentation);
+        void setShortDocumentation(const char *short_documentation);
         /**
          * Sets the long documentation string of this Documented.
          */
-        std::string setLongDocumentation(const char *long_documentation);
+        void setLongDocumentation(const char *long_documentation);
     private:
         std::string short_documentation_;
         std::string long_documentation_;
