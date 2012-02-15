@@ -102,4 +102,4 @@ tests/check_version
 !prototypes/midilooper-gui/Makefile
 !prototypes/modules/Makefile
 !prototypes/matrix_type/Makefile
-
+!prototypes/mapofsharedobjects/Makefile
