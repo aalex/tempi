@@ -28,7 +28,7 @@ namespace base {
 SpigotNode::SpigotNode() :
     Node()
 {
-    addAttribute("pass", Message("b", true), "Let messages flow or not.");
+    addAttribute(Attribute::ptr(new Attribute("pass", Message("b", true), "Let messages flow or not.")));
     addInlet("0", "Incoming messages.");
     addOutlet("0", "Outlet from which messages flow if its open.");
     setShortDocumentation("Lets messages flow through it or not.");

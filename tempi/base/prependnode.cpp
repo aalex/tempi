@@ -29,7 +29,7 @@ PrependNode::PrependNode() :
     Node()
 {
     setShortDocumentation("Prepends some atoms to a message");
-    addAttribute("value", Message(), "Holds any message to prepend.", false);
+    addAttribute(Attribute::ptr(new Attribute("value", Message(), "Holds any message to prepend.", false)));
     addOutlet("0", "Resulting messages with prepent atoms.");
     addInlet("0", "Incoming messages.");
 }

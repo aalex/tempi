@@ -45,12 +45,12 @@ std::string Documented::getLongDocumentation() const
     return long_documentation_;
 }
 
-std::string Documented::setShortDocumentation(const char *short_documentation)
+void Documented::setShortDocumentation(const char *short_documentation)
 {
     short_documentation_ = std::string(short_documentation);
 }
 
-std::string Documented::setLongDocumentation(const char *long_documentation)
+void Documented::setLongDocumentation(const char *long_documentation)
 {
     long_documentation_ = std::string(long_documentation);
 }

@@ -28,7 +28,7 @@ namespace base {
 RouteNode::RouteNode() :
     Node()
 {
-    addAttribute("selectors", Message(), "List of string that first atom must match in order to be output via the corresponding outlet.", false);
+    addAttribute(Attribute::ptr(new Attribute("selectors", Message(), "List of string that first atom must match in order to be output via the corresponding outlet.", false)));
     addInlet("0");
     setShortDocumentation("The RouteNode routes messages to its different outlets according to the first string in each message.");
 }

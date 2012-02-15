@@ -33,8 +33,8 @@ MidiRouteNode::MidiRouteNode() :
     addOutlet("0", "Prepends MIDI messages (converted to integers) by their type name. (\"note\", \"control\" or \"pitch_bend\")");
     //Outputs MIDI messages of a single event type.");
     addInlet("0", "You must send MIDI messages to this inlet. (list of unsigned characters)");
-//    addAttribute("types", Message("s", "note"), "List of strings for MIDI event types. "
-//        "Valid values are \"note\" and \"control\".", false);
+//    addAttribute(Attribute::ptr("types", Message("s", "note"), "List of strings for MIDI event types. "
+//        "Valid values are \"note\" and \"control\".", false));
 }
 
 void MidiRouteNode::processMessage(const char *inlet, const Message &message)

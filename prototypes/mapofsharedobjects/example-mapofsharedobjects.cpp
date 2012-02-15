@@ -1,46 +1,36 @@
-/*
- * Copyright (C) 2011 Alexandre Quessy
- * Copyright (C) 2011 Michal Seta
- * Copyright (C) 2012 Nicolas Bouillot
- *
- * This file is part of Tempi.
- *
- * This program is free software: you can redistribute it and/or
- * modify it under the terms of, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * Tempi is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
- */
-
-/**
- * @file
- * The NamedObjectMap template class.
- */
-#ifndef __TEMPI_NAMEDOBJECTMAP_H__
-#define __TEMPI_NAMEDOBJECTMAP_H__
-
+#include <string>
+#include <tr1/memory>
 #include <map>
 #include <vector>
 #include <iostream>
 #include <string>
 #include <sstream>
-#include "tempi/namedobject.h"
-#include "tempi/exceptions.h"
-#include "tempi/sharedptr.h"
+#include <stdexcept>
 
-namespace tempi
+class BadIndexException : public std::runtime_error
 {
+    public:
+        BadIndexException(const char *error_message) :
+            std::runtime_error(error_message)
+        {}
+};
 
-/**
- * Map containing named instances of children of NamedObject.
- * T must be a child of NamedObject.
- */
+class NamedObject
+{
+    public:
+        typedef std::tr1::shared_ptr<NamedObject> ptr;
+        NamedObject(const char *name = "") :
+            name_(name)
+        {}
+        std::string getName() const
+        {
+            return name_;
+        }
+        virtual ~NamedObject() {}
+    private:
+        std::string name_;
+};
+
 template <typename T>
 class NamedObjectMap
 {
@@ -141,7 +131,63 @@ class NamedObjectMap
         MapType objects_;
 };
 
-} // end of namespace
+class IntermediateClass : public NamedObject
+{
+    public:
+        typedef std::tr1::shared_ptr<IntermediateClass> ptr;
+        IntermediateClass(const char *name) :
+            NamedObject(name)
+        {}
+        virtual ~IntermediateClass()
+        {}
+};
 
-#endif // ifndef
+class ExampleNamedObject : public IntermediateClass
+{
+    public:
+        ExampleNamedObject(const char *name) :
+            IntermediateClass(name)
+        {}
+        int getX() const
+        {
+            return x_;
+        }
+        void setX(int x)
+        {
+            x_ = x;
+        }
+    private:
+        int x_; // extra attribute
+};
+
+class ExampleApp
+{
+    public:
+        ExampleApp()
+        {}
+        void addOne(IntermediateClass::ptr obj)
+        {
+            objects_.add(obj);
+        }
+        void print() const
+        {
+            std::vector<std::string> names = objects_.listNames();
+            std::vector<std::string>::const_iterator iter;
+            for (iter = names.begin(); iter != names.end(); ++iter)
+                std::cout << (*iter) << std::endl;
+        }
+    private:
+        NamedObjectMap<IntermediateClass> objects_;
+};
+
+int main(int argc, char *argv[])
+{
+    ExampleApp app;
+    app.addOne(IntermediateClass::ptr(new ExampleNamedObject("a")));
+    app.addOne(IntermediateClass::ptr(new ExampleNamedObject("b")));
+    app.addOne(IntermediateClass::ptr(new ExampleNamedObject("c")));
+    app.addOne(IntermediateClass::ptr(new ExampleNamedObject("d")));
+    app.print();
+    return 0;
+}
 

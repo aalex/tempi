@@ -48,6 +48,11 @@ class Entity : public Documented
             const char *name = "",
             const char *short_documentation = "",
             const char *long_documentation = "");
+        
+        /**
+         * A virtual destructor makes this class polymorphic.
+         */
+        virtual ~Entity() {}
         /**
          * Retrieves a Signal.
          */
@@ -113,16 +118,16 @@ class Entity : public Documented
         /**
          * Adds an attribute to this Entity.
          */
-        void newAttribute(Attribute* attribute)
+        void addAttribute(Attribute::ptr attribute)
             throw(BadIndexException);
         /**
          * Adds a signal to this Entity.
          */
-        void addSignal(NodeSignal* signal)
+        void addSignal(NodeSignal::ptr signal)
             throw(BadIndexException);
     private:
-        NamedObjectMap attributes_;
-        NamedObjectMap signals_;
+        NamedObjectMap<Attribute> attributes_;
+        NamedObjectMap<NodeSignal> signals_;
 };
 
 } // end of namespace
