@@ -62,7 +62,7 @@ bool Graph::addNode(const char *type, const char *name)
         node->setName(name);
         nodes_[name] = node;
         std::ostringstream os;
-        os << "Create node " << name << " of type " << type;
+        os << "Graph::" << __FUNCTION__ << "(\"" << type << "\", \"" << name << "\")";
         logger_.log(log::DEBUG, os.str().c_str());
 
         try
@@ -164,8 +164,8 @@ bool Graph::connect(const char *from, const char *outlet, const char *to, const 
     }
     connections_.push_back(Connection(std::string(from), std::string(outlet), std::string(to), std::string(inlet)));
     std::ostringstream os;
-    os << "Graph." << __FUNCTION__ << "(): Connect "
-        << from << ":" << outlet << " -> " << to << ":" << inlet << std::endl;
+    os << "Graph::" << __FUNCTION__ << "(" <<
+        from << ":" << outlet << ", " << to << ":" << inlet << ")";
     logger_.log(log::DEBUG, os.str().c_str());
     return true;
 }
