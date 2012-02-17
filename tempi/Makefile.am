@@ -1,4 +1,5 @@
 AM_CXXFLAGS = \
+	$(LOG4CPP_CFLAGS) \
     $(BOOST_CPPFLAGS) \
     $(CLUTTER_CFLAGS) \
     $(LIBLO_CFLAGS) \
@@ -8,10 +9,11 @@ AM_CXXFLAGS = \
     -I$(top_srcdir)/tempi
 
 AM_LIBS = \
+	$(LOG4CPP_LIBS) \
     $(BOOST_FILESYSTEM_LIB) \
+    $(BOOST_LDFLAGS) \
     $(BOOST_LIBS)  \
     $(BOOST_SYSTEM_LIB) \
-    $(BOOST_LDFLAGS) \
     $(BOOST_THREAD_LIB) \
     $(CLUTTER_LIBS) \
     $(GLIB_LIBS) \
@@ -60,6 +62,7 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     fsm/statemachine.cpp \
     graph.cpp \
     internals.cpp \
+	log.cpp \
     mapping/slide.cpp \
     mapping/slidefilter.cpp \
     math/mathlibrary.cpp \
@@ -135,6 +138,7 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     graph.h \
     identifier.h \
     internals.h \
+	log.h \
     library.h \
     mapping/average.h \
     mapping/slide.h \

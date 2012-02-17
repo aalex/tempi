@@ -146,6 +146,14 @@ fi
 AC_SUBST([LIBXML_LIBS])
 AC_SUBST([LIBXML_CFLAGS])
 
+# log4cpp
+PKG_CHECK_MODULES([LOG4CPP], [log4cpp], have_log4cpp=true, have_log4cpp=false)
+if test "x${have_log4cpp}" = "xfalse" ; then
+    AC_MSG_ERROR([missing package: libilog4cpp5-dev])
+fi
+AC_SUBST([LOG4CPP_LIBS])
+AC_SUBST([LOG4CPP_CFLAGS])
+
 # BOOST
 AX_BOOST_BASE([1.35])
 
