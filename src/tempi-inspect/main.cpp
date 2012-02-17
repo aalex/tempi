@@ -28,6 +28,7 @@
 #include "tempi/internals.h"
 #include "tempi/outlet.h"
 #include "tempi/inlet.h"
+#include "tempi/log.h"
 #include "tempi/utils.h"
 #include <boost/lexical_cast.hpp>
 #include <boost/program_options.hpp>
@@ -309,8 +310,11 @@ int TempiInspect::parse_options(int argc, char **argv)
         std::cout << PROGRAM_NAME << " " << PACKAGE_VERSION << std::endl;
         return 0;
     }
-    //if (verbose_)
-    //    std::cout << "Looking for keyword \"" << keyword_ << "\"..." << std::endl;
+    if (verbose_)
+    {
+        log::Logger& logger = log::Logger::getInstance();
+        logger.setLevel(log::DEBUG);
+    }
     return -1;
 }
 

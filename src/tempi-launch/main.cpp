@@ -27,6 +27,7 @@
 #include "tempi/scheduler.h"
 #include "tempi/threadedscheduler.h"
 #include "tempi/serializer.h"
+#include "tempi/log.h"
 #include <boost/lexical_cast.hpp>
 #include <glib.h>
 #include <boost/program_options.hpp>
@@ -196,6 +197,11 @@ int TempiLauncher::parse_options(int argc, char **argv)
     {
         std::cout << PROGRAM_NAME << " " << PACKAGE_VERSION << std::endl;
         return 0;
+    }
+    if (verbose_)
+    {
+        tempi::log::Logger& logger = tempi::log::Logger::getInstance();
+        logger.setLevel(tempi::log::DEBUG);
     }
     return -1;
 }

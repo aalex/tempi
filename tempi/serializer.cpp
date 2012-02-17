@@ -175,8 +175,9 @@ bool Serializer::save(Graph &graph, const char *filename)
 
     // Save document to file
     xmlSaveFormatFileEnc(filename, doc, "UTF-8", 1);
-    //if (config_->get_verbose())
-    //std::cout << "Saved the graph to " << filename << std::endl;
+    std::ostringstream os;
+    os << "Saved the graph to " << filename << std::endl;
+    log::Logger::getInstance().log(log::DEBUG, os.str().c_str());
     // Free the document + global variables that may have been
     // allocated by the parser.
     xmlFreeDoc(doc);
@@ -322,6 +323,9 @@ bool Serializer::load(Graph &graph, const char *filename)
         } // is a graph
     } // for each graph
 
+    std::ostringstream os;
+    os << "Loaded the graph from " << filename << std::endl;
+    log::Logger::getInstance().log(log::DEBUG, os.str().c_str());
     if (verbose)
     {
         std::cout << "The Graph is now:\n";
