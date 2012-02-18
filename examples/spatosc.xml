@@ -12,8 +12,14 @@
     <node id="cast0" class="base.cast">
       <attribute name="type"><s>f</s></attribute>
     </node>
-    <node id="print0" class="base.print">
-      <attribute name="prefix"><s>count: </s></attribute>
+    <node id="deg2rad0" class="math.deg2rad">
+    </node>
+    <node id="print_to_spatosc" class="base.print">
+      <attribute name="prefix"><s>To   [spatosc]: </s></attribute>
+      <attribute name="enabled"><b>1</b></attribute>
+    </node>
+    <node id="print_from_spatosc" class="base.print">
+      <attribute name="prefix"><s>From [spatosc]: success=</s></attribute>
       <attribute name="enabled"><b>1</b></attribute>
     </node>
     <node id="prepend0" class="base.prepend">
@@ -21,6 +27,8 @@
     </node>
     <node id="append0" class="base.append">
       <attribute name="value"><f>0.0</f><f>10.0</f></attribute>
+    </node>
+    <node id="nop0" class="base.nop">
     </node>
     <!--
     <node id="oscreceive0" class="osc.receive">
@@ -45,6 +53,7 @@
     <node id="loadmess0" class="base.loadmess">
       <attribute name="value">
         <s>addTranslatorWithAddress</s>
+        <s>default</s>
         <s>BasicTranslator</s>
         <s>osc.udp://127.0.0.1:10000</s>
       </attribute>
@@ -71,22 +80,19 @@
     <!-- CONNECTIONS -->
     <connection from="metro0" outlet="0" to="counter0" inlet="0"/>
     <connection from="counter0" outlet="0" to="cast0" inlet="0"/>
-    <connection from="cast0" outlet="0" to="print0" inlet="0"/>
-    <connection from="cast0" outlet="0" to="prepend0" inlet="0"/>
+    <connection from="cast0" outlet="0" to="deg2rad0" inlet="0"/>
+    <connection from="deg2rad0" outlet="0" to="prepend0" inlet="0"/>
     <connection from="prepend0" outlet="0" to="append0" inlet="0"/>
-    <connection from="append0" outlet="0" to="spatosc0" inlet="0"/>
+    <connection from="append0" outlet="0" to="nop0" inlet="0"/>
+    <connection from="nop0" outlet="0" to="print_to_spatosc" inlet="0"/>
+    <connection from="nop0" outlet="0" to="spatosc0" inlet="0"/>
+    <connection from="spatosc0" outlet="success" to="print_from_spatosc" inlet="0"/>
 
-    <connection from="loadmess0" outlet="0" to="spatosc0" inlet="0"/>
-    <connection from="loadmess1" outlet="0" to="spatosc0" inlet="0"/>
-    <connection from="loadmess2" outlet="0" to="spatosc0" inlet="0"/>
-    <connection from="loadmess3" outlet="0" to="spatosc0" inlet="0"/>
-    <connection from="loadmess4" outlet="0" to="spatosc0" inlet="0"/>
-
-    <connection from="loadmess0" outlet="0" to="print1" inlet="0"/>
-    <connection from="loadmess1" outlet="0" to="print1" inlet="0"/>
-    <connection from="loadmess2" outlet="0" to="print1" inlet="0"/>
-    <connection from="loadmess3" outlet="0" to="print1" inlet="0"/>
-    <connection from="loadmess4" outlet="0" to="print1" inlet="0"/>
+    <connection from="loadmess0" outlet="0" to="nop0" inlet="0"/>
+    <connection from="loadmess1" outlet="0" to="nop0" inlet="0"/>
+    <connection from="loadmess2" outlet="0" to="nop0" inlet="0"/>
+    <connection from="loadmess3" outlet="0" to="nop0" inlet="0"/>
+    <connection from="loadmess4" outlet="0" to="nop0" inlet="0"/>
 
     <connection from="metro1" outlet="0" to="any0" inlet="0"/>
     <connection from="any0" outlet="0" to="spatosc0" inlet="0"/>
