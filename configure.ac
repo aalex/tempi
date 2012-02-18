@@ -154,6 +154,14 @@ fi
 AC_SUBST([LOG4CPP_LIBS])
 AC_SUBST([LOG4CPP_CFLAGS])
 
+PKG_CHECK_MODULES([SPATOSC], [spatosc-0.3], have_spatosc=true, have_spatosc=false)
+if test "x${have_spatosc}" = "xfalse" ; then
+    AC_MSG_WARN([missing package: libspatosc-0.3-dev])
+else
+    AC_DEFINE(HAVE_SPATOSC,[1],[SpatOSC headers successfully detected])
+AC_SUBST(SPATOSC_CXXFLAGS, "-DHAVE_SPATOSC")
+fi
+
 # BOOST
 AX_BOOST_BASE([1.35])
 
