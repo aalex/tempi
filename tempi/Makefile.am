@@ -4,6 +4,8 @@ AM_CXXFLAGS = \
     $(CLUTTER_CFLAGS) \
     $(LIBLO_CFLAGS) \
     $(LIBXML_CFLAGS) \
+    $(SPATOSC_CFLAGS) \
+    $(SPATOSC_DEFINE) \
     $(STK_CXXFLAGS) \
     -I$(top_srcdir) \
     -I$(top_srcdir)/tempi
@@ -18,6 +20,7 @@ AM_LIBS = \
     $(CLUTTER_LIBS) \
     $(GLIB_LIBS) \
     $(LIBLO_LIBS) \
+    $(SPATOSC_LIBS) \
     $(LIBXML_LIBS) \
     $(STK_LIBS)
 
@@ -53,6 +56,7 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     base/print_node.cpp \
     base/routenode.cpp \
     base/spigotnode.cpp \
+    base/spatosc/spatoscnode.cpp \
     clutter/clutterlibrary.cpp \
     clutter/clutterstagenode.cpp \
     documented.cpp \
@@ -126,6 +130,7 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     base/print_node.h \
     base/routenode.h \
     base/spigotnode.h \
+    base/spatosc/spatoscnode.h \
     clutter/clutterlibrary.h \
     clutter/clutterstagenode.h \
     concurrentqueue.h \

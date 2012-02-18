@@ -28,12 +28,24 @@
 namespace tempi {
 namespace base {
 
+struct SpatoscNode_internals
+{
+    public:
+        spatosc::Wrapper wrapper_;
+};
+
 SpatoscNode::SpatoscNode() :
     Node()
 {
+    internals_ = new SpatoscNode_internals;
     this->setShortDocumentation("Controls a SpatOSC scene.");
     this->addInlet("0", "Calls to a instance of spatosc::Wrapper.");
     this->addOutlet("success", "Success or not of the last message. Outputs a boolean.");
+}
+
+SpatoscNode::~SpatoscNode()
+{
+    delete internals_;
 }
 
 static bool messageMatches(const Message &message, const char *selector, const char *argsTypeTag)
@@ -54,74 +66,89 @@ static bool messageMatches(const Message &message, const char *selector, const c
     return true;
 }
 
-void SpatOSC::processMessage(const char *inlet, const Message &message)
+void SpatoscNode::processMessage(const char *inlet, const Message &message)
 {
     bool success = false;
     if (messageMatches(message, "clearScene", ""))
-        wrapper_.clearScene();
+        internals_->wrapper_.clearScene();
     else if (messageMatches(message, "addTranslatorWithAddress", "sss"))
-        success = wrapper_.addTranslatorWithAddress(message.getString(1), message.getString(2), message.getString(3));
+        success = internals_->wrapper_.addTranslatorWithAddress(message.getString(1), message.getString(2), message.getString(3));
     else if (messageMatches(message, "addTranslatorWithoutAddress", "ss"))
-        success = wrapper_.addTranslatorWithoutAddress(message.getString(1), message.getString(2));
+        success = internals_->wrapper_.addTranslatorWithoutAddress(message.getString(1), message.getString(2));
     else if (messageMatches(message, "connect", "ss"))
-        success = wrapper_.connect(message.getString(1), message.getString(2));
+        success = internals_->wrapper_.connect(message.getString(1), message.getString(2));
     else if (messageMatches(message, "createListener", "s"))
-        success = wrapper_.createListener(message.getString(1));
+        success = internals_->wrapper_.createListener(message.getString(1));
     else if (messageMatches(message, "createSource", "s"))
-        success = wrapper_.createSource(message.getString(1));
+        success = internals_->wrapper_.createSource(message.getString(1));
     else if (messageMatches(message, "debugPrint", ""))
-        success = wrapper_.debugPrint();
+    {
+        internals_->wrapper_.debugPrint();
+        success = true;
+    }
     else if (messageMatches(message, "deleteNode", "s"))
-        success = wrapper_.deleteNode(message.getString(1));
+        success = internals_->wrapper_.deleteNode(message.getString(1));
     else if (messageMatches(message, "disconnect", "ss"))
-        success = wrapper_.disconnect(message.getString(1), message.getString(2));
+        success = internals_->wrapper_.disconnect(message.getString(1), message.getString(2));
     else if (messageMatches(message, "flushMessages", ""))
-        success = wrapper_.flushMessages();
+        success = internals_->wrapper_.flushMessages();
     else if (messageMatches(message, "removeNodeFloatProperty", "ss"))
-        success = wrapper_.removeNodeFloatProperty(message.getString(1), message.getString(2));
+        success = internals_->wrapper_.removeNodeFloatProperty(message.getString(1), message.getString(2));
     else if (messageMatches(message, "removeNodeIntProperty", "ss"))
-        success = wrapper_.removeNodeIntProperty(message.getString(1), message.getString(2));
+        success = internals_->wrapper_.removeNodeIntProperty(message.getString(1), message.getString(2));
     else if (messageMatches(message, "removeNodeStringProperty", "ss"))
-        success = wrapper_.removeNodeStringProperty(message.getString(1), message.getString(2));
+        success = internals_->wrapper_.removeNodeStringProperty(message.getString(1), message.getString(2));
     else if (messageMatches(message, "removeTranslator", "s"))
-        success = wrapper_.removeTranslator(message.getString(1));
+        success = internals_->wrapper_.removeTranslator(message.getString(1));
     else if (messageMatches(message, "setAutoConnect", "b"))
-        success = wrapper_.setAutoConnect(message.getBoolean(1));
+        success = internals_->wrapper_.setAutoConnect(message.getBoolean(1));
     else if (messageMatches(message, "setConnectFilter", "s"))
-        success = wrapper_.setConnectFilter(message.getString(1));
+        success = internals_->wrapper_.setConnectFilter(message.getString(1));
     // TODO else if (messageMatches(message, "setDefaultDistanceFactor", ""))
     // TODO else if (messageMatches(message, "setDefaultDopplerFactor", ""))
     // TODO else if (messageMatches(message, "setDefaultRolloffFactor", ""))
     // TODO else if (messageMatches(message, "setDistanceFactor", ""))
-    // TODO     success = wrapper_.setDistanceFactor(message.getString(1), message.getFloat(2));
-    else if (messageMatches(message, "setDopplerFactor", "sf"))
-        success = wrapper_.setDopplerFactor(message.getString(1), message.getFloat(2));
+    // TODO     success = internals_->wrapper_.setDistanceFactor(message.getString(1), message.getFloat(2));
+    else if (messageMatches(message, "setDopplerFactor", "ssf"))
+        success = internals_->wrapper_.setDopplerFactor(message.getString(1), message.getString(2), message.getFloat(3));
     else if (messageMatches(message, "setNodeActive", "sb"))
-        success = wrapper_.setNodeActive(message.getString(1), message.getBoolean(2));
+        success = internals_->wrapper_.setNodeActive(message.getString(1), message.getBoolean(2));
     else if (messageMatches(message, "setNodeFloatProperty", "ssf"))
-        success = wrapper_.setNodeStringProperty(message.getString(1), message.getString(2), message.getFloat(3));
+        success = internals_->wrapper_.setNodeFloatProperty(message.getString(1), message.getString(2), message.getFloat(3));
     else if (messageMatches(message, "setNodeIntProperty", "ssi"))
-        success = wrapper_.setNodeStringProperty(message.getString(1), message.getString(2), message.getInt(3));
+        success = internals_->wrapper_.setNodeIntProperty(message.getString(1), message.getString(2), message.getInt(3));
     else if (messageMatches(message, "setNodeOrientation", "sfff"))
-        success = wrapper_.setNodeOrientation(message.getString(1), message.getFloat(2), message.getFloat(3), message.getFloat(4));
+        success = internals_->wrapper_.setNodeOrientation(message.getString(1), message.getFloat(2), message.getFloat(3), message.getFloat(4));
     else if (messageMatches(message, "setNodeStringProperty", "sss"))
-        success = wrapper_.setNodeStringProperty(message.getString(1), message.getString(2), message.getString(3));
+        success = internals_->wrapper_.setNodeStringProperty(message.getString(1), message.getString(2), message.getString(3));
     else if (messageMatches(message, "setPosition", "sfff"))
-        success = wrapper_.setPosition(message.getString(1), message.getFloat(2), message.getFloat(3), message.getFloat(4));
+        success = internals_->wrapper_.setPosition(message.getString(1), message.getFloat(2), message.getFloat(3), message.getFloat(4));
     else if (messageMatches(message, "setPositionAED", "sfff"))
-        success = wrapper_.setPositionAED(message.getString(1), message.getFloat(2), message.getFloat(3), message.getFloat(4));
+        success = internals_->wrapper_.setPositionAED(message.getString(1), message.getFloat(2), message.getFloat(3), message.getFloat(4));
     else if (messageMatches(message, "setRadius", "sf"))
-        success = wrapper_.setRadius(message.getString(1), message.getFloat(2));
+        success = internals_->wrapper_.setRadius(message.getString(1), message.getFloat(2));
     else if (messageMatches(message, "setScale", "fff"))
-        success = wrapper_.setScale(message.getFloat(1), message.getFloat(2), message.getFloat(3));
+    {
+        internals_->wrapper_.setScale(message.getFloat(1), message.getFloat(2), message.getFloat(3));
+        success = true;
+    }
     else if (messageMatches(message, "setSynchronous", "b"))
-        success = wrapper_.setSynchronous(message.getBoolean(1));
+    {
+        internals_->wrapper_.setSynchronous(message.getBoolean(1));
+        success = true;
+    }
     else if (messageMatches(message, "setTranslation", "fff"))
-        success = wrapper_.setTranslation(message.getFloat(1), message.getFloat(2), message.getFloat(3));
+    {
+        internals_->wrapper_.setTranslation(message.getFloat(1), message.getFloat(2), message.getFloat(3));
+        success = true;
+    }
     else if (messageMatches(message, "setTranslatorVerbose", "sb"))
-        success = wrapper_.setVerbose(message.getString(1), message.getBoolean(2));
+    {
+        internals_->wrapper_.setTranslatorVerbose(message.getString(1), message.getBoolean(2));
+        success = true;
+    }
     else if (messageMatches(message, "setVerbose", "b"))
-        success = wrapper_.setVerbose(message.getBoolean(1));
+        success = internals_->wrapper_.setVerbose(message.getBoolean(1));
     if (! success)
         std::cerr << "[spatosc]: could not handle message " << message << std::endl;
     this->output("success", Message("b", success));

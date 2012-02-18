@@ -29,9 +29,12 @@
 #include "tempi/base/spigotnode.h"
 #include "tempi/base/prependnode.h"
 #include "tempi/base/routenode.h"
+#include "tempi/base/spatosc/spatoscnode.h"
 #include "tempi/utils.h"
+#include "tempi/config.h"
 
-namespace tempi { namespace base {
+namespace tempi {
+namespace base {
 
 void BaseLibrary::load(NodeFactory &factory, const char *prefix) const
 {
@@ -46,6 +49,9 @@ void BaseLibrary::load(NodeFactory &factory, const char *prefix) const
     factory.registerTypeT<SpigotNode>(concatenate(prefix, "spigot").c_str());
     factory.registerTypeT<PrependNode>(concatenate(prefix, "prepend").c_str());
     factory.registerTypeT<RouteNode>(concatenate(prefix, "route").c_str());
+#ifdef HAVE_SPATOSC
+    factory.registerTypeT<tempi::base::SpatoscNode>(concatenate(prefix, "spatosc").c_str());
+#endif // HAVE_SPATOSC
 }
 
 } // end of namespace

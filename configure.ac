@@ -159,7 +159,7 @@ if test "x${have_spatosc}" = "xfalse" ; then
     AC_MSG_WARN([missing package: libspatosc-0.3-dev])
 else
     AC_DEFINE(HAVE_SPATOSC,[1],[SpatOSC headers successfully detected])
-AC_SUBST(SPATOSC_CXXFLAGS, "-DHAVE_SPATOSC")
+    AC_SUBST(SPATOSC_DEFINE, "-DHAVE_SPATOSC")
 fi
 
 # BOOST

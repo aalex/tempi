@@ -27,11 +27,12 @@
 
 #include "tempi/node.h"
 #include "spatosc/spatosc.h"
-
-#ifdef HAVE_SPATOSC
+#include "tempi/config.h"
 
 namespace tempi {
 namespace base {
+
+struct SpatoscNode_internals; // forward declaration
 
 /**
  * The SpatoscNode controls a spatosc::Wrapper.
@@ -40,14 +41,14 @@ class SpatoscNode : public Node
 {
     public:
         SpatoscNode();
+        ~SpatoscNode();
     private:
-        spatosc::Wrapper wrapper_;
+        SpatoscNode_internals *internals_;
         virtual void processMessage(const char *inlet, const Message &message);
 };
 
 } // end of namespace
 } // end of namespace
 
-#endif // HAVE_SPATOSC
 #endif // ifndef
 
