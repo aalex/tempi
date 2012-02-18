@@ -43,6 +43,45 @@ SpatoscNode::SpatoscNode() :
     Logger::log(DEBUG, "Create SpatoscNode_internals");
     internals_ = new SpatoscNode_internals;
     this->setShortDocumentation("Controls a SpatOSC scene.");
+    this->setLongDocumentation(""
+    "Supported messages:\n"
+    "\n"
+    "* clearScene\n"
+    "* addTranslatorWithAddress, sss\n"
+    "* addTranslatorWithoutAddress, ss\n"
+    "* connect ,ss\n"
+    "* createListener ,s\n"
+    "* createSource ,s\n"
+    "* debugPrint\n"
+    "* deleteNode ,s\n"
+    "* disconnect ,ss\n"
+    "* flushMessages\n"
+    "* removeNodeFloatProperty ,ss\n"
+    "* removeNodeIntProperty ,ss\n"
+    "* removeNodeStringProperty ,ss\n"
+    "* removeTranslator ,s\n"
+    "* setAutoConnect ,b\n"
+    "* setConnectFilter ,s\n"
+    "* setDopplerFactor ,ssf\n"
+    "* setNodeActive ,sb\n"
+    "* setNodeFloatProperty ,ssf\n"
+    "* setNodeIntProperty ,ssi\n"
+    "* setNodeOrientation ,sfff\n"
+    "* setNodeStringProperty ,sss\n"
+    "* setPosition ,sfff\n"
+    "* setPositionAED ,sfff\n"
+    "* setRadius ,sf\n"
+    "* setScale ,fff\n"
+    "* setSynchronous ,b\n"
+    "* setTranslation ,fff\n"
+    "* setTranslatorVerbose ,sb\n"
+    "* setVerbose ,b\n"
+    "");
+    // TODO messageMatches(message, "setDefaultDistanceFactor", ""))
+    // TODO messageMatches(message, "setDefaultDopplerFactor", ""))
+    // TODO messageMatches(message, "setDefaultRolloffFactor", ""))
+    // TODO messageMatches(message, "setDistanceFactor", ""))
+
     this->addInlet("0", "Calls to a instance of spatosc::Wrapper.");
     this->addOutlet("success", "Success or not of the last message. Outputs a boolean.");
 }

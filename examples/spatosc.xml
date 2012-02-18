@@ -7,10 +7,17 @@
       <attribute name="running"><b>1</b></attribute>
     </node>
     <node id="counter0" class="base.counter">
+      <attribute name="increment"><i>10</i></attribute>
+    </node>
+    <node id="cast0" class="base.cast">
+      <attribute name="type"><s>f</s></attribute>
     </node>
     <node id="print0" class="base.print">
       <attribute name="prefix"><s>count: </s></attribute>
       <attribute name="enabled"><b>1</b></attribute>
+    </node>
+    <node id="prepend0" class="base.prepend">
+      <attribute name="value"><s>setPositionAED</s><s>source0</s></attribute>
     </node>
     <!--
     <node id="oscreceive0" class="osc.receive">
@@ -51,7 +58,8 @@
 
     <!-- CONNECTIONS -->
     <connection from="metro0" outlet="0" to="counter0" inlet="0"/>
-    <connection from="counter0" outlet="0" to="print0" inlet="0"/>
+    <connection from="counter0" outlet="0" to="cast0" inlet="0"/>
+    <connection from="cast0" outlet="0" to="print0" inlet="0"/>
 
     <connection from="loadmess0" outlet="0" to="spatosc0" inlet="0"/>
     <connection from="loadmess1" outlet="0" to="spatosc0" inlet="0"/>
