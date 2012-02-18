@@ -240,6 +240,12 @@ void Graph::tick()
     for (iter = nodes_.begin(); iter != nodes_.end(); ++iter)
     {
         Node *node = (*iter).second.get();
+        if (! node->isLoadBanged())
+            node->loadBang();
+    }
+    for (iter = nodes_.begin(); iter != nodes_.end(); ++iter)
+    {
+        Node *node = (*iter).second.get();
         node->tick();
     }
 }

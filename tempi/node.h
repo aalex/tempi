@@ -61,6 +61,7 @@ class Node : public Entity
          * Should be called when one ticks its parent Graph.
          */
         bool init();
+        void loadBang();
         /**
          * Returns whether or not this node's init() has been called.
          */
@@ -142,6 +143,7 @@ class Node : public Entity
          * @return True if it has it.
          */
         bool hasOutlet(const char *name) const;
+        bool isLoadBanged() const;
     protected:
         void enableHandlingReceiveSymbol(const char *selector);
         virtual void onHandleReceive(const char *selector, const Message &message)
@@ -192,8 +194,13 @@ class Node : public Entity
          * (for initiating sockets, files, user interfaces, etc.)
          */
         virtual void onInit();
+        /**
+         * Called for each node after onInit()
+         */
+        virtual void onLoadBang();
     private:
         bool initiated_;
+        bool load_banged_;
         std::map<std::string, Outlet::ptr> outlets_;
         std::map<std::string, Inlet::ptr> inlets_;
         std::string typeName_;
