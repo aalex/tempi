@@ -26,7 +26,6 @@
 #define __TEMPI_BASE_SPATOSC_H__
 
 #include "tempi/node.h"
-#include "spatosc/spatosc.h"
 #include "tempi/config.h"
 
 namespace tempi {

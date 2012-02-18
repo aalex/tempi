@@ -18,11 +18,14 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "tempi/config.h" // include before check for HAVE_SPATOSC
+
 #ifdef HAVE_SPATOSC
 
 #include <iostream>
 #include "tempi/base/spatosc/spatoscnode.h"
 #include "tempi/utils.h"
+#include "spatosc/spatosc.h"
 #include "spatosc/wrapper.h"
 
 namespace tempi {
