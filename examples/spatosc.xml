@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tempi version="0.1.9">
   <graph>
+    <!-- COUNTER -->
     <node id="metro0" class="base.metro">
       <attribute name="interval"><i>1000</i></attribute>
       <attribute name="running"><b>1</b></attribute>
@@ -11,10 +12,7 @@
       <attribute name="prefix"><s>count: </s></attribute>
       <attribute name="enabled"><b>1</b></attribute>
     </node>
-    <node id="print1" class="base.print">
-      <attribute name="prefix"><s>loadmess: </s></attribute>
-      <attribute name="enabled"><b>1</b></attribute>
-    </node>
+    <!--
     <node id="oscreceive0" class="osc.receive">
       <attribute name="port"><i>10000</i></attribute>
     </node>
@@ -22,7 +20,9 @@
       <attribute name="prefix"><s>receive osc: </s></attribute>
       <attribute name="enabled"><b>1</b></attribute>
     </node>
-    <!-- LOADMESS -->
+    -->
+
+    <!-- SPATOSC AND ITS LOADMESS'S -->
     <node id="loadmess0" class="base.loadmess">
       <attribute name="value">
         <s>addTranslatorWithAddress</s>
@@ -44,8 +44,15 @@
     </node>
     <node id="spatosc0" class="base.spatosc">
     </node>
+    <node id="print1" class="base.print">
+      <attribute name="prefix"><s>loadmess: </s></attribute>
+      <attribute name="enabled"><b>1</b></attribute>
+    </node>
+
+    <!-- CONNECTIONS -->
     <connection from="metro0" outlet="0" to="counter0" inlet="0"/>
     <connection from="counter0" outlet="0" to="print0" inlet="0"/>
+
     <connection from="loadmess0" outlet="0" to="spatosc0" inlet="0"/>
     <connection from="loadmess1" outlet="0" to="spatosc0" inlet="0"/>
     <connection from="loadmess2" outlet="0" to="spatosc0" inlet="0"/>

@@ -91,6 +91,21 @@ void appendArgumentFromString(Message &message, const char *atom_value, Argument
  */
 std::string charToString(const char c);
 
+/**
+ * Checks if a type tag contains valid letters or not.
+ */
+bool isValidType(const char *type);
+/**
+ * Checks if a character represents a valid type tag.
+ */
+bool isValidAtomType(const char c);
+
+/**
+ * Tries to cast a Message arguments to some other type tags.
+ */
+Message castMessage(const Message &message, const char *type)
+    throw(BadArgumentTypeException, BadIndexException);
+
 } // end of namespace
 } // end of namespace
 

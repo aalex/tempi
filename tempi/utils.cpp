@@ -220,6 +220,156 @@ std::string charToString(const char c)
     return boost::lexical_cast<std::string>(c);
 }
 
+bool isValidAtomType(const char c)
+{
+    switch (c)
+    {
+        case BOOLEAN:
+        case CHAR:
+        case UNSIGNED_CHAR:
+        case DOUBLE:
+        case FLOAT:
+        case INT:
+        case LONG:
+        case STRING:
+        case POINTER:
+            return true;
+            break;
+        case INVALID:
+        default:
+            return false;
+            break;
+    }
+}
+
+bool isValidType(const char *type)
+{
+    std::string typeTag(type);
+    unsigned int length = typeTag.size();
+    for (unsigned int i = 0; i < length; ++i)
+    {
+        if (! isValidAtomType(typeTag[i]))
+        {
+            std::ostringstream os;
+            os << __FUNCTION__ << ": Unsupported atom type \"" <<
+                typeTag[i] << "\" at " << i << " in " << type << std::endl;
+            return false;
+        }
+    }
+    return true;
+}
+
+Message castMessage(const Message &message, const char *type)
+    throw(BadArgumentTypeException, BadIndexException)
+{
+    if (! isValidType(type))
+    {
+        std::ostringstream os;
+        os << __FUNCTION__ << ": Bad type tag: " << type;
+        throw BadArgumentTypeException(os.str().c_str());
+    }
+    std::string desiredTypeTag(type);
+    if (desiredTypeTag.size() != message.getSize())
+    {
+        std::ostringstream os;
+        os << __FUNCTION__ << ": Type tag does not match the message's size: " << type << message;
+        throw BadIndexException(os.str().c_str());
+    }
+    unsigned int size = message.getSize();
+    Message result;
+    for (unsigned int i = 0; i < size; ++i)
+    {
+        ArgumentType current;
+        message.getArgumentType(i, current);
+        ArgumentType desired = (ArgumentType) desiredTypeTag[i];
+
+        // CONVERSION
+        bool success = true;
+        switch (desired)
+        {
+            case FLOAT: // desired is FLOAT
+                switch (current)
+                {
+                    case FLOAT:
+                        result.appendFloat(message.getFloat(i));
+                        break;
+                    case BOOLEAN:
+                        result.appendFloat((float) message.getBoolean(i));
+                        break;
+                    case CHAR:
+                        result.appendFloat((float) message.getChar(i));
+                        break;
+                    case UNSIGNED_CHAR:
+                        result.appendFloat((float) message.getUnsignedChar(i));
+                        break;
+                    case DOUBLE:
+                        result.appendFloat((float) message.getDouble(i));
+                        break;
+                    case INT:
+                        result.appendFloat((float) message.getInt(i));
+                        break;
+                    case LONG:
+                        result.appendFloat((float) message.getLong(i));
+                        break;
+                    case STRING:
+                        try
+                        {
+                            appendArgumentFromString(result,
+                                message.getString(i).c_str(), FLOAT);
+                        }
+                        catch(const BadArgumentTypeException &e)
+                        {
+                            std::cerr << e.what() << std::endl;
+                            success = false;
+                        }
+                        break;
+                    case POINTER:
+                        result.appendFloat((float) (int) message.getPointer(i));
+                        break;
+                    case INVALID:
+                    default:
+                        success = false;
+                        break;
+                } // switch desired
+                break; // case FLOAT
+            case STRING: // desired is STRING
+                try
+                {
+                    result.appendString(argumentToString(message, i).c_str());
+                }
+                catch (const BadIndexException &e)
+                {
+                    std::cerr << e.what() << std::endl;
+                    success = false;
+                }
+                catch (const BadArgumentTypeException &e)
+                {
+                    std::cerr << e.what() << std::endl;
+                    success = false;
+                }
+                break; // case STRING
+            // TODO: support casting to BOOLEAN
+            // TODO: support casting to CHAR
+            // TODO: support casting to UNSIGNED_CHAR
+            // TODO: support casting to DOUBLE
+            // TODO: support casting to INT
+            // TODO: support casting to LONG
+            default:
+                success = false;
+            // boost::lexical_cast<char>(atom_value));
+            //     result.appendFloat((float) message.getInt(i));
+            if (! success)
+            {
+                std::ostringstream os;
+                os << "ERROR: " << __FUNCTION__ << 
+                    ": Could not cast message to \"" << desired << "\": " << message;
+                throw BadArgumentTypeException(os.str().c_str());
+            }
+        } // switch current
+    }
+    return result;
+}
+
 } // end of namespace
 } // end of namespace
 
