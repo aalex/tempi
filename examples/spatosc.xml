@@ -19,6 +19,9 @@
     <node id="prepend0" class="base.prepend">
       <attribute name="value"><s>setPositionAED</s><s>source0</s></attribute>
     </node>
+    <node id="append0" class="base.append">
+      <attribute name="value"><f>0.0</f><f>10.0</f></attribute>
+    </node>
     <!--
     <node id="oscreceive0" class="osc.receive">
       <attribute name="port"><i>10000</i></attribute>
@@ -60,6 +63,9 @@
     <connection from="metro0" outlet="0" to="counter0" inlet="0"/>
     <connection from="counter0" outlet="0" to="cast0" inlet="0"/>
     <connection from="cast0" outlet="0" to="print0" inlet="0"/>
+    <connection from="cast0" outlet="0" to="prepend0" inlet="0"/>
+    <connection from="prepend0" outlet="0" to="append0" inlet="0"/>
+    <connection from="append0" outlet="0" to="spatosc0" inlet="0"/>
 
     <connection from="loadmess0" outlet="0" to="spatosc0" inlet="0"/>
     <connection from="loadmess1" outlet="0" to="spatosc0" inlet="0"/>

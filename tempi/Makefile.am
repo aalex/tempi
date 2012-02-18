@@ -46,6 +46,7 @@ libtempi_@TEMPI_API_VERSION@_la_includedir = $(includedir)/tempi-$(TEMPI_API_VER
 libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     attribute.cpp \
     base/anynode.cpp \
+    base/appendnode.h \
     base/appsinknode.cpp \
     base/baselibrary.cpp \
     base/counternode.cpp \

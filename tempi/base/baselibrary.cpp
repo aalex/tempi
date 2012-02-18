@@ -19,6 +19,7 @@
  */
 
 #include "tempi/base/anynode.h"
+#include "tempi/base/appendnode.h"
 #include "tempi/base/appsinknode.h"
 #include "tempi/base/baselibrary.h"
 #include "tempi/base/counternode.h"
@@ -42,6 +43,7 @@ void BaseLibrary::load(NodeFactory &factory, const char *prefix) const
 {
     using utils::concatenate;
     factory.registerTypeT<PrintNode>(concatenate(prefix, "print").c_str());
+    factory.registerTypeT<AppendNode>(concatenate(prefix, "append").c_str());
     factory.registerTypeT<NopNode>(concatenate(prefix, "nop").c_str());
     factory.registerTypeT<MetroNode>(concatenate(prefix, "metro").c_str());
     factory.registerTypeT<AnyNode>(concatenate(prefix, "any").c_str());
