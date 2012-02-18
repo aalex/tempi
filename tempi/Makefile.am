@@ -5,6 +5,8 @@ AM_CXXFLAGS = \
     $(LIBLO_CFLAGS) \
     $(LIBXML_CFLAGS) \
     $(STK_CXXFLAGS) \
+    $(SPATOSC_CFLAGS) \
+    $(SPATOSC_CXXFLAGS) \
     -I$(top_srcdir) \
     -I$(top_srcdir)/tempi
 
@@ -19,6 +21,7 @@ AM_LIBS = \
     $(GLIB_LIBS) \
     $(LIBLO_LIBS) \
     $(LIBXML_LIBS) \
+    $(SPATOSC_LIBS) \
     $(STK_LIBS)
 
 # this file is not installed, just included by .cpp files at compile time.
@@ -62,7 +65,6 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     fsm/statemachine.cpp \
     graph.cpp \
     internals.cpp \
-	log.cpp \
     mapping/slide.cpp \
     mapping/slidefilter.cpp \
     math/mathlibrary.cpp \
@@ -138,7 +140,6 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     graph.h \
     identifier.h \
     internals.h \
-	log.h \
     library.h \
     mapping/average.h \
     mapping/slide.h \
