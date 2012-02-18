@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tempi version="0.1.9">
+  <graph>
+    <node id="metro0" class="base.metro">
+      <attribute name="interval"><i>1000</i></attribute>
+      <attribute name="running"><b>1</b></attribute>
+    </node>
+    <node id="counter0" class="base.counter">
+    </node>
+    <node id="print0" class="base.print">
+      <attribute name="prefix"><s>count: </s></attribute>
+      <attribute name="enabled"><b>1</b></attribute>
+    </node>
+    <node id="print1" class="base.print">
+      <attribute name="prefix"><s>loadmess: </s></attribute>
+      <attribute name="enabled"><b>1</b></attribute>
+    </node>
+    <node id="oscreceive0" class="osc.receive">
+      <attribute name="port"><i>10000</i></attribute>
+    </node>
+    <node id="print2" class="base.print">
+      <attribute name="prefix"><s>receive osc: </s></attribute>
+      <attribute name="enabled"><b>1</b></attribute>
+    </node>
+    <!-- LOADMESS -->
+    <node id="loadmess0" class="base.loadmess">
+      <attribute name="value">
+        <s>addTranslatorWithAddress</s>
+        <s>BasicTranslator</s>
+        <s>osc.udp://127.0.0.1:10000</s>
+      </attribute>
+    </node>
+    <node id="loadmess4" class="base.loadmess">
+      <attribute name="value"><s>setVerbose</s><b>1</b></attribute>
+    </node>
+    <node id="loadmess1" class="base.loadmess">
+      <attribute name="value"><s>createListener</s><s>listener0</s></attribute>
+    </node>
+    <node id="loadmess2" class="base.loadmess">
+      <attribute name="value"><s>createSource</s><s>source0</s></attribute>
+    </node>
+    <node id="loadmess3" class="base.loadmess">
+      <attribute name="value"><s>debugPrint</s></attribute>
+    </node>
+    <node id="spatosc0" class="base.spatosc">
+    </node>
+    <connection from="metro0" outlet="0" to="counter0" inlet="0"/>
+    <connection from="counter0" outlet="0" to="print0" inlet="0"/>
+    <connection from="loadmess0" outlet="0" to="spatosc0" inlet="0"/>
+    <connection from="loadmess1" outlet="0" to="spatosc0" inlet="0"/>
+    <connection from="loadmess2" outlet="0" to="spatosc0" inlet="0"/>
+    <connection from="loadmess3" outlet="0" to="spatosc0" inlet="0"/>
+    <connection from="loadmess4" outlet="0" to="spatosc0" inlet="0"/>
+
+    <connection from="loadmess0" outlet="0" to="print1" inlet="0"/>
+    <connection from="loadmess1" outlet="0" to="print1" inlet="0"/>
+    <connection from="loadmess2" outlet="0" to="print1" inlet="0"/>
+    <connection from="loadmess3" outlet="0" to="print1" inlet="0"/>
+    <connection from="loadmess4" outlet="0" to="print1" inlet="0"/>
+
+    <connection from="oscreceive0" outlet="0" to="print2" inlet="0"/>
+  </graph>
+</tempi>
