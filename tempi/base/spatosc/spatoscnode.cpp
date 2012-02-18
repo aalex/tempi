@@ -25,8 +25,8 @@
 #include <iostream>
 #include "tempi/base/spatosc/spatoscnode.h"
 #include "tempi/utils.h"
-#include "spatosc/spatosc.h"
 #include "spatosc/wrapper.h"
+#include "tempi/log.h"
 
 namespace tempi {
 namespace base {
@@ -40,6 +40,7 @@ struct SpatoscNode_internals
 SpatoscNode::SpatoscNode() :
     Node()
 {
+    Logger::log(DEBUG, "Create SpatoscNode_internals");
     internals_ = new SpatoscNode_internals;
     this->setShortDocumentation("Controls a SpatOSC scene.");
     this->addInlet("0", "Calls to a instance of spatosc::Wrapper.");
@@ -48,6 +49,7 @@ SpatoscNode::SpatoscNode() :
 
 SpatoscNode::~SpatoscNode()
 {
+    Logger::log(DEBUG, "Delete SpatoscNode_internals");
     delete internals_;
 }
 
@@ -71,6 +73,11 @@ static bool messageMatches(const Message &message, const char *selector, const c
 
 void SpatoscNode::processMessage(const char *inlet, const Message &message)
 {
+    {
+        std::ostringstream os;
+        os << "SpatoscNode::" << __FUNCTION__ << ": " << message;
+        Logger::log(DEBUG, os.str().c_str());
+    }
     bool success = false;
     if (messageMatches(message, "clearScene", ""))
         internals_->wrapper_.clearScene();
@@ -154,6 +161,11 @@ void SpatoscNode::processMessage(const char *inlet, const Message &message)
         success = internals_->wrapper_.setVerbose(message.getBoolean(1));
     if (! success)
         std::cerr << "[spatosc]: could not handle message " << message << std::endl;
+    {
+        std::ostringstream os;
+        os << "SpatoscNode::" << __FUNCTION__ << ": " << "Success: " << success;
+        Logger::log(DEBUG, os.str().c_str());
+    }
     this->output("success", Message("b", success));
 }
 

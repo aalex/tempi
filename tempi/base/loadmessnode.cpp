@@ -20,6 +20,7 @@
 
 #include <iostream>
 #include "tempi/base/loadmessnode.h"
+#include "tempi/log.h"
 
 namespace tempi {
 namespace base {
@@ -37,9 +38,12 @@ void LoadMessNode::processMessage(const char *inlet, const Message &message)
     // pass
 }
 
-void LoadMessNode::onInit()
+void LoadMessNode::onLoadBang()
 {
     this->output("0", this->getAttributeValue("value"));
+    std::ostringstream os;
+    os << "LoadMessNode::" << __FUNCTION__ << ": output " << this->getAttributeValue("value");
+    Logger::log(DEBUG, os.str().c_str());
 }
 
 } // end of namespace
