@@ -200,8 +200,7 @@ int TempiLauncher::parse_options(int argc, char **argv)
     }
     if (verbose_)
     {
-        tempi::log::Logger& logger = tempi::log::Logger::getInstance();
-        logger.setLevel(tempi::log::DEBUG);
+        tempi::Logger::getInstance().setLevel(tempi::DEBUG);
     }
     return -1;
 }

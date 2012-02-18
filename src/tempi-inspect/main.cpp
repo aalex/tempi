@@ -312,8 +312,7 @@ int TempiInspect::parse_options(int argc, char **argv)
     }
     if (verbose_)
     {
-        log::Logger& logger = log::Logger::getInstance();
-        logger.setLevel(log::DEBUG);
+        Logger::getInstance().setLevel(DEBUG);
     }
     return -1;
 }
