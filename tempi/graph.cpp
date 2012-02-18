@@ -240,13 +240,18 @@ void Graph::tick()
     for (iter = nodes_.begin(); iter != nodes_.end(); ++iter)
     {
         Node *node = (*iter).second.get();
-        if (! node->isLoadBanged())
-            node->loadBang();
+        node->tick();
     }
+}
+
+void Graph::loadBang()
+{
+    NodesMapType::const_iterator iter;
     for (iter = nodes_.begin(); iter != nodes_.end(); ++iter)
     {
         Node *node = (*iter).second.get();
-        node->tick();
+        if (! node->isLoadBanged())
+            node->loadBang();
     }
 }
 

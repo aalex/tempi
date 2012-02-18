@@ -42,7 +42,7 @@ void LoadMessNode::onLoadBang()
 {
     this->output("0", this->getAttributeValue("value"));
     std::ostringstream os;
-    os << "LoadMessNode::" << __FUNCTION__ << ": output " << this->getAttributeValue("value");
+    os << "LoadMessNode::" << __FUNCTION__ << ": Node::output(" << this->getAttributeValue("value") << ")";
     Logger::log(DEBUG, os.str().c_str());
 }
 

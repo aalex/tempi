@@ -107,6 +107,11 @@ class Graph
          */
         void tick();
         /**
+         * Calls Node::loadBang() on each Node.
+         * Can be called only once.
+         */
+        void loadBang(); // FIXME: rename. FIXME: can be called only once?
+        /**
          * Deletes a node after disconnecting all its outlets and inlets.
          */
         bool deleteNode(const char *name);

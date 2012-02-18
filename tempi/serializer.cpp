@@ -324,6 +324,8 @@ bool Serializer::load(Graph &graph, const char *filename)
         } // is a graph
     } // for each graph
 
+    graph.loadBang();
+
     std::ostringstream os;
     os << "Loaded the graph from " << filename << std::endl;
     Logger::log(DEBUG, os.str().c_str());
