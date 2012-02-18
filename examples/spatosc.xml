@@ -30,16 +30,17 @@
     </node>
     <node id="nop0" class="base.nop">
     </node>
-    <!--
+
+    <!-- FIXME: oscreceive segfaults.
     <node id="oscreceive0" class="osc.receive">
       <attribute name="port"><i>10000</i></attribute>
     </node>
-    <node id="print2" class="base.print">
-      <attribute name="prefix"><s>receive osc: </s></attribute>
+    <node id="print_from_oscreceive" class="base.print">
+      <attribute name="prefix"><s>receive OSC: </s></attribute>
       <attribute name="enabled"><b>1</b></attribute>
     </node>
+    <connection from="oscreceive0" outlet="0" to="print_from_oscreceive" inlet="0"/>
     -->
-
 
     <node id="metro1" class="base.metro">
       <attribute name="interval"><i>10000</i></attribute>
@@ -97,6 +98,5 @@
     <connection from="metro1" outlet="0" to="any0" inlet="0"/>
     <connection from="any0" outlet="0" to="spatosc0" inlet="0"/>
 
-    <connection from="oscreceive0" outlet="0" to="print2" inlet="0"/>
   </graph>
 </tempi>
