@@ -20,6 +20,7 @@
 
 #include "tempi/osc/oscreceivernode.h"
 #include "tempi/utils.h"
+#include "tempi/log.h"
 #include <iostream>
 
 namespace tempi {
@@ -35,7 +36,9 @@ OscReceiverNode::OscReceiverNode() :
 
 void OscReceiverNode::onAttributeChanged(const char *name, const Message &value)
 {
-    //std::cout << "OscReceiverNode::" << __FUNCTION__ << "(" << name << ", " << value << ")" << std::endl;
+    std::ostringstream os;
+    os << "OscReceiverNode::" << __FUNCTION__ << "(\"" << name << "\", " << value << ")" << std::endl;
+    Logger::log(DEBUG, os.str().c_str());
     if (utils::stringsMatch("port", name))
     {
         unsigned int portNumber = value.getInt(0);

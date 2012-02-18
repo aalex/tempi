@@ -164,6 +164,13 @@ bool TempiInspect::printClass(const std::string &name)
             cout << node->getShortDocumentation(); // << endl;
         else
             cout << "(node type not documented)"; // << endl;
+        if (node->getLongDocumentation() != "")
+        {
+            cout << endl;
+            cout << endl;
+            cout << node->getLongDocumentation(); // << endl;
+            cout << endl;
+        }
         cout << endl;
         cout << endl;
         {

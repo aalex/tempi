@@ -74,7 +74,21 @@ bool Node::init()
     }
 }
 
+void Node::loadBang()
+{
+    if (! load_banged_)
+    {
+        onLoadBang();
+        load_banged_ = true;
+    }
+}
+
 void Node::onInit()
+{
+    // pass
+}
+
+void Node::onLoadBang()
 {
     // pass
 }
@@ -359,6 +373,11 @@ void Node::enableHandlingReceiveSymbol(const char *selector)
 bool Node::handlesReceiveSymbol(const char *selector) const
 {
     return handledReceiveSymbol_ == selector;
+}
+
+bool Node::isLoadBanged() const
+{
+    return load_banged_;
 }
 
 bool Node::removeOutlet(const char *name)

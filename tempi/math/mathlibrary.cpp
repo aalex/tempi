@@ -20,6 +20,11 @@
 
 #include "tempi/math/mathlibrary.h"
 #include "tempi/utils.h"
+// #include <cmath>
+
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
 
 namespace tempi {
 namespace math {
@@ -249,6 +254,28 @@ void SubtractNode::processMessage(const char *inlet, const Message &message)
         std::cerr << "SubtractNode::" << __FUNCTION__ << "(): Bad type for message " << message << std::endl;
 }
 
+class DegToRadNode : public Node
+{
+    public:
+        DegToRadNode() :
+            Node()
+        {
+            addInlet("0");
+            addOutlet("0");
+            this->setShortDocumentation("Convert degrees to radians.");
+        }
+    protected:
+        void processMessage(const char *inlet, const Message &message)
+        {
+            if (message.typesMatch("f"))
+            {
+                output("0", Message("f", message.getFloat(0) * (M_PI / 180.0f)));
+            }
+            else
+                std::cerr << "DegToRadNode::" << __FUNCTION__ << "(): Bad type for message " << message << std::endl;
+        }
+};
+
 void MathLibrary::load(NodeFactory &factory, const char *prefix) const
 {
     using utils::concatenate;
@@ -260,6 +287,7 @@ void MathLibrary::load(NodeFactory &factory, const char *prefix) const
     factory.registerTypeT<IsLessNode>(concatenate(prefix, "<").c_str());
     factory.registerTypeT<SubtractNode>(concatenate(prefix, "-").c_str());
     factory.registerTypeT<MultNode>(concatenate(prefix, "*").c_str());
+    factory.registerTypeT<DegToRadNode>(concatenate(prefix, "deg2rad").c_str());
 }
 
 } // end of namespace

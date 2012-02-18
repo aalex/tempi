@@ -19,6 +19,7 @@
  */
 
 #include "tempi/base/anynode.h"
+#include "tempi/base/appendnode.h"
 #include "tempi/base/appsinknode.h"
 #include "tempi/base/baselibrary.h"
 #include "tempi/base/counternode.h"
@@ -29,6 +30,8 @@
 #include "tempi/base/spigotnode.h"
 #include "tempi/base/prependnode.h"
 #include "tempi/base/routenode.h"
+#include "tempi/base/castnode.h"
+#include "tempi/base/loadmessnode.h"
 #include "tempi/base/spatosc/spatoscnode.h"
 #include "tempi/utils.h"
 #include "tempi/config.h"
@@ -40,6 +43,7 @@ void BaseLibrary::load(NodeFactory &factory, const char *prefix) const
 {
     using utils::concatenate;
     factory.registerTypeT<PrintNode>(concatenate(prefix, "print").c_str());
+    factory.registerTypeT<AppendNode>(concatenate(prefix, "append").c_str());
     factory.registerTypeT<NopNode>(concatenate(prefix, "nop").c_str());
     factory.registerTypeT<MetroNode>(concatenate(prefix, "metro").c_str());
     factory.registerTypeT<AnyNode>(concatenate(prefix, "any").c_str());
@@ -49,6 +53,8 @@ void BaseLibrary::load(NodeFactory &factory, const char *prefix) const
     factory.registerTypeT<SpigotNode>(concatenate(prefix, "spigot").c_str());
     factory.registerTypeT<PrependNode>(concatenate(prefix, "prepend").c_str());
     factory.registerTypeT<RouteNode>(concatenate(prefix, "route").c_str());
+    factory.registerTypeT<LoadMessNode>(concatenate(prefix, "loadmess").c_str());
+    factory.registerTypeT<CastNode>(concatenate(prefix, "cast").c_str());
 #ifdef HAVE_SPATOSC
     factory.registerTypeT<tempi::base::SpatoscNode>(concatenate(prefix, "spatosc").c_str());
 #endif // HAVE_SPATOSC

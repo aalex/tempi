@@ -46,9 +46,11 @@ libtempi_@TEMPI_API_VERSION@_la_includedir = $(includedir)/tempi-$(TEMPI_API_VER
 libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     attribute.cpp \
     base/anynode.cpp \
+    base/appendnode.h \
     base/appsinknode.cpp \
     base/baselibrary.cpp \
     base/counternode.cpp \
+    base/castnode.h \
     base/loadmessnode.cpp \
     base/delaynode.cpp \
     base/metro_node.cpp \
@@ -57,7 +59,7 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     base/print_node.cpp \
     base/routenode.cpp \
     base/spigotnode.cpp \
-    base/spatosc/spatoscnode.cpp \
+    base/spatosc/spatoscnode.h \
     clutter/clutterlibrary.cpp \
     clutter/clutterstagenode.cpp \
     documented.cpp \
@@ -132,7 +134,6 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     base/print_node.h \
     base/routenode.h \
     base/spigotnode.h \
-    base/spatosc/spatoscnode.h \
     clutter/clutterlibrary.h \
     clutter/clutterstagenode.h \
     concurrentqueue.h \
