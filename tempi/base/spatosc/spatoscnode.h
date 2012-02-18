@@ -44,6 +44,7 @@ class SpatoscNode : public Node
     private:
         SpatoscNode_internals *internals_;
         virtual void processMessage(const char *inlet, const Message &message);
+        virtual void doTick();
 };
 
 } // end of namespace

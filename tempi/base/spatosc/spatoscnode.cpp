@@ -84,6 +84,12 @@ SpatoscNode::SpatoscNode() :
 
     this->addInlet("0", "Calls to a instance of spatosc::Wrapper.");
     this->addOutlet("success", "Success or not of the last message. Outputs a boolean.");
+    internals_->wrapper_.setSynchronous(false);
+}
+
+void SpatoscNode::doTick()
+{
+    internals_->wrapper_.flushMessages();
 }
 
 SpatoscNode::~SpatoscNode()

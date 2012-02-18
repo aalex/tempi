@@ -32,6 +32,15 @@
     </node>
     -->
 
+
+    <node id="metro1" class="base.metro">
+      <attribute name="interval"><i>10000</i></attribute>
+      <attribute name="running"><b>1</b></attribute>
+    </node>
+    <node id="any0" class="base.any">
+      <attribute name="value"><s>debugPrint</s></attribute>
+    </node>
+
     <!-- SPATOSC AND ITS LOADMESS'S -->
     <node id="loadmess0" class="base.loadmess">
       <attribute name="value">
@@ -78,6 +87,9 @@
     <connection from="loadmess2" outlet="0" to="print1" inlet="0"/>
     <connection from="loadmess3" outlet="0" to="print1" inlet="0"/>
     <connection from="loadmess4" outlet="0" to="print1" inlet="0"/>
+
+    <connection from="metro1" outlet="0" to="any0" inlet="0"/>
+    <connection from="any0" outlet="0" to="spatosc0" inlet="0"/>
 
     <connection from="oscreceive0" outlet="0" to="print2" inlet="0"/>
   </graph>
