@@ -31,7 +31,6 @@
 #include "tempi/node.h"
 #include "tempi/sharedptr.h"
 #include "tempi/nodefactory.h"
-#include "tempi/log.h"
 
 namespace tempi
 {
@@ -124,7 +123,6 @@ class Graph
         typedef std::vector<Connection> ConnectionVec;
         NodeFactory::ptr factory_;
         NodesMapType nodes_;
-        log::Logger& logger_;
         void disconnectAllConnectedTo(const char *name);
         void disconnectAllConnectedFrom(const char *name);
         void disconnectAllConnectedTo(const char *name, const char *inlet);

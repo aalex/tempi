@@ -20,6 +20,7 @@
 
 #include "tempi/graph.h"
 #include "tempi/utils.h"
+#include "tempi/log.h"
 #include <iostream>
 #include <ostream>
 #include <sstream>
@@ -28,13 +29,11 @@ namespace tempi
 {
 
 Graph::Graph(NodeFactory::ptr factory) :
-    factory_(factory),
-    logger_(log::Logger::getInstance())
+    factory_(factory)
 {
 }
 
-Graph::Graph() :
-    logger_(log::Logger::getInstance())
+Graph::Graph()
 {
 }
 
@@ -63,7 +62,7 @@ bool Graph::addNode(const char *type, const char *name)
         nodes_[name] = node;
         std::ostringstream os;
         os << "Graph::" << __FUNCTION__ << "(\"" << type << "\", \"" << name << "\")";
-        logger_.log(log::DEBUG, os.str().c_str());
+        Logger::log(DEBUG, os.str().c_str());
 
         try
         {
@@ -166,7 +165,7 @@ bool Graph::connect(const char *from, const char *outlet, const char *to, const 
     std::ostringstream os;
     os << "Graph::" << __FUNCTION__ << "(" <<
         from << ":" << outlet << ", " << to << ":" << inlet << ")";
-    logger_.log(log::DEBUG, os.str().c_str());
+    Logger::log(DEBUG, os.str().c_str());
     return true;
 }
 

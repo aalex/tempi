@@ -29,9 +29,9 @@
 #include <log4cpp/Category.hh>
 #include <log4cpp/OstreamAppender.hh>
 #include <log4cpp/PatternLayout.hh>
+#include <sstream> // to provide std::ostringstream
 
 namespace tempi {
-namespace log {
 
 /**
  * Log level
@@ -59,7 +59,7 @@ class Logger
         /**
          * Logs a message.
          */
-        log4cpp::Category& log(LogLevel level, const char *message);
+        static log4cpp::Category& log(LogLevel level, const char *message);
         ~Logger();
     private:
         log4cpp::Appender *appender_;
@@ -74,7 +74,6 @@ class Logger
         void operator=(Logger const&); // Don't implement
 };
 
-} // end of namespace
 } // end of namespace
 
 #endif // ifndef

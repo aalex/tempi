@@ -21,6 +21,7 @@
 #include "tempi/serializer.h"
 #include "tempi/config.h"
 #include "tempi/utils.h"
+#include "tempi/log.h"
 #include <boost/lexical_cast.hpp>
 #include <boost/filesystem.hpp>
 #include <libxml/parser.h>
@@ -177,7 +178,7 @@ bool Serializer::save(Graph &graph, const char *filename)
     xmlSaveFormatFileEnc(filename, doc, "UTF-8", 1);
     std::ostringstream os;
     os << "Saved the graph to " << filename << std::endl;
-    log::Logger::getInstance().log(log::DEBUG, os.str().c_str());
+    Logger::log(DEBUG, os.str().c_str());
     // Free the document + global variables that may have been
     // allocated by the parser.
     xmlFreeDoc(doc);
@@ -325,7 +326,7 @@ bool Serializer::load(Graph &graph, const char *filename)
 
     std::ostringstream os;
     os << "Loaded the graph from " << filename << std::endl;
-    log::Logger::getInstance().log(log::DEBUG, os.str().c_str());
+    Logger::log(DEBUG, os.str().c_str());
     if (verbose)
     {
         std::cout << "The Graph is now:\n";

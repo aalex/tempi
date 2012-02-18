@@ -22,7 +22,6 @@
 #include <iostream>
 
 namespace tempi {
-namespace log {
 
 Logger& Logger::getInstance()
 {
@@ -38,7 +37,8 @@ void Logger::setLevel(LogLevel level)
 
 log4cpp::Category& Logger::log(LogLevel level, const char *message)
 {
-    log4cpp::Category& category = log4cpp::Category::getInstance(category_name_);
+    Logger &self = Logger::getInstance();
+    log4cpp::Category& category = log4cpp::Category::getInstance(self.category_name_);
     switch (level)
     {
         case DEBUG:
@@ -77,6 +77,5 @@ Logger::Logger()
 
 const char * const Logger::category_name_ = "default";
 
-} // end of namespace
 } // end of namespace
 
