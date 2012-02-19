@@ -16,6 +16,7 @@ To do for 0.2
 * Scheduler::deleteGraph()
 * Score::load(fileName)
 * Score::save(fileName)
+* Fix segfault in, or disable, [clutter.stage]
 * [base.line]
 * [base.receive]
 * [base.send]
