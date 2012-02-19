@@ -26,10 +26,6 @@ Bugs fixed:
 * update license header to LGPL
 * make some libraries non-necessary: Clutter, GLib, spatosc
 
-In progress:
-
-* [clutter.stage] (still segfaults)
-
 
 Tempi 0.1.8 (2012-01-12)
 ------------------------
