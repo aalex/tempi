@@ -3,36 +3,21 @@ To do in Tempi
 
 To do for 0.2
 -------------
+* World: containing Regions, BehaviourTrees, Tables and Graphs
 * loadBang: Find a better name. Node::loadBang only once? When to Graph::loadBang?
 * move tests to tempi/tests and plugins-base/tests
 * Move nodes to plugins-base // FIXME: header files are not installed in subdirectories, but flat
+* tempi-osc-looper: multitrack GUI configured with an XML Graph
 * Node::listInlets()
 * Node::listOutlets()
-* Fix segfault in Node destructor, which have data memebers, such as in ~MidiReceiverNode and ~OscReceiverNode. (try with tempi-inspect midi.receive, or tempi-osc-looper)
-* Handle objects renaming
-* (WONTFIX) list/configure MIDI ports by their ALSA ID, not an index
-* midilooper: multitrack sequencer with GUI
-* Bugfix: Message.*(...): avoid segfault if length does not match
-* Bugfix: Message.*(...): avoid segfault if types do not match
+* [math.***]: create base classes FloatMathNode and BoolMathNode
 * Rename Filter to FilterNode.
 * FilterNode.filter should return a const&
-* Each scheduler should access some tracks
-* Each scheduler should access some state machines
 * Node::addMethod (i18n doc)
 * Scheduler::deleteGraph()
 * Score::load(fileName)
 * Score::save(fileName)
-* tempi::MATRIX
-* tempi::LIST
-* [mapping.curve]
-* [midi.closenote]
-* [base.prepend]
-* [mapping.curve]
-* [midi.closenote]
-* [midi.route.control]
-* [midi.route.controls]
-* [midi.route.note]
-* [midi.route.notes]
+* [base.line]
 * [base.receive]
 * [base.send]
 * [base.timer]
@@ -43,6 +28,10 @@ To do for 0.2
 
 To do for 0.4
 -------------
+* (WONTFIX) list/configure MIDI ports by their ALSA ID, not an index
+* Bugfix: Message.*(...): avoid segfault if length does not match
+* Bugfix: Message.*(...): avoid segfault if types do not match
+* Handle objects renaming
 * Regions have mapping modifiers. (range, clip, etc.)
 * Regions have follow actions. (nothing, stop, play again, previous, next, first, last, any, other)
 * Create libraries of nodes (tempi-plugins-base)
@@ -51,7 +40,10 @@ To do for 0.4
 * Feature: allow to configure externals with an XML config file. (system-wide, then user-specific)
 * Application: Write a basic trajectories editor, for 3D coordinates with 3D and 2D views. (like Hole-edit)
 * Application: Write a basic node editor.
+* tempi::MATRIX
+* tempi::LIST
 * [mapping.*] should be provided a typetag argument. (and support types fdi)
+* [mapping.curve]
 * [base.converttype]
 * [base.trigger]
 * [base.typematches]
@@ -60,6 +52,12 @@ To do for 0.4
 * [math.rsqrt]
 * [math.sqrt]
 * [math.wrap]
+* midilooper: multitrack sequencer with GUI
+* [midi.closenote]
+* [midi.route.control]
+* [midi.route.controls]
+* [midi.route.note]
+* [midi.route.notes]
 * [osc.prepend]
 * [osc.route]
 * [osc.pop]
