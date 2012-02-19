@@ -21,6 +21,7 @@
 #include "tempi/clutter/clutterlibrary.h"
 #include "tempi/clutter/clutterstagenode.h"
 #include "tempi/utils.h"
+#include "tempi/config.h"
 
 namespace tempi {
 namespace clutter {
@@ -28,7 +29,9 @@ namespace clutter {
 void ClutterLibrary::load(NodeFactory &factory, const char *prefix) const
 {
     using utils::concatenate;
+#ifdef HAVE_CLUTTER
     factory.registerTypeT<TempiClutterStageNode>(concatenate(prefix, "stage").c_str());
+#endif
 }
 
 } // end of namespace

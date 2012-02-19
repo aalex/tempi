@@ -5,7 +5,6 @@ AM_CXXFLAGS = \
     $(LIBLO_CFLAGS) \
     $(LIBXML_CFLAGS) \
     $(SPATOSC_CFLAGS) \
-    $(SPATOSC_DEFINE) \
     $(STK_CXXFLAGS) \
     -I$(top_srcdir) \
     -I$(top_srcdir)/tempi

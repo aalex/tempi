@@ -21,7 +21,16 @@
  * @file An OSC looper.
  */
 
+#include <iostream>
 #include "tempi/config.h"
+#ifndef HAVE_CLUTTER
+int main(int argc, char *argv[])
+{
+    std::cout << "No Clutter support" << std::endl;
+    return 1;
+}
+#else //HAVE_CLUTTER
+
 #include "tempi/message.h"
 #include "tempi/scheduler.h"
 #include "tempi/threadedscheduler.h"
@@ -32,7 +41,6 @@
 #include <boost/program_options.hpp>
 #include <clutter/clutter.h>
 #include <glib.h>
-#include <iostream>
 #include <sstream>
 
 // namespaces:
@@ -467,4 +475,6 @@ int main(int argc, char *argv[])
     clutter_main();
     return 0;
 }
+
+#endif //HAVE_CLUTTER
 

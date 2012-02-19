@@ -25,6 +25,10 @@
 #ifndef __TEMPI_CLUTTER_STAGENODE_H__
 #define __TEMPI_CLUTTER_STAGENODE_H__
 
+#include "tempi/config.h"
+
+#ifdef HAVE_CLUTTER
+
 #include "tempi/node.h"
 #include "tempi/sharedptr.h"
 #include "tempi/message.h"
@@ -131,5 +135,6 @@ class TempiClutterStageNode : public Node
 #define CLUTTER_KEY_BackSpace CLUTTER_BackSpace
 #endif
 
+#endif // HAVE_CLUTTER
 #endif // ifndef
 

@@ -22,7 +22,17 @@
  * @file The tempi application.
  */
 
+#include <iostream>
 #include "tempi/config.h"
+
+#ifndef HAVE_GLIB
+int main(int argc, char *argv[])
+{
+    std::cout << "No glib support" << std::endl;
+    return 1;
+}
+#else // HAVE_GLIB
+
 #include "tempi/message.h"
 #include "tempi/scheduler.h"
 #include "tempi/threadedscheduler.h"
@@ -31,7 +41,6 @@
 #include <boost/lexical_cast.hpp>
 #include <glib.h>
 #include <boost/program_options.hpp>
-#include <iostream>
 #include <sstream>
 
 // namespaces:
@@ -248,4 +257,6 @@ int main(int argc, char *argv[])
     g_main_loop_unref(mainLoop);
     return 0;
 }
+
+#endif // HAVE_GLIB
 

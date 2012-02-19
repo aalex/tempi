@@ -1,5 +1,7 @@
 #include "particlegenerator.h"
 
+#ifdef HAVE_CLUTTER
+
 static void set_blending_mode_for_texture(ClutterTexture *texture, const gchar *blend)
 {
     CoglHandle material = clutter_texture_get_cogl_material(texture);
@@ -121,4 +123,5 @@ void ParticleGenerator::setSourcePosition(double x, double y)
     source_y_ = y;
 }
 
+#endif // HAVE_CLUTTER
 

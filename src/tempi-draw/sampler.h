@@ -20,6 +20,9 @@
 #ifndef __SAMPLER_H__
 #define __SAMPLER_H__
 
+#include "tempi/config.h"
+#ifdef HAVE_CLUTTER
+
 #include "tempi/tempi.h"
 #include <tr1/memory>
 #include "particlegenerator.h"
@@ -43,5 +46,6 @@ struct Sampler
         ParticleGenerator generator_;
 };
 
-#endif
+#endif // HAVE_CLUTTER
+#endif // include guard
 

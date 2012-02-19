@@ -22,6 +22,9 @@
  * @file The TempiClutterStageNode class.
  */
 
+#include "tempi/config.h"
+#ifdef HAVE_CLUTTER
+
 #include <clutter/clutter.h>
 #include "tempi/message.h"
 #include "tempi/clutter/clutterstagenode.h"
@@ -318,4 +321,6 @@ Message StageManager::getAttribute(const char *name)
 
 } // end of namespace
 } // end of namespace
+
+#endif // HAVE_CLUTTER
 

@@ -21,6 +21,19 @@
  * @file A simple drawing application.
  */
 
+#include "tempi/config.h"
+#include <iostream>
+
+#ifndef HAVE_CLUTTER
+
+int main(int argc, char *argv[])
+{
+    std::cout << "No clutter support" << std::endl;
+    return 1;
+}
+
+#else // HAVE_CLUTTER
+
 #include "legacy.h"
 #include "particlegenerator.h"
 #include "sampler.h"
@@ -31,7 +44,6 @@
 #include <boost/program_options.hpp>
 #include <clutter/clutter.h>
 #include <glib.h>
-#include <iostream>
 #include <tr1/memory>
 #include <vector>
 #include <unistd.h>
@@ -611,3 +623,4 @@ int main(int argc, char *argv[])
     return 0;
 }
 
+#endif // HAVE_CLUTTER

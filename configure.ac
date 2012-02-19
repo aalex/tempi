@@ -123,43 +123,38 @@ AC_SUBST(STK_CXXFLAGS, "-D__LINUX_ALSA__ -D__UNIX_JACK__ -D__LITTLE_ENDIAN__")
 AC_LANG_POP(C++)
 
 # Glib
-PKG_CHECK_MODULES([GLIB], [glib-2.0 >= 2.10.2], have_glib=true, have_glib=false)
+PKG_CHECK_MODULES([GLIB], [glib-2.0 gthread-2.0], have_glib=true, have_glib=false)
 if test "x${have_glib}" = "xfalse" ; then
-    AC_MSG_ERROR([missing package: libglib-2.0-dev])
+    AC_MSG_WARN([missing package: libglib-2.0-dev])
+else
+    AC_DEFINE(HAVE_GLIB,[1],[Glib headers successfully detected])
 fi
-AC_SUBST([GLIB_LIBS])
-AC_SUBST([GLIB_CFLAGS])
 
 # Clutter
 PKG_CHECK_MODULES([CLUTTER], [clutter-1.0 >= 1.0], have_clutter=true, have_clutter=false)
 if test "x${have_clutter}" = "xfalse" ; then
-    AC_MSG_ERROR([missing package: libclutter-1.0-dev])
+    AC_MSG_WARN([missing package: libclutter-1.0-dev])
+else
+    AC_DEFINE(HAVE_CLUTTER,[1],[Clutter headers successfully detected])
 fi
-AC_SUBST([CLUTTER_LIBS])
-AC_SUBST([CLUTTER_CFLAGS])
 
 # libxml2
 PKG_CHECK_MODULES([LIBXML], [libxml-2.0], have_libxml=true, have_libxml=false)
 if test "x${have_libxml}" = "xfalse" ; then
     AC_MSG_ERROR([missing package: libxml2-dev])
 fi
-AC_SUBST([LIBXML_LIBS])
-AC_SUBST([LIBXML_CFLAGS])
 
 # log4cpp
 PKG_CHECK_MODULES([LOG4CPP], [log4cpp], have_log4cpp=true, have_log4cpp=false)
 if test "x${have_log4cpp}" = "xfalse" ; then
     AC_MSG_ERROR([missing package: libilog4cpp5-dev])
 fi
-AC_SUBST([LOG4CPP_LIBS])
-AC_SUBST([LOG4CPP_CFLAGS])
 
 PKG_CHECK_MODULES([SPATOSC], [spatosc-0.3], have_spatosc=true, have_spatosc=false)
 if test "x${have_spatosc}" = "xfalse" ; then
     AC_MSG_WARN([missing package: libspatosc-0.3-dev])
 else
     AC_DEFINE(HAVE_SPATOSC,[1],[SpatOSC headers successfully detected])
-    AC_SUBST(SPATOSC_DEFINE, "-DHAVE_SPATOSC")
 fi
 
 # BOOST

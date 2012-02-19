@@ -1,6 +1,9 @@
 #ifndef __PARTICLEGENERATOR_H__
 #define __PARTICLEGENERATOR_H__
 
+#include "tempi/config.h"
+#ifdef HAVE_CLUTTER
+
 #include <clutter/clutter.h>
 #include <glib.h>
 #include <vector>
@@ -35,5 +38,6 @@ class ParticleGenerator : public Actor
         ClutterColor color_;
 };
 
+#endif // HAVE_CLUTTER
 #endif // ifndef
 

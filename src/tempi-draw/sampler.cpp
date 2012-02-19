@@ -18,6 +18,7 @@
  */
 
 #include "sampler.h"
+#ifdef HAVE_CLUTTER
 #include "tempi/sampler/simpleplayback.h"
 
 Sampler::Sampler() :
@@ -66,4 +67,6 @@ bool Sampler::isRecording()
 {
      return recording_;
 }
+
+#endif // HAVE_CLUTTER
 
