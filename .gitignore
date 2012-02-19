@@ -81,6 +81,7 @@ tests/check_base
 tests/check_fsm
 tests/check_graph
 tests/check_libraries
+tests/check_log
 tests/check_math
 tests/check_message
 tests/check_node
