@@ -21,6 +21,7 @@
 #include <iostream>
 #include "tempi/base/routenode.h"
 #include "tempi/utils.h"
+#include "tempi/log.h"
 
 namespace tempi {
 namespace base {
@@ -29,6 +30,7 @@ RouteNode::RouteNode() :
     Node()
 {
     addAttribute(Attribute::ptr(new Attribute("selectors", Message(), "List of string that first atom must match in order to be output via the corresponding outlet.", false)));
+    Logger::log(DEBUG, "RouteNode::RouteNode(): Selectors = ()");
     addInlet("0");
     setShortDocumentation("The RouteNode routes messages to its different outlets according to the first string in each message.");
 }
@@ -41,7 +43,9 @@ void RouteNode::processMessage(const char *inlet, const Message &message)
         return;
     if (! message.indexMatchesType(0, 's'))
     {
-        std::cerr << "RouteNode: " << "First atom must be a string!";
+        std::ostringstream os;
+        os << "RouteNode::processMessage(): First atom is not a string: " << message;
+        Logger::log(DEBUG, os.str().c_str());
         return;
     }
     std::string selector = message.getString(0);
@@ -50,7 +54,28 @@ void RouteNode::processMessage(const char *inlet, const Message &message)
         output(selector.c_str(), ret);
     else
     {
-        std::cerr << "RouteNode: No selector named " << selector << std::endl;
+        {
+            std::ostringstream os;
+            os << "RouteNode::processMessage(): No selector named like first atom:  " << message;
+            Logger::log(DEBUG, os.str().c_str());
+        }
+        {
+            std::ostringstream os;
+            os << "RouteNode: selectors it stored:";
+            std::vector<std::string>::const_iterator iter;
+            for (iter = selectors_.begin(); iter != selectors_.end(); ++iter)
+                os << " " << (*iter);
+            Logger::log(DEBUG, os.str().c_str());
+        }
+        {
+            std::ostringstream os;
+            os << "RouteNode: actual outlets:";
+            std::vector<std::string> outlets = this->listOutlets();
+            std::vector<std::string>::const_iterator iter;
+            for (iter = outlets.begin(); iter != outlets.end(); ++iter)
+                os << " " << (*iter);
+            Logger::log(DEBUG, os.str().c_str());
+        }
     }
 }
 
@@ -68,6 +93,11 @@ void RouteNode::onAttributeChanged(const char *name, const Message &value)
 {
     if (! utils::stringsMatch("selectors", name))
         return;
+    {
+        std::ostringstream os;
+        os << "RouteNode::" << __FUNCTION__ << ": " << name << " " << value;
+        Logger::log(DEBUG, os.str().c_str());
+    }
     std::vector<std::string> new_outlets;
     unsigned int size = value.getSize();
     for (unsigned int i = 0; i < size; ++i)
@@ -78,7 +108,9 @@ void RouteNode::onAttributeChanged(const char *name, const Message &value)
             if (hasOutlet(s.c_str()) && 
                 utils::find_in_vector<std::string>(selectors_, s))
             {
-                std::cerr << "RouteNode::" << __FUNCTION__ << "(): Already got outlet with that name: " << s << std::endl;
+                std::ostringstream os;
+                os << "RouteNode::" << __FUNCTION__ << ": Already have selector named " << s;
+                Logger::log(WARNING, os.str().c_str());
             }
             else
             {
