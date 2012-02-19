@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tempi version="0.1.9">
+  <graph>
+    <node id="metro0" class="base.metro">
+      <attribute name="interval"><i>1000</i></attribute>
+      <attribute name="running"><b>1</b></attribute>
+    </node>
+    <node id="counter0" class="base.counter">
+    </node>
+    <node id="prepend0" class="base.prepend">
+      <attribute name="value"><s>hello</s></attribute>
+    </node>
+    <node id="print0" class="base.print">
+      <attribute name="prefix"><s>count: </s></attribute>
+      <attribute name="enabled"><b>1</b></attribute>
+    </node>
+    <connection from="metro0" outlet="0" to="counter0" inlet="0"/>
+    <connection from="counter0" outlet="0" to="prepend0" inlet="0"/>
+    <connection from="prepend0" outlet="0" to="print0" inlet="0"/>
+  </graph>
+</tempi>
