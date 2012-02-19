@@ -27,13 +27,14 @@
 
 #include <clutter/clutter.h>
 #include "tempi/message.h"
+#include "tempi/utils.h"
 #include "tempi/clutter/clutterstagenode.h"
-//#include <mx/mx.h>
 #include <iostream>
 #include <tr1/memory>
 #include <string>
 #include <string.h> // for strlen
 #include <vector>
+//TODO #include <mx/mx.h>
 
 namespace tempi {
 namespace clutter {
@@ -133,11 +134,11 @@ static void on_stage_destroyed(gpointer *user_data)
 
 TempiClutterStageNode::TempiClutterStageNode()
 {
-    startClutterThread();
-    //TODO: addInlet();    
-    //TODO: addOutlet();    
+    //TODO: addInlet();
+    //TODO: addOutlet();
     addAttribute(Attribute::ptr(new Attribute("script", Message("s", ""), "JSON file to load with ClutterScript.")));
     addAttribute(Attribute::ptr(new Attribute("size", Message("ii", 640, 480), "Size of the ClutterStage.")));
+    addAttribute(Attribute::ptr(new Attribute("visible", Message("b", false), "Shows the stage when enabled.")));
 }
 
 TempiClutterStageNode::~TempiClutterStageNode()
@@ -147,6 +148,8 @@ TempiClutterStageNode::~TempiClutterStageNode()
 
 void TempiClutterStageNode::startClutterThread()
 {
+    if (worker_.get() == 0) // only once!
+        return;
     worker_.reset(new Worker(this));
     clutterThread_.reset(new boost::thread(*(worker_.get())));
 }
@@ -273,10 +276,19 @@ static void key_event_cb(ClutterActor *actor, ClutterKeyEvent *event, gpointer u
     }
 }
 
-// TODO: implement processMessage
-void TempiClutterStageNode::processMessage(const char *inlet, const Message &message) {}
-// TODO: implement onAttributeChanged
-void TempiClutterStageNode::onAttributeChanged(const char *name, const Message &value) {}
+void TempiClutterStageNode::processMessage(const char *inlet, const Message &message)
+{
+    // TODO: implement processMessage
+}
+void TempiClutterStageNode::onAttributeChanged(const char *name, const Message &value)
+{
+    if (utils::stringsMatch(name, "visible"))
+    {
+        if (value.getBoolean(0))
+            startClutterThread();
+    }
+    // TODO: implement more attributes support
+}
 
 // static bool tempi_clutter_set_obj_property(GObject *object, const char *name, const Message &value)
 // {

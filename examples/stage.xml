@@ -3,6 +3,7 @@
   <graph>
     <node id="stage0" class="clutter.stage">
       <attribute name="script"><s>examples/stage.json</s></attribute>
+      <attribute name="visible"><b>1</b></attribute>
     </node>
   </graph>
 </tempi>
