@@ -1,7 +1,7 @@
 Tempi release notes
 ===================
 
-Tempi 0.1.10 (2012-??-??)
+Tempi 0.1.10 (2012-02-19)
 -------------------------
 This release is a developer snapshot in the 0.1 series.
 
@@ -23,8 +23,8 @@ Bugs fixed:
 
 * Fix calculation in ms <-> ns conversion 
 * Fix timing in [base.metro]
-* update license header to LGPL
-* make some libraries non-necessary: Clutter, GLib, spatosc
+* Update license header to LGPL, as advertized
+* Make some libraries non-necessary: Clutter, GLib, spatosc
 
 
 Tempi 0.1.8 (2012-01-12)
