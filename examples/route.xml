@@ -5,6 +5,8 @@
       <attribute name="interval"><i>1000</i></attribute>
       <attribute name="running"><b>1</b></attribute>
     </node>
+    <node id="counter0" class="base.counter">
+    </node>
     <node id="prepend_foo" class="base.prepend">
       <attribute name="value"><s>foo</s></attribute>
     </node>
@@ -25,8 +27,9 @@
       <attribute name="prefix"><s>bar: </s></attribute>
       <attribute name="enabled"><b>1</b></attribute>
     </node>
-    <connection from="metro0" outlet="0" to="prepend_foo" inlet="0"/>
-    <connection from="metro0" outlet="0" to="prepend_bar" inlet="0"/>
+    <connection from="metro0" outlet="0" to="counter0" inlet="0"/>
+    <connection from="counter0" outlet="0" to="prepend_foo" inlet="0"/>
+    <connection from="counter0" outlet="0" to="prepend_bar" inlet="0"/>
     <connection from="prepend_foo" outlet="0" to="route0" inlet="0"/>
     <connection from="prepend_bar" outlet="0" to="route0" inlet="0"/>
     <!-- <connection from="prepend_foo" outlet="0" to="print_foo" inlet="0"/> -->
