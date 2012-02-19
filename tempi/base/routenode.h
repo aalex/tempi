@@ -44,6 +44,7 @@ class RouteNode : public Node
         virtual void onAttributeChanged(const char *name, const Message &value);
     private:
         std::vector<std::string> selectors_;
+        void printOutletsInfo() const;
 };
 
 } // end of namespace

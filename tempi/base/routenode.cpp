@@ -30,7 +30,7 @@ RouteNode::RouteNode() :
     Node()
 {
     addAttribute(Attribute::ptr(new Attribute("selectors", Message(), "List of string that first atom must match in order to be output via the corresponding outlet.", false)));
-    Logger::log(DEBUG, "RouteNode::RouteNode(): Selectors = ()");
+    Logger::log(DEBUG, "[route] constructor: selectors = ()");
     addInlet("0");
     setShortDocumentation("The RouteNode routes messages to its different outlets according to the first string in each message.");
 }
@@ -44,7 +44,7 @@ void RouteNode::processMessage(const char *inlet, const Message &message)
     if (! message.indexMatchesType(0, 's'))
     {
         std::ostringstream os;
-        os << "RouteNode::processMessage(): First atom is not a string: " << message;
+        os << "[route] processMessage: First atom is not a string: " << message;
         Logger::log(DEBUG, os.str().c_str());
         return;
     }
@@ -56,38 +56,32 @@ void RouteNode::processMessage(const char *inlet, const Message &message)
     {
         {
             std::ostringstream os;
-            os << "RouteNode::processMessage(): No selector named like first atom:  " << message;
-            Logger::log(DEBUG, os.str().c_str());
-        }
-        {
-            std::ostringstream os;
-            os << "RouteNode: selectors it stored:";
-            std::vector<std::string>::const_iterator iter;
-            for (iter = selectors_.begin(); iter != selectors_.end(); ++iter)
-                os << " " << (*iter);
-            Logger::log(DEBUG, os.str().c_str());
-        }
-        {
-            std::ostringstream os;
-            os << "RouteNode: actual outlets:";
-            std::vector<std::string> outlets = this->listOutlets();
-            std::vector<std::string>::const_iterator iter;
-            for (iter = outlets.begin(); iter != outlets.end(); ++iter)
-                os << " " << (*iter);
+            os << "[route] processMessage: No selector named like first atom:  " << message;
             Logger::log(DEBUG, os.str().c_str());
         }
     }
 }
 
-// static void print_outlets(const std::map<std::string, Outlet::ptr> &outlets)
-// {
-//     std::cout << "Outlets:\n";
-//     std::map<std::string, Outlet::ptr>::const_iterator iter;
-//     for (iter = outlets.begin(); iter != outlets.end(); ++iter)
-//     {
-//         std::cout << " * " << (*iter).first << std::endl;
-//     }
-// }
+void RouteNode::printOutletsInfo() const
+{
+    {
+        std::ostringstream os;
+        os << "[route]: selectors it stored:";
+        std::vector<std::string>::const_iterator iter;
+        for (iter = selectors_.begin(); iter != selectors_.end(); ++iter)
+            os << " " << (*iter);
+        Logger::log(DEBUG, os.str().c_str());
+    }
+    {
+        std::ostringstream os;
+        os << "[route]: actual outlets:";
+        std::vector<std::string> outlets = this->listOutlets();
+        std::vector<std::string>::const_iterator iter;
+        for (iter = outlets.begin(); iter != outlets.end(); ++iter)
+            os << " " << (*iter);
+        Logger::log(DEBUG, os.str().c_str());
+    }
+}
 
 void RouteNode::onAttributeChanged(const char *name, const Message &value)
 {
@@ -95,10 +89,12 @@ void RouteNode::onAttributeChanged(const char *name, const Message &value)
         return;
     {
         std::ostringstream os;
-        os << "RouteNode::" << __FUNCTION__ << ": " << name << " " << value;
+        os << "[route] " << __FUNCTION__ << ": name=\"" << name << "\" value=" << value;
         Logger::log(DEBUG, os.str().c_str());
     }
-    std::vector<std::string> new_outlets;
+    this->printOutletsInfo();
+
+    std::vector<std::string> new_outlets_list;
     unsigned int size = value.getSize();
     for (unsigned int i = 0; i < size; ++i)
     {
@@ -109,13 +105,16 @@ void RouteNode::onAttributeChanged(const char *name, const Message &value)
                 utils::find_in_vector<std::string>(selectors_, s))
             {
                 std::ostringstream os;
-                os << "RouteNode::" << __FUNCTION__ << ": Already have selector named " << s;
-                Logger::log(WARNING, os.str().c_str());
+                os << "[route] " << __FUNCTION__ << ": Already have selector named " << s;
+                Logger::log(DEBUG, os.str().c_str());
+                new_outlets_list.push_back(s);
             }
             else
             {
-                //std::cout << "[route] add outlet " << s << " to new_outlets" << std::endl;
-                new_outlets.push_back(s);
+                std::ostringstream os;
+                os << "[route] " << __FUNCTION__ << ": new_outlets_list.push_back(" << s << ")";
+                Logger::log(DEBUG, os.str().c_str());
+                new_outlets_list.push_back(s);
             }
         }
     }
@@ -123,24 +122,30 @@ void RouteNode::onAttributeChanged(const char *name, const Message &value)
     std::vector<std::string>::const_iterator iter;
     for (iter = selectors_.begin(); iter != selectors_.end(); iter ++)
     {
-        if (! utils::find_in_vector<std::string>(new_outlets, (*iter)))
+        if (! utils::find_in_vector<std::string>(new_outlets_list, (*iter)))
         {
+            std::ostringstream os;
+            os << "[route]: remove outlet " << (*iter) << std::endl;
+            Logger::log(DEBUG, os.str().c_str());
+
             selectors_.erase(std::find(selectors_.begin(), selectors_.end(), (*iter)));
             removeOutlet((*iter).c_str());
-            //std::cout << "[route]: rm outlet " << (*iter) << std::endl;
         }
     }
     // add outlets that should be there:
-    for (iter = new_outlets.begin(); iter != new_outlets.end(); iter ++)
+    for (iter = new_outlets_list.begin(); iter != new_outlets_list.end(); iter ++)
     {
         if (! utils::find_in_vector<std::string>(selectors_, (*iter)))
         {
+            std::ostringstream os;
+            os << "[route]: add outlet " << (*iter) << std::endl;
+            Logger::log(DEBUG, os.str().c_str());
+
             selectors_.push_back((*iter));
-            std::cout << "[route]: add outlet " << (*iter) << std::endl;
             addOutlet((*iter).c_str(), "Output for the message starting with a string of the same name.");
         }
     }
-    //print_outlets(getOutlets());
+    this->printOutletsInfo();
 }
 
 } // end of namespace
