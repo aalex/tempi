@@ -2,7 +2,7 @@
 
 int main(int argc, char *argv[])
 {
-    using namespace tempi::log;
+    using namespace tempi;
     Logger& logger = Logger::getInstance();
     logger.setLevel(ERROR);
     logger.log(DEBUG, "DEBUG");
