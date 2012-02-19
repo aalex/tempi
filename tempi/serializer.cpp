@@ -324,6 +324,7 @@ bool Serializer::load(Graph &graph, const char *filename)
         } // is a graph
     } // for each graph
 
+    graph.tick();
     graph.loadBang();
 
     std::ostringstream os;
