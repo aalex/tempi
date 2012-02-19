@@ -75,13 +75,13 @@ class Node : public Entity
          */
         std::map<std::string, Inlet::ptr> getInlets();
         /**
-         * Returns the number of inlets this node has.
+         * Returns the name of all inlets for this Node.
          */
-        unsigned int getNumberOfInlets() const; // TODO: deprecate
+        std::vector<std::string> listInlets() const;
         /**
-         * Returns the number of outlets this node has.
+         * Returns the name of all outlets for this Node.
          */
-        unsigned int getNumberOfOutlets() const; // TODO: deprecate
+        std::vector<std::string> listOutlets() const;
         /**
          * Sends a message to a given inlet of this node.
          * @param inlet Name of the inlet to send a message to.

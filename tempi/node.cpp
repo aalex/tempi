@@ -173,6 +173,24 @@ std::map<std::string, Inlet::ptr> Node::getInlets()
     return inlets_;
 }
 
+std::vector<std::string> Node::listInlets() const
+{
+    std::vector<std::string> ret;
+    std::map<std::string, Inlet::ptr>::const_iterator iter;
+    for (iter = inlets_.begin(); iter != inlets_.end(); ++iter)
+        ret.push_back((*iter).first);
+    return ret;
+}
+
+std::vector<std::string> Node::listOutlets() const
+{
+    std::vector<std::string> ret;
+    std::map<std::string, Outlet::ptr>::const_iterator iter;
+    for (iter = outlets_.begin(); iter != outlets_.end(); ++iter)
+        ret.push_back((*iter).first);
+    return ret;
+}
+
 bool Node::addOutlet(Outlet::ptr outlet)
 {
     if (! hasOutlet(outlet.get()))
@@ -270,16 +288,6 @@ void Node::tick()
 void Node::doTick()
 {
     // pass
-}
-
-unsigned int Node::getNumberOfInlets() const
-{
-    return inlets_.size();
-}
-
-unsigned int Node::getNumberOfOutlets() const
-{
-    return outlets_.size();
 }
 
 Inlet *Node::getInlet(const char *name) const

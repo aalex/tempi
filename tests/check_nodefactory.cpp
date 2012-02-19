@@ -147,7 +147,6 @@ bool check_print()
     graph.message("print0", "__attr__", prefix0_message);
     Message prefix1_message = Message("sss", "set", "prefix", "playback: ");
     graph.message("print1", "__attr__", prefix1_message);
-    //std::cout << "sampler0 has n inlets: " << graph.getNode("sampler0")->getNumberOfInlets() << std::endl;
     // enables the sampler
     // FIXME: property inlet in hard-coded to __attr__ in Node
     Message playing = Message("ssb", "set", "playing", true);
