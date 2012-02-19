@@ -4,6 +4,7 @@ To do in Tempi
 To do for 0.2
 -------------
 * World: containing Regions, BehaviourTrees, Tables and Graphs
+* __attr__ inlet: remove "set" prefix. Support "__list__" method.
 * loadBang: Find a better name. Node::loadBang only once? When to Graph::loadBang?
 * move tests to tempi/tests and plugins-base/tests
 * Move nodes to plugins-base // FIXME: header files are not installed in subdirectories, but flat
