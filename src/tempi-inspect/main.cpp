@@ -175,7 +175,7 @@ bool TempiInspect::printClass(const std::string &name)
         cout << endl;
         {
             if (node->listAttributes().size() == 0)
-                cout << "(No attributes)" << endl;
+                cout << "(No attributes)" << endl << endl;
             else
             {
                 vector<string> attributes = node->listAttributes();
