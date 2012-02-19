@@ -1,11 +1,12 @@
 /*
  * Copyright (C) 2011 Alexandre Quessy
- * 
+ * Copyright (C) 2011 Michal Seta
+ * Copyright (C) 2012 Nicolas Bouillot
+ *
  * This file is part of Tempi.
- * 
- * Tempi is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
+ *
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of, either version 3 of the License, or
  * (at your option) any later version.
  * 
  * Tempi is distributed in the hope that it will be useful,
@@ -28,10 +29,12 @@ namespace midi {
 MidiRouteNode::MidiRouteNode() :
     Node()
 {
-    addOutlet("0", "Outputs MIDI messages of a single event type.");
-    addInlet("0", "MIDI messages received here.");
-//    addAttribute("types", Message("s", "note"), "List of strings for MIDI event types. "
-//        "Valid values are \"note\" and \"control\".", false);
+    setShortDocumentation("Routes MIDI messages according to their type.");
+    addOutlet("0", "Prepends MIDI messages (converted to integers) by their type name. (\"note\", \"control\" or \"pitch_bend\")");
+    //Outputs MIDI messages of a single event type.");
+    addInlet("0", "You must send MIDI messages to this inlet. (list of unsigned characters)");
+//    addAttribute(Attribute::ptr("types", Message("s", "note"), "List of strings for MIDI event types. "
+//        "Valid values are \"note\" and \"control\".", false));
 }
 
 void MidiRouteNode::processMessage(const char *inlet, const Message &message)

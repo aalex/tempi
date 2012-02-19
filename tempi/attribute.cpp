@@ -1,11 +1,12 @@
 /*
  * Copyright (C) 2011 Alexandre Quessy
- * 
+ * Copyright (C) 2011 Michal Seta
+ * Copyright (C) 2012 Nicolas Bouillot
+ *
  * This file is part of Tempi.
- * 
- * Tempi is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
+ *
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of, either version 3 of the License, or
  * (at your option) any later version.
  * 
  * Tempi is distributed in the hope that it will be useful,
@@ -22,22 +23,11 @@
 
 namespace tempi {
 
-Attribute::Attribute(const char *name, const Message &value, const char *doc, bool type_strict)
+Attribute::Attribute(const char *name, const Message &value, const char *short_doc, bool type_strict) :
+    Documented(name, short_doc, "")
 {
     value_ = value;
-    name_ = std::string(name);
-    documentation_ = std::string(documentation_);
     type_strict_ = type_strict;
-}
-
-std::string Attribute::getName() const
-{
-    return name_;
-}
-
-std::string Attribute::getDocumentation() const
-{
-    return documentation_;
 }
 
 const Message &Attribute::getValue()

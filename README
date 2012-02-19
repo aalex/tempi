@@ -28,7 +28,7 @@ This library offers new possibilities for in situ data sampling. One can record 
 
 License
 -------
-This program is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License and GNU General Public License as published by the Free Software Foundation; either version 3 of the Licenses, or (at your option) any later version. The library itself is licensed under LGPL while the commandline application is licensed under GPL.
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License and GNU General Public License as published by the Free Software Foundation; either version 3 of the Licenses, or (at your option) any later version.
 
 
 Authors
@@ -55,7 +55,7 @@ Installation
 Here is how to build and install it on Debian GNU/Linux or Ubuntu::
 
   $ sudo apt-get install help2man gettext automake bison build-essential flex libtool 
-  $ sudo apt-get install libxml2-dev libclutter-1.0-dev libglib-2.0-dev libboost-all-dev libstk0-dev liblo0-dev
+  $ sudo apt-get install libxml2-dev libclutter-1.0-dev libglib-2.0-dev libboost-all-dev libstk0-dev liblo0-dev liblog4cpp5-dev
   $ ./autogen.sh
   $ ./configure
   $ make

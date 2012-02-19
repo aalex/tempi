@@ -1,11 +1,12 @@
 /*
  * Copyright (C) 2011 Alexandre Quessy
- * 
+ * Copyright (C) 2011 Michal Seta
+ * Copyright (C) 2012 Nicolas Bouillot
+ *
  * This file is part of Tempi.
- * 
- * Tempi is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
+ *
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of, either version 3 of the License, or
  * (at your option) any later version.
  * 
  * Tempi is distributed in the hope that it will be useful,
@@ -31,11 +32,12 @@ SamplerNode::SamplerNode() :
     recorder_(new Recorder(region_)),
     player_(new Player(region_))
 {
+    setShortDocumentation("Contains a Region, a Recorder and a Player to loop data samples.");
     Message recording = Message("b", false);
-    addAttribute("recording", recording);
+    addAttribute(Attribute::ptr(new Attribute("recording", recording, "Currently recording or not.")));
 
     Message playing = Message("b", false);
-    addAttribute("playing", playing);
+    addAttribute(Attribute::ptr(new Attribute("playing", playing, "Currently playing or not.")));
 
     addInlet("0", "Messages to record.");
     addOutlet("0", "Played back messages.");

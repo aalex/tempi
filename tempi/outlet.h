@@ -1,11 +1,12 @@
 /*
  * Copyright (C) 2011 Alexandre Quessy
- * 
+ * Copyright (C) 2011 Michal Seta
+ * Copyright (C) 2012 Nicolas Bouillot
+ *
  * This file is part of Tempi.
- * 
- * Tempi is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
+ *
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of, either version 3 of the License, or
  * (at your option) any later version.
  * 
  * Tempi is distributed in the hope that it will be useful,
@@ -47,7 +48,15 @@ class Outlet
         {
             return on_triggered_signal_;
         }
+        /**
+         * Returns the name of this outlet.
+         * Each Node should take care of naming its outlets.
+         */
         std::string getName() const;
+        /**
+         * Returns the documentation of this outlet.
+         * Each Node should take care of documenting its outlets.
+         */
         std::string getDocumentation() const;
     private:
          TriggeredSignal on_triggered_signal_;

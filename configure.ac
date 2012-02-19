@@ -14,7 +14,7 @@
 # - increase tempi_interface_version to the next odd number
 m4_define([tempi_major_version], [0])
 m4_define([tempi_minor_version], [1])
-m4_define([tempi_micro_version], [8])
+m4_define([tempi_micro_version], [10])
 
 m4_define([tempi_release_status],
           [m4_if(m4_eval(tempi_micro_version % 2), [1], [git],
@@ -123,28 +123,39 @@ AC_SUBST(STK_CXXFLAGS, "-D__LINUX_ALSA__ -D__UNIX_JACK__ -D__LITTLE_ENDIAN__")
 AC_LANG_POP(C++)
 
 # Glib
-PKG_CHECK_MODULES([GLIB], [glib-2.0 >= 2.10.2], have_glib=true, have_glib=false)
+PKG_CHECK_MODULES([GLIB], [glib-2.0 gthread-2.0], have_glib=true, have_glib=false)
 if test "x${have_glib}" = "xfalse" ; then
-    AC_MSG_ERROR([missing package: libglib-2.0-dev])
+    AC_MSG_WARN([missing package: libglib-2.0-dev])
+else
+    AC_DEFINE(HAVE_GLIB,[1],[Glib headers successfully detected])
 fi
-AC_SUBST([GLIB_LIBS])
-AC_SUBST([GLIB_CFLAGS])
 
 # Clutter
 PKG_CHECK_MODULES([CLUTTER], [clutter-1.0 >= 1.0], have_clutter=true, have_clutter=false)
 if test "x${have_clutter}" = "xfalse" ; then
-    AC_MSG_ERROR([missing package: libclutter-1.0-dev])
+    AC_MSG_WARN([missing package: libclutter-1.0-dev])
+else
+    AC_DEFINE(HAVE_CLUTTER,[1],[Clutter headers successfully detected])
 fi
-AC_SUBST([CLUTTER_LIBS])
-AC_SUBST([CLUTTER_CFLAGS])
 
 # libxml2
 PKG_CHECK_MODULES([LIBXML], [libxml-2.0], have_libxml=true, have_libxml=false)
 if test "x${have_libxml}" = "xfalse" ; then
     AC_MSG_ERROR([missing package: libxml2-dev])
 fi
-AC_SUBST([LIBXML_LIBS])
-AC_SUBST([LIBXML_CFLAGS])
+
+# log4cpp
+PKG_CHECK_MODULES([LOG4CPP], [log4cpp], have_log4cpp=true, have_log4cpp=false)
+if test "x${have_log4cpp}" = "xfalse" ; then
+    AC_MSG_ERROR([missing package: libilog4cpp5-dev])
+fi
+
+PKG_CHECK_MODULES([SPATOSC], [spatosc-0.3], have_spatosc=true, have_spatosc=false)
+if test "x${have_spatosc}" = "xfalse" ; then
+    AC_MSG_WARN([missing package: libspatosc-0.3-dev])
+else
+    AC_DEFINE(HAVE_SPATOSC,[1],[SpatOSC headers successfully detected])
+fi
 
 # BOOST
 AX_BOOST_BASE([1.35])
@@ -154,7 +165,6 @@ if test "x${ax_cv_boost_signals}" = "xno" ; then
 	AC_MSG_ERROR([missing package: libboost-signals-dev])
 fi
 
-#Set LIBLO with pkg-config
 PKG_CHECK_MODULES(LIBLO, liblo, have_liblo=true, have_liblo=false)
 if test "x${have_liblo}" = "xfalse" ; then
     AC_MSG_ERROR([Missing liblo])
@@ -165,10 +175,10 @@ if test "x${ax_cv_boost_program_options}" = "xno" ; then
 	AC_MSG_ERROR([missing package: libboost-program-options-dev])
 fi
 
-dnl AX_BOOST_FILESYSTEM
-dnl if test "x${ax_cv_boost_filesystem}" = "xno" ; then
-dnl 	AC_MSG_ERROR([missing package: libboost-filesystem-dev])
-dnl fi
+AX_BOOST_FILESYSTEM
+if test "x${ax_cv_boost_filesystem}" = "xno" ; then
+	AC_MSG_ERROR([missing package: libboost-filesystem-dev])
+fi
 
 AX_BOOST_THREAD
 if test "x${ax_cv_boost_thread}" = "xno" ; then
@@ -180,10 +190,11 @@ dnl if test "x${ax_cv_boost_date_time}" = "xno" ; then
 dnl 	AC_MSG_ERROR([missing package: libboost-date-time-dev])
 dnl fi
 dnl 
-dnl AX_BOOST_SYSTEM
-dnl if test "x${ax_cv_boost_system}" = "xno" ; then
-dnl 	AC_MSG_ERROR([missing package: libboost-system-dev])
-dnl fi
+
+AX_BOOST_SYSTEM
+if test "x${ax_cv_boost_system}" = "xno" ; then
+	AC_MSG_ERROR([missing package: libboost-system-dev])
+fi
 
 CFLAGS+=" -Wall -Wextra -Wfatal-errors -Werror "
 
@@ -198,8 +209,6 @@ else
     HELP2MAN=:
 fi
 
-dnl TODO: check for Boost
-
 # Override the template file name of the generated .pc file, so that there
 # is no need to rename the template file when the API version changes.
 AC_CONFIG_FILES([
@@ -210,6 +219,9 @@ AC_CONFIG_FILES([
         src/midilooper/Makefile
         src/osc-forward/Makefile
         src/tempi-draw/Makefile
+        src/tempi-inspect/Makefile
+        src/tempi-launch/Makefile
+        src/tempi-osc-looper/Makefile
         tests/Makefile
         doxyfile 
         data/Makefile

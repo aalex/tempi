@@ -1,11 +1,12 @@
 /*
  * Copyright (C) 2011 Alexandre Quessy
- * 
+ * Copyright (C) 2011 Michal Seta
+ * Copyright (C) 2012 Nicolas Bouillot
+ *
  * This file is part of Tempi.
- * 
- * Tempi is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
+ *
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of, either version 3 of the License, or
  * (at your option) any later version.
  * 
  * Tempi is distributed in the hope that it will be useful,
@@ -26,9 +27,10 @@ namespace base {
 AnyNode::AnyNode() :
     Node()
 {
-    addAttribute("value", Message(), "Holds any message to store.", false);
-    addOutlet("0", "Value.");
-    addInlet("0", "Bang to output value. Any other message will set and output value.");
+    setShortDocumentation("Stores message and outputs them when it receives an empty message. (bang)");
+    addAttribute(Attribute::ptr(new Attribute("value", Message(), "Holds any message to store.", false)));
+    addOutlet("0", "Outputs the stored value when inlet 0 is banged.");
+    addInlet("0", "Bang to output value. Any other type of message will set and output value.");
 }
 
 void AnyNode::processMessage(const char *inlet, const Message &message)
@@ -39,7 +41,7 @@ void AnyNode::processMessage(const char *inlet, const Message &message)
     }
     else // any message with some type tags sets the value and outputs it
     {
-        setAttribute("value", message);
+        setAttributeValue("value", message);
     }
     if (utils::stringsMatch(inlet, "0"))
         output("0", getAttributeValue("value"));

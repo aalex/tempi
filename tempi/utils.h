@@ -1,11 +1,12 @@
 /*
  * Copyright (C) 2011 Alexandre Quessy
- * 
+ * Copyright (C) 2011 Michal Seta
+ * Copyright (C) 2012 Nicolas Bouillot
+ *
  * This file is part of Tempi.
- * 
- * Tempi is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
+ *
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of, either version 3 of the License, or
  * (at your option) any later version.
  * 
  * Tempi is distributed in the hope that it will be useful,
@@ -25,7 +26,10 @@
 #define __TEMPI_UTILS_H__
 
 #include <string>
+#include <vector>
+#include <algorithm>
 #include "tempi/exceptions.h"
+#include "tempi/message.h"
 
 namespace tempi {
 namespace utils {
@@ -60,6 +64,47 @@ std::string concatenate(const char *a, const char *b);
  */
 template <typename T>
 std::string to_string(T value) throw(BadArgumentTypeException);
+
+/**
+ * Checks if a value is in a vector.
+ */
+template <typename T>
+bool find_in_vector(std::vector<T> &vec, const T &value)
+{
+    return std::find(vec.begin(), vec.end(), value) != vec.end();
+}
+
+/**
+ * Serializes a given argument from a Message.
+ */
+std::string argumentToString(const Message &message, unsigned int index)
+    throw(BadArgumentTypeException, BadIndexException);
+
+/**
+ * Appends an argument to the given Message parsing a serialized string, if valid.
+ */
+void appendArgumentFromString(Message &message, const char *atom_value, ArgumentType type)
+    throw(BadArgumentTypeException);
+
+/**
+ * Simply converts a char to a string.
+ */
+std::string charToString(const char c);
+
+/**
+ * Checks if a type tag contains valid letters or not.
+ */
+bool isValidType(const char *type);
+/**
+ * Checks if a character represents a valid type tag.
+ */
+bool isValidAtomType(const char c);
+
+/**
+ * Tries to cast a Message arguments to some other type tags.
+ */
+Message castMessage(const Message &message, const char *type)
+    throw(BadArgumentTypeException, BadIndexException);
 
 } // end of namespace
 } // end of namespace

@@ -27,4 +27,4 @@ See http://tempi.toonloop.com
 Copyright (c) 2011 Alexandre Quessy <alexandre@quessy.net>
 
 [SEE ALSO]
-osc-forward(1), tempi-draw(1)
+osc-forward(1), tempi-draw(1), tempi-launch(1), tempi-inspect(1)

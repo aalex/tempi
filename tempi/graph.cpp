@@ -1,11 +1,12 @@
 /*
  * Copyright (C) 2011 Alexandre Quessy
- * 
+ * Copyright (C) 2011 Michal Seta
+ * Copyright (C) 2012 Nicolas Bouillot
+ *
  * This file is part of Tempi.
- * 
- * Tempi is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
+ *
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of, either version 3 of the License, or
  * (at your option) any later version.
  * 
  * Tempi is distributed in the hope that it will be useful,
@@ -19,7 +20,10 @@
 
 #include "tempi/graph.h"
 #include "tempi/utils.h"
+#include "tempi/log.h"
 #include <iostream>
+#include <ostream>
+#include <sstream>
 
 namespace tempi
 {
@@ -54,9 +58,26 @@ bool Graph::addNode(const char *type, const char *name)
             std::cerr << "Graph::" << __FUNCTION__ << ": Invalid pointer to Node." << std::endl;
             return false;
         }
-        node->setTypeName(type);
-        node->setInstanceName(name);
+        node->setName(name);
         nodes_[name] = node;
+        std::ostringstream os;
+        os << "Graph::" << __FUNCTION__ << "(\"" << type << "\", \"" << name << "\")";
+        Logger::log(DEBUG, os.str().c_str());
+
+        try
+        {
+            //std::cout << "Graph::addNode: node->getSignal()\n";
+            node->getSignal(INLET_DELETED_SIGNAL)->getSignal().connect(
+                boost::bind(&Graph::onInletDeleted, this, _1));
+            node->getSignal(OUTLET_DELETED_SIGNAL)->getSignal().connect(
+                boost::bind(&Graph::onOutletDeleted, this, _1));
+        }
+        catch (const BadIndexException &e)
+        {
+            // XXX should not occur!!
+            std::cerr << __FILE__ << ": " << __FUNCTION__ << std::endl;
+            std::cerr << e.what() << std::endl;
+        }
         return true;
     }
     else
@@ -66,6 +87,22 @@ bool Graph::addNode(const char *type, const char *name)
         //std::cerr << "Graph::" << __FUNCTION__ << ": " << *factory_.get();
         return false; // FIXME
     }
+}
+
+void Graph::onInletDeleted(const Message &message)
+{
+    std::string node = message.getString(0);
+    std::string inlet = message.getString(1);
+    ConnectionVec connections = getAllConnectedTo(node.c_str(), inlet.c_str());
+    disconnectMany(connections);
+}
+
+void Graph::onOutletDeleted(const Message &message)
+{
+    std::string node = message.getString(0);
+    std::string outlet = message.getString(1);
+    ConnectionVec connections = getAllConnectedFrom(node.c_str(), outlet.c_str());
+    disconnectMany(connections);
 }
 
 bool Graph::message(const char *node, const char *inlet, const Message &message)
@@ -90,13 +127,13 @@ bool Graph::connect(const char *from, const char *outlet, const char *to, const 
     if (fromNode.get() == 0)
     {
 
-        std::cerr << "Graph::" << __FUNCTION__ << ": Cannot find node " << from << "." << std::endl;
+        std::cerr << "Graph::" << __FUNCTION__ << ": Cannot find node \"" << from << "\"." << std::endl;
         return false;
     }
     Node::ptr toNode = getNode(to);
     if (toNode.get() == 0)
     {
-        std::cerr << "Graph::" << __FUNCTION__ << ": Cannot find node " << to << "." << std::endl;
+        std::cerr << "Graph::" << __FUNCTION__ << ": Cannot find node \"" << to << "\"." << std::endl;
         return false;
     }
 
@@ -125,19 +162,23 @@ bool Graph::connect(const char *from, const char *outlet, const char *to, const 
         return false;
     }
     connections_.push_back(Connection(std::string(from), std::string(outlet), std::string(to), std::string(inlet)));
+    std::ostringstream os;
+    os << "Graph::" << __FUNCTION__ << "(" <<
+        from << ":" << outlet << ", " << to << ":" << inlet << ")";
+    Logger::log(DEBUG, os.str().c_str());
     return true;
 }
 
 bool Graph::isConnected(const char *from, const char *outlet, const char *to, const char *inlet)
 {
-    if (hasNode(from))
+    if (! hasNode(from))
     {
-        std::cerr << "Graph::" << __FUNCTION__ << ": Cannot find node " << from << "." << std::endl;
+        std::cerr << "Graph::" << __FUNCTION__ << ": Cannot find node \"" << from << "\"." << std::endl;
         return false;
     }
-    if (hasNode(to))
+    if (! hasNode(to))
     {
-        std::cerr << "Graph::" << __FUNCTION__ << ": Cannot find node " << to << "." << std::endl;
+        std::cerr << "Graph::" << __FUNCTION__ << ": Cannot find node \"" << to << "\"." << std::endl;
         return false;
     }
     std::vector<Connection>::const_iterator iter;
@@ -162,8 +203,8 @@ bool Graph::disconnect(const char *from, const char *outlet, const char *to, con
         Node::ptr toNode = getNode(to);
         // no need to catch BadIndexException sinze already tested it
         Outlet::ptr source = fromNode->getOutletSharedPtr(outlet);
-        Inlet *sink = toNode->getInlet(inlet);
-        return sink->disconnect(source);
+        Inlet *inletPtr = toNode->getInlet(inlet);
+        return inletPtr->disconnect(source);
     }
     else
         return false;
@@ -200,6 +241,17 @@ void Graph::tick()
     {
         Node *node = (*iter).second.get();
         node->tick();
+    }
+}
+
+void Graph::loadBang()
+{
+    NodesMapType::const_iterator iter;
+    for (iter = nodes_.begin(); iter != nodes_.end(); ++iter)
+    {
+        Node *node = (*iter).second.get();
+        if (! node->isLoadBanged())
+            node->loadBang();
     }
 }
 
@@ -260,31 +312,8 @@ std::vector<Graph::Connection> Graph::getAllConnectedFrom(const char *name)
     return ret;
 }
 
-void Graph::disconnectAllConnectedTo(const char *name)
-{
-    Node::ptr node = getNode(name);
-    ConnectionVec connections = getAllConnectedTo(name);
-    ConnectionVec::const_iterator iter;
-    for (iter = connections.begin(); iter != connections.end(); ++iter)
-    {
-        Connection conn = (*iter);
-        disconnect(conn.get<0>().c_str(), conn.get<1>().c_str(), conn.get<2>().c_str(), conn.get<3>().c_str());
-    }
-}
 
-void Graph::disconnectAllConnectedFrom(const char *name)
-{
-    Node::ptr node = getNode(name);
-    ConnectionVec connections = getAllConnectedFrom(name);
-    ConnectionVec::const_iterator iter;
-    for (iter = connections.begin(); iter != connections.end(); ++iter)
-    {
-        Connection conn = (*iter);
-        disconnect(conn.get<0>().c_str(), conn.get<1>().c_str(), conn.get<2>().c_str(), conn.get<3>().c_str());
-    }
-}
-
-std::vector<Graph::Connection> Graph::getAllConnections()
+const std::vector<Graph::Connection> Graph::getAllConnections() const
 {
     return connections_;
 }
@@ -401,12 +430,18 @@ bool Graph::setNodeAttribute(const char *nodeName, const char *attributeName, co
     }
     catch (const BadIndexException &e)
     {
-        std::cerr << "Graph::" << __FUNCTION__ << ": " << e.what();
+        std::cerr << "BadIndexException in ";
+        std::cerr << "Graph::" << __FUNCTION__ << "(" <<
+            nodeName << ", " << attributeName << ", " << value
+            << "): " << e.what() << std::endl;;
         return false;
     }
     catch (const BadArgumentTypeException &e)
     {
-        std::cerr << "Graph::" << __FUNCTION__ << ": " << e.what();
+        std::cerr << "BadArgumentTypeException in ";
+        std::cerr << "Graph::" << __FUNCTION__ << "(" <<
+            nodeName << ", " << attributeName << ", " << value
+            << "): " << e.what() << std::endl;;
         return false;
     }
 }
@@ -425,11 +460,59 @@ std::vector<std::string> Graph::getNodeNames() const
 std::ostream &operator<<(std::ostream &os, const Graph &graph)
 {
     os << "Graph:" << std::endl;
+    os << " Nodes:" << std::endl;
     std::vector<std::string> nodes = graph.getNodeNames();
     std::vector<std::string>::const_iterator iter;
     for (iter = nodes.begin(); iter != nodes.end(); ++iter)
         os << " * " << (*iter) << std::endl;
+
+    std::vector<Graph::Connection> connections = graph.getAllConnections();
+    std::vector<Graph::Connection>::const_iterator iter2;
+    if (connections.size() == 0)
+        os << " No Connections." << std::endl;
+    else
+        os << " Connections:" << std::endl;
+    for (iter2 = connections.begin(); iter2 != connections.end(); ++iter2)
+    {
+        Graph::Connection conn = (*iter2);
+        os << " * " << conn.get<0>() << ":" << conn.get<1>() <<
+            " ->" << conn.get<2>() << ":" << conn.get<3>() << std::endl;
+    }
     return os;
+}
+
+void Graph::disconnectMany(ConnectionVec &connections)
+{
+    ConnectionVec::const_iterator iter;
+    for (iter = connections.begin(); iter != connections.end(); ++iter)
+    {
+        Connection conn = (*iter);
+        disconnect(conn.get<0>().c_str(), conn.get<1>().c_str(), conn.get<2>().c_str(), conn.get<3>().c_str());
+    }
+}
+
+void Graph::disconnectAllConnectedFrom(const char *name, const char *outlet)
+{
+    ConnectionVec connections = getAllConnectedFrom(name, outlet);
+    disconnectMany(connections);
+}
+
+void Graph::disconnectAllConnectedFrom(const char *name)
+{
+    ConnectionVec connections = getAllConnectedFrom(name);
+    disconnectMany(connections);
+}
+
+void Graph::disconnectAllConnectedTo(const char *name)
+{
+    ConnectionVec connections = getAllConnectedTo(name);
+    disconnectMany(connections);
+}
+
+void Graph::disconnectAllConnectedTo(const char *name, const char *inlet)
+{
+    ConnectionVec connections = getAllConnectedTo(name, inlet);
+    disconnectMany(connections);
 }
 
 } // end of namespace

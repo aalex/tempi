@@ -1,11 +1,12 @@
 /*
  * Copyright (C) 2011 Alexandre Quessy
- * 
+ * Copyright (C) 2011 Michal Seta
+ * Copyright (C) 2012 Nicolas Bouillot
+ *
  * This file is part of Tempi.
- * 
- * Tempi is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
+ *
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of, either version 3 of the License, or
  * (at your option) any later version.
  * 
  * Tempi is distributed in the hope that it will be useful,
@@ -27,7 +28,23 @@ namespace tempi
 
 Node::Node()
 {
-    addInlet("attributes"); // all nodes have at least one inlet for attributes
+    // XXX: Add Signals BEFORE adding inlets/outlets!
+    // TODO: intercept ATTRIBUTE_LOG when set to make sure it's in the right range.
+    //addAttribute(ATTRIBUTE_LOG, Message("i", 1), "How much [1-5] to print debug info in the console. 1=ERROR, 2=CRITICAL, 3=WARNING, 4=INFO, 5=DEBUG");
+    //TODO: __attr__ and __log__ ?
+    //std::cout << __FUNCTION__ << "()" << std::endl;
+
+    addSignal(NodeSignal::ptr(new NodeSignal(OUTLET_DELETED_SIGNAL,
+        "Triggered when an outlet is deleted. Arguments are: the name of this node, the name of the outlet.", "TODO", "ss")));
+    addSignal(NodeSignal::ptr(new NodeSignal(INLET_DELETED_SIGNAL,
+        "Triggered when an inlet is deleted. Arguments are: the name of this node, the name of the inlet.", "TODO", "ss")));
+    addSignal(NodeSignal::ptr(new NodeSignal(OUTLET_CREATED_SIGNAL,
+        "Triggered when an outlet is created. Arguments are: the name of this node, the name of the outlet.", "TODO", "ss")));
+    addSignal(NodeSignal::ptr(new NodeSignal(INLET_CREATED_SIGNAL,
+        "Triggered when an inlet is created. Arguments are: the name of this node, the name of the inlet.", "TODO", "ss")));
+
+    addInlet(ATTRIBUTES_INLET, "Set attribute value with (s:\"set\", s:name, ...)"); // all nodes have at least one inlet for attributes
+    //addAttribute("log-level", Message("i", 1), "How much [1-5] to print debug info in the console. 1=ERROR, 2=CRITICAL, 3=WARNING, 4=INFO, 5=DEBUG");
 }
 
 bool Node::isInitiated() const
@@ -43,17 +60,35 @@ bool Node::init()
     {
         initiated_ = true; // very important!
         onInit();
-        std::map<std::string, Attribute::ptr>::const_iterator iter;
-        for (iter = attributes_.begin(); iter != attributes_.end(); ++iter)
+        std::vector<std::string> attributes = listAttributes();
+        std::vector<std::string>::const_iterator iter;
+        for (iter = attributes.begin(); iter != attributes.end(); ++iter)
         {
             // Updates properties, etc.
-            onAttributeChanged((*iter).first.c_str(), (*iter).second->getValue());
+            Attribute* attribute = getAttribute((*iter).c_str());
+            onAttributeChanged((*iter).c_str(), attribute->getValue());
+            // add an inlet for each attribute
+            addInlet((*iter).c_str(), attribute->getShortDocumentation().c_str());
         }
         return true;
     }
 }
 
+void Node::loadBang()
+{
+    if (! load_banged_)
+    {
+        onLoadBang();
+        load_banged_ = true;
+    }
+}
+
 void Node::onInit()
+{
+    // pass
+}
+
+void Node::onLoadBang()
 {
     // pass
 }
@@ -67,8 +102,7 @@ void Node::onInletTriggered(Inlet *inlet, const Message &message)
 {
     //std::cout << __FUNCTION__ << std::endl;
     bool is_a_attribute = false;
-    // FIXME: the name of the "attributes" inlet should be a constant
-    if (inlet->getName() == "attributes" && message.getSize() >= 3)
+    if (inlet->getName() == ATTRIBUTES_INLET && message.getSize() >= 3)
     {
         // ArgumentType type0;
         // ArgumentType type1;
@@ -97,13 +131,35 @@ void Node::onInletTriggered(Inlet *inlet, const Message &message)
                 }
                 catch (const BadIndexException &e)
                 {
-                    std::cerr << "Node(" << getTypeName() << ":" << getInstanceName() << ")::" << __FUNCTION__ << ": " << e.what();
+                    std::cerr << "Node(" << getTypeName() << ":" << getName() << ")::" << __FUNCTION__ << ": " << e.what();
                 }
                 catch (const BadArgumentTypeException &e)
                 {
-                    std::cerr << "Node(" << getTypeName() << ":" << getInstanceName() << ")::" << __FUNCTION__ << ": " << e.what();
+                    std::cerr << "Node(" << getTypeName() << ":" << getName() << ")::" << __FUNCTION__ << ": " << e.what();
                 }
             }
+        }
+    }
+
+    if (is_a_attribute)
+        return;
+    
+    // Attribute inlet:
+    std::vector<std::string> attributes = listAttributes();
+    std::vector<std::string>::const_iterator iter;
+    for (iter = attributes.begin(); iter != attributes.end(); ++iter)
+    {
+        if (inlet->getName() == (*iter))
+        {
+            try
+            {
+                setAttribute(inlet->getName().c_str(), message);
+            }
+            catch (const BadArgumentTypeException &e)
+            {
+                std::cerr << "Node(" << getTypeName() << ":" << getName() << ")::" << __FUNCTION__ << ": " << e.what();
+            }
+            is_a_attribute = true;
         }
     }
     if (! is_a_attribute)
@@ -117,11 +173,39 @@ std::map<std::string, Inlet::ptr> Node::getInlets()
     return inlets_;
 }
 
+std::vector<std::string> Node::listInlets() const
+{
+    std::vector<std::string> ret;
+    std::map<std::string, Inlet::ptr>::const_iterator iter;
+    for (iter = inlets_.begin(); iter != inlets_.end(); ++iter)
+        ret.push_back((*iter).first);
+    return ret;
+}
+
+std::vector<std::string> Node::listOutlets() const
+{
+    std::vector<std::string> ret;
+    std::map<std::string, Outlet::ptr>::const_iterator iter;
+    for (iter = outlets_.begin(); iter != outlets_.end(); ++iter)
+        ret.push_back((*iter).first);
+    return ret;
+}
+
 bool Node::addOutlet(Outlet::ptr outlet)
 {
     if (! hasOutlet(outlet.get()))
     {
         outlets_[outlet->getName()] = outlet;
+        try
+        {
+            getSignal(OUTLET_CREATED_SIGNAL)->trigger(
+                Message("ss", getName().c_str(), outlet->getName().c_str()));
+        }
+        catch (const BadIndexException &e)
+        {
+            std::cerr << "In Node::" << __FUNCTION__ << ": already got such and outlet: " << std::endl;
+            std::cerr << e.what() << std::endl;
+        }
         return true;
     }
     return false;
@@ -133,6 +217,16 @@ bool Node::addInlet(Inlet::ptr inlet)
     {
         inlets_[inlet->getName()] = inlet;
         inlet.get()->getOnTriggeredSignal().connect(boost::bind(&Node::onInletTriggered, this, _1, _2));
+        try
+        {
+            getSignal(INLET_CREATED_SIGNAL)->trigger(
+                Message("ss", getName().c_str(), inlet->getName().c_str()));
+        }
+        catch (const BadIndexException &e)
+        {
+            std::cerr << "In " << __FUNCTION__ << std::endl;
+            std::cerr << e.what() << std::endl;
+        }
         return true;
     }
     return false;
@@ -196,16 +290,6 @@ void Node::doTick()
     // pass
 }
 
-unsigned int Node::getNumberOfInlets() const
-{
-    return inlets_.size();
-}
-
-unsigned int Node::getNumberOfOutlets() const
-{
-    return outlets_.size();
-}
-
 Inlet *Node::getInlet(const char *name) const
 {
     if (hasInlet(name))
@@ -242,84 +326,9 @@ Outlet::ptr Node::getOutletSharedPtr(const char *name) const throw(BadIndexExcep
     else
     {
         std::ostringstream os;
-        os << "Node(" << getTypeName() << ":" << getInstanceName() << ")::" << __FUNCTION__ << ": " << ": Bad outlet name: " << name;
+        os << "Node(" << getTypeName() << ":" << getName() << ")::" << __FUNCTION__ << ": " << ": Bad outlet name: " << name;
         throw BadIndexException(os.str().c_str());
     }
-}
-
-Attribute::ptr Node::getAttribute(const char *name) const throw(BadIndexException)
-{
-    std::map<std::string, Attribute::ptr>::const_iterator iter = attributes_.find(std::string(name));
-    if (iter == attributes_.end())
-    {
-        std::ostringstream os;
-        os << "Node(" << getTypeName() << ":" << getInstanceName() << ")::" << __FUNCTION__ << ": " << ": No such attribute: " << name;
-        throw (BadIndexException(os.str().c_str()));
-    }
-    else
-        return (*iter).second;
-}
-
-const Message &Node::getAttributeValue(const char *name) const throw(BadIndexException)
-{
-    return getAttribute(name)->getValue();
-}
-
-bool Node::hasAttribute(const char *name) const
-{
-    return (attributes_.find(std::string(name)) != attributes_.end());
-}
-
-void Node::addAttribute(const char *name, const Message &value, const char *doc, bool type_strict) throw(BadIndexException)
-{
-    if (hasAttribute(name))
-    {
-        std::ostringstream os;
-        os << "Node::" << __FUNCTION__ << ": Already has attribute: " << name;
-        throw (BadIndexException(os.str().c_str()));
-    }
-    Attribute::ptr attr(new Attribute(name, value, doc, type_strict));
-    attributes_[std::string(name)] = attr;
-}
-
-void Node::setAttribute(const char *name, const Message &value) throw(BadIndexException, BadArgumentTypeException)
-{
-    bool ok_to_change = false;
-    Attribute::ptr current = getAttribute(name); // might throw BadIndexException
-    //std::cout << "Node::" << __FUNCTION__ << ": " << name << " = " << value << std::endl;
-    if (current->isTypeStrict())
-    {
-        if (current->getValue().getTypes().compare(value.getTypes()) == 0)
-        {
-            ok_to_change = true;
-        }
-        else
-        {
-            std::ostringstream os;
-            os << "Node::" << __FUNCTION__ << ": Attribute " << name << ": Bad type " << value.getTypes() << " while expecting " << current->getValue().getTypes();
-            throw (BadArgumentTypeException(os.str().c_str()));
-        }
-    }
-    else
-        ok_to_change = true;
-    // do it:
-    if (ok_to_change)
-    {
-        current->setValue(value);
-        if (isInitiated())
-            onAttributeChanged(name, value);
-    }
-}
-
-std::vector<std::string> Node::getAttributesNames() const
-{
-    std::vector<std::string> ret;
-    std::map<std::string, Attribute::ptr>::const_iterator iter;
-    for (iter = attributes_.begin(); iter != attributes_.end(); ++iter)
-    {
-        ret.push_back((*iter).first);
-    }
-    return ret;
 }
 
 bool Node::message(const char *inlet, const Message &message)
@@ -364,16 +373,6 @@ const std::string &Node::getTypeName() const
     return typeName_;
 }
 
-void Node::setInstanceName(const char *instanceName)
-{
-    instanceName_ = std::string(instanceName);
-}
-
-const std::string &Node::getInstanceName() const
-{
-    return instanceName_;
-}
-
 void Node::enableHandlingReceiveSymbol(const char *selector)
 {
     handledReceiveSymbol_ = selector;
@@ -382,6 +381,22 @@ void Node::enableHandlingReceiveSymbol(const char *selector)
 bool Node::handlesReceiveSymbol(const char *selector) const
 {
     return handledReceiveSymbol_ == selector;
+}
+
+bool Node::isLoadBanged() const
+{
+    return load_banged_;
+}
+
+bool Node::removeOutlet(const char *name)
+{
+    std::string nameStr(name);
+    if (hasOutlet(name))
+    {
+        outlets_.erase(outlets_.find(nameStr));
+        return true;
+    }
+    return false;
 }
 
 } // end of namespace

@@ -1,11 +1,12 @@
 /*
  * Copyright (C) 2011 Alexandre Quessy
- * 
+ * Copyright (C) 2011 Michal Seta
+ * Copyright (C) 2012 Nicolas Bouillot
+ *
  * This file is part of Tempi.
- * 
- * Tempi is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
+ *
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of, either version 3 of the License, or
  * (at your option) any later version.
  * 
  * Tempi is distributed in the hope that it will be useful,
@@ -30,7 +31,7 @@ OscSenderNode::OscSenderNode() :
     Message host_port;
     host_port.appendString("localhost");
     host_port.appendInt(0);
-    addAttribute("host_port", host_port);
+    addAttribute(Attribute::ptr(new Attribute("host_port", host_port, "IP and port number to send to")));
     addInlet("0", "Messages to send. First atom must be a string that is a valid OSC path.");
 }
 

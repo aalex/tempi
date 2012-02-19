@@ -1,11 +1,12 @@
 /*
  * Copyright (C) 2011 Alexandre Quessy
- * 
+ * Copyright (C) 2011 Michal Seta
+ * Copyright (C) 2012 Nicolas Bouillot
+ *
  * This file is part of Tempi.
- * 
- * Tempi is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
+ *
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of, either version 3 of the License, or
  * (at your option) any later version.
  * 
  * Tempi is distributed in the hope that it will be useful,
@@ -27,9 +28,10 @@ MidiSenderNode::MidiSenderNode() :
     Node()
 {
     //addOutlet("0");
-    addInlet("0", "Send MIDI received from this inlet.");
+    setShortDocumentation("Sends MIDI messages to a single device.");
+    addInlet("0", "Send MIDI received from this inlet. (list of unsigned characters)");
     Message port = Message("i", 0);
-    addAttribute("port", port);
+    addAttribute(Attribute::ptr(new Attribute("port", port, "STK MIDI device index.")));
     midi_output_.reset(new MidiOutput);
 }
 

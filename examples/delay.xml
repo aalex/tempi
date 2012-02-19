@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tempi version="0.1.9">
+  <graph>
+    <node id="metro0" class="base.metro">
+      <attribute name="interval"><i>1000</i></attribute>
+      <attribute name="running"><b>1</b></attribute>
+    </node>
+    <node id="delay0" class="base.delay">
+      <attribute name="delay"><l>500</l></attribute>
+    </node>
+    <node id="print0" class="base.print">
+      <attribute name="prefix"><s>normal:  </s></attribute>
+      <attribute name="enabled"><b>1</b></attribute>
+    </node>
+    <node id="print1" class="base.print">
+      <attribute name="prefix"><s>delayed: </s></attribute>
+      <attribute name="enabled"><b>1</b></attribute>
+    </node>
+    <connection from="metro0" outlet="0" to="print0" inlet="0"/>
+    <connection from="metro0" outlet="0" to="delay0" inlet="0"/>
+    <connection from="delay0" outlet="0" to="print1" inlet="0"/>
+  </graph>
+</tempi>

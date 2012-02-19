@@ -1,11 +1,12 @@
 /*
  * Copyright (C) 2011 Alexandre Quessy
- * 
+ * Copyright (C) 2011 Michal Seta
+ * Copyright (C) 2012 Nicolas Bouillot
+ *
  * This file is part of Tempi.
- * 
- * Tempi is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
+ *
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of, either version 3 of the License, or
  * (at your option) any later version.
  * 
  * Tempi is distributed in the hope that it will be useful,
@@ -36,7 +37,6 @@ namespace tempi
 
 /**
  * A Inlet is a pad to which we can connect Outlet pads.
- * TODO: rename to Destination
  */
 class Inlet
 {
@@ -47,17 +47,44 @@ class Inlet
         // TODO: rename to ReceiveSlot
         typedef TriggeredSignal::slot_function_type TriggeredSlot;
         Inlet(const char *name, const char *documentation="");
+        ~Inlet();
+        /**
+         * Connects this given Outlet to this Inlet.
+         * @param source The Outlet to connect from.
+         */
         bool connect(Outlet::ptr source);
+        /**
+         * Disconnects this given Outlet from this Inlet.
+         * @param source The Outlet to disconnect from.
+         */
         bool disconnect(Outlet::ptr source);
+        /**
+         * Checks if the given Outlet is connected to this Inlet.
+         * @param source The Outlet to check if it is connected to this Inlet.
+         */
         bool isConnected(Outlet::ptr source);
         // TODO: rename to receive
+        /**
+         * Called when a message is receive via this Inlet.
+         */
         void trigger(const Message &message);
         TriggeredSignal &getOnTriggeredSignal()
         {
             return on_triggered_signal_;
         }
+        /**
+         * Disconnects all Outlets connected to this Inlet.
+         */
         void disconnectAll();
+        /**
+         * Returns the name of this Inlet.
+         * Each Node should take care of naming its inlets.
+         */
         std::string getName() const;
+        /**
+         * Returns the documentation string for this Inlet.
+         * Each Node should take care of documenting its inlets.
+         */
         std::string getDocumentation() const;
     private:
         //typedef std::map<Outlet::ptr, std::tr1::shared_ptr<boost::signals2::scoped_connection> > OutletMap;

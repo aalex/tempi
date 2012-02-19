@@ -1,11 +1,12 @@
 /*
  * Copyright (C) 2011 Alexandre Quessy
- * 
+ * Copyright (C) 2011 Michal Seta
+ * Copyright (C) 2012 Nicolas Bouillot
+ *
  * This file is part of Tempi.
- * 
- * Tempi is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
+ *
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of, either version 3 of the License, or
  * (at your option) any later version.
  * 
  * Tempi is distributed in the hope that it will be useful,
@@ -30,23 +31,40 @@
 #include "tempi/exceptions.h"
 #include "tempi/inlet.h"
 #include "tempi/message.h"
+#include "tempi/nodesignal.h"
 #include "tempi/outlet.h"
 #include "tempi/sharedptr.h"
+#include "tempi/entity.h"
 
 namespace tempi
 {
+
+const char * const ATTRIBUTES_INLET = "__attr__";
+const char * const ATTRIBUTE_LOG = "__log__";
+const char * const INLET_CREATED_SIGNAL = "__create_inlet__";
+const char * const INLET_DELETED_SIGNAL = "__delete_inlet__";
+const char * const OUTLET_CREATED_SIGNAL = "__create_outlet__";
+const char * const OUTLET_DELETED_SIGNAL = "__delete_outlet__";
 
 /**
  * A Node is something that element that can be connected to and from other elements.
  * All nodes have at least one inlet for setting properties. (using ,ss... "set" "name" ...)
  */
-class Node
+class Node : public Entity
 {
     public:
         typedef std::tr1::shared_ptr<Node> ptr;
         Node();
         virtual ~Node() {}
+        /**
+         * Initializes the Node.
+         * Should be called when one ticks its parent Graph.
+         */
         bool init();
+        void loadBang();
+        /**
+         * Returns whether or not this node's init() has been called.
+         */
         bool isInitiated() const;
         /**
          * Returns all its outlets.
@@ -56,9 +74,23 @@ class Node
          * Returns all its inlets.
          */
         std::map<std::string, Inlet::ptr> getInlets();
-        unsigned int getNumberOfInlets() const;
-        unsigned int getNumberOfOutlets() const;
+        /**
+         * Returns the name of all inlets for this Node.
+         */
+        std::vector<std::string> listInlets() const;
+        /**
+         * Returns the name of all outlets for this Node.
+         */
+        std::vector<std::string> listOutlets() const;
+        /**
+         * Sends a message to a given inlet of this node.
+         * @param inlet Name of the inlet to send a message to.
+         * @param message Message to send.
+         */
         bool message(const char *inlet, const Message &message);
+        /**
+         * Retrieves an inlet of this Node.
+         */
         Inlet *getInlet(const char *name) const;
         // TODO: deprecate getOutlet?
         Outlet *getOutlet(const char *name) const;
@@ -67,28 +99,30 @@ class Node
          * Triggers whatever time-dependent events. Calleds by the Graph.
          */
         void tick();
-        // TODO: properties:
-        // std::map<std::string, Message> getAttributes();
-        Attribute::ptr getAttribute(const char *name) const throw(BadIndexException);
-        const Message &getAttributeValue(const char *name) const throw(BadIndexException);
-        bool hasAttribute(const char *name) const;
         /**
-         * Sets a attribute value.
-         * You can also do this by sending a message in the form s:"set" s:name ...
-         * WARNING: if the value has not changed, it won't call onAttributeChanged.
+         * Sets the type name for this Node.
+         * WARNING: This should be only called by the NodeFactory.
          */
-        void setAttribute(const char *name, const Message &value) throw(BadIndexException, BadArgumentTypeException);
-        std::string getAttributeType(const char *name);
-        std::vector<std::string> getAttributesNames() const;
-        //
-        // TODO: signals:
-        // typedef boost::signals2::signal<void(Message)> Signal;
-        // std::map<std::string, Signal> getSignals();
-        // type_info *getSignalType(std::string signal);
         void setTypeName(const char *typeName);
+        /**
+         * Gets the type name for this Node.
+         */
         const std::string &getTypeName() const;
-        void setInstanceName(const char *instanceName);
-        const std::string &getInstanceName() const;
+        ///**
+        // * Sets the instance name for this Node.
+        // * WARNING: Should only be called by its parent Graph.
+        // */
+        //void setInstanceName(const char *instanceName) // TODO:deprecate
+        //{
+        //    setName(instanceName);
+        //}
+        ///**
+        // * Gets the instance name for this Node.
+        // */
+        //std::string getInstanceName() const // TODO:deprecate
+        //{
+        //    return getName();
+        //}
         bool handlesReceiveSymbol(const char *selector) const;
         bool handleReceive(const char *selector, const Message &message)
         {
@@ -97,32 +131,55 @@ class Node
             onHandleReceive(selector, message);
             return true;
         }
+        /**
+         * Checks if this Node has an inlet with the given name.
+         * @param name Name of the inlet to look for.
+         * @return True if it has it.
+         */
         bool hasInlet(const char *name) const;
+        /**
+         * Checks if this Node has an outlet with the given name.
+         * @param name Name of the outlet to look for.
+         * @return True if it has it.
+         */
         bool hasOutlet(const char *name) const;
+        bool isLoadBanged() const;
     protected:
         void enableHandlingReceiveSymbol(const char *selector);
         virtual void onHandleReceive(const char *selector, const Message &message)
         {}
         /**
-         * Adds a outlet.
+         * Adds an outlet.
          */
         bool addOutlet(const char *name, const char *documentation="");
         /**
-         * Adds a inlet.
+         * Adds an inlet.
          */
         bool addInlet(const char *name, const char *documentation="");
         /**
-         * Adds a outlet.
+         * Adds an outlet.
          */
         bool addOutlet(Outlet::ptr outlet);
         /**
-         * Adds a inlet.
+         * Removes an outlet.
+         */
+        bool removeOutlet(const char *name);
+        /**
+         * Adds an inlet.
          */
         bool addInlet(Inlet::ptr inlet);
-        void addAttribute(const char *name, const Message &value, const char *doc="", bool type_strict=true) throw(BadIndexException);
+        /**
+         * Adds an attribute.
+         * TODO: remove this
+         */
+        // void addAttribute(const char *name, const Message &value, const char *doc="", bool type_strict=true) throw(BadIndexException)
+        // {
+        //     addAttribute(Attribute::ptr(new Attribute(name, value, doc, type_strict)));
+        // }
+        /**
+         * Outputs a Message through the given outlet.
+         */
         void output(const char *outlet, const Message &message) const throw(BadIndexException);
-        virtual void onAttributeChanged(const char *name, const Message &value)
-        {}
         // TODO: make private:
         void onInletTriggered(Inlet *inlet, const Message &message);
         // TODO: make private:
@@ -137,10 +194,14 @@ class Node
          * (for initiating sockets, files, user interfaces, etc.)
          */
         virtual void onInit();
+        /**
+         * Called for each node after onInit()
+         */
+        virtual void onLoadBang();
     private:
         bool initiated_;
+        bool load_banged_;
         std::map<std::string, Outlet::ptr> outlets_;
-        std::map<std::string, Attribute::ptr> attributes_;
         std::map<std::string, Inlet::ptr> inlets_;
         std::string typeName_;
         std::string instanceName_;

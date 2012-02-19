@@ -1,11 +1,12 @@
  /*
  * Copyright (C) 2011 Alexandre Quessy
- * 
+ * Copyright (C) 2011 Michal Seta
+ * Copyright (C) 2012 Nicolas Bouillot
+ *
  * This file is part of Tempi.
- * 
- * Tempi is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
+ *
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of, either version 3 of the License, or
  * (at your option) any later version.
  * 
  * Tempi is distributed in the hope that it will be useful,
@@ -119,7 +120,8 @@ MidiInput::MidiInput() :
 
 MidiInput::~MidiInput()
 {
-    delete midi_in_;
+    if (midi_in_)
+        delete midi_in_;
 }
 
 bool MidiInput::open(unsigned int port)

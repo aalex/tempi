@@ -1,11 +1,12 @@
 /*
  * Copyright (C) 2011 Alexandre Quessy
- * 
+ * Copyright (C) 2011 Michal Seta
+ * Copyright (C) 2012 Nicolas Bouillot
+ *
  * This file is part of Tempi.
- * 
- * Tempi is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
+ *
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of, either version 3 of the License, or
  * (at your option) any later version.
  * 
  * Tempi is distributed in the hope that it will be useful,
@@ -19,6 +20,11 @@
 
 #include "tempi/math/mathlibrary.h"
 #include "tempi/utils.h"
+// #include <cmath>
+
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
 
 namespace tempi {
 namespace math {
@@ -26,11 +32,12 @@ namespace math {
 AddNode::AddNode() :
     Node()
 {
-    addInlet("0");
-    addOutlet("0");
+    setShortDocumentation("Outputs the addition of two floats together.");
+    addInlet("0", "Incoming float.");
+    addOutlet("0", "Resulting float.");
 
     Message operand = Message("f", 0.0f);
-    addAttribute("operand", operand);
+    addAttribute(Attribute::ptr(new Attribute("operand", operand)));
 }
 
 void AddNode::processMessage(const char *inlet, const Message &message)
@@ -52,11 +59,12 @@ void AddNode::processMessage(const char *inlet, const Message &message)
 DivNode::DivNode() :
     Node()
 {
-    addInlet("0");
-    addOutlet("0");
+    setShortDocumentation("Outputs the division of one float by another.");
+    addInlet("0", "Incoming float.");
+    addOutlet("0", "Resulting float.");
 
     Message operand = Message("f", 0.0f);
-    addAttribute("operand", operand);
+    addAttribute(Attribute::ptr(new Attribute("operand", operand)));
 }
 
 void DivNode::processMessage(const char *inlet, const Message &message)
@@ -83,11 +91,12 @@ void DivNode::processMessage(const char *inlet, const Message &message)
 EqualsNotNode::EqualsNotNode() :
     Node()
 {
-    addInlet("0");
-    addOutlet("0");
+    setShortDocumentation("Outputs whether two floats are equal or not.");
+    addInlet("0", "Incoming float.");
+    addOutlet("0", "Boolean result.");
 
     Message operand = Message("f", 0.0f);
-    addAttribute("operand", operand);
+    addAttribute(Attribute::ptr(new Attribute("operand", operand)));
 }
 
 void EqualsNotNode::processMessage(const char *inlet, const Message &message)
@@ -106,11 +115,12 @@ void EqualsNotNode::processMessage(const char *inlet, const Message &message)
 IsGreaterNode::IsGreaterNode() :
     Node()
 {
-    addInlet("0");
-    addOutlet("0");
+    setShortDocumentation("Outputs whether the incoming float is greather than another value or not.");
+    addInlet("0", "Incoming float.");
+    addOutlet("0", "Boolean result.");
 
     Message operand = Message("f", 0.0f);
-    addAttribute("operand", operand);
+    addAttribute(Attribute::ptr(new Attribute("operand", operand)));
 }
 
 void IsGreaterNode::processMessage(const char *inlet, const Message &message)
@@ -134,11 +144,12 @@ void IsGreaterNode::processMessage(const char *inlet, const Message &message)
 IsEqualNode::IsEqualNode() :
     Node()
 {
-    addInlet("0");
-    addOutlet("0");
+    setShortDocumentation("Outputs whether the incoming float is equal to another value or not.");
+    addInlet("0", "Incoming float.");
+    addOutlet("0", "Boolean result.");
 
     Message operand = Message("f", 0.0f);
-    addAttribute("operand", operand);
+    addAttribute(Attribute::ptr(new Attribute("operand", operand)));
 }
 
 void IsEqualNode::processMessage(const char *inlet, const Message &message)
@@ -163,11 +174,12 @@ void IsEqualNode::processMessage(const char *inlet, const Message &message)
 IsLessNode::IsLessNode() :
     Node()
 {
-    addInlet("0");
-    addOutlet("0");
+    setShortDocumentation("Outputs whether the incoming float is less than another value or not.");
+    addInlet("0", "Incoming float.");
+    addOutlet("0", "Boolean result.");
 
     Message operand = Message("f", 0.0f);
-    addAttribute("operand", operand);
+    addAttribute(Attribute::ptr(new Attribute("operand", operand)));
 }
 
 void IsLessNode::processMessage(const char *inlet, const Message &message)
@@ -191,11 +203,12 @@ void IsLessNode::processMessage(const char *inlet, const Message &message)
 MultNode::MultNode() :
     Node()
 {
-    addInlet("0");
-    addOutlet("0");
+    setShortDocumentation("Outputs the multiplication of an incoming float and another float.");
+    addInlet("0", "Incoming float.");
+    addOutlet("0", "Resulting float.");
 
     Message operand = Message("f", 0.0f);
-    addAttribute("operand", operand);
+    addAttribute(Attribute::ptr(new Attribute("operand", operand, "The right operand in the operation.")));
 }
 
 void MultNode::processMessage(const char *inlet, const Message &message)
@@ -217,11 +230,12 @@ void MultNode::processMessage(const char *inlet, const Message &message)
 SubtractNode::SubtractNode() :
     Node()
 {
-    addInlet("0");
-    addOutlet("0");
+    setShortDocumentation("Outputs the subtraction of an incoming float and another float.");
+    addInlet("0", "Incoming float.");
+    addOutlet("0", "Resulting float.");
 
     Message operand = Message("f", 0.0f);
-    addAttribute("operand", operand);
+    addAttribute(Attribute::ptr(new Attribute("operand", operand, "The right operand in the operation.")));
 }
 
 void SubtractNode::processMessage(const char *inlet, const Message &message)
@@ -240,6 +254,28 @@ void SubtractNode::processMessage(const char *inlet, const Message &message)
         std::cerr << "SubtractNode::" << __FUNCTION__ << "(): Bad type for message " << message << std::endl;
 }
 
+class DegToRadNode : public Node
+{
+    public:
+        DegToRadNode() :
+            Node()
+        {
+            addInlet("0");
+            addOutlet("0");
+            this->setShortDocumentation("Convert degrees to radians.");
+        }
+    protected:
+        void processMessage(const char *inlet, const Message &message)
+        {
+            if (message.typesMatch("f"))
+            {
+                output("0", Message("f", message.getFloat(0) * (M_PI / 180.0f)));
+            }
+            else
+                std::cerr << "DegToRadNode::" << __FUNCTION__ << "(): Bad type for message " << message << std::endl;
+        }
+};
+
 void MathLibrary::load(NodeFactory &factory, const char *prefix) const
 {
     using utils::concatenate;
@@ -251,6 +287,7 @@ void MathLibrary::load(NodeFactory &factory, const char *prefix) const
     factory.registerTypeT<IsLessNode>(concatenate(prefix, "<").c_str());
     factory.registerTypeT<SubtractNode>(concatenate(prefix, "-").c_str());
     factory.registerTypeT<MultNode>(concatenate(prefix, "*").c_str());
+    factory.registerTypeT<DegToRadNode>(concatenate(prefix, "deg2rad").c_str());
 }
 
 } // end of namespace

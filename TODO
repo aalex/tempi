@@ -1,42 +1,31 @@
 To do in Tempi
 ==============
 
-To do for 0.1.8
----------------
-* Move nodes to tempi-plugins-base // FIXME: header files are not installed in subdirectories, but flat
-* Node::listInlets()
-* Node::listOutlets()
-* Graph: handle inlet/outlet deletion
-
 To do for 0.2
 -------------
-* list/configure MIDI ports by their ALSA ID, not an index
-* midilooper: multitrack sequencer with GUI
-* Bugfix: Message.*(...): avoid segfault if length does not match
-* Bugfix: Message.*(...): avoid segfault if types do not match
+* FIXME: clutter.stage segfaults
+* FIXME: base.spatosc seems not to work after the initial OSC messages sent
+* FIXME: Serializer::load sets node attributes twice?
+* serializer: write class before node name
+* World: containing Regions, BehaviourTrees, Tables and Graphs
+* STK MIDI: fix cflags for PPC 
+* __attr__ inlet: remove "set" prefix. Support "__list__" method.
+* loadBang: Find a better name. Node::loadBang only once? When to Graph::loadBang?
+* move tests to tempi/tests and plugins-base/tests
+* Move nodes to plugins-base // FIXME: header files are not installed in subdirectories, but flat
+* tempi-osc-looper: multitrack GUI configured with an XML Graph
+* [math.***]: create base classes FloatMathNode and BoolMathNode
 * Rename Filter to FilterNode.
 * FilterNode.filter should return a const&
-* Each scheduler should access some tracks
-* Each scheduler should access some state machines
-* Graph::load(fileName)
-* Graph::save(fileName)
-* Node::addInlet (i18n doc)
 * Node::addMethod (i18n doc)
-* Node::addOutlet (i18n doc)
-* Node::addProperty (i18n doc, allow non type strict)
-* Node::listProperties()
 * Scheduler::deleteGraph()
 * Score::load(fileName)
 * Score::save(fileName)
-* tempi::MATRIX
-* tempi::LIST
-* [mapping.curve]
-* [midi.closenote]
-* [base.prepend]
+* Fix segfault in, or disable, [clutter.stage]
+* Fix segfault in [base.route] when using tempi-launch
+* [base.line]
 * [base.receive]
-* [base.route]
 * [base.send]
-* [base.spigot]
 * [base.timer]
 * [sampler.reader]
 * [sampler.score]
@@ -45,6 +34,10 @@ To do for 0.2
 
 To do for 0.4
 -------------
+* (WONTFIX) list/configure MIDI ports by their ALSA ID, not an index
+* Bugfix: Message.*(...): avoid segfault if length does not match
+* Bugfix: Message.*(...): avoid segfault if types do not match
+* Handle objects renaming
 * Regions have mapping modifiers. (range, clip, etc.)
 * Regions have follow actions. (nothing, stop, play again, previous, next, first, last, any, other)
 * Create libraries of nodes (tempi-plugins-base)
@@ -53,9 +46,11 @@ To do for 0.4
 * Feature: allow to configure externals with an XML config file. (system-wide, then user-specific)
 * Application: Write a basic trajectories editor, for 3D coordinates with 3D and 2D views. (like Hole-edit)
 * Application: Write a basic node editor.
+* tempi::MATRIX
+* tempi::LIST
 * [mapping.*] should be provided a typetag argument. (and support types fdi)
+* [mapping.curve]
 * [base.converttype]
-* [base.delay]
 * [base.trigger]
 * [base.typematches]
 * [base.python]
@@ -63,6 +58,12 @@ To do for 0.4
 * [math.rsqrt]
 * [math.sqrt]
 * [math.wrap]
+* midilooper: multitrack sequencer with GUI
+* [midi.closenote]
+* [midi.route.control]
+* [midi.route.controls]
+* [midi.route.note]
+* [midi.route.notes]
 * [osc.prepend]
 * [osc.route]
 * [osc.pop]
@@ -96,7 +97,7 @@ To do for 0.6
 * All nodes should have a verbose attribute
 * Implement Node::error, which triggers a signal that the Graph catches.
 * Feature: Many OSC sender/receiver with the same host+port should share the same OSC sender. Use a map of tuple<ip,port> to shared_ptr<OscSender>.
-* Bugfix: Prevent from recursion by throwing a RecursionException upon output triggered twice. No?
+* Bugfix: Prevent from recursion by throwing a RecursionException upon output triggered twice.
 * Create a timeline Clutter actor.
 * Create a graph editor Clutter actor.
 

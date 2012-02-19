@@ -1,11 +1,12 @@
 /*
  * Copyright (C) 2011 Alexandre Quessy
- * 
+ * Copyright (C) 2011 Michal Seta
+ * Copyright (C) 2012 Nicolas Bouillot
+ *
  * This file is part of Tempi.
- * 
- * Tempi is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
+ *
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of, either version 3 of the License, or
  * (at your option) any later version.
  * 
  * Tempi is distributed in the hope that it will be useful,
@@ -19,6 +20,7 @@
 
 #include "tempi/osc/oscreceivernode.h"
 #include "tempi/utils.h"
+#include "tempi/log.h"
 #include <iostream>
 
 namespace tempi {
@@ -29,12 +31,14 @@ OscReceiverNode::OscReceiverNode() :
 {
     addOutlet("0");
     Message port = Message("i", 0);
-    addAttribute("port", port);
+    addAttribute(Attribute::ptr(new Attribute("port", port, "Receive OSC messages on this port number.")));
 }
 
 void OscReceiverNode::onAttributeChanged(const char *name, const Message &value)
 {
-    //std::cout << "OscReceiverNode::" << __FUNCTION__ << "(" << name << ", " << value << ")" << std::endl;
+    std::ostringstream os;
+    os << "OscReceiverNode::" << __FUNCTION__ << "(\"" << name << "\", " << value << ")" << std::endl;
+    Logger::log(DEBUG, os.str().c_str());
     if (utils::stringsMatch("port", name))
     {
         unsigned int portNumber = value.getInt(0);
