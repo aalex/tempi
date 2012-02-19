@@ -18,7 +18,7 @@ To do for 0.2
 * Score::load(fileName)
 * Score::save(fileName)
 * Fix segfault in, or disable, [clutter.stage]
-* Fix segfault in [base.route]
+* Fix segfault in [base.route] when using tempi-launch
 * [base.line]
 * [base.receive]
 * [base.send]
