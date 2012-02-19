@@ -3,6 +3,9 @@ To do in Tempi
 
 To do for 0.2
 -------------
+* FIXME: Serializer::load sets node attributes twice?
+* FIXME: remove [clutter.stage] from loaded object since it segfaults.
+* serializer: write class before node name
 * World: containing Regions, BehaviourTrees, Tables and Graphs
 * STK MIDI: fix cflags for PPC 
 * __attr__ inlet: remove "set" prefix. Support "__list__" method.

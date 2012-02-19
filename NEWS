@@ -9,27 +9,26 @@ New features:
 
 * Save and load Graph to and from XML.
 * Add examples: route.xml, counter.xml, etc.
-* New node types: [base.delay], [base.spigot], [base.route], [base.prepend]
-* New utilities: tempi-launch, tempi-inspect
-* Add Node::removeOutlet
+* New node types: [base.delay], [base.spigot], [base.route], [base.prepend], [base.append], [base.spatosc], [base.loadmess], [base.cast], [math.deg2rad]
+* New command-line tools: tempi-launch, tempi-inspect
+* Add methods to Node: removeOutlet, listInlets, listOutlets
 * Add NodeSignal (especially for when deleting a pad)
 * rename "attributes" inlet to "__attr__"
 * more doc for many nodes
 * Add abstract classes: Pad, NamedObject, DocumentedObject, NamedObjectMap
-* Add utils::argumentToString and utils::appendArgumentFromString
+* Add in utils: argumentToString, appendArgumentFromString, castMessage, isValidType
+* Add Logger with various log levels
 
 Bugs fixed:
 
 * Fix calculation in ms <-> ns conversion 
 * Fix timing in [base.metro]
+* update license header to LGPL
+* make some libraries non-necessary: Clutter, GLib, spatosc
 
 In progress:
 
-* [clutter.stage]
-
-To do
-
-* Entity::setLogLevel(), getLogLevel()
+* [clutter.stage] (still segfaults)
 
 
 Tempi 0.1.8 (2012-01-12)
