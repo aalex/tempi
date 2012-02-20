@@ -1,5 +1,5 @@
 #include <iostream>
-#include "tempi/table/table.h"
+#include "tempi/table.h"
 
 using namespace tempi;
 

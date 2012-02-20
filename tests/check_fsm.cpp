@@ -1,5 +1,5 @@
 #include <iostream>
-#include "tempi/fsm/statemachine.h"
+#include "tempi/fsm_statemachine.h"
 
 using namespace tempi::fsm;
 

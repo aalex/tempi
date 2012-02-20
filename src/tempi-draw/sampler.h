@@ -23,7 +23,9 @@
 #include "tempi/config.h"
 #ifdef HAVE_CLUTTER
 
-#include "tempi/tempi.h"
+#include "tempi/sampler_player.h"
+#include "tempi/sampler_recorder.h"
+#include "tempi/sampler_region.h"
 #include <tr1/memory>
 #include "particlegenerator.h"
 

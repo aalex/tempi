@@ -1,5 +1,7 @@
 AM_CXXFLAGS = -I$(top_srcdir)
-LDADD = $(top_builddir)/tempi/libtempi-@TEMPI_API_VERSION@.la
+LDADD = \
+    $(top_builddir)/plugins-base/libtempi-@TEMPI_API_VERSION@-plugins-base.la \
+	$(top_builddir)/tempi/libtempi-@TEMPI_API_VERSION@.la
 
 check_PROGRAMS = \
     check_average \
@@ -10,10 +12,8 @@ check_PROGRAMS = \
     check_message \
     check_libraries \
     check_log \
-    check_node \
     check_nodefactory \
     check_osc \
-    check_osc_nodes \
     check_properties \
     check_serializer \
     check_slide \
@@ -35,7 +35,6 @@ check_log_SOURCES = check_log.cpp
 check_node_SOURCES = check_node.cpp
 check_nodefactory_SOURCES = check_nodefactory.cpp
 check_osc_SOURCES = check_osc.cpp
-check_osc_nodes_SOURCES = check_osc_nodes.cpp
 check_properties_SOURCES = check_properties.cpp
 check_serializer_SOURCES = check_serializer.cpp
 check_slide_SOURCES = check_slide.cpp

@@ -215,6 +215,7 @@ AC_CONFIG_FILES([
         Makefile 
         tempi/tempi-version.h
         tempi/Makefile 
+        plugins-base/Makefile
         src/Makefile
         src/midilooper/Makefile
         src/osc-forward/Makefile

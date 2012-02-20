@@ -1,5 +1,7 @@
 #include <iostream>
-#include "tempi/tempi.h"
+#include "tempi/graph.h"
+#include "tempi/node.h"
+#include "tempi/nodefactory.h"
 
 using namespace tempi;
 static const bool VERBOSE = false;

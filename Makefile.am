@@ -6,6 +6,7 @@ AUTOMAKE_OPTIONS = foreign
 
 SUBDIRS = \
     tempi \
+	plugins-base \
     src \
     tests \
     data \

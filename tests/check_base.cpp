@@ -1,4 +1,5 @@
-#include "tempi/tempi.h"
+#include "tempi/timer.h"
+#include "tempi/timeposition.h"
 #include "tempi/graph.h"
 #include "tempi/internals.h"
 #include <unistd.h>

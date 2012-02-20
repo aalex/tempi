@@ -19,7 +19,7 @@
 
 #include "sampler.h"
 #ifdef HAVE_CLUTTER
-#include "tempi/sampler/simpleplayback.h"
+#include "tempi/sampler_simpleplayback.h"
 
 Sampler::Sampler() :
     track_(new tempi::sampler::Region)

@@ -34,8 +34,6 @@ int main(int argc, char *argv[])
 #include "tempi/message.h"
 #include "tempi/scheduler.h"
 #include "tempi/threadedscheduler.h"
-#include "tempi/midi/midiinput.h"
-#include "tempi/midi/midioutput.h"
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/program_options.hpp>
@@ -288,7 +286,6 @@ bool App::setupGraph()
     if (verbose_)
         std::cout << "Connect nodes\n";
     // Connections:
-    //graph->connect("midi.recv0", 0, "midi.send0", 0);
     graph->connect("osc.recv0", "0", "base.print0", "0");
     graph->connect("osc.recv0", "0", "sampler.sampler0", "0");
     graph->connect("sampler.sampler0", "0", "osc.send0", "0");

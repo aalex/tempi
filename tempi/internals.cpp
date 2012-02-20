@@ -21,12 +21,7 @@
 #include "tempi/internals.h"
 #include "tempi/nodefactory.h"
 #include "tempi/library.h"
-#include "tempi/osc/osclibrary.h"
-#include "tempi/base/baselibrary.h"
-#include "tempi/math/mathlibrary.h"
-#include "tempi/midi/midilibrary.h"
-#include "tempi/sampler/samplerlibrary.h"
-#include "tempi/clutter/clutterlibrary.h"
+#include "plugins-base/baselibrary.h"
 
 namespace tempi {
 namespace internals {
@@ -35,11 +30,6 @@ bool loadInternals(NodeFactory &factory)
 {
     using librarytools::loadLibrary;
     loadLibrary<base::BaseLibrary>(factory, "base.");
-    loadLibrary<midi::MidiLibrary>(factory, "midi.");
-    loadLibrary<osc::OscLibrary>(factory, "osc.");
-    loadLibrary<sampler::SamplerLibrary>(factory, "sampler.");
-    loadLibrary<math::MathLibrary>(factory, "math.");
-    loadLibrary<clutter::ClutterLibrary>(factory, "clutter.");
     return true;
 }
 
