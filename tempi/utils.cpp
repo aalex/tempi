@@ -324,7 +324,7 @@ Message castMessage(const Message &message, const char *type)
                         }
                         break;
                     case POINTER:
-                        result.appendFloat((float) (int) message.getPointer(i));
+                        result.appendFloat((float) (long) message.getPointer(i));
                         break;
                     case INVALID:
                     default:
