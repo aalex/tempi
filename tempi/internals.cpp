@@ -37,6 +37,7 @@ bool loadInternals(NodeFactory &factory)
     loader.addPath("/usr/lib/" TEMPI_PLUGINS_DIR); // FIXME
     loader.addPath("./plugins-base/.libs");
     loader.addPath("../plugins-base/.libs");
+    loader.addPath("../../plugins-base/.libs");
     return loader.load(factory, "base");
     //loadLibrary<base::BaseLibrary>(factory, "base.");
     return true;
