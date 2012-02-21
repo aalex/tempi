@@ -35,7 +35,10 @@ class Loader
 {
     public:
         typedef void (*SetupFunc)(void *);
-        Loader();
+        /**
+         * Retrieves the singleton.
+         */
+        static Loader& getInstance();
         bool addPath(const char *path);
         bool load(NodeFactory &factory, const char *name);
         bool isLoaded(const char *name);
@@ -46,7 +49,14 @@ class Loader
         static const char * const FILE_SUFFIX;
         static const char * const FUNC_PREFIX;
         static const char * const FUNC_SUFFIX;
+        // Private constructor
+        Loader();
         bool hasPath(const char *path);
+        // Dont forget to declare these two. You want to make sure they
+        // are unaccessable otherwise you may accidently get copies of
+        // your singelton appearing.
+        Loader(Loader const&);         // Don't Implement
+        void operator=(Loader const&); // Don't implement
 };
 
 } // end of namespace

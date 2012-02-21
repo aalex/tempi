@@ -70,6 +70,12 @@ Loader::Loader()
     // pass
 }
 
+Loader& Loader::getInstance()
+{
+    static Loader instance; // Guaranteed to be destroyed.
+    return instance; // Instantiated on first use.
+}
+
 bool Loader::addPath(const char *path)
 {
     std::string str = removeTrailingPathSep(path);

@@ -31,7 +31,7 @@ namespace internals {
 bool loadInternals(NodeFactory &factory)
 {
     using librarytools::loadLibrary;
-    Loader loader = Loader();
+    Loader& loader = Loader::getInstance();
     loader.addPath(".");
     loader.addPath("/usr/local/lib/" TEMPI_PLUGINS_DIR); // FIXME
     loader.addPath("/usr/lib/" TEMPI_PLUGINS_DIR); // FIXME

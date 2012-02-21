@@ -4,7 +4,7 @@
 int main(int argc, char *argv[])
 {
     std::cout << "create Loader" << std::endl;
-    tempi::Loader loader;
+    tempi::Loader loader = tempi::Loader::getInstance();
     loader.addPath(".");
     loader.addPath("/usr/local/lib/tempi-0.1");
     loader.addPath("/usr/lib/tempi-0.1");
