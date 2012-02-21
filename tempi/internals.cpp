@@ -21,7 +21,9 @@
 #include "tempi/internals.h"
 #include "tempi/nodefactory.h"
 #include "tempi/library.h"
-#include "plugins-base/baselibrary.h"
+//#include "plugins-base/baselibrary.h"
+#include "tempi/loader.h"
+#include "tempi/config.h"
 
 namespace tempi {
 namespace internals {
@@ -29,7 +31,14 @@ namespace internals {
 bool loadInternals(NodeFactory &factory)
 {
     using librarytools::loadLibrary;
-    loadLibrary<base::BaseLibrary>(factory, "base.");
+    Loader loader = Loader();
+    loader.addPath(".");
+    loader.addPath("/usr/local/lib/" TEMPI_PLUGINS_DIR); // FIXME
+    loader.addPath("/usr/lib/" TEMPI_PLUGINS_DIR); // FIXME
+    loader.addPath("./plugins-base/.libs");
+    loader.addPath("../plugins-base/.libs");
+    return loader.load(factory, "base");
+    //loadLibrary<base::BaseLibrary>(factory, "base.");
     return true;
 }
 

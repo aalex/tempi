@@ -16,7 +16,6 @@ LDADD = \
     $(BOOST_LIBS) \
     $(CLUTTER_LIBS) \
     $(GLIB_LIBS) \
-    $(top_builddir)/plugins-base/libtempi-@TEMPI_API_VERSION@-plugins-base.la \
     $(top_builddir)/tempi/libtempi-@TEMPI_API_VERSION@.la
 
 midilooper_CXXFLAGS = $(AM_CXXFLAGS)

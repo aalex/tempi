@@ -20,6 +20,7 @@
 
 #include "tempi/nodefactory.h"
 #include "tempi/node.h"
+#include "tempi/log.h"
 #include <iostream>
 #include <sstream>
 
@@ -28,20 +29,29 @@ namespace tempi
 
 bool NodeFactory::registerType(const char *name, AbstractNodeType::ptr entry)
 {
-    //std::cout << "NodeFactory::" << __FUNCTION__ << "(" << name << ", " << entry << ")" << std::endl;
     if (hasType(name))
     {
-        std::cerr << "NodeFactory::" << __FUNCTION__ << "Already got an entry named " << name << std::endl;
+        std::ostringstream os;
+        os << "NodeFactory::" << __FUNCTION__ << "Already got an entry named " << name;
+        Logger::log(ERROR, os.str().c_str());
         return false;
     }
     if (entry.get() == 0)
     {
-        std::cerr << "NodeFactory::" << __FUNCTION__ << ": " << name << " is a " << "null pointer!" << std::endl;
+        std::ostringstream os;
+        os << "NodeFactory::" << __FUNCTION__ << ": " << name << " is a " << "null pointer!";
+        Logger::log(ERROR, os.str().c_str());
         return false;
+    }
+    {
+        std::ostringstream os;
+        os << "NodeFactory::" << __FUNCTION__ << "(" << name << ", " << entry << ")";
+        Logger::log(WARNING, os.str().c_str());
     }
     entries_[std::string(name)] = entry;
     return true;
 }
+
 
 Node::ptr NodeFactory::create(const char *name) throw(BadNodeTypeException)
 {

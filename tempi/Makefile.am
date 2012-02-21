@@ -48,6 +48,7 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     graph.cpp \
     inlet.cpp \
     internals.cpp \
+    loader.cpp \
     log.cpp \
     message.cpp \
     midi_input.cpp \
@@ -97,6 +98,7 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     inlet.h \
     internals.h \
     library.h \
+    loader.h \
     log.h \
     message.h \
     midi_input.h \

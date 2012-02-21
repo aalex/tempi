@@ -14,7 +14,6 @@ LDADD = \
     $(CLUTTER_LIBS) \
     $(GLIB_LIBS) \
     $(LIBLO_LIBS) \
-    $(top_builddir)/plugins-base/libtempi-@TEMPI_API_VERSION@-plugins-base.la \
     $(top_builddir)/tempi/libtempi-@TEMPI_API_VERSION@.la
 
 osc_forward_CXXFLAGS = $(AM_CXXFLAGS)
