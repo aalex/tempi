@@ -1,5 +1,5 @@
 #include <iostream>
-#include "tempi/mapping/slide.h"
+#include "plugins-base/mapping/slide.h"
 
 static const bool VERBOSE = false;
 

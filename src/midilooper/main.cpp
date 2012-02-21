@@ -34,8 +34,8 @@ int main(int argc, char *argv[])
 #include "tempi/message.h"
 #include "tempi/scheduler.h"
 #include "tempi/threadedscheduler.h"
-#include "tempi/midi/midiinput.h"
-#include "tempi/midi/midioutput.h"
+#include "tempi/midi_input.h"
+#include "tempi/midi_output.h"
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/program_options.hpp>

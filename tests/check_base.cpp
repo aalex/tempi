@@ -1,4 +1,5 @@
-#include "tempi/tempi.h"
+#include "tempi/timer.h"
+#include "tempi/timeposition.h"
 #include "tempi/graph.h"
 #include "tempi/internals.h"
 #include <unistd.h>
@@ -6,14 +7,13 @@
 
 using namespace tempi;
 static const bool VERBOSE = false;
+static NodeFactory::ptr factory;
 
 static bool check_create()
 {
-    NodeFactory factory;
-    internals::loadInternals(factory);
-    Node::ptr metro0 = factory.create("base.metro");
-    Node::ptr print0 = factory.create("base.print");
-    Node::ptr counter0 = factory.create("base.counter");
+    Node::ptr metro0 = factory->create("base.metro");
+    Node::ptr print0 = factory->create("base.print");
+    Node::ptr counter0 = factory->create("base.counter");
     if (metro0.get() == 0)
     {
         std::cout << "Metro ptr is null" << std::endl;
@@ -29,14 +29,10 @@ static bool checkPrepend()
 {
     if (VERBOSE)
         std::cout << __FUNCTION__ << std::endl;
-    NodeFactory::ptr factory(new NodeFactory);
-    if (VERBOSE)
-        std::cout << "loadInternals:" << std::endl;
-    internals::loadInternals(factory);
 
     if (VERBOSE)
         std::cout << "create Graph:" << std::endl;
-    Graph graph(factory); // FIXME: smart ptr or not for factory?
+    Graph graph(factory);
     if (VERBOSE)
         std::cout << "add nodes:" << std::endl;
     graph.addNode("base.print", "print0");
@@ -48,14 +44,9 @@ static bool checkMetro()
 {
     if (VERBOSE)
         std::cout << __FUNCTION__ << std::endl;
-    NodeFactory::ptr factory(new NodeFactory);
-    if (VERBOSE)
-        std::cout << "loadInternals:" << std::endl;
-    internals::loadInternals(factory);
-
     if (VERBOSE)
         std::cout << "create Graph:" << std::endl;
-    Graph graph(factory); // FIXME: smart ptr or not for factory?
+    Graph graph(factory);
     if (VERBOSE)
         std::cout << "add nodes:" << std::endl;
     graph.addNode("base.metro", "metro0");
@@ -146,9 +137,6 @@ static bool checkMetro()
 
 static bool check_all_loaded()
 {
-    NodeFactory factory;
-    internals::loadInternals(factory);
-
     std::vector<std::string> names;
     names.push_back(std::string("base.print"));
     names.push_back(std::string("base.nop"));
@@ -160,7 +148,7 @@ static bool check_all_loaded()
     std::vector<std::string>::const_iterator iter;
     for (iter = names.begin(); iter != names.end(); ++iter)
     {
-        if (! factory.hasType((*iter).c_str()))
+        if (! factory->hasType((*iter).c_str()))
         {
             std::cout << "Factory should have type " << (*iter) << std::endl;
             return false;
@@ -174,9 +162,7 @@ static bool check_all_loaded()
  */
 static bool check_any()
 {
-    NodeFactory::ptr factory(new NodeFactory);
-    internals::loadInternals(factory);
-    Graph graph(factory); // FIXME: smart ptr or not for factory?
+    Graph graph(factory);
     graph.addNode("base.any", "any0");
     Node::ptr any0 = graph.getNode("any0");
     any0->setAttribute("value", Message("f", 3.14159f));
@@ -185,6 +171,8 @@ static bool check_any()
 
 int main(int argc, char **argv)
 {
+    factory.reset(new NodeFactory);
+    internals::loadInternals(factory);
     if (! checkMetro())
         return 1;
     if (! check_create())

@@ -8,8 +8,8 @@ int main(int argc, char *argv[])
     logger.log(DEBUG, "DEBUG");
     logger.log(INFO, "INFO");
     logger.log(WARNING, "WARNING");
-    logger.log(CRITICAL, "CRITICAL");
     //logger.log(ERROR, "ERROR");
+    //logger.log(CRITICAL, "CRITICAL");
     return 0;
 }
 

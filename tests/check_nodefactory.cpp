@@ -5,6 +5,7 @@
 
 using namespace tempi;
 static const bool VERBOSE = false;
+static NodeFactory::ptr factory;
 
 class FooNode: public Node
 {
@@ -40,18 +41,17 @@ bool check_nodefactory()
 {
     if (VERBOSE)
         std::cout << __FUNCTION__ << std::endl;
-    NodeFactory factory;
     AbstractNodeType *tmp = (AbstractNodeType*) new NodeType<FooNode>();
     AbstractNodeType::ptr fooType(tmp);
     if (fooType.get() == 0)
         std::cout << __FUNCTION__ << ": FooType is a null pointer!!!!!!" << std::endl;
-    if (! factory.registerType("foo", fooType))
+    if (! factory->registerType("foo", fooType))
     {
         std::cout << "Could not register type FooNode" << std::endl;
         return false;
     }
     AbstractNodeType::ptr barType((AbstractNodeType*) new NodeType<BarNode>);
-    if (! factory.registerType("bar",  barType))
+    if (! factory->registerType("bar",  barType))
     {
         std::cout << "Could not register type BarNode" << std::endl;
         return false;
@@ -61,7 +61,7 @@ bool check_nodefactory()
     //std::cout << factory << std::endl;
     try
     {
-        Node::ptr foo = factory.create("egg");
+        Node::ptr foo = factory->create("egg");
         return false;
     }
     catch (const BadNodeTypeException &e)
@@ -69,8 +69,8 @@ bool check_nodefactory()
         //std::cout << e.what() << std::endl;
         //std::cout << "Good it could not create a EggNode" << std::endl;
     }
-    Node::ptr foo = factory.create("foo");
-    Node::ptr bar = factory.create("bar");
+    Node::ptr foo = factory->create("foo");
+    Node::ptr bar = factory->create("bar");
     foo->init();
     bar->init();
 
@@ -84,16 +84,14 @@ bool check_many_instances()
 {
     if (VERBOSE)
         std::cout << __FUNCTION__ << std::endl;
-    NodeFactory factory;
-    internals::loadInternals(factory);
-    if (factory.registerTypeT<FooNode>("foo").get() == 0)
+    if (factory->registerTypeT<FooNode>("blah").get() == 0)
     {
         std::cout << "Could not register type FooNode" << std::endl;
         return false;
     }
-    Node::ptr foo0 = factory.create("foo");
-    Node::ptr foo1 = factory.create("foo");
-    Node::ptr foo2 = factory.create("base.nop");
+    Node::ptr foo0 = factory->create("blah");
+    Node::ptr foo1 = factory->create("blah");
+    Node::ptr foo2 = factory->create("base.nop");
     if (foo0.get() == 0 || foo1.get() == 0 || foo2.get() == 0)
     {
         std::cout << __FUNCTION__ << ": invalid pointer" << std::endl;
@@ -106,8 +104,6 @@ bool check_print()
 {
     if (VERBOSE)
         std::cout << __FUNCTION__ << std::endl;
-    NodeFactory::ptr factory(new NodeFactory);
-    internals::loadInternals(*(factory.get()));
     Node::ptr nop0 = factory->create("base.nop");
     Node::ptr nop1 = factory->create("base.nop");
     Node::ptr print0 = factory->create("base.print");
@@ -179,6 +175,8 @@ bool check_print()
 
 int main(int argc, char **argv)
 {
+    factory.reset(new NodeFactory);
+    internals::loadInternals(*(factory.get()));
     if (! check_nodefactory())
         return 1;
     if (! check_many_instances())

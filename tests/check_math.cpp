@@ -8,13 +8,13 @@
 using namespace tempi;
 //static const bool VERBOSE = true;
 static const bool VERBOSE = false;
+static NodeFactory::ptr factory;
 
 template <typename T>
 static bool check_op(const char *op, float left, float right, T expected)
 {
     // Check that we can create the given node type.
-    NodeFactory::ptr factory(new NodeFactory);
-    internals::loadInternals(factory);
+    //internals::loadInternals(factory);
     Node::ptr obj = factory->create(op);
     if (obj.get() == 0)
     {
@@ -72,6 +72,9 @@ static bool check_op(const char *op, float left, float right, T expected)
 
 int main(int argc, char **argv)
 {
+    factory.reset(new NodeFactory);
+    internals::loadInternals(factory);
+
     std::string add = std::string("math.+");
     std::string divide= std::string("math./");
     std::string equal = std::string("math.==");

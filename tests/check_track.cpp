@@ -1,5 +1,5 @@
 #include <iostream>
-#include "tempi/sampler/track.h"
+#include "tempi/sampler_track.h"
 
 using namespace tempi;
 

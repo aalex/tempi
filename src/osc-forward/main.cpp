@@ -21,13 +21,11 @@
  * @file A OSC forwarder.
  */
 
-#include "tempi/base/nop_node.h"
 #include "tempi/config.h"
 #include "tempi/graph.h"
 #include "tempi/message.h"
 #include "tempi/node.h"
-#include "tempi/osc/oscreceivernode.h"
-#include "tempi/osc/oscsendernode.h"
+#include "tempi/internals.h"
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/program_options.hpp>
@@ -119,14 +117,11 @@ bool App::isValidHost(const std::string &host) const
 void App::setupGraph()
 {
     NodeFactory::ptr factory(new NodeFactory);
-
-    factory->registerTypeT<osc::OscSenderNode>("osc.send");
-    factory->registerTypeT<osc::OscReceiverNode>("osc.receive");
-    factory->registerTypeT<base::NopNode>("nop");
+    internals::loadInternals(factory);
 
     graph_.reset(new tempi::Graph(factory));
     
-    graph_->addNode("nop", "nop0");
+    graph_->addNode("base.nop", "nop0");
     graph_->tick(); // calls Node::init()
 }
 
