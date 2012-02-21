@@ -46,7 +46,7 @@ bool NodeFactory::registerType(const char *name, AbstractNodeType::ptr entry)
     {
         std::ostringstream os;
         os << "NodeFactory::" << __FUNCTION__ << "(" << name << ", " << entry << ")";
-        Logger::log(WARNING, os.str().c_str());
+        Logger::log(DEBUG, os.str().c_str());
     }
     entries_[std::string(name)] = entry;
     return true;

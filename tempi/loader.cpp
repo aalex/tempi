@@ -86,12 +86,12 @@ bool Loader::load(NodeFactory &factory, const char *name)
     {
         std::ostringstream os;
         os << "pwd: " << getenv("PWD");
-        Logger::log(WARNING, os.str().c_str());
+        Logger::log(DEBUG, os.str().c_str());
     }
     if (isLoaded(name))
     {
         std::ostringstream os;
-        os << "Already loaded: " << name;
+        os << "Loader." << __FUNCTION__ << ": Plugin already loaded: " << name;
         Logger::log(ERROR, os.str().c_str());
         return false;
     }
@@ -117,7 +117,7 @@ bool Loader::load(NodeFactory &factory, const char *name)
             if (! dlobj)
             {
                 std::ostringstream os;
-                os << "Error loading " << fileName << ": " << dlerror();
+                os << "Loader." << __FUNCTION__ << ": Error loading " << fileName << ": " << dlerror();
                 Logger::log(ERROR, os.str().c_str());
                 return false;
             }
@@ -125,20 +125,20 @@ bool Loader::load(NodeFactory &factory, const char *name)
             functionName = std::string(FUNC_PREFIX) + name + FUNC_SUFFIX;
             {
                 std::ostringstream os;
-                os << "Retrieve symbol " <<  functionName.c_str();
+                os << "Loader." << __FUNCTION__ << ": Retrieve symbol " <<  functionName.c_str();
                 Logger::log(DEBUG, os.str().c_str());
             }
             SetupFunc functionPtr = (SetupFunc) dlsym(dlobj,  functionName.c_str());
             if (! functionPtr)
             {
                 std::ostringstream os;
-                os << "Failed to retrieve symbol " <<  functionName.c_str();
+                os << "Loader." << __FUNCTION__ << ": Failed to retrieve symbol " <<  functionName.c_str() << "in " << fileName;
                 Logger::log(ERROR, os.str().c_str());
                 return false;
             }
             {
                 std::ostringstream os;
-                os << "calling %s()..." <<  functionName;
+                os << "Loader." << __FUNCTION__ << ": calling %s()..." <<  functionName;
                 Logger::log(DEBUG, os.str().c_str());
             }
             (*functionPtr)(static_cast<void*>(&factory));
@@ -146,20 +146,20 @@ bool Loader::load(NodeFactory &factory, const char *name)
             {
                 std::ostringstream os;
                 os << "Loader::" << __FUNCTION__ << ": Succesfully called " << functionName << " from " << fileName;
-                Logger::log(WARNING, os.str().c_str());
+                Logger::log(DEBUG, os.str().c_str());
             }
             return true;
         }
         else
         {
             std::ostringstream os;
-            os << "Could not find " << fileName;
-            Logger::log(WARNING, os.str().c_str());
+            os << "Loader::" << __FUNCTION__ << ": Could not find " << fileName;
+            Logger::log(DEBUG, os.str().c_str());
         }
     }
     {
         std::ostringstream os;
-        os << "Failed to load " << name;
+        os << "Loader::" << __FUNCTION__ << ": Failed to load plugin " << name;
         Logger::log(ERROR, os.str().c_str());
     }
     return false;
