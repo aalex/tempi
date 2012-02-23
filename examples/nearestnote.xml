@@ -22,6 +22,8 @@
         <f>11.0</f>
       </attribute>
     </node>
+    <node id="monodic0" class="music.monodic">
+    </node>
     <node id="print0" class="base.print">
       <attribute name="prefix"><s>note: </s></attribute>
       <attribute name="enabled"><b>1</b></attribute>
@@ -29,6 +31,7 @@
     <connection from="metro0" outlet="0" to="counter0" inlet="0"/>
     <connection from="counter0" outlet="0" to="cast0" inlet="0"/>
     <connection from="cast0" outlet="0" to="nearest0" inlet="0"/>
-    <connection from="nearest0" outlet="0" to="print0" inlet="0"/>
+    <connection from="nearest0" outlet="0" to="monodic0" inlet="0"/>
+    <connection from="monodic0" outlet="0" to="print0" inlet="0"/>
   </graph>
 </tempi>

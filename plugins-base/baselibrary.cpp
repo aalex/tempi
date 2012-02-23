@@ -40,6 +40,7 @@
 #include "plugins-base/midi/midiroutenode.h"
 #include "plugins-base/midi/midisendernode.h"
 #include "plugins-base/music/musicnearestnode.h"
+#include "plugins-base/music/monodicnode.h"
 #include "plugins-base/osc/oscreceivernode.h"
 #include "plugins-base/osc/oscsendernode.h"
 #include "plugins-base/sampler/samplernode.h"
@@ -98,6 +99,7 @@ void BaseLibrary::load(NodeFactory &factory, const char *prefix) const
     factory.registerTypeT<MidiSenderNode>(concatenate("midi.", "send").c_str());
     factory.registerTypeT<MidiRouteNode>(concatenate("midi.", "route").c_str());
     factory.registerTypeT<NearestNoteNode>(concatenate("music.", "nearest.note").c_str());
+    factory.registerTypeT<MonodicNode>(concatenate("music.", "monodic").c_str());
 // TODO #ifdef HAVE_LIBLO
     factory.registerTypeT<OscReceiverNode>(concatenate("osc.", "receive").c_str());
     factory.registerTypeT<OscSenderNode>(concatenate("osc.", "send").c_str());
