@@ -75,6 +75,7 @@ EXTRA_DIST = \
     flow/castnode.h \
     flow/counternode.h \
     flow/delaynode.h \
+    flow/dictnode.h \
     flow/loadmessnode.h \
     flow/metro_node.h \
     flow/nop_node.h \

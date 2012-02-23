@@ -25,6 +25,7 @@
 #include "plugins-base/flow/castnode.h"
 #include "plugins-base/flow/counternode.h"
 #include "plugins-base/flow/delaynode.h"
+#include "plugins-base/flow/dictnode.h"
 #include "plugins-base/flow/loadmessnode.h"
 #include "plugins-base/flow/metro_node.h"
 #include "plugins-base/flow/nop_node.h"
@@ -59,6 +60,7 @@ void BaseLibrary::load(NodeFactory &factory, const char *prefix) const
     using namespace tempi::math;
     using namespace tempi::sampler;
     using namespace tempi::plugins_base::random;
+    using namespace tempi::plugins_base::flow;
 
     factory.registerTypeT<PrintNode>(concatenate("base.", "print").c_str());
     factory.registerTypeT<AppendNode>(concatenate("base.", "append").c_str());
@@ -67,6 +69,7 @@ void BaseLibrary::load(NodeFactory &factory, const char *prefix) const
     factory.registerTypeT<AnyNode>(concatenate("base.", "any").c_str());
     factory.registerTypeT<CounterNode>(concatenate("base.", "counter").c_str());
     factory.registerTypeT<DelayNode>(concatenate("base.", "delay").c_str());
+    factory.registerTypeT<DictNode>(concatenate("base.", "dict").c_str());
     factory.registerTypeT<AppSinkNode>(concatenate("base.", "appsink").c_str());
     factory.registerTypeT<SpigotNode>(concatenate("base.", "spigot").c_str());
     factory.registerTypeT<PrependNode>(concatenate("base.", "prepend").c_str());
