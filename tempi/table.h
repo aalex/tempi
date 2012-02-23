@@ -28,10 +28,8 @@
 #include <vector>
 #include "tempi/message.h"
 
-namespace tempi
-{
-namespace table
-{
+namespace tempi {
+namespace table {
 
 /**
  * A Table contains indexed Message objects. 
@@ -58,7 +56,6 @@ class Table
         void append(const Message &message);
         bool set(unsigned int index, const Message &message);
         bool get(unsigned int index, Message &message) const;
-
     private:
         std::vector<Message> messages_;
 };

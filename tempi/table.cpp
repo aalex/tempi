@@ -20,10 +20,8 @@
 
 #include "tempi/table.h"
 
-namespace tempi
-{
-namespace table
-{
+namespace tempi {
+namespace table {
 
 Table::Table()
 {
@@ -44,7 +42,6 @@ void Table::append(const Message &message)
 {
     messages_.push_back(message);
 }
-
 
 bool Table::set(unsigned int index, const Message &message)
 {
