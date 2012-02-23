@@ -23,6 +23,7 @@
 #include "tempi/graph.h"
 #include "tempi/message.h"
 #include "tempi/scheduler.h"
+#include "tempi/log.h"
 #include <iostream>
 
 // more thread-safety with mutexes
@@ -42,8 +43,10 @@ bool Scheduler::createGraph(const char *name)
     //    return false;
     if (hasGraph(name))
     {
-        std::cout << "Already has a Graph named "
+        std::ostringstream os;
+        os << "Scheduler::createGraph: Already has a Graph named "
             << name << std::endl;
+        Logger::log(ERROR, os.str().c_str());
         return false;
     }
     else
@@ -80,8 +83,9 @@ Graph::ptr Scheduler::getGraph(const char *name) const
     //    return Graph::ptr();
     if (! hasGraph(name))
     {
-        std::cout << "No Graph named "
-            << name << std::endl;
+        std::ostringstream os;
+        os << "No Graph named " << name << std::endl;
+        Logger::log(ERROR, os.str().c_str());
         return Graph::ptr(); // NULL pointer!!
     }
     return (* (graphs_.find(std::string(name)))).second;

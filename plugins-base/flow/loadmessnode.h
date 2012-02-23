@@ -39,6 +39,7 @@ class LoadMessNode : public Node
         LoadMessNode();
     protected:
         virtual void onLoadBang();
+        void onAttributeChanged(const char *name, const Message &value);
     private:
         virtual void processMessage(const char *inlet, const Message &message);
 };

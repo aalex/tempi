@@ -464,7 +464,7 @@ std::ostream &operator<<(std::ostream &os, const Graph &graph)
     std::vector<std::string> nodes = graph.getNodeNames();
     std::vector<std::string>::const_iterator iter;
     for (iter = nodes.begin(); iter != nodes.end(); ++iter)
-        os << " * " << (*iter) << std::endl;
+        os << " * " << (*iter) << " (" << graph.getNode((*iter).c_str())->getTypeName() << ")" << std::endl;
 
     std::vector<Graph::Connection> connections = graph.getAllConnections();
     std::vector<Graph::Connection>::const_iterator iter2;
