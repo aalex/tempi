@@ -41,6 +41,7 @@ libtempi_@TEMPI_API_VERSION@_la_includedir = $(includedir)/tempi-$(TEMPI_API_VER
 libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     attribute.cpp \
     documented.cpp \
+    dict.cpp \
     entity.cpp \
     fsm_rule.cpp \
     fsm_state.cpp \
@@ -85,6 +86,7 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
 libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     attribute.h \
     concurrentqueue.h \
+    dict.h \
     documented.h \
     entity.h \
     exceptions.h \
