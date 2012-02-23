@@ -39,6 +39,7 @@
 #include "plugins-base/midi/midireceivernode.h"
 #include "plugins-base/midi/midiroutenode.h"
 #include "plugins-base/midi/midisendernode.h"
+#include "plugins-base/music/musicnearestnode.h"
 #include "plugins-base/osc/oscreceivernode.h"
 #include "plugins-base/osc/oscsendernode.h"
 #include "plugins-base/sampler/samplernode.h"
@@ -62,6 +63,7 @@ void BaseLibrary::load(NodeFactory &factory, const char *prefix) const
     using namespace tempi::sampler;
     using namespace tempi::plugins_base::random;
     using namespace tempi::plugins_base::flow;
+    using namespace tempi::plugins_base::music;
 
     factory.registerTypeT<PrintNode>(concatenate("base.", "print").c_str());
     factory.registerTypeT<AppendNode>(concatenate("base.", "append").c_str());
@@ -95,6 +97,7 @@ void BaseLibrary::load(NodeFactory &factory, const char *prefix) const
     factory.registerTypeT<MidiReceiverNode>(concatenate("midi.", "receive").c_str());
     factory.registerTypeT<MidiSenderNode>(concatenate("midi.", "send").c_str());
     factory.registerTypeT<MidiRouteNode>(concatenate("midi.", "route").c_str());
+    factory.registerTypeT<NearestNoteNode>(concatenate("music.", "nearest.note").c_str());
 // TODO #ifdef HAVE_LIBLO
     factory.registerTypeT<OscReceiverNode>(concatenate("osc.", "receive").c_str());
     factory.registerTypeT<OscSenderNode>(concatenate("osc.", "send").c_str());

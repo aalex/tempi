@@ -88,6 +88,7 @@ EXTRA_DIST = \
     mapping/slide.h \
     mapping/slidefilter.h \
     math/mathnodes.h \
+    music/musicnearestnode.h \
     midi/midireceivernode.h \
     midi/midiroutenode.h \
     midi/midisendernode.h \

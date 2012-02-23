@@ -41,32 +41,40 @@ bool Graph::addNode(const char *type, const char *name)
 {
     if (factory_.get() == 0)
     {
-        std::cerr << "Graph::" << __FUNCTION__ << ": this NodeFactory is an Invalid pointer." << std::endl;
+        std::ostringstream os;
+        os << "Graph." << __FUNCTION__ << ": this NodeFactory is an Invalid pointer." << std::endl;
+        Logger::log(ERROR, os.str().c_str());
         return false;
     }
     if (factory_->hasType(type))
     {
-        //std::cerr << "Graph::" << __FUNCTION__ << ": NodeFactory does have type " << type << std::endl;
+        //os << "Graph." << __FUNCTION__ << ": NodeFactory does have type " << type << std::endl;
         if (getNode(name).get() != 0)
         {
-            std::cerr << "Graph::" << __FUNCTION__ << ": There is already a node with ID " << name << std::endl;
+            std::ostringstream os;
+            os << "Graph." << __FUNCTION__ << ": There is already a node with ID " << name << std::endl;
+            Logger::log(ERROR, os.str().c_str());
             return false;
         }
         Node::ptr node = factory_->create(type);
         if (node.get() == 0)
         {
-            std::cerr << "Graph::" << __FUNCTION__ << ": Invalid pointer to Node." << std::endl;
+            std::ostringstream os;
+            os << "Graph." << __FUNCTION__ << ": Invalid pointer to Node." << std::endl;
+            Logger::log(ERROR, os.str().c_str());
             return false;
         }
         node->setName(name);
         nodes_[name] = node;
-        std::ostringstream os;
-        os << "Graph::" << __FUNCTION__ << "(\"" << type << "\", \"" << name << "\")";
-        Logger::log(DEBUG, os.str().c_str());
+        {
+            std::ostringstream os;
+            os << "Graph." << __FUNCTION__ << "(\"" << type << "\", \"" << name << "\")";
+            Logger::log(DEBUG, os.str().c_str());
+        }
 
         try
         {
-            //std::cout << "Graph::addNode: node->getSignal()\n";
+            //std::cout << "Graph.addNode: node->getSignal()\n";
             node->getSignal(INLET_DELETED_SIGNAL)->getSignal().connect(
                 boost::bind(&Graph::onInletDeleted, this, _1));
             node->getSignal(OUTLET_DELETED_SIGNAL)->getSignal().connect(
@@ -75,16 +83,20 @@ bool Graph::addNode(const char *type, const char *name)
         catch (const BadIndexException &e)
         {
             // XXX should not occur!!
-            std::cerr << __FILE__ << ": " << __FUNCTION__ << std::endl;
-            std::cerr << e.what() << std::endl;
+            std::ostringstream os;
+            os << "Graph." << ": " << __FUNCTION__ << std::endl;
+            os << e.what() << std::endl;
+            Logger::log(ERROR, os.str().c_str());
         }
         return true;
     }
     else
     {
-        std::cerr << "Graph::" << __FUNCTION__ << ": This NodeFactory doesn't have type " << type << std::endl;
-        //std::cerr << "Graph::" << __FUNCTION__ << ": Look:" << std::endl;
-        //std::cerr << "Graph::" << __FUNCTION__ << ": " << *factory_.get();
+        std::ostringstream os;
+        os << "Graph." << __FUNCTION__ << ": This NodeFactory doesn't have type " << type << std::endl;
+        //os << "Graph::" << __FUNCTION__ << ": Look:" << std::endl;
+        //os << "Graph::" << __FUNCTION__ << ": " << *factory_.get();
+        Logger::log(ERROR, os.str().c_str());
         return false; // FIXME
     }
 }
@@ -110,12 +122,16 @@ bool Graph::message(const char *node, const char *inlet, const Message &message)
     Node::ptr nodePtr = getNode(node);
     if (nodePtr.get() == 0)
     {
-        std::cerr << "Graph::" << __FUNCTION__ << ": No such node: " << node << std::endl;
+        std::ostringstream os;
+        os << "Graph." << __FUNCTION__ << ": No such node: " << node << std::endl;
+        Logger::log(ERROR, os.str().c_str());
         return false;
     }
     else if (inlet == 0)
     {
-        std::cerr << "Graph::" << __FUNCTION__ << ": Null inlet string name ! " << std::endl;
+        std::ostringstream os;
+        os << "Graph." << __FUNCTION__ << ": Null inlet string name ! " << std::endl;
+        Logger::log(ERROR, os.str().c_str());
         return false;
     }
     return nodePtr->message(inlet, message);
@@ -126,30 +142,39 @@ bool Graph::connect(const char *from, const char *outlet, const char *to, const 
     Node::ptr fromNode = getNode(from);
     if (fromNode.get() == 0)
     {
-
-        std::cerr << "Graph::" << __FUNCTION__ << ": Cannot find node \"" << from << "\"." << std::endl;
+        std::ostringstream os;
+        os << "Graph." << __FUNCTION__ << ": Cannot find node \"" << from << "\"." << std::endl;
+        Logger::log(ERROR, os.str().c_str());
         return false;
     }
     Node::ptr toNode = getNode(to);
     if (toNode.get() == 0)
     {
-        std::cerr << "Graph::" << __FUNCTION__ << ": Cannot find node \"" << to << "\"." << std::endl;
+        std::ostringstream os;
+        os << "Graph." << __FUNCTION__ << ": Cannot find node \"" << to << "\"." << std::endl;
+        Logger::log(ERROR, os.str().c_str());
         return false;
     }
 
     if (inlet == 0 || outlet == 0)
     {
-        std::cerr << "Graph::" << __FUNCTION__ << ": Null inlet/outlet!!" << std::endl;
+        std::ostringstream os;
+        os << "Graph." << __FUNCTION__ << ": Null inlet/outlet!!" << std::endl;
+        Logger::log(ERROR, os.str().c_str());
         return false;
     }
     if (! fromNode->hasOutlet(outlet))
     {
-        std::cerr << "Graph::" << __FUNCTION__ << ": Outlet " << outlet << " not found in " << from << "." << std::endl;
+        std::ostringstream os;
+        os << "Graph." << __FUNCTION__ << ": Outlet " << outlet << " not found in " << from << "." << std::endl;
+        Logger::log(ERROR, os.str().c_str());
         return false;
     }
     if (! toNode->hasInlet(inlet))
     {
-        std::cerr << "Graph::" << __FUNCTION__ << ": Inlet " << inlet << " not found in " << to << "." << std::endl;
+        std::ostringstream os;
+        os << "Graph." << __FUNCTION__ << ": Inlet " << inlet << " not found in " << to << "." << std::endl;
+        Logger::log(ERROR, os.str().c_str());
         return false;
     }
     try
@@ -158,12 +183,14 @@ bool Graph::connect(const char *from, const char *outlet, const char *to, const 
     }
     catch (const BadIndexException &e)
     {
-        std::cerr << e.what() << std::endl;
+        std::ostringstream os;
+        os << "Graph." << __FUNCTION__ << ": " << e.what() << std::endl;
+        Logger::log(ERROR, os.str().c_str());
         return false;
     }
     connections_.push_back(Connection(std::string(from), std::string(outlet), std::string(to), std::string(inlet)));
     std::ostringstream os;
-    os << "Graph::" << __FUNCTION__ << "(" <<
+    os << "Graph." << __FUNCTION__ << "(" <<
         from << ":" << outlet << ", " << to << ":" << inlet << ")";
     Logger::log(DEBUG, os.str().c_str());
     return true;
@@ -173,12 +200,16 @@ bool Graph::isConnected(const char *from, const char *outlet, const char *to, co
 {
     if (! hasNode(from))
     {
-        std::cerr << "Graph::" << __FUNCTION__ << ": Cannot find node \"" << from << "\"." << std::endl;
+        std::ostringstream os;
+        os << "Graph." << __FUNCTION__ << ": Cannot find node \"" << from << "\"." << std::endl;
+        Logger::log(ERROR, os.str().c_str());
         return false;
     }
     if (! hasNode(to))
     {
-        std::cerr << "Graph::" << __FUNCTION__ << ": Cannot find node \"" << to << "\"." << std::endl;
+        std::ostringstream os;
+        os << "Graph." << __FUNCTION__ << ": Cannot find node \"" << to << "\"." << std::endl;
+        Logger::log(ERROR, os.str().c_str());
         return false;
     }
     std::vector<Connection>::const_iterator iter;
@@ -214,7 +245,9 @@ Node::ptr Graph::getNode(const char *name) const
 {
     if (name == 0)
     {
-        std::cerr << "Graph::getNode() :: null string!\n";
+        std::ostringstream os;
+        os << "Graph.getNode() :: null string!\n";
+        Logger::log(ERROR, os.str().c_str());
         return Node::ptr((Node *) 0); // NULL pointer
     }
     std::string nameString(name);
@@ -323,7 +356,9 @@ bool Graph::deleteNode(const char *name)
     Node::ptr node = getNode(name);
     if (node.get() == 0)
     {
-        std::cerr << "Graph::" << __FUNCTION__ << ": Cannot find node " << name << "." << std::endl;
+        std::ostringstream os;
+        os << "Graph." << __FUNCTION__ << ": Cannot find node " << name << "." << std::endl;
+        Logger::log(ERROR, os.str().c_str());
         return false;
     }
     else
@@ -420,7 +455,9 @@ bool Graph::setNodeAttribute(const char *nodeName, const char *attributeName, co
     Node::ptr nodePtr = getNode(nodeName);
     if (nodePtr.get() == 0)
     {
-        std::cerr << "Graph::" << __FUNCTION__ << ": No such node: " << nodeName << std::endl;
+        std::ostringstream os;
+        os << "Graph." << __FUNCTION__ << ": No such node: " << nodeName << std::endl;
+        Logger::log(ERROR, os.str().c_str());
         return false;
     }
     try
@@ -430,18 +467,22 @@ bool Graph::setNodeAttribute(const char *nodeName, const char *attributeName, co
     }
     catch (const BadIndexException &e)
     {
-        std::cerr << "BadIndexException in ";
-        std::cerr << "Graph::" << __FUNCTION__ << "(" <<
+        std::ostringstream os;
+        os << "BadIndexException in ";
+        os << "Graph." << __FUNCTION__ << "(" <<
             nodeName << ", " << attributeName << ", " << value
             << "): " << e.what() << std::endl;;
+        Logger::log(ERROR, os.str().c_str());
         return false;
     }
     catch (const BadArgumentTypeException &e)
     {
-        std::cerr << "BadArgumentTypeException in ";
-        std::cerr << "Graph::" << __FUNCTION__ << "(" <<
+        std::ostringstream os;
+        os << "BadArgumentTypeException in ";
+        os << "Graph." << __FUNCTION__ << "(" <<
             nodeName << ", " << attributeName << ", " << value
             << "): " << e.what() << std::endl;;
+        Logger::log(ERROR, os.str().c_str());
         return false;
     }
 }

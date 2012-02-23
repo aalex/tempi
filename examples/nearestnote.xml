@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tempi version="0.1.9">
+  <graph>
+    <node id="metro0" class="base.metro">
+      <attribute name="interval"><i>1000</i></attribute>
+      <attribute name="running"><b>1</b></attribute>
+    </node>
+    <node id="counter0" class="base.counter">
+      <attribute name="increment"><i>1</i></attribute>
+    </node>
+    <node id="cast0" class="base.cast">
+      <attribute name="type"><s>f</s></attribute>
+    </node>
+    <node id="nearest0" class="music.nearest.note">
+      <attribute name="scale">
+        <f>0.0</f>
+        <f>2.0</f>
+        <f>4.0</f>
+        <f>5.0</f>
+        <f>7.0</f>
+        <f>9.0</f>
+        <f>11.0</f>
+      </attribute>
+    </node>
+    <node id="print0" class="base.print">
+      <attribute name="prefix"><s>note: </s></attribute>
+      <attribute name="enabled"><b>1</b></attribute>
+    </node>
+    <connection from="metro0" outlet="0" to="counter0" inlet="0"/>
+    <connection from="counter0" outlet="0" to="cast0" inlet="0"/>
+    <connection from="cast0" outlet="0" to="nearest0" inlet="0"/>
+    <connection from="nearest0" outlet="0" to="print0" inlet="0"/>
+  </graph>
+</tempi>
