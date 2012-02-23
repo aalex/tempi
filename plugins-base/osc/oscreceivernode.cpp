@@ -42,7 +42,11 @@ void OscReceiverNode::onAttributeChanged(const char *name, const Message &value)
     if (utils::stringsMatch("port", name))
     {
         unsigned int portNumber = value.getInt(0);
-        //std::cout << "OscReceiver::" << __FUNCTION__ << " listen on port " << portNumber << std::endl;
+        {
+            std::ostringstream os;
+            os << "OscReceiver::" << __FUNCTION__ << " listen on port " << portNumber << std::endl;
+            Logger::log(WARNING, os.str().c_str());
+        }
         if (portNumber == 0)
             osc_receiver_.reset((OscReceiver *) 0);
         else
