@@ -19,11 +19,13 @@
  */
 
 #include "tempi/oscreceiver.h"
+#include "tempi/log.h"
 #include <boost/lexical_cast.hpp>
 #include <stdio.h>
 #include <string>
 
-namespace tempi { namespace osc {
+namespace tempi {
+namespace osc {
 
 std::string removeFirstChar(const std::string &from)
 {
@@ -85,7 +87,17 @@ bool OscReceiver::start()
     if (running_)
         return false;
     // TODO: handle errors
+    {
+        std::ostringstream os;
+        os << "OscReceive.start(): calling lo_server_new(" << port_ << onError << ")";
+        Logger::log(INFO, os.str().c_str());
+    }
     server_ = lo_server_new(boost::lexical_cast<std::string>(port_).c_str(), onError);
+    {
+        std::ostringstream os;
+        os << "OscReceive.start(): calling lo_server_add_method(" << server_ << ", NULL, NULL, " << generic_handler << ", this)";
+        Logger::log(INFO, os.str().c_str());
+    }
     /* add method that will match any path and args */
     lo_server_add_method(server_, NULL, NULL, generic_handler, this);
     running_ = true;
