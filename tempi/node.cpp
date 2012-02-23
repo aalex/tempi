@@ -29,11 +29,12 @@ namespace tempi
 
 Node::Node()
 {
+    load_banged_ = false;
     // XXX: Add Signals BEFORE adding inlets/outlets!
     // TODO: intercept ATTRIBUTE_LOG when set to make sure it's in the right range.
     //addAttribute(ATTRIBUTE_LOG, Message("i", 1), "How much [1-5] to print debug info in the console. 1=ERROR, 2=CRITICAL, 3=WARNING, 4=INFO, 5=DEBUG");
     //TODO: __attr__ and __log__ ?
-    //std::cout << __FUNCTION__ << "()" << std::endl;
+    //std::cout << __FUNCTION__ << "()" << std::enD
 
     addSignal(NodeSignal::ptr(new NodeSignal(OUTLET_DELETED_SIGNAL,
         "Triggered when an outlet is deleted. Arguments are: the name of this node, the name of the outlet.", "TODO", "ss")));
@@ -82,10 +83,21 @@ bool Node::init()
 
 void Node::loadBang()
 {
+    {
+        std::ostringstream os;
+        os << "Node.loadBang: " << getName();
+        Logger::log(DEBUG, os.str().c_str());
+    }
     if (! load_banged_)
     {
         onLoadBang();
         load_banged_ = true;
+    }
+    else
+    {
+        std::ostringstream os;
+        os << "Node.loadBang: had already been loadBanged: " << getName();
+        Logger::log(DEBUG, os.str().c_str());
     }
 }
 
