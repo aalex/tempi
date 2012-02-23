@@ -55,7 +55,7 @@ class RandomDrunkNode : public Node
             {
                 std::ostringstream os;
                 os << "RandomDrunkNode." << __FUNCTION__ << ": " << name << "=" << value;
-                Logger::log(DEBUG, os.str().c_str());
+                Logger::log(INFO, os.str().c_str());
             }
             if (utils::stringsMatch(name, "current"))
             {
