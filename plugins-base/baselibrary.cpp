@@ -41,6 +41,7 @@
 #include "plugins-base/osc/oscreceivernode.h"
 #include "plugins-base/osc/oscsendernode.h"
 #include "plugins-base/sampler/samplernode.h"
+#include "plugins-base/random/randomdrunknode.h"
 #include "tempi/config.h"
 #include "tempi/nodefactory.h"
 #include "tempi/utils.h"
@@ -57,6 +58,7 @@ void BaseLibrary::load(NodeFactory &factory, const char *prefix) const
     using namespace tempi::base;
     using namespace tempi::math;
     using namespace tempi::sampler;
+    using namespace tempi::plugins_base::random;
 
     factory.registerTypeT<PrintNode>(concatenate("base.", "print").c_str());
     factory.registerTypeT<AppendNode>(concatenate("base.", "append").c_str());
@@ -94,6 +96,9 @@ void BaseLibrary::load(NodeFactory &factory, const char *prefix) const
     factory.registerTypeT<OscSenderNode>(concatenate("osc.", "send").c_str());
 // TODO #endif // HAVE_SPATOSC
     factory.registerTypeT<SamplerNode>(concatenate("sampler.", "sampler").c_str());
+#ifdef HAVE_GLIB
+    factory.registerTypeT<RandomDrunkNode>(concatenate("random.", "drunk").c_str());
+#endif // HAVE_GLIB
 }
 
 } // end of namespace

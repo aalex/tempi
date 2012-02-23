@@ -3,20 +3,22 @@ To do in Tempi
 
 To do for 0.2
 -------------
+* FIXME: split utils.h so that compilation gets faster
 * FIXME: clutter.stage segfaults
 * FIXME: base.spatosc seems not to work after the initial OSC messages sent
 * FIXME: Serializer::load sets node attributes twice?
+* allow pads to have types
+* give pads some signals
 * serializer: write class before node name
 * World: containing Regions, BehaviourTrees, Tables and Graphs
 * STK MIDI: fix cflags for PPC 
 * __attr__ inlet: remove "set" prefix. Support "__list__" method.
 * loadBang: Find a better name. Node::loadBang only once? When to Graph::loadBang?
 * move tests to tempi/tests and plugins-base/tests
-* Move nodes to plugins-base // FIXME: header files are not installed in subdirectories, but flat
 * tempi-osc-looper: multitrack GUI configured with an XML Graph
 * [math.***]: create base classes FloatMathNode and BoolMathNode
-* Rename Filter to FilterNode.
-* FilterNode.filter should return a const&
+* Rename Filter to AbstractFilterNode.
+* AbstractFilterNode.filter should return a const&
 * Node::addMethod (i18n doc)
 * Scheduler::deleteGraph()
 * Score::load(fileName)

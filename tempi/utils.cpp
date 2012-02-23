@@ -348,9 +348,53 @@ Message castMessage(const Message &message, const char *type)
                     success = false;
                 }
                 break; // case STRING
+            case UNSIGNED_CHAR: // desired is UNSIGNED_CHAR
+                switch (current)
+                {
+                    case FLOAT:
+                        result.appendUnsignedChar((unsigned char) message.getFloat(i));
+                        break;
+                    case BOOLEAN:
+                        result.appendUnsignedChar((unsigned char) message.getBoolean(i));
+                        break;
+                    case CHAR:
+                        result.appendUnsignedChar((unsigned char) message.getChar(i));
+                        break;
+                    case UNSIGNED_CHAR:
+                        result.appendUnsignedChar(message.getUnsignedChar(i));
+                        break;
+                    case DOUBLE:
+                        result.appendUnsignedChar((unsigned char) message.getDouble(i));
+                        break;
+                    case INT:
+                        result.appendUnsignedChar((unsigned char) message.getInt(i));
+                        break;
+                    case LONG:
+                        result.appendUnsignedChar((unsigned char) message.getLong(i));
+                        break;
+                    case STRING:
+                        try
+                        {
+                            appendArgumentFromString(result,
+                                message.getString(i).c_str(), UNSIGNED_CHAR);
+                        }
+                        catch(const BadArgumentTypeException &e)
+                        {
+                            std::cerr << e.what() << std::endl;
+                            success = false;
+                        }
+                        break;
+                    case POINTER:
+                        result.appendUnsignedChar((unsigned char) (long) message.getPointer(i));
+                        break;
+                    case INVALID:
+                    default:
+                        success = false;
+                        break;
+                } // switch desired
+                break; // case UNSIGNED_CHAR
             // TODO: support casting to BOOLEAN
             // TODO: support casting to CHAR
-            // TODO: support casting to UNSIGNED_CHAR
             // TODO: support casting to DOUBLE
             // TODO: support casting to INT
             // TODO: support casting to LONG

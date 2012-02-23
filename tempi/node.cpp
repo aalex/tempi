@@ -19,6 +19,7 @@
  */
 
 #include "tempi/node.h"
+#include "tempi/log.h"
 #include <boost/bind.hpp>
 #include <iostream>
 #include <sstream>
@@ -54,6 +55,11 @@ bool Node::isInitiated() const
 
 bool Node::init()
 {
+    {
+        std::ostringstream os;
+        os << "Node.init(): " << getName();
+        Logger::log(DEBUG, os.str().c_str());
+    }
     if (isInitiated())
         return false;
     else
@@ -195,6 +201,11 @@ bool Node::addOutlet(Outlet::ptr outlet)
 {
     if (! hasOutlet(outlet.get()))
     {
+        {
+            std::ostringstream os;
+            os << "Node.addOutlet: (" << getName() << "): " << outlet->getName();
+            Logger::log(DEBUG, os.str().c_str());
+        }
         outlets_[outlet->getName()] = outlet;
         try
         {
@@ -216,6 +227,11 @@ bool Node::addInlet(Inlet::ptr inlet)
     if (! hasInlet(inlet.get()))
     {
         inlets_[inlet->getName()] = inlet;
+        {
+            std::ostringstream os;
+            os << "Node.addInlet: (" << getName() << "): " << inlet->getName();
+            Logger::log(DEBUG, os.str().c_str());
+        }
         inlet.get()->getOnTriggeredSignal().connect(boost::bind(&Node::onInletTriggered, this, _1, _2));
         try
         {

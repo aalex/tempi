@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tempi version="0.1.9">
+  <graph>
+    <node id="metro0" class="base.metro">
+      <attribute name="interval"><i>100</i></attribute>
+      <attribute name="running"><b>1</b></attribute>
+    </node>
+    <node id="drunk0" class="random.drunk">
+      <attribute name="range"><i>0</i><i>100</i></attribute>
+      <!-- FIXME: current must be after range? -->
+      <attribute name="current"><i>50</i></attribute>
+      <attribute name="step"><i>0</i><i>10</i></attribute>
+    </node>
+    <node id="print0" class="base.print">
+      <attribute name="prefix"><s>drunk: </s></attribute>
+      <attribute name="enabled"><b>1</b></attribute>
+    </node>
+    <connection from="metro0" outlet="0" to="drunk0" inlet="0"/>
+    <connection from="drunk0" outlet="0" to="print0" inlet="0"/>
+  </graph>
+</tempi>

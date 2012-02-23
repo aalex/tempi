@@ -19,6 +19,7 @@
  */
 
 #include "tempi/entity.h"
+#include "tempi/log.h"
 
 namespace tempi
 {
@@ -77,6 +78,11 @@ void Entity::setAttribute(const char *name, const Message &value)
     {
         current->setValue(value);
         // TODO: //if (isInitiated())
+        {
+            std::ostringstream os;
+            os << "Entity." << __FUNCTION__ << ": (" << this->getName() << ") \"" << name << "\"=" << value;
+            Logger::log(DEBUG, os.str().c_str());
+        }
         onAttributeChanged(name, value);
     }
 }

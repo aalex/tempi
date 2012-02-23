@@ -42,56 +42,61 @@ libtempi_plugins_base_la_includedir = $(includedir)/tempi-$(TEMPI_API_VERSION)
 ## PLEASE KEEP THEM IN ALPHABETICAL ORDER
 libtempi_plugins_base_la_SOURCES = \
     baselibrary.cpp \
-    baselibrary.h \
     clutter/clutterstagenode.cpp \
-    clutter/clutterstagenode.h \
     flow/anynode.cpp \
+    flow/appsinknode.cpp \
+    flow/counternode.cpp \
+    flow/delaynode.cpp \
+    flow/loadmessnode.cpp \
+    flow/metro_node.cpp \
+    flow/nop_node.cpp \
+    flow/prependnode.cpp \
+    flow/print_node.cpp \
+    flow/routenode.cpp \
+    flow/spigotnode.cpp \
+    mapping/filter.cpp \
+    mapping/slide.cpp \
+    mapping/slidefilter.cpp \
+    midi/midireceivernode.cpp \
+    midi/midiroutenode.cpp \
+    midi/midisendernode.cpp \
+    midi/midiutilities.cpp \
+    osc/oscreceivernode.cpp \
+    osc/oscsendernode.cpp \
+    random/drunkint.cpp \
+    sampler/samplernode.cpp
+
+EXTRA_DIST = \
+    baselibrary.h \
+    clutter/clutterstagenode.h \
     flow/anynode.h \
     flow/appendnode.h \
-    flow/appsinknode.cpp \
     flow/appsinknode.h \
     flow/castnode.h \
-    flow/counternode.cpp \
     flow/counternode.h \
-    flow/delaynode.cpp \
     flow/delaynode.h \
-    flow/loadmessnode.cpp \
     flow/loadmessnode.h \
-    flow/metro_node.cpp \
     flow/metro_node.h \
-    flow/nop_node.cpp \
     flow/nop_node.h \
-    flow/prependnode.cpp \
     flow/prependnode.h \
-    flow/print_node.cpp \
     flow/print_node.h \
-    flow/routenode.cpp \
     flow/routenode.h \
-    flow/spigotnode.cpp \
     flow/spigotnode.h \
     mapping/average.h \
-    mapping/filter.cpp \
     mapping/filter.h \
-    mapping/slide.cpp \
     mapping/slide.h \
-    mapping/slidefilter.cpp \
     mapping/slidefilter.h \
     math/mathnodes.h \
-    midi/midireceivernode.cpp \
     midi/midireceivernode.h \
-    midi/midiroutenode.cpp \
     midi/midiroutenode.h \
-    midi/midisendernode.cpp \
     midi/midisendernode.h \
-    midi/midiutilities.cpp \
     midi/midiutilities.h \
-    osc/oscreceivernode.cpp \
     osc/oscreceivernode.h \
-    osc/oscsendernode.cpp \
     osc/oscsendernode.h \
-    sampler/samplernode.cpp \
-    spatosc/spatoscnode.h \
-    sampler/samplernode.h
+    random/drunkint.h \
+    random/randomdrunknode.h \
+    sampler/samplernode.h \
+    spatosc/spatoscnode.h
 
 # TODO base/receivenode.cpp
 # TODO base/receivenode.h
