@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tempi version="0.1.9">
+  <graph>
+    <node id="oscreceive0" class="osc.receive">
+      <attribute name="port">
+        <i>10000</i>
+      </attribute>
+    </node>
+    <node id="route0" class="base.route">
+      <attribute name="selectors">
+        <s>/toon/clip/select</s> <!-- int -->
+      </attribute>
+    </node>
+    <node id="dict0" class="base.dict">
+    </node>
+    <node id="print0" class="base.print">
+      <attribute name="prefix">
+        <s>print: </s>
+      </attribute>
+    </node>
+    <connect from="oscreceive0" outlet="0" to="route0" inlet="0" />
+    <connect from="route0" outlet="/toon/clip/select" to="print0" inlet="0" />
+  </graph>
+</tempi>
