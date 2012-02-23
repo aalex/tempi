@@ -2,6 +2,7 @@ AM_CXXFLAGS = \
     $(LOG4CPP_CFLAGS) \
     $(BOOST_CPPFLAGS) \
     $(CLUTTER_CFLAGS) \
+    $(GLIB_CFLAGS) \
     $(LIBLO_CFLAGS) \
     $(LIBXML_CFLAGS) \
     $(SPATOSC_CFLAGS) \
