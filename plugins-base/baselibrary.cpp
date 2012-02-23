@@ -43,6 +43,7 @@
 #include "plugins-base/osc/oscsendernode.h"
 #include "plugins-base/sampler/samplernode.h"
 #include "plugins-base/random/randomdrunknode.h"
+#include "plugins-base/random/randomintnode.h"
 #include "tempi/config.h"
 #include "tempi/nodefactory.h"
 #include "tempi/utils.h"
@@ -101,6 +102,7 @@ void BaseLibrary::load(NodeFactory &factory, const char *prefix) const
     factory.registerTypeT<SamplerNode>(concatenate("sampler.", "sampler").c_str());
 #ifdef HAVE_GLIB
     factory.registerTypeT<RandomDrunkNode>(concatenate("random.", "drunk").c_str());
+    factory.registerTypeT<RandomIntNode>(concatenate("random.", "int").c_str());
 #endif // HAVE_GLIB
 }
 

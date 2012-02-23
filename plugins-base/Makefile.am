@@ -95,6 +95,7 @@ EXTRA_DIST = \
     osc/oscreceivernode.h \
     osc/oscsendernode.h \
     random/drunkint.h \
+    random/randomintnode.h \
     random/randomdrunknode.h \
     sampler/samplernode.h \
     spatosc/spatoscnode.h
