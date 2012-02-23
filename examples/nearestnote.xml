@@ -2,7 +2,7 @@
 <tempi version="0.1.9">
   <graph>
     <node id="metro0" class="base.metro">
-      <attribute name="interval"><i>1000</i></attribute>
+      <attribute name="interval"><i>100</i></attribute>
       <attribute name="running"><b>1</b></attribute>
     </node>
     <node id="counter0" class="base.counter">

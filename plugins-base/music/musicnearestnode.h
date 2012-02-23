@@ -35,16 +35,27 @@ namespace music {
 
 namespace { // anonymous namespace
 
+float getOctava(float incoming)
+{
+    return (incoming - fmod(incoming, 12.0f)) / 12.0f;
+}
+
+float getNote(float incoming)
+{
+    return fmod(incoming, 12.0f);
+}
+
 float getClosest(float incoming, std::vector<float> &notes)
 {
     if (notes.size() == 0)
         return incoming;
-    float octava = incoming / 12.0f - (fmod(incoming, 12.0f));
+    float octava = getOctava(incoming);
+    float note = getNote(incoming);
     unsigned int closest = 0;
     float smallest = 12.0f;
     for (unsigned int i = 0; i < notes.size(); ++i)
     {
-        float difference = fabs(notes[i] - incoming);
+        float difference = fabs(notes[i] - note);
         if (difference < smallest)
         {
             smallest = difference;
