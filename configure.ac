@@ -149,7 +149,7 @@ fi
 # log4cpp
 PKG_CHECK_MODULES([LOG4CPP], [log4cpp], have_log4cpp=true, have_log4cpp=false)
 if test "x${have_log4cpp}" = "xfalse" ; then
-    AC_MSG_ERROR([missing package: libilog4cpp5-dev])
+    AC_MSG_ERROR([missing package: liblog4cpp5-dev])
 fi
 
 PKG_CHECK_MODULES([SPATOSC], [spatosc-0.3], have_spatosc=true, have_spatosc=false)
@@ -198,7 +198,7 @@ if test "x${ax_cv_boost_system}" = "xno" ; then
 	AC_MSG_ERROR([missing package: libboost-system-dev])
 fi
 
-CFLAGS+=" -Wall -Wextra -Wfatal-errors -Werror "
+CFLAGS+=" -Wall -g -Wextra -Wfatal-errors -Werror "
 
 # GNU help2man creates man pages from --help output; in many cases, this
 # is sufficient, and obviates the need to maintain man pages separately.
