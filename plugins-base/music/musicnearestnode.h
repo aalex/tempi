@@ -108,7 +108,7 @@ class NearestNoteNode : public Node
                 if (to_be_corrected)
                 {
                     Logger::log(DEBUG, "NearestNoteNode: calling setAttributeValue within onAttributeChanged might cause infinite recursion.");
-                    setAttributeValue("range", corrected);
+                    setAttributeValue("scale", corrected);
                 }
             }
         }
