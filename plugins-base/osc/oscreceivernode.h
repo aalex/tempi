@@ -44,6 +44,7 @@ class OscReceiverNode : public Node
         {}
         virtual void onAttributeChanged(const char *name, const Message &value);
     private:
+        unsigned int port_number_;
         OscReceiver::ptr osc_receiver_;
 };
 

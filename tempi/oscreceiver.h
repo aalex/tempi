@@ -79,6 +79,7 @@ class OscReceiver
         static int generic_handler(const char *path, const char *types, lo_arg **argv,
             int argc, void *data, void *user_data);
         bool start();
+        bool portNumberIsOK();
 };
 
 std::ostream &operator<<(std::ostream &os, const OscReceiver &osc_receiver);

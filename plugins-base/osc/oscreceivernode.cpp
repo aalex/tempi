@@ -27,7 +27,8 @@ namespace tempi {
 namespace osc {
 
 OscReceiverNode::OscReceiverNode() :
-    Node()
+    Node(),
+    port_number_(0)
 {
     addOutlet("0");
     Message port = Message("i", 0);
@@ -36,16 +37,34 @@ OscReceiverNode::OscReceiverNode() :
 
 void OscReceiverNode::onAttributeChanged(const char *name, const Message &value)
 {
+    {
     std::ostringstream os;
     os << "OscReceiverNode::" << __FUNCTION__ << "(\"" << name << "\", " << value << ")" << std::endl;
     Logger::log(DEBUG, os.str().c_str());
+    }
     if (utils::stringsMatch("port", name))
     {
-        unsigned int portNumber = value.getInt(0);
+        int tmp = value.getInt(0);
+        if (tmp < 0)
+        {
+            std::ostringstream os;
+            os << "OscReceiverNode::" << __FUNCTION__ << ": Negative port numbers are not supported: " << tmp;
+            Logger::log(DEBUG, os.str().c_str());
+            return;
+        }
+        unsigned int portNumber = (unsigned int) tmp;
+        if (portNumber == port_number_)
+        {
+            std::ostringstream os;
+            os << "OscReceiver::" << __FUNCTION__ << " already listening on port " << portNumber << std::endl;
+            Logger::log(INFO, os.str().c_str());
+            return;
+        }
+        port_number_ = portNumber;
         {
             std::ostringstream os;
             os << "OscReceiver::" << __FUNCTION__ << " listen on port " << portNumber << std::endl;
-            Logger::log(WARNING, os.str().c_str());
+            Logger::log(INFO, os.str().c_str());
         }
         if (portNumber == 0)
             osc_receiver_.reset((OscReceiver *) 0);

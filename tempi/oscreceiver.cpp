@@ -79,7 +79,30 @@ OscReceiver::OscReceiver(unsigned int port) :
     debug_(false)
 {
     if (port_ != 0)
-        start();
+    {
+        if (portNumberIsOK())
+            start();
+    }
+}
+
+bool OscReceiver::portNumberIsOK()
+{
+    if (port_ < 1024)
+    {
+        std::ostringstream os;
+        os << "OscReceive: Port number " << port_ << " is quite low. You might need to run this as root";
+        Logger::log(WARNING, os.str().c_str());
+    }
+    if (port_ > 65535)
+    {
+        std::ostringstream os;
+        os << "OscReceive: Port number is too high: " << port_ << "";
+        Logger::log(ERROR, os.str().c_str());
+        port_ = 0;
+        return false;
+    }
+    else
+        return true;
 }
 
 bool OscReceiver::start()

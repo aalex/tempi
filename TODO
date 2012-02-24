@@ -3,6 +3,11 @@ To do in Tempi
 
 To do for 0.2
 -------------
+* Rename ArgumentType to AtomType
+* Allow range for int attributes?
+* Support lists of messages?
+* Support unsigned int atoms
+* FIXME: onAttributeChanged is called sometime twice. If the attribute has not been changed, it should not be called again
 * FIXME: split utils.h so that compilation gets faster
 * FIXME: clutter.stage segfaults
 * FIXME: base.spatosc seems not to work after the initial OSC messages sent
