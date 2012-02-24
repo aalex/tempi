@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tempi version="0.1.9">
+  <graph>
+    <node id="oscreceive0" class="osc.receive">
+      <attribute name="port">
+        <i>10000</i>
+      </attribute>
+    </node>
+    <node id="print_osc" class="base.print">
+      <attribute name="prefix">
+        <s>osc: </s>
+      </attribute>
+    </node>
+    <connection from="oscreceive0" outlet="incoming" to="print_osc" inlet="0" />
+  </graph>
+</tempi>
