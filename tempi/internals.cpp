@@ -34,7 +34,7 @@ bool loadInternals(NodeFactory &factory)
     Loader& loader = Loader::getInstance();
     loader.addPath(".");
     loader.addPath("/usr/local/lib/" TEMPI_PLUGINS_DIR); // FIXME
-    loader.addPath("/usr/local/lib/"); // FIXME
+    loader.addPath("/usr/local/lib"); // FIXME
     loader.addPath("/usr/lib/" TEMPI_PLUGINS_DIR); // FIXME
     loader.addPath("./plugins-base/.libs");
     loader.addPath("../plugins-base/.libs");
