@@ -38,9 +38,9 @@ OscReceiverNode::OscReceiverNode() :
 void OscReceiverNode::onAttributeChanged(const char *name, const Message &value)
 {
     {
-    std::ostringstream os;
-    os << "OscReceiverNode::" << __FUNCTION__ << "(\"" << name << "\", " << value << ")";
-    Logger::log(DEBUG, os.str().c_str());
+        std::ostringstream os;
+        os << "OscReceiverNode::" << __FUNCTION__ << "(\"" << name << "\", " << value << ")";
+        Logger::log(DEBUG, os.str().c_str());
     }
     if (utils::stringsMatch("port", name))
     {
@@ -49,7 +49,7 @@ void OscReceiverNode::onAttributeChanged(const char *name, const Message &value)
         {
             std::ostringstream os;
             os << "OscReceiverNode::" << __FUNCTION__ << ": Negative port numbers are not supported: " << tmp;
-            Logger::log(DEBUG, os.str().c_str());
+            Logger::log(ERROR, os.str().c_str());
             return;
         }
         unsigned int portNumber = (unsigned int) tmp;
@@ -57,7 +57,7 @@ void OscReceiverNode::onAttributeChanged(const char *name, const Message &value)
         {
             std::ostringstream os;
             os << "OscReceiver::" << __FUNCTION__ << " already listening on port " << portNumber;
-            Logger::log(INFO, os.str().c_str());
+            Logger::log(DEBUG, os.str().c_str());
             return;
         }
         port_number_ = portNumber;
@@ -91,9 +91,9 @@ void OscReceiverNode::doTick()
     std::vector<Message>::iterator iter;
     for (iter = messages.begin(); iter != messages.end(); ++iter)
     {
-        std::ostringstream os;
-        os << "OscReceiverNode." << __FUNCTION__ << ": " << (*iter);
-        Logger::log(DEBUG, os.str().c_str());
+        // std::ostringstream os;
+        // os << "OscReceiverNode." << __FUNCTION__ << ": " << (*iter);
+        // Logger::log(DEBUG, os.str().c_str());
         output("incoming", *iter);
     }
 }
