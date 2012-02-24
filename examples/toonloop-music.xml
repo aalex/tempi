@@ -16,23 +16,71 @@
         <s>print: </s>
       </attribute>
     </node>
-    <connect from="oscreceive0" outlet="0" to="route0" inlet="0" />
-    <connect from="route0" outlet="/toon/clip/select" to="print0" inlet="0" />
+    <node id="cast0" class="base.cast">
+      <attribute name="type">
+        <s>s</s>
+      </attribute>
+    </node>
+    <node id="prepend_set_scale" class="base.prepend">
+      <attribute name="value">
+        <s>set</s>
+        <s>scale</s>
+      </attribute>
+    </node>
+    <node id="metro0" class="base.metro">
+      <attribute name="interval"><i>100</i></attribute>
+      <attribute name="running"><b>1</b></attribute>
+    </node>
+    <node id="nearest0" class="music.nearest.note"> </node>
+    <connection from="oscreceive0" outlet="0" to="route0" inlet="0" />
+    <connection from="route0" outlet="/toon/clip/select" to="print0" inlet="0" />
+    <connection from="route0" outlet="/toon/clip/select" to="cast0" inlet="0" />
+    <connection from="cast0" outlet="0" to="chords_dict" inlet="get" />
+    <connection from="chords_dict" outlet="0" to="prepend_set_scale" inlet="__attr__" />
+
+    <!-- DRUNK -->
+    <node id="drunk0" class="random.drunk">
+      <attribute name="range"><i>0</i><i>100</i></attribute>
+      <attribute name="current"><i>50</i></attribute>
+      <attribute name="step"><i>0</i><i>10</i></attribute>
+    </node>
+    <node id="cast_f" class="base.cast">
+      <attribute name="type"><s>f</s></attribute>
+    </node>
+    <connection from="metro0" outlet="0" to="drunk0" inlet="0"/>
+    <connection from="drunk0" outlet="0" to="cast_f" inlet="0"/>
+    <connection from="cast_f" outlet="0" to="nearest0" inlet="0"/>
+    <connection from="nearest0" outlet="0" to="close0" inlet="0"/>
+    <node id="close0" class="music.monodic"></node>
+    <node id="prepend_channel" class="base.prepend">
+      <attribute name="value"><i>0</i></attribute>
+    </node>
+
+    <node id="cast_CCC" class="base.cast">
+      <attribute name="type"><s>CCC</s></attribute>
+    </node>
+    <connection from="close0" outlet="0" to="prepend_channel" inlet="0"/>
+    <connection from="prepend_channel" outlet="0" to="cast_CCC" inlet="0"/>
+
+    <node id="midi_out" class="midi.send">
+      <attribute name="port"><i>0</i></attribute>
+    </node>
+    <connection from="cast_CCC" outlet="0" to="midi_out" inlet="0"/>
 
     <!-- CHORDS -->
     <node id="chords_dict" class="base.dict"></node>
-    <connection from="chords_dict" outlet="0" to="music_closest" inlet="__attr__"/>
     <node id="chords_loadmess_C" class="base.loadmess">
       <attribute name="value">
-	<f>0.0</f> <f>2.0</f> <f>4.0</f> <f>7.0</f> <f>9.0</f>
+	<s>0</s> <f>0.0</f> <f>2.0</f> <f>4.0</f> <f>7.0</f> <f>9.0</f>
       </attribute>
     </node>
     <node id="chords_loadmess_Ab" class="base.loadmess">
       <attribute name="value">
-	<f>0.0</f> <f>3.0</f> <f>5.0</f> <f>8.0</f> <f>10.0</f>
+	<s>1</s> <f>0.0</f> <f>3.0</f> <f>5.0</f> <f>8.0</f> <f>10.0</f>
       </attribute>
     </node>
-    <connection from="chords_loadmess_C" outlet="0" to="chords_dict" inlet="list"/>
+    <connection from="chords_loadmess_C" outlet="0" to="chords_dict" inlet="set"/>
+    <connection from="chords_loadmess_Ab" outlet="0" to="chords_dict" inlet="set"/>
   </graph>
 
 </tempi>

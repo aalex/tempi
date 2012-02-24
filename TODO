@@ -3,6 +3,8 @@ To do in Tempi
 
 To do for 0.2
 -------------
+* create a validator for XML schemas
+* rename connection to connect in XML schema
 * FIXME: OscReceiver segfaults if port is busy
 * FIXME: fix path to libs
 * FIXME: removeTrailingPathSep crashes if has a trailing slash...
