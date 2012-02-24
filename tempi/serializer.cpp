@@ -176,9 +176,11 @@ bool Serializer::save(Graph &graph, const char *filename)
 
     // Save document to file
     xmlSaveFormatFileEnc(filename, doc, "UTF-8", 1);
-    std::ostringstream os;
-    os << "Saved the graph to " << filename << std::endl;
-    Logger::log(DEBUG, os.str().c_str());
+    {
+        std::ostringstream os;
+        os << "Saved the graph to " << filename << std::endl;
+        Logger::log(INFO, os.str().c_str());
+    }
     // Free the document + global variables that may have been
     // allocated by the parser.
     xmlFreeDoc(doc);
@@ -193,25 +195,26 @@ bool Serializer::load(Graph &graph, const char *filename)
     xmlDoc *doc = xmlReadFile(filename, NULL, 0);
     if (doc == NULL)
     {
-        printf("error: could not parse file %s\n", filename);
+        std::ostringstream os;
+        os << "Serializer could not parse file " <<  filename;
+        Logger::log(ERROR, os.str().c_str());
         return false;
     }
-    else if (verbose)
     {
-        std::cout << "Loading project file " << filename << std::endl;
+        std::ostringstream os;
+        os << "Loading project file " << filename;
+        Logger::log(INFO, os.str().c_str());
     }
     xmlNode *root = xmlDocGetRootElement(doc);
 
-    if (verbose)
-        std::cout << "graphs\n";
+    Logger::log(DEBUG, "Graphs");
     for (xmlNode *graph_node = root->children;
         graph_node;
         graph_node = graph_node->next)
     {
         if (node_name_is(graph_node, GRAPH_NODE))
         { // is a graph:
-            if (verbose)
-                std::cout << "* graph\n";
+            Logger::log(DEBUG, " * Graph");
             for (xmlNode *node_node = graph_node->children;
                 node_node;
                 node_node = node_node->next)
@@ -224,8 +227,11 @@ bool Serializer::load(Graph &graph, const char *filename)
                     // TODO: check if it has the property
                     xmlChar *node_name = xmlGetProp(node_node, 
                         XMLSTR NODE_ID_PROPERTY);
-                    if (verbose)
-                        std::cout << "  * node " << node_name << " of type " << node_type << std::endl;
+                    {
+                        std::ostringstream os;
+                        os << "  * node " << node_name << " of type " << node_type << std::endl;
+                        Logger::log(INFO, os.str().c_str());
+                    }
                     if (node_type != NULL && node_name != NULL)
                     { // node has name
                         graph.addNode((char *) node_type, (char *) node_name);
@@ -268,14 +274,17 @@ bool Serializer::load(Graph &graph, const char *filename)
                                         try
                                         {
                                             utils::appendArgumentFromString(attr_value, atom_value.c_str(), atom_typetag);
-                                            if (verbose)
-                                                std::cout << "    * atom " <<
-                                                    (char) atom_typetag << ":" <<
-                                                    atom_value  << std::endl;
+                                            std::ostringstream os;
+                                            os << "    * atom " <<
+                                                (char) atom_typetag << ":" <<
+                                                atom_value  << std::endl;
+                                            Logger::log(INFO, os.str().c_str());
                                         }
                                         catch (const BadArgumentTypeException &e)
                                         {
-                                            std::cerr << __FILE__ << ": " << __FUNCTION__ << " " << e.what() << std::endl;
+                                            std::ostringstream os;
+                                            os << __FILE__ << ": " << __FUNCTION__ << " " << e.what();
+                                            Logger::log(ERROR, os.str().c_str());
                                         }
                                     } // is atom node
                                 } // for each atom
@@ -297,8 +306,7 @@ bool Serializer::load(Graph &graph, const char *filename)
             // is a connection:
             if (node_name_is(connection_node, CONNECTION_NODE))
             {
-                if (verbose)
-                    std::cout << "Entering connection:\n";
+                Logger::log(DEBUG, "Entering connection:");
                 xmlChar *from = xmlGetProp(connection_node,
                     XMLSTR CONNECTION_FROM_PROPERTY);
                 xmlChar *outlet = xmlGetProp(connection_node,
@@ -310,9 +318,10 @@ bool Serializer::load(Graph &graph, const char *filename)
                 if (from != NULL && outlet != NULL
                     && to != NULL && inlet != NULL)
                 {
-                    if (verbose)
-                        std::cout << "serializer::" << __FUNCTION__ << "(): Connect "
-                            << from << ":" << outlet << " -> " << to << ":" << inlet << std::endl;
+                    std::ostringstream os;
+                    os << "serializer::" << __FUNCTION__ << "(): Connect "
+                        << from << ":" << outlet << " -> " << to << ":" << inlet;
+                    Logger::log(INFO, os.str().c_str());
                     graph.connect((char *) from, (char *) outlet, (char *) to, (char *) inlet);
                 }
                 xmlFree(from);
@@ -320,6 +329,13 @@ bool Serializer::load(Graph &graph, const char *filename)
                 xmlFree(to);
                 xmlFree(inlet);
             } // is a connection
+            else if (! node_name_is(connection_node, NODE_NODE) &&
+                connection_node->type == XML_ELEMENT_NODE)
+            {
+                std::ostringstream os;
+                os << "Found unknown XML tag: \"" << connection_node->name << "\"";
+                Logger::log(ERROR, os.str().c_str());
+            }
         } // for each connection
         } // is a graph
     } // for each graph
@@ -327,9 +343,11 @@ bool Serializer::load(Graph &graph, const char *filename)
     graph.tick();
     graph.loadBang();
 
-    std::ostringstream os;
-    os << "Loaded the graph from " << filename << std::endl;
-    Logger::log(DEBUG, os.str().c_str());
+    {
+        std::ostringstream os;
+        os << "Loaded the graph from " << filename << std::endl;
+        Logger::log(INFO, os.str().c_str());
+    }
     if (verbose)
     {
         std::cout << "The Graph is now:\n";

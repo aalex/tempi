@@ -30,7 +30,7 @@ OscReceiverNode::OscReceiverNode() :
     Node(),
     port_number_(0)
 {
-    addOutlet("0");
+    addOutlet("incoming");
     Message port = Message("i", 0);
     addAttribute(Attribute::ptr(new Attribute("port", port, "Receive OSC messages on this port number.")));
 }
@@ -38,9 +38,9 @@ OscReceiverNode::OscReceiverNode() :
 void OscReceiverNode::onAttributeChanged(const char *name, const Message &value)
 {
     {
-    std::ostringstream os;
-    os << "OscReceiverNode::" << __FUNCTION__ << "(\"" << name << "\", " << value << ")" << std::endl;
-    Logger::log(DEBUG, os.str().c_str());
+        std::ostringstream os;
+        os << "OscReceiverNode::" << __FUNCTION__ << "(\"" << name << "\", " << value << ")";
+        Logger::log(DEBUG, os.str().c_str());
     }
     if (utils::stringsMatch("port", name))
     {
@@ -49,21 +49,21 @@ void OscReceiverNode::onAttributeChanged(const char *name, const Message &value)
         {
             std::ostringstream os;
             os << "OscReceiverNode::" << __FUNCTION__ << ": Negative port numbers are not supported: " << tmp;
-            Logger::log(DEBUG, os.str().c_str());
+            Logger::log(ERROR, os.str().c_str());
             return;
         }
         unsigned int portNumber = (unsigned int) tmp;
         if (portNumber == port_number_)
         {
             std::ostringstream os;
-            os << "OscReceiver::" << __FUNCTION__ << " already listening on port " << portNumber << std::endl;
-            Logger::log(INFO, os.str().c_str());
+            os << "OscReceiver::" << __FUNCTION__ << " already listening on port " << portNumber;
+            Logger::log(DEBUG, os.str().c_str());
             return;
         }
         port_number_ = portNumber;
         {
             std::ostringstream os;
-            os << "OscReceiver::" << __FUNCTION__ << " listen on port " << portNumber << std::endl;
+            os << "OscReceiver::" << __FUNCTION__ << " listen on port " << portNumber;
             Logger::log(INFO, os.str().c_str());
         }
         if (portNumber == 0)
@@ -75,16 +75,26 @@ void OscReceiverNode::onAttributeChanged(const char *name, const Message &value)
 
 void OscReceiverNode::doTick()
 {
+    static bool printed_no_port_warning = false;
     if (osc_receiver_.get() == 0)
     {
-        // std::cerr << "OscReceiverNode::" << __FUNCTION__ << "(): OscReceiver is NULL. Cannot poll incoming OSC messages. Please specifiy a port number." << std::endl;
+        if (! printed_no_port_warning)
+        {
+            std::ostringstream os;
+            os << "OscReceiverNode." << __FUNCTION__ << ": Please specifiy a port number.";
+            Logger::log(WARNING, os.str().c_str());
+            printed_no_port_warning = true;
+        }
         return;
     }
     std::vector<Message> messages = osc_receiver_->poll();
     std::vector<Message>::iterator iter;
     for (iter = messages.begin(); iter != messages.end(); ++iter)
     {
-        output("0", *iter);
+        // std::ostringstream os;
+        // os << "OscReceiverNode." << __FUNCTION__ << ": " << (*iter);
+        // Logger::log(DEBUG, os.str().c_str());
+        output("incoming", *iter);
     }
 }
 

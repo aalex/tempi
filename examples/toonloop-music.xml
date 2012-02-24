@@ -11,7 +11,9 @@
         <s>/toon/clip/select</s> <!-- int -->
       </attribute>
     </node>
-    <node id="print0" class="base.print">
+    <node id="dict0" class="base.dict">
+    </node>
+    <node id="print_select_clip" class="base.print">
       <attribute name="prefix">
         <s>print: </s>
       </attribute>
@@ -81,6 +83,18 @@
     </node>
     <connection from="chords_loadmess_C" outlet="0" to="chords_dict" inlet="set"/>
     <connection from="chords_loadmess_Ab" outlet="0" to="chords_dict" inlet="set"/>
+=======
+    <!--
+    <node id="print_osc" class="base.print">
+      <attribute name="prefix">
+        <s>osc: </s>
+      </attribute>
+    </node>
+    <connection from="oscreceive0" outlet="incoming" to="print_osc" inlet="0" />
+    -->
+    <connection from="oscreceive0" outlet="incoming" to="route0" inlet="0" />
+    <connection from="route0" outlet="/toon/clip/select" to="print_select_clip" inlet="0" />
+>>>>>>> 9a8c3f349d30335e16b2cbaf3fcaa4bb1453b998
   </graph>
 
 </tempi>

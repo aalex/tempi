@@ -112,7 +112,7 @@ bool OscReceiver::start()
     // TODO: handle errors
     {
         std::ostringstream os;
-        os << "OscReceive.start(): calling lo_server_new(" << port_ << onError << ")";
+        os << "OscReceive.start(): calling lo_server_new(" << port_ << ", " << onError << ")";
         Logger::log(INFO, os.str().c_str());
     }
     server_ = lo_server_new(boost::lexical_cast<std::string>(port_).c_str(), onError);
