@@ -192,7 +192,7 @@
     <connection from="tempo_2" outlet="0" to="tempi_dict" inlet="set"/>
 
     <node id="tempo_3" class="base.loadmess">
-      <attribute name="value"><s>3</s><i>100</i></attribute>
+      <attribute name="value"><s>3</s><i>1000</i></attribute>
     </node>
     <connection from="tempo_3" outlet="0" to="tempi_dict" inlet="set"/>
 
@@ -212,7 +212,7 @@
     <connection from="tempo_6" outlet="0" to="tempi_dict" inlet="set"/>
 
     <node id="tempo_7" class="base.loadmess">
-      <attribute name="value"><s>7</s><i>50</i></attribute>
+      <attribute name="value"><s>7</s><i>500</i></attribute>
     </node>
     <connection from="tempo_7" outlet="0" to="tempi_dict" inlet="set"/>
 
