@@ -15,8 +15,10 @@ Here is some info about Tempi:
 * The README_ file
 * The documentation_ generated from the code.
 * The nodes_ documentation.
+* The mailing list_.
 
 .. _README: http://tempi.toonloop.com/latest/readme.html
 .. _documentation: http://tempi.toonloop.com/latest/doxygen/annotated.html
 .. _nodes: http://tempi.toonloop.com/latest/nodes.html
+.. _list: https://listes.koumbit.net/cgi-bin/mailman/listinfo/tempi-toonloop.com
 
