@@ -154,8 +154,8 @@ bool TempiInspect::printClass(const std::string &name)
     {
         Node::ptr node = factory_.create(name.c_str());
         node->init();
-        cout << "Node Type [" << name << "]" << endl;
-        cout << "===========";
+        cout << "[" << name << "]" << endl;
+        cout << "=";
         print_n_times(node->getTypeName().size(), "=");
         cout << "=";
         cout << endl;
@@ -248,7 +248,8 @@ void TempiInspect::printListOfTypes()
 
 void TempiInspect::printAll()
 {
-    print_title(std::string("Tempi types:"), FIRST);
+    // print_title(std::string("Tempi types:"), FIRST);
+    std::cout << "Tempi base plugins version " << PACKAGE_VERSION << std::endl << std::endl;
     std::map<std::string, AbstractNodeType::ptr>::const_iterator iter;
     std::map<std::string, AbstractNodeType::ptr> entries = factory_.getEntries();
     for (iter = entries.begin(); iter != entries.end(); ++iter)
