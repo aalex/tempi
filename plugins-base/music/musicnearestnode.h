@@ -79,7 +79,7 @@ class NearestNoteNode : public Node
             this->setShortDocumentation("Rounds a MIDI note to the nearest within a given scale, in its own octava.");
             this->addInlet("0", "Incoming note. (float)");
             this->addOutlet("0", "Resulting note. (float).");
-            this->addAttribute(Attribute::ptr(new Attribute("scale", Message("fffffl", 0.0f, 2.0f, 4.0f, 7.0f, 9.0f), "Musical scale to pick the note from, in any octava. Default is a pentatonic major scale in C.", false)));
+            this->addAttribute(Attribute::ptr(new Attribute("scale", Message("fffff", 0.0f, 2.0f, 4.0f, 7.0f, 9.0f), "Musical scale to pick the note from, in any octava. Default is a pentatonic major scale in C.", false)));
         }
     protected:
         virtual void onAttributeChanged(const char *name, const Message &value)
