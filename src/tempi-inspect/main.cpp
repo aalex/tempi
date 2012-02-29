@@ -215,7 +215,7 @@ bool TempiInspect::printClass(const std::string &name)
             }
         }
         if (node->getOutlets().size() == 0)
-            cout << "(No outlet)" << endl;
+            cout << endl << "(No outlet)" << endl;
         else
         {
             map<string, Outlet::ptr> outlets = node->getOutlets();
