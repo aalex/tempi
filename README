@@ -10,11 +10,11 @@
 
 About
 -----
-Tempi dataflow programming C++ library aimed at multimodal sampling.
+Tempi is a dataflow programming C++ library aimed at multimodal sampling.
 
 Tempi is a C++ library for multi-modal sampling through a strongly-typed dataflow language. It allows recording and playback of flows of messages whose types can be arbitrary. We can then record series of events encoded as numbers, texts, 3D trajectories, list of images or sounds files. For example, one could use Tempi to store musical notes sequenced over time, to do rapid prototyping of motion, or any type of changes that are then easy to reproduce again.
 
-Tempi eases routing data, and provides tracks in which one can store the changes overt time in those streams of data. It also provides some game logic bricks such as finite states machines. Streams can be passed through filter nodes in order to smooth changes, detect thresholds, change their scale or script finite state machines according to what happens in the streams. For each state, one could play different tracks, or choose different filters to apply on the transmitted data. Furthermore, it is possible to extend Tempi through extensions. Some extensions already provide OSC and MIDI input and output. In short, Tempi provides basic building blocks for building interactive digital art works.
+Tempi eases routing data, and provides tracks in which one can store the changes overt time in those streams of data. It also provides some game logic bricks such as behaviour trees. Streams can be passed through filter nodes in order to smooth changes, detect thresholds, change their scale or script finite state machines according to what happens in the streams. For each state, one could play different tracks, or choose different filters to apply on the transmitted data. Furthermore, it is possible to extend Tempi through extensions. Some extensions already provide OSC and MIDI input and output. In short, Tempi provides basic building blocks for building interactive digital art works.
 
 
 History
