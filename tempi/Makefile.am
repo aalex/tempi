@@ -54,6 +54,7 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     message.cpp \
     midi_input.cpp \
     midi_output.cpp \
+    nameallocator.cpp \
     namedobject.cpp \
     node.cpp \
     nodefactory.cpp \
@@ -105,6 +106,7 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     message.h \
     midi_input.h \
     midi_output.h \
+    nameallocator.h \
     namedobject.h \
     namedobjectmap.h \
     node.h \
