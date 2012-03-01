@@ -9,7 +9,7 @@ New features:
 
 * New node types: [sampler.read], [sample.write], [sampler.sample]
 * Nodes can access the regions owned by their scheduler.
-* Add NameAllocator
+* Add NameAllocator (not used yet)
 * New node types: [music.nearest.note], [music.monodic], [base.dict], [random.int], [random.drunk]
 * Base plugins are now dynamically loaded with Loader, a singleton.
 
@@ -20,6 +20,7 @@ Bugs fixed:
 * Fix rst format output by utilities
 * Refactor math nodes using inheritance
 * New examples: oscreceive.xml, toonloop-music.xml
+* Dependencies not mandatory anymore: Clutter, liblo, GLib, spatosc
 
 
 Tempi 0.1.10 (2012-02-19)
