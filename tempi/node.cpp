@@ -427,5 +427,15 @@ bool Node::removeOutlet(const char *name)
     return false;
 }
 
+void Node::setGraph(Graph *graph)
+{
+    graph_ = graph;
+}
+
+Graph* Node::getGraph() const
+{
+    return graph_;
+}
+
 } // end of namespace
 

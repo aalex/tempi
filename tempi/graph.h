@@ -36,6 +36,8 @@
 namespace tempi
 {
 
+class Scheduler; // forward declaration
+
 /**
  * A Graph is a group of Node that are connected and through which messages can flow.
  */
@@ -128,11 +130,14 @@ class Graph : public NamedObject
         // TODO: World* getWorld ();
         // TODO: void setWorld (World* world);
         // TODO: World* world_;
+        void setScheduler(Scheduler *scheduler);
+        Scheduler *getScheduler() const;
     private:
         typedef std::map<std::string, Node::ptr> NodesMapType;
         typedef std::vector<Connection> ConnectionVec;
         NodeFactory::ptr factory_;
         NodesMapType nodes_;
+        Scheduler *scheduler_;
         void disconnectAllConnectedTo(const char *name);
         void disconnectAllConnectedFrom(const char *name);
         void disconnectAllConnectedTo(const char *name, const char *inlet);

@@ -42,6 +42,7 @@ void Scheduler::createGraph(const char *name)
 {
     Graph::ptr graph(new Graph(factory_));
     graph->setName(name);
+    graph->setScheduler(this);
     graphs_.add(graph);
 }
 

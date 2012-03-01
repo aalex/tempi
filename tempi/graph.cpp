@@ -65,6 +65,7 @@ bool Graph::addNode(const char *type, const char *name)
             return false;
         }
         node->setName(name);
+        node->setGraph(this);
         nodes_[name] = node;
         {
             std::ostringstream os;
@@ -554,6 +555,16 @@ void Graph::disconnectAllConnectedTo(const char *name, const char *inlet)
 {
     ConnectionVec connections = getAllConnectedTo(name, inlet);
     disconnectMany(connections);
+}
+
+void Graph::setScheduler(Scheduler *scheduler)
+{
+    scheduler_ = scheduler;
+}
+
+Scheduler *Graph::getScheduler() const
+{
+    return scheduler_;
 }
 
 } // end of namespace
