@@ -68,20 +68,21 @@ class Scheduler
          */
         void createGraph(const char *name)
             throw(BadIndexException);
+        /**
+         * Create a Region identified by a name.
+         */
         void createRegion(const char *name)
             throw(BadIndexException);
-        // TODO: bool remoteGraph(const char *name);
         NodeFactory::ptr getFactory() const;
 
         /**
-         * Return the list of all the graph names.
+         * Return the list of all the Graph names.
          */
         std::vector<std::string> listGraphs() const;
         /**
-         * Return the list of all the sampler names.
+         * Return the list of all the Region names.
          */
         std::vector<std::string> listRegions() const;
-
         /**
          * Retrieves a Region.
          */
@@ -92,8 +93,14 @@ class Scheduler
          */
         Graph::ptr getGraph(const char *name) const
             throw(BadIndexException);
+        /**
+         * Deletes a Graph.
+         */
         void removeGraph(const char *name)
             throw(BadIndexException);
+        /**
+         * Deletes a Region.
+         */
         void removeRegion(const char *name)
             throw(BadIndexException);
         /**
@@ -114,7 +121,13 @@ class Scheduler
         // * Same as canGetGraphPtr, but prints an error message if the user did not lock the mutex.
         // */
         //bool makeSureLockIsAcquired() const;
+        /**
+         * Checks if a given named Graph exists.
+         */
         bool hasGraph(const char *name) const;
+        /**
+         * Checks if a given named Region exists.
+         */
         bool hasRegion(const char *name) const;
     protected:
         //bool sendToAllGraphs(const Message &message);
