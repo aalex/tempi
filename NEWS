@@ -7,11 +7,19 @@ This release is a developer snapshot in the 0.1 series.
 
 New features:
 
-* (none)
+* New node types: [sampler.read], [sample.write], [sampler.sample]
+* Nodes can access the regions owned by their scheduler.
+* Add NameAllocator
+* New node types: [music.nearest.note], [music.monodic], [base.dict], [random.int], [random.drunk]
+* Base plugins are now dynamically loaded with Loader, a singleton.
+
 
 Bugs fixed:
 
-* (none)
+* Move plugins-base's tests to their directory
+* Fix rst format output by utilities
+* Refactor math nodes using inheritance
+* New examples: oscreceive.xml, toonloop-music.xml
 
 
 Tempi 0.1.10 (2012-02-19)
