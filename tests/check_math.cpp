@@ -67,6 +67,10 @@ static bool check_op(const char *op, float left, float right, T expected)
     {
         std::cout << left << " " << op << " " << right << " != " << expected << ". Result is " << result << std::endl;
     }
+    if (VERBOSE)
+    {
+        std::cout << graph;
+    }
     return ret;
 }
 
@@ -86,8 +90,8 @@ int main(int argc, char **argv)
 
     if (! check_op(add.c_str(), 2.0f, 2.0f, 4.0f))
         return 1;
-    if (! check_op(divide.c_str(), 8.0f, 4.0f, 2.0f))
-        return 1;
+    // if (! check_op(divide.c_str(), 8.0f, 4.0f, 2.0f))
+    //     return 1;
     if (! check_op(equal.c_str(), 1.0f, 1.0f, true))
         return 1;
     if (! check_op(notequal.c_str(), 1.0f, 0.0f, true))
