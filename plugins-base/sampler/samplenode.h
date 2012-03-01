@@ -19,29 +19,39 @@
  */
 
 /**
- * @file
- * The PrintNode class.
+ * The SamplerSampleNode class.
  */
-#ifndef __TEMPI_BASE_PRINTNODE_H__
-#define __TEMPI_BASE_PRINTNODE_H__
 
+#ifndef __TEMPI_SAMPLER_SAMPLE_NODE_H__
+#define __TEMPI_SAMPLER_SAMPLE_NODE_H__
+
+#include <boost/signals2.hpp>
+#include <tr1/memory>
+#include <string>
+#include "tempi/sampler_score.h"
+#include "tempi/timeposition.h"
+#include "tempi/identifier.h"
+#include "tempi/sampler_region.h"
+#include "tempi/sampler_recorder.h"
 #include "tempi/node.h"
-#include "tempi/message.h"
-#include <iostream>
 
 namespace tempi {
-namespace base {
+namespace sampler {
 
 /**
- * The PrintNode prints the contents of a Message.
+ * Creates a Region accessible by all nodes within the same scheduler.
  */
-class PrintNode : public Node
+class SamplerSampleNode : public Node
 {
     public:
-        PrintNode();
+        SamplerSampleNode();
     protected:
         virtual void processMessage(const char *inlet, const Message &message);
         virtual void onAttributeChanged(const char *name, const Message &value);
+    private:
+        std::string previous_region_name_;
+        static const char * const ATTR_NAME;
+        bool setRegionName(const std::string &name);
 };
 
 } // end of namespace

@@ -19,29 +19,44 @@
  */
 
 /**
- * @file
- * The PrintNode class.
+ * The SamplerReadNode class.
  */
-#ifndef __TEMPI_BASE_PRINTNODE_H__
-#define __TEMPI_BASE_PRINTNODE_H__
 
+#ifndef __TEMPI_SAMPLER_READ_NODE_H__
+#define __TEMPI_SAMPLER_READ_NODE_H__
+
+#include <boost/signals2.hpp>
+#include <tr1/memory>
+#include <string>
+#include "tempi/sampler_score.h"
+#include "tempi/timeposition.h"
+#include "tempi/identifier.h"
+#include "tempi/sampler_region.h"
+#include "tempi/sampler_player.h"
 #include "tempi/node.h"
-#include "tempi/message.h"
-#include <iostream>
 
 namespace tempi {
-namespace base {
+namespace sampler {
 
 /**
- * The PrintNode prints the contents of a Message.
+ * Reads Regions.
  */
-class PrintNode : public Node
+class SamplerReadNode : public Node
 {
     public:
-        PrintNode();
+        SamplerReadNode();
     protected:
         virtual void processMessage(const char *inlet, const Message &message);
         virtual void onAttributeChanged(const char *name, const Message &value);
+    private:
+        Region::ptr empty_region_;
+        Player::ptr player_;
+        void play(bool enabled);
+        virtual void doTick();
+        void setRegion(const std::string &name);
+        static const char * const ATTR_READING;
+        static const char * const ATTR_REGION;
+        static const char * const OUTLET_READ;
 };
 
 } // end of namespace

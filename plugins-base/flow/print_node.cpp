@@ -21,36 +21,39 @@
 #include <iostream>
 #include "plugins-base/flow/print_node.h"
 #include "tempi/utils.h"
+#include "tempi/log.h"
 
-namespace tempi { namespace base {
+namespace tempi {
+namespace base {
 
 PrintNode::PrintNode() :
-    Node(),
-    prefix_("print: "),
-    enabled_(true)
+    Node()
 {
+    setShortDocumentation("Prints incoming messages to the text console.");
     //addOutlet();
     addInlet("0", "Print messages received from this inlet.");
 
-    Message prefix_prop = Message("s", prefix_.c_str());
+    Message prefix_prop = Message("s", "print: ");
     addAttribute(Attribute::ptr(new Attribute("prefix", prefix_prop, "Prefix when printing incoming messages to the console.")));
 
-    Message enabled_prop = Message("b", enabled_);
+    Message enabled_prop = Message("b", true);
     addAttribute(Attribute::ptr(new Attribute("enabled", enabled_prop)));
 }
 
 void PrintNode::processMessage(const char *inlet, const Message &message)
 {
-    if (enabled_)
-        std::cout << prefix_ << message << std::endl;
+    if (getAttributeValue("enabled").getBoolean(0))
+    {
+        std::ostringstream os;
+        os << "[print]: Printing since enabled is true.";
+        Logger::log(DEBUG, os.str().c_str());
+        std::cout << getAttributeValue("prefix").getString(0) << message << std::endl;
+    }
 }
 
 void PrintNode::onAttributeChanged(const char *name, const Message &value)
 {
-    if (utils::stringsMatch(name, "prefix"))
-        prefix_ = value.getString(0);
-    else if (utils::stringsMatch(name, "enabled"))
-        enabled_ = value.getBoolean(0);
+    // pass
 }
 
 } // end of namespace

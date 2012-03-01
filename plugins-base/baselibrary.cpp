@@ -46,6 +46,9 @@
 #include "plugins-base/osc/oscreceivernode.h"
 #include "plugins-base/osc/oscsendernode.h"
 #include "plugins-base/sampler/samplernode.h"
+#include "plugins-base/sampler/samplenode.h"
+#include "plugins-base/sampler/samplerwritenode.h"
+#include "plugins-base/sampler/samplerreadnode.h"
 #include "plugins-base/random/randomdrunknode.h"
 #include "plugins-base/random/randomintnode.h"
 #include "tempi/config.h"
@@ -82,9 +85,11 @@ void BaseLibrary::load(NodeFactory &factory, const char *prefix) const
     factory.registerTypeT<RouteNode>(concatenate("base.", "route").c_str());
     factory.registerTypeT<LoadMessNode>(concatenate("base.", "loadmess").c_str());
     factory.registerTypeT<CastNode>(concatenate("base.", "cast").c_str());
+
 #ifdef HAVE_SPATOSC
     factory.registerTypeT<SpatoscNode>(concatenate("base.", "spatosc").c_str());
 #endif // HAVE_SPATOSC
+
     factory.registerTypeT<AddNode>(concatenate("math.", "+").c_str());
     factory.registerTypeT<DivNode>(concatenate("math.", "/").c_str());
     factory.registerTypeT<EqualsNotNode>(concatenate("math.", "!=").c_str());
@@ -94,19 +99,30 @@ void BaseLibrary::load(NodeFactory &factory, const char *prefix) const
     factory.registerTypeT<SubtractNode>(concatenate("math.", "-").c_str());
     factory.registerTypeT<MultNode>(concatenate("math.", "*").c_str());
     factory.registerTypeT<DegToRadNode>(concatenate("math.", "deg2rad").c_str());
+
 #ifdef HAVE_CLUTTER
     factory.registerTypeT<TempiClutterStageNode>(concatenate("clutter.", "stage").c_str());
 #endif // HAVE_CLUTTER
+
+// TODO: #ifdef HAVE_STK
     factory.registerTypeT<MidiReceiverNode>(concatenate("midi.", "receive").c_str());
     factory.registerTypeT<MidiSenderNode>(concatenate("midi.", "send").c_str());
     factory.registerTypeT<MidiRouteNode>(concatenate("midi.", "route").c_str());
+// TODO: #endif // HAVE_STK
+
     factory.registerTypeT<NearestNoteNode>(concatenate("music.", "nearest.note").c_str());
     factory.registerTypeT<MonodicNode>(concatenate("music.", "monodic").c_str());
+
 // TODO #ifdef HAVE_LIBLO
     factory.registerTypeT<OscReceiverNode>(concatenate("osc.", "receive").c_str());
     factory.registerTypeT<OscSenderNode>(concatenate("osc.", "send").c_str());
-// TODO #endif // HAVE_SPATOSC
+// TODO #endif // HAVE_LIBLO
+
+    factory.registerTypeT<SamplerSampleNode>(concatenate("sampler.", "sample").c_str());
     factory.registerTypeT<SamplerNode>(concatenate("sampler.", "sampler").c_str());
+    factory.registerTypeT<SamplerReadNode>(concatenate("sampler.", "read").c_str());
+    factory.registerTypeT<SamplerWriteNode>(concatenate("sampler.", "write").c_str());
+
 #ifdef HAVE_GLIB
     factory.registerTypeT<RandomDrunkNode>(concatenate("random.", "drunk").c_str());
     factory.registerTypeT<RandomIntNode>(concatenate("random.", "int").c_str());

@@ -104,10 +104,16 @@ void appendArgumentFromString(Message &message, const char *atom_value, Argument
         switch (type)
         {
             case BOOLEAN:
-                if (atom_value == "0")
+                if (stringsMatch(atom_value, "1"))
+                    message.appendBoolean(true);
+                else if (stringsMatch(atom_value, "true"))
+                    message.appendBoolean(true);
+                else if (stringsMatch(atom_value, "0"))
+                    message.appendBoolean(false);
+                else if (stringsMatch(atom_value, "false"))
                     message.appendBoolean(false);
                 else
-                    message.appendBoolean(true);
+                    message.appendBoolean(false);
                 break;
             case CHAR:
                 message.appendChar(
@@ -171,8 +177,12 @@ std::string argumentToString(const Message &message, unsigned int index)
     switch (atom_type)
     {
         case BOOLEAN:
-            return boost::lexical_cast<std::string>(
-                message.getBoolean(index));
+            if (message.getBoolean(index))
+                return std::string("true");
+            else
+                return std::string("false");
+            //return boost::lexical_cast<std::string>(
+            //    message.getBoolean(index));
             break;
         case CHAR:
             return boost::lexical_cast<std::string>(

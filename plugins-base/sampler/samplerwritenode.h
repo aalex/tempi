@@ -19,29 +19,44 @@
  */
 
 /**
- * @file
- * The PrintNode class.
+ * The SamplerWriteNode class.
  */
-#ifndef __TEMPI_BASE_PRINTNODE_H__
-#define __TEMPI_BASE_PRINTNODE_H__
 
+#ifndef __TEMPI_SAMPLER_WRITE_NODE_H__
+#define __TEMPI_SAMPLER_WRITE_NODE_H__
+
+#include <boost/signals2.hpp>
+#include <tr1/memory>
+#include <string>
+#include "tempi/sampler_score.h"
+#include "tempi/timeposition.h"
+#include "tempi/identifier.h"
+#include "tempi/sampler_region.h"
+#include "tempi/sampler_recorder.h"
 #include "tempi/node.h"
-#include "tempi/message.h"
-#include <iostream>
 
 namespace tempi {
-namespace base {
+namespace sampler {
 
 /**
- * The PrintNode prints the contents of a Message.
+ * Writes Messages into a Region.
  */
-class PrintNode : public Node
+class SamplerWriteNode : public Node
 {
     public:
-        PrintNode();
+        SamplerWriteNode();
     protected:
         virtual void processMessage(const char *inlet, const Message &message);
         virtual void onAttributeChanged(const char *name, const Message &value);
+    private:
+        Region::ptr empty_region_;
+        Recorder::ptr recorder_;
+        void record(bool enabled);
+        virtual void doTick();
+        void setRegion(const std::string &name);
+        static const char * const ATTR_WRITING;
+        static const char * const ATTR_REGION;
+        static const char * const INLET_WRITE;
 };
 
 } // end of namespace

@@ -100,7 +100,7 @@ TempiLauncher::~TempiLauncher()
     {
         {
             std::ostringstream os;
-            os << __FUNCTION__ << "(): Waiting for Scheduler's thread to join." << std::endl;
+            os << __FUNCTION__ << "(): Waiting for Scheduler's thread to join.";
             tempi::Logger::log(DEBUG, os.str().c_str());
         }
         engine_->stop();
@@ -124,7 +124,7 @@ bool TempiLauncher::setupGraph()
     }
     {
         std::ostringstream os;
-        os << "tempi-launch: Found " << fileName_ << std::endl;
+        os << "tempi-launch: Found " << fileName_;
         tempi::Logger::log(DEBUG, os.str().c_str());
     }
     // Create Scheduler
@@ -160,7 +160,7 @@ bool TempiLauncher::setupGraph()
     }
     {
         std::ostringstream os;
-        os << "tempi-launch: Loaded " << fileName_ << std::endl;
+        os << "tempi-launch: Loaded " << fileName_;
         tempi::Logger::log(DEBUG, os.str().c_str());
     }
     return true;
@@ -239,7 +239,7 @@ int TempiLauncher::parse_options(int argc, char **argv)
     }
     {
         std::ostringstream os;
-        os << "XML file to load: " << fileName_ << std::endl;
+        os << "XML file to load: " << fileName_;
         tempi::Logger::log(DEBUG, os.str().c_str());
     }
     return -1;

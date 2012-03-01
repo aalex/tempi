@@ -136,6 +136,7 @@ TempiClutterStageNode::TempiClutterStageNode()
 {
     //TODO: addInlet();
     //TODO: addOutlet();
+    setShortDocumentation("Manages a Clutter stage. (not yet working)");
     addAttribute(Attribute::ptr(new Attribute("script", Message("s", ""), "JSON file to load with ClutterScript.")));
     addAttribute(Attribute::ptr(new Attribute("size", Message("ii", 640, 480), "Size of the ClutterStage.")));
     addAttribute(Attribute::ptr(new Attribute("visible", Message("b", false), "Shows the stage when enabled.")));

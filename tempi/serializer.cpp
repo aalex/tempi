@@ -178,7 +178,7 @@ bool Serializer::save(Graph &graph, const char *filename)
     xmlSaveFormatFileEnc(filename, doc, "UTF-8", 1);
     {
         std::ostringstream os;
-        os << "Saved the graph to " << filename << std::endl;
+        os << "Saved the graph to " << filename;
         Logger::log(INFO, os.str().c_str());
     }
     // Free the document + global variables that may have been
@@ -229,7 +229,7 @@ bool Serializer::load(Graph &graph, const char *filename)
                         XMLSTR NODE_ID_PROPERTY);
                     {
                         std::ostringstream os;
-                        os << "  * node " << node_name << " of type " << node_type << std::endl;
+                        os << "  * node " << node_name << " of type " << node_type;
                         Logger::log(INFO, os.str().c_str());
                     }
                     if (node_type != NULL && node_name != NULL)
@@ -277,7 +277,7 @@ bool Serializer::load(Graph &graph, const char *filename)
                                             std::ostringstream os;
                                             os << "    * atom " <<
                                                 (char) atom_typetag << ":" <<
-                                                atom_value  << std::endl;
+                                                atom_value;
                                             Logger::log(INFO, os.str().c_str());
                                         }
                                         catch (const BadArgumentTypeException &e)
@@ -285,6 +285,11 @@ bool Serializer::load(Graph &graph, const char *filename)
                                             std::ostringstream os;
                                             os << __FILE__ << ": " << __FUNCTION__ << " " << e.what();
                                             Logger::log(ERROR, os.str().c_str());
+                                        }
+                                        {
+                                            std::ostringstream os;
+                                            os << "    * atom results in " << attr_value;
+                                            Logger::log(DEBUG, os.str().c_str());
                                         }
                                     } // is atom node
                                 } // for each atom
@@ -345,7 +350,7 @@ bool Serializer::load(Graph &graph, const char *filename)
 
     {
         std::ostringstream os;
-        os << "Loaded the graph from " << filename << std::endl;
+        os << "Loaded the graph from " << filename;
         Logger::log(INFO, os.str().c_str());
     }
     if (verbose)
