@@ -54,6 +54,7 @@ Tempi 0.1.8 (2012-01-12)
 This release is a developer snapshot in the 0.1 series.
 
 New features:
+
 * New node types: [math.+], [math.-], [math.<], [math.>], [math./], [math.*], [math.==], [math.!=]
 * New node types: [midi.route]
 * Allow non type-strict attributes
@@ -69,10 +70,12 @@ Tempi 0.1.6 (2011-12-19)
 This release is a developer snapshot in the 0.1 series.
 
 New features:
+
 * Read multiple events at once from a Region
 * Add Node::init() to move node initialization routines out of the constructor.
 
 Bugs fixed:
+
 * Fix timing issue with first event recorded in a Region
 
 
@@ -81,6 +84,7 @@ Tempi 0.1.4 (2011-12-14)
 This release is a developer snapshot in the 0.1 series.
 
 New features:
+
 * New atom types: pointer, unsigned char
 * New command-line utilities: midilooper
 * New namespaces: base, osc, midi, sampler, mapping, table
@@ -98,6 +102,7 @@ New features:
 * Rename utility "tempi" to "tempi-draw"
 
 Bugs fixed:
+
 * Move executables' source code to subdirectories
 * Remove deprecated property.{h,cpp} files
 * midilooper: do not list our own ports
@@ -110,6 +115,7 @@ Tempi 0.1.2 (2011-10-14)
 This release is a developer snapshot in the 0.1 series.
 
 New features:
+
 * The osc-forward command-lineutility.
 * OscReceiverNode and OscSenderNode
 * can instanciate Message with va_list
@@ -125,6 +131,7 @@ New features:
 * Add more version macros
 
 Bugs fixed:
+
 * Tests are silent
 * Moved specific nodes to subdirectories
 * Fix bad exception type
