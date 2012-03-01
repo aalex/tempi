@@ -29,6 +29,7 @@
 #include <vector>
 #include "tempi/timer.h"
 #include "tempi/message.h"
+#include "tempi/namedobject.h"
 #include "tempi/sharedptr.h"
 
 namespace tempi {
@@ -37,7 +38,7 @@ namespace sampler {
 /**
  * A Region contains timed Message objects. 
  */
-class Region
+class Region : public NamedObject
 {
     public:
         typedef std::tr1::shared_ptr<Region> ptr;

@@ -31,6 +31,7 @@
 #include "tempi/node.h"
 #include "tempi/sharedptr.h"
 #include "tempi/nodefactory.h"
+#include "tempi/namedobject.h"
 
 namespace tempi
 {
@@ -38,7 +39,7 @@ namespace tempi
 /**
  * A Graph is a group of Node that are connected and through which messages can flow.
  */
-class Graph
+class Graph : public NamedObject
 {
     public:
         typedef std::tr1::shared_ptr<Graph> ptr;
@@ -123,6 +124,10 @@ class Graph
          * Sets the value of a given named attribute of a named Node in this Graph.
          */
         bool setNodeAttribute(const char *nodeName, const char *attributeName, const Message &value);
+
+        // TODO: World* getWorld ();
+        // TODO: void setWorld (World* world);
+        // TODO: World* world_;
     private:
         typedef std::map<std::string, Node::ptr> NodesMapType;
         typedef std::vector<Connection> ConnectionVec;
