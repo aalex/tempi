@@ -75,6 +75,7 @@ class TempiInspect
         bool printClass(const std::string &name);
     private:
         bool verbose_;
+        bool debug_;
         bool all_;
         std::vector<std::string> keywords_;
         tempi::NodeFactory factory_;
@@ -126,9 +127,9 @@ static void print_bullet_line_if_not_empty(const std::string &text)
 }
 
 TempiInspect::TempiInspect() :
-    verbose_(false)
+    verbose_(false),
+    debug_(false)
 {
-    internals::loadInternals(factory_);
 }
 
 bool TempiInspect::getVerbose() const
@@ -260,6 +261,7 @@ void TempiInspect::printAll()
 
 bool TempiInspect::run()
 {
+    internals::loadInternals(factory_);
     if (all_)
         printAll();
     else
@@ -286,6 +288,7 @@ int TempiInspect::parse_options(int argc, char **argv)
         ("version", "Show program's version number and exit")
         ("keywords,k", po::value<std::vector<std::string> >(&keywords_)->multitoken(), "Sets the node type names to look for in Tempi's documentation. There can be many.")
         ("verbose,v", po::bool_switch(), "Enables a verbose output")
+        ("debug,d", po::bool_switch(), "Enables a very verbose output")
         ("all,a", po::bool_switch(), "Prints detailed info for all node types")
         ;
     po::variables_map options;
@@ -306,6 +309,17 @@ int TempiInspect::parse_options(int argc, char **argv)
     }
 
     verbose_ = options["verbose"].as<bool>();
+    debug_ = options["debug"].as<bool>();
+    if (verbose_)
+    {
+        tempi::Logger::getInstance().setLevel(tempi::INFO);
+        tempi::Logger::log(INFO, "Set logging level to INFO");
+    }
+    if (debug_)
+    {
+        tempi::Logger::getInstance().setLevel(tempi::DEBUG);
+        tempi::Logger::log(INFO, "Set logging level to DEBUG");
+    }
     all_ = options["all"].as<bool>();
     // Options that makes the program exit:
     if (options.count("help"))
