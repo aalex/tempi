@@ -3,6 +3,7 @@ To do in Tempi
 
 To do for 0.2
 -------------
+* FIXME: Serializer always loads booleans as true!!!
 * create a validator for XML schemas
 * rename connection to connect in XML schema
 * FIXME: OscReceiver segfaults if port is busy
