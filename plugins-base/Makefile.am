@@ -71,6 +71,7 @@ libtempi_plugins_base_la_SOURCES = \
     osc/oscreceivernode.cpp \
     osc/oscsendernode.cpp \
     random/drunkint.cpp \
+    sampler/samplenode.cpp \
     sampler/samplernode.cpp \
     sampler/samplerreadnode.cpp \
     sampler/samplerwritenode.cpp
@@ -110,6 +111,7 @@ EXTRA_DIST = \
     random/drunkint.h \
     random/randomintnode.h \
     random/randomdrunknode.h \
+    sampler/samplenode.h \
     sampler/samplernode.h \
     sampler/samplerreadnode.h \
     sampler/samplerwritenode.h \
