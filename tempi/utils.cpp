@@ -106,6 +106,12 @@ void appendArgumentFromString(Message &message, const char *atom_value, Argument
             case BOOLEAN:
                 if (atom_value == "0")
                     message.appendBoolean(false);
+                else if (atom_value == "false")
+                    message.appendBoolean(false);
+                else if (atom_value == "1")
+                    message.appendBoolean(true);
+                else if (atom_value == "true")
+                    message.appendBoolean(true);
                 else
                     message.appendBoolean(true);
                 break;

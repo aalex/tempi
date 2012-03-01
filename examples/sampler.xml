@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tempi version="0.1.11">
+  <graph>
+    <node id="metro0" class="base.metro">
+      <attribute name="interval"><i>1000</i></attribute>
+      <attribute name="running"><b>1</b></attribute>
+    </node>
+    <node id="counter0" class="base.counter">
+    </node>
+    <node id="print_write" class="base.print">
+      <attribute name="prefix"><s>write: </s></attribute>
+      <attribute name="enabled"><b>1</b></attribute>
+    </node>
+    <connection from="metro0" outlet="0" to="counter0" inlet="0"/>
+    <connection from="counter0" outlet="0" to="print_write" inlet="0"/>
+
+    <node id="region0" class="sampler.sample">
+      <attribute name="name"><s>region0</s></attribute>
+    </node>
+    <node id="read0" class="sampler.read">
+      <attribute name="region"><s>region0</s></attribute>
+      <attribute name="reading"><b>1</b></attribute>
+    </node>
+    <node id="write0" class="sampler.write">
+      <attribute name="region"><s>region0</s></attribute>
+      <attribute name="writing"><b>1</b></attribute>
+    </node>
+    <node id="print_read" class="base.print">
+      <attribute name="prefix"><s>read: </s></attribute>
+      <attribute name="enabled"><b>1</b></attribute>
+    </node>
+    <connection from="counter0" outlet="0" to="write0" inlet="write"/>
+    <connection from="read0" outlet="read" to="print_read" inlet="0"/>
+
+    <node id="print_attr" class="base.print">
+      <attribute name="prefix"><s>attr: </s></attribute>
+      <attribute name="enabled"><b>1</b></attribute>
+    </node>
+
+    <!-- STOP WRITING AFTER 5 SECONDS -->
+    <node id="stop_write" class="base.loadmess">
+      <attribute name="value"><s>set</s><s>writing</s><b>false</b></attribute>
+    </node>
+    <node id="stop_write_delay" class="base.delay">
+      <attribute name="delay"><l>5000</l></attribute>
+    </node>
+    <connection from="stop_write" outlet="0" to="stop_write_delay" inlet="0"/>
+    <connection from="stop_write_delay" outlet="0" to="write0" inlet="__attr__"/>
+    <connection from="stop_write_delay" outlet="0" to="print_attr" inlet="0"/>
+
+    <!-- STOP PRINTING AFTER 5 SECONDS -->
+    <node id="stop_print" class="base.loadmess">
+      <attribute name="value"><s>set</s><s>enabled</s><b>false</b></attribute>
+    </node>
+    <node id="stop_print_delay" class="base.delay">
+      <attribute name="delay"><l>5000</l></attribute>
+    </node>
+    <connection from="stop_print" outlet="0" to="stop_print_delay" inlet="0"/>
+    <connection from="stop_print_delay" outlet="0" to="print_write" inlet="__attr__"/>
+    <connection from="stop_print_delay" outlet="0" to="print_attr" inlet="0"/>
+  </graph>
+</tempi>

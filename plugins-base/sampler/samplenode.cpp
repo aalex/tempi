@@ -43,6 +43,13 @@ void SamplerSampleNode::onAttributeChanged(const char *name, const Message &valu
     const static std::string region(ATTR_NAME);
     if (region == name)
     {
+        if (value.getString(0) == previous_region_name_)
+        {
+            std::ostringstream os;
+            os << "FIXME: attributes are set twice.";
+            Logger::log(WARNING, os.str().c_str());
+            return;
+        }
         bool ok = setRegionName(value.getString(0));
         if (! ok)
         {

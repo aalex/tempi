@@ -29,7 +29,8 @@
 #include "tempi/message.h"
 #include <iostream>
 
-namespace tempi { namespace base {
+namespace tempi {
+namespace base {
 
 /**
  * The PrintNode prints the contents of a Message.
@@ -41,9 +42,6 @@ class PrintNode : public Node
     protected:
         virtual void processMessage(const char *inlet, const Message &message);
         virtual void onAttributeChanged(const char *name, const Message &value);
-    private:
-        std::string prefix_;
-        bool enabled_;
 };
 
 } // end of namespace
