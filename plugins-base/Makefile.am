@@ -1,3 +1,5 @@
+SUBDIRS = tests
+
 AM_CXXFLAGS = \
     $(LOG4CPP_CFLAGS) \
     $(BOOST_CPPFLAGS) \
