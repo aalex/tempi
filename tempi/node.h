@@ -46,6 +46,8 @@ const char * const INLET_DELETED_SIGNAL = "__delete_inlet__";
 const char * const OUTLET_CREATED_SIGNAL = "__create_outlet__";
 const char * const OUTLET_DELETED_SIGNAL = "__delete_outlet__";
 
+class Graph; // forward declaration
+
 /**
  * A Node is something that element that can be connected to and from other elements.
  * All nodes have at least one inlet for setting properties. (using ,ss... "set" "name" ...)
@@ -62,6 +64,8 @@ class Node : public Entity
          */
         bool init();
         void loadBang();
+        void setGraph(Graph *graph);
+        Graph *getGraph() const;
         /**
          * Returns whether or not this node's init() has been called.
          */
@@ -208,6 +212,7 @@ class Node : public Entity
         std::string handledReceiveSymbol_;
         // TODO: return success
         // TODO: add unsigned int inlet_number
+        Graph *graph_;
 };
 
 } // end of namespace

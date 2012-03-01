@@ -5,10 +5,8 @@ LDADD = \
 
 check_PROGRAMS = \
     check_average \
-    check_base \
     check_fsm \
     check_graph \
-    check_math \
     check_message \
     check_libraries \
     check_log \
@@ -25,10 +23,8 @@ check_PROGRAMS = \
 TESTS = $(check_PROGRAMS)
 
 check_average_SOURCES = check_average.cpp
-check_base_SOURCES = check_base.cpp
 check_fsm_SOURCES = check_fsm.cpp
 check_graph_SOURCES = check_graph.cpp
-check_math_SOURCES = check_math.cpp
 check_message_SOURCES = check_message.cpp
 check_libraries_SOURCES = check_libraries.cpp
 check_log_SOURCES = check_log.cpp
