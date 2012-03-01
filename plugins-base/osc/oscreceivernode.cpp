@@ -30,6 +30,7 @@ OscReceiverNode::OscReceiverNode() :
     Node(),
     port_number_(0)
 {
+    setShortDocumentation("Receives OSC messages.");
     addOutlet("incoming");
     Message port = Message("i", 0);
     addAttribute(Attribute::ptr(new Attribute("port", port, "Receive OSC messages on this port number.")));

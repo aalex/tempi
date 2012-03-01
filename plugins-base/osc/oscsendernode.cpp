@@ -28,6 +28,7 @@ namespace osc {
 OscSenderNode::OscSenderNode() :
     Node()
 {
+    setShortDocumentation("Sends OSC messages.");
     Message host_port;
     host_port.appendString("localhost");
     host_port.appendInt(0);

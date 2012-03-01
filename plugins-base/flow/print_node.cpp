@@ -29,6 +29,7 @@ PrintNode::PrintNode() :
     prefix_("print: "),
     enabled_(true)
 {
+    setShortDocumentation("Prints incoming messages to the text console.");
     //addOutlet();
     addInlet("0", "Print messages received from this inlet.");
 
