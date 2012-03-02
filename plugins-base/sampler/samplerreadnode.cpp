@@ -66,6 +66,11 @@ void SamplerReadNode::play(bool enabled)
 
 void SamplerReadNode::setRegion(const std::string &name)
 {
+    if (name == "")
+    {
+        Logger::log(INFO, "SamplerReadNode.setRegion: name is an empty string");
+        return;
+    }
     Graph *graph = this->getGraph();
     if (graph == 0)
     {
