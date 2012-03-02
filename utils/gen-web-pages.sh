@@ -4,6 +4,7 @@ cd ..
 HTML_DIR=doc/html
 RST2HTML_OPTS="--stylesheet voidspace.css --link-stylesheet"
 mkdir -p ${HTML_DIR}
+cp logo_sat.png ${HTML_DIR}/
 rst2html ${RST2HTML_OPTS} NEWS > ${HTML_DIR}/news.html
 rst2html ${RST2HTML_OPTS} README > ${HTML_DIR}/readme.html
 rst2html ${RST2HTML_OPTS} doc/index.rst > ${HTML_DIR}/index.html
