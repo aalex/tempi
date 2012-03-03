@@ -45,7 +45,12 @@ namespace serializer {
 static bool node_name_is(xmlNode *node, const std::string &name);
 static bool save_message(xmlNodePtr message_node, const Message &value);
 static bool save_connections(xmlNodePtr graph_node, Graph &graph);
-bool save_region(xmlNodePtr root_node, sampler::Region &region);
+static bool save_region(xmlNodePtr root_node, sampler::Region &region);
+static bool load_graph_connections(xmlNodePtr graph_node, Graph &graph);
+/**
+ * Note: internally calls Graph.tick()
+ */
+static bool load_graph(xmlNodePtr graph_node, Graph &graph);
 
 /**
  * Converts a char to a string.
@@ -162,7 +167,6 @@ bool save_nodes(xmlNodePtr graph_node, Graph &graph)
 
 bool Serializer::save(Graph &graph, const char *filename)
 {
-    char buff[256]; // buff for node names and int properties
     xmlDocPtr doc = xmlNewDoc(XMLSTR "1.0");
     // "tempi" node with its "version" attribute
     xmlNodePtr root_node = xmlNewNode(NULL, XMLSTR ROOT_NODE);
@@ -194,6 +198,153 @@ bool Serializer::save(Graph &graph, const char *filename)
     return true;
 }
 
+bool load_graph_connections(xmlNodePtr graph_node, Graph &graph)
+{
+    for (xmlNode *connection_node = graph_node->children;
+        connection_node; connection_node = connection_node->next)
+    { // for each connection
+        // is a connection:
+        if (node_name_is(connection_node, CONNECTION_NODE))
+        {
+            Logger::log(DEBUG, "Entering connection:");
+            xmlChar *from = xmlGetProp(connection_node,
+                XMLSTR CONNECTION_FROM_PROPERTY);
+            xmlChar *outlet = xmlGetProp(connection_node,
+                XMLSTR CONNECTION_OUTLET_PROPERTY);
+            xmlChar *to = xmlGetProp(connection_node,
+                XMLSTR CONNECTION_TO_PROPERTY);
+            xmlChar *inlet = xmlGetProp(connection_node,
+                XMLSTR CONNECTION_INLET_PROPERTY);
+            if (from != NULL && outlet != NULL
+                && to != NULL && inlet != NULL)
+            {
+                std::ostringstream os;
+                os << "serializer::" << __FUNCTION__ << "(): Connect "
+                    << from << ":" << outlet << " -> " << to << ":" << inlet;
+                Logger::log(INFO, os.str().c_str());
+                graph.connect((char *) from, (char *) outlet, (char *) to, (char *) inlet);
+            }
+            xmlFree(from);
+            xmlFree(outlet);
+            xmlFree(to);
+            xmlFree(inlet);
+        } // is a connection
+        else if (
+            ! node_name_is(connection_node, NODE_NODE) &&
+            ! node_name_is(connection_node, CONNECTION_NODE) &&
+            ! node_name_is(connection_node, REGION_NODE) &&
+            connection_node->type == XML_ELEMENT_NODE)
+        {
+            std::ostringstream os;
+            os << "Found unknown XML tag: \"" << connection_node->name << "\"";
+            Logger::log(ERROR, os.str().c_str());
+        }
+    } // for each connection
+}
+
+bool load_node_attributes(xmlNodePtr node_node, Node &node)
+{
+    // ATTRIBUTES:
+    for (xmlNode *attribute_node = node_node->children;
+        attribute_node;
+        attribute_node = attribute_node->next)
+    { // each child of node
+        Message attr_value;
+        if (node_name_is(attribute_node, ATTRIBUTE_NODE))
+        { // is an attribute:
+            xmlChar *attr_name = xmlGetProp(attribute_node,
+                XMLSTR ATTRIBUTE_NAME_PROPERTY);
+            //std::cout << "   * attr " << attr_name << std::endl;
+            for (xmlNode *atom_node =
+                attribute_node->children;
+                atom_node;
+                atom_node = atom_node->next)
+            { // for each atom:
+                // get atom type:
+                ArgumentType atom_typetag = static_cast<ArgumentType>('\0');
+                xmlChar *tmp_atom_value = xmlNodeGetContent(
+                    atom_node);
+                std::string atom_value = std::string((char *) tmp_atom_value);
+                xmlFree(tmp_atom_value);
+                if (atom_node->type == XML_ELEMENT_NODE
+                    && atom_node->name)
+                { // is atom node
+                    std::string tmp_typetag = std::string(
+                            (char *) atom_node->name);
+                    if (tmp_typetag.size() == 1)
+                    {
+                        atom_typetag = static_cast<ArgumentType>(tmp_typetag[0]);
+                    } // size
+                    else
+                    {
+                        std::cerr << "Atom typetags should be only one char. Got " <<
+                            tmp_typetag << std::endl;
+                    }
+                    try
+                    {
+                        utils::appendArgumentFromString(attr_value, atom_value.c_str(), atom_typetag);
+                        std::ostringstream os;
+                        os << "    * atom " <<
+                            (char) atom_typetag << ":" <<
+                            atom_value;
+                        Logger::log(INFO, os.str().c_str());
+                    }
+                    catch (const BadArgumentTypeException &e)
+                    {
+                        std::ostringstream os;
+                        os << __FILE__ << ": " << __FUNCTION__ << " " << e.what();
+                        Logger::log(ERROR, os.str().c_str());
+                    }
+                    {
+                        std::ostringstream os;
+                        os << "    * atom results in " << attr_value;
+                        Logger::log(DEBUG, os.str().c_str());
+                    }
+                } // is atom node
+            } // for each atom
+            node.setAttributeValue((char *) attr_name, attr_value);
+            xmlFree(attr_name);
+        } // is an attribute
+    } // each child of node
+    return true;
+}
+
+bool load_graph(xmlNodePtr graph_node, Graph &graph)
+{
+    for (xmlNode *node_node = graph_node->children;
+        node_node;
+        node_node = node_node->next)
+    { // for each node:
+        if (node_name_is(node_node, NODE_NODE))
+        { // is a node
+            // TODO: check if it has the property
+            xmlChar *node_type = xmlGetProp(node_node, 
+                XMLSTR NODE_CLASS_PROPERTY);
+            // TODO: check if it has the property
+            xmlChar *node_name = xmlGetProp(node_node, 
+                XMLSTR NODE_ID_PROPERTY);
+            {
+                std::ostringstream os;
+                os << "  * node " << node_name << " of type " << node_type;
+                Logger::log(INFO, os.str().c_str());
+            }
+            if (node_type != NULL && node_name != NULL)
+            { // node has name
+                graph.addNode((char *) node_type, (char *) node_name);
+                Node::ptr node = graph.getNode((char *) node_name);
+                load_node_attributes(node_node, *(node.get()));
+            } // node has name
+            xmlFree(node_type);
+            xmlFree(node_name);
+        } // is a node
+    } // for each node
+
+    graph.tick(); // FIXME this is annoying
+
+    load_graph_connections(graph_node, graph);
+    return true;
+}
+
 bool Serializer::load(Graph &graph, const char *filename)
 {
     bool verbose = false;
@@ -213,6 +364,7 @@ bool Serializer::load(Graph &graph, const char *filename)
     }
     xmlNode *root = xmlDocGetRootElement(doc);
 
+    // FIXME: this method might load many graphs into one!
     Logger::log(DEBUG, "Graphs");
     for (xmlNode *graph_node = root->children;
         graph_node;
@@ -221,133 +373,10 @@ bool Serializer::load(Graph &graph, const char *filename)
         if (node_name_is(graph_node, GRAPH_NODE))
         { // is a graph:
             Logger::log(DEBUG, " * Graph");
-            for (xmlNode *node_node = graph_node->children;
-                node_node;
-                node_node = node_node->next)
-            { // for each node:
-                if (node_name_is(node_node, NODE_NODE))
-                { // is a node
-                    // TODO: check if it has the property
-                    xmlChar *node_type = xmlGetProp(node_node, 
-                        XMLSTR NODE_CLASS_PROPERTY);
-                    // TODO: check if it has the property
-                    xmlChar *node_name = xmlGetProp(node_node, 
-                        XMLSTR NODE_ID_PROPERTY);
-                    {
-                        std::ostringstream os;
-                        os << "  * node " << node_name << " of type " << node_type;
-                        Logger::log(INFO, os.str().c_str());
-                    }
-                    if (node_type != NULL && node_name != NULL)
-                    { // node has name
-                        graph.addNode((char *) node_type, (char *) node_name);
-                        // ATTRIBUTES:
-                        for (xmlNode *attribute_node = node_node->children;
-                            attribute_node;
-                            attribute_node = attribute_node->next)
-                        { // each child of node
-                            Message attr_value;
-                            if (node_name_is(attribute_node, ATTRIBUTE_NODE))
-                            { // is an attribute:
-                                xmlChar *attr_name = xmlGetProp(attribute_node,
-                                    XMLSTR ATTRIBUTE_NAME_PROPERTY);
-                                //std::cout << "   * attr " << attr_name << std::endl;
-                                for (xmlNode *atom_node =
-                                    attribute_node->children;
-                                    atom_node;
-                                    atom_node = atom_node->next)
-                                { // for each atom:
-                                    // get atom type:
-                                    ArgumentType atom_typetag = static_cast<ArgumentType>('\0');
-                                    xmlChar *tmp_atom_value = xmlNodeGetContent(
-                                        atom_node);
-                                    std::string atom_value = std::string((char *) tmp_atom_value);
-                                    xmlFree(tmp_atom_value);
-                                    if (atom_node->type == XML_ELEMENT_NODE
-                                        && atom_node->name)
-                                    { // is atom node
-                                        std::string tmp_typetag = std::string(
-                                                (char *) atom_node->name);
-                                        if (tmp_typetag.size() == 1)
-                                        {
-                                            atom_typetag = static_cast<ArgumentType>(tmp_typetag[0]);
-                                        } // size
-                                        else
-                                        {
-                                            std::cerr << "Atom typetags should be only one char. Got " <<
-                                                tmp_typetag << std::endl;
-                                        }
-                                        try
-                                        {
-                                            utils::appendArgumentFromString(attr_value, atom_value.c_str(), atom_typetag);
-                                            std::ostringstream os;
-                                            os << "    * atom " <<
-                                                (char) atom_typetag << ":" <<
-                                                atom_value;
-                                            Logger::log(INFO, os.str().c_str());
-                                        }
-                                        catch (const BadArgumentTypeException &e)
-                                        {
-                                            std::ostringstream os;
-                                            os << __FILE__ << ": " << __FUNCTION__ << " " << e.what();
-                                            Logger::log(ERROR, os.str().c_str());
-                                        }
-                                        {
-                                            std::ostringstream os;
-                                            os << "    * atom results in " << attr_value;
-                                            Logger::log(DEBUG, os.str().c_str());
-                                        }
-                                    } // is atom node
-                                } // for each atom
-                                graph.setNodeAttribute((char *) node_name, (char *) attr_name, attr_value);
-                                xmlFree(attr_name);
-                            } // is an attribute
-                        } // each child of node
-                    } // node has name
-                    xmlFree(node_type);
-                    xmlFree(node_name);
-                } // is a node
-            } // for each node
-
-        graph.tick(); // FIXME this is annoying
-
-        for (xmlNode *connection_node = graph_node->children;
-            connection_node; connection_node = connection_node->next)
-        { // for each connection
-            // is a connection:
-            if (node_name_is(connection_node, CONNECTION_NODE))
-            {
-                Logger::log(DEBUG, "Entering connection:");
-                xmlChar *from = xmlGetProp(connection_node,
-                    XMLSTR CONNECTION_FROM_PROPERTY);
-                xmlChar *outlet = xmlGetProp(connection_node,
-                    XMLSTR CONNECTION_OUTLET_PROPERTY);
-                xmlChar *to = xmlGetProp(connection_node,
-                    XMLSTR CONNECTION_TO_PROPERTY);
-                xmlChar *inlet = xmlGetProp(connection_node,
-                    XMLSTR CONNECTION_INLET_PROPERTY);
-                if (from != NULL && outlet != NULL
-                    && to != NULL && inlet != NULL)
-                {
-                    std::ostringstream os;
-                    os << "serializer::" << __FUNCTION__ << "(): Connect "
-                        << from << ":" << outlet << " -> " << to << ":" << inlet;
-                    Logger::log(INFO, os.str().c_str());
-                    graph.connect((char *) from, (char *) outlet, (char *) to, (char *) inlet);
-                }
-                xmlFree(from);
-                xmlFree(outlet);
-                xmlFree(to);
-                xmlFree(inlet);
-            } // is a connection
-            else if (! node_name_is(connection_node, NODE_NODE) &&
-                connection_node->type == XML_ELEMENT_NODE)
-            {
-                std::ostringstream os;
-                os << "Found unknown XML tag: \"" << connection_node->name << "\"";
-                Logger::log(ERROR, os.str().c_str());
-            }
-        } // for each connection
+            // Loads nodes and their attributes
+            // ticks the Graph
+            // and loads the connections between nodes:
+            load_graph(graph_node, graph);
         } // is a graph
     } // for each graph
 
@@ -431,7 +460,6 @@ bool save_region(xmlNodePtr root_node, sampler::Region &region)
 
 bool Serializer::save(sampler::Region &region, const char *filename)
 {
-    char buff[256]; // buff for node names and int properties
     xmlDocPtr doc = xmlNewDoc(XMLSTR "1.0");
     // "tempi" node with its "version" attribute
     xmlNodePtr root_node = xmlNewNode(NULL, XMLSTR ROOT_NODE);
