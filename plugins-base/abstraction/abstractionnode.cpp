@@ -31,8 +31,11 @@ namespace plugins_base {
 const char * const AbstractionNode::INLET_NODE_NAME = "abs.inlet";
 const char * const AbstractionNode::OUTLET_NODE_NAME = "abs.outlet";
 
-static std::vector<std::string> listNodeWhoseTypeIs(const Graph &graph, const char *typeName);
-static bool hasNodeOfType(Graph &graph, const std::string &nodeName, const std::string &nodeType);
+static std::vector<std::string> listNodeWhoseTypeIs(
+    const Graph &graph, const char *typeName);
+
+static bool hasNodeOfType(
+    Graph &graph, const std::string &nodeName, const std::string &nodeType);
 
 AbstractionNode::AbstractionNode() :
     Node(),
@@ -43,8 +46,6 @@ AbstractionNode::AbstractionNode() :
     setShortDocumentation("Loads a Graph from an XML file and allows one to send and receives messages to and from its nodes.");
     addAttribute(Attribute::ptr(new Attribute("file_path", Message("s", ""), "Path to the XML file to load the Tempi Graph from.")));
 }
-
-
 
 void AbstractionNode::onAttributeChanged(const char *name, const Message &value)
 {
