@@ -476,10 +476,10 @@ bool Graph::setNodeAttribute(const char *nodeName, const char *attributeName, co
         Logger::log(ERROR, os.str().c_str());
         return false;
     }
-    catch (const BadArgumentTypeException &e)
+    catch (const BadAtomTypeException &e)
     {
         std::ostringstream os;
-        os << "BadArgumentTypeException in ";
+        os << "BadAtomTypeException in ";
         os << "Graph." << __FUNCTION__ << "(" <<
             nodeName << ", " << attributeName << ", " << value
             << "): " << e.what() << std::endl;;

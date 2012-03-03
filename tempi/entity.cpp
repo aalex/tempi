@@ -53,7 +53,7 @@ const Message &Entity::getAttributeValue(const char *name) const
 
 // TODO: rename to setAttributeValue
 void Entity::setAttribute(const char *name, const Message &value)
-    throw(BadIndexException, BadArgumentTypeException)
+    throw(BadIndexException, BadAtomTypeException)
 {
     bool ok_to_change = false;
     Attribute* current = getAttribute(name); // might throw BadIndexException
@@ -68,7 +68,7 @@ void Entity::setAttribute(const char *name, const Message &value)
         {
             std::ostringstream os;
             os << "Entity::" << __FUNCTION__ << ": Attribute " << name << ": Bad type " << value.getTypes() << " while expecting " << current->getValue().getTypes();
-            throw (BadArgumentTypeException(os.str().c_str()));
+            throw (BadAtomTypeException(os.str().c_str()));
         }
     }
     else

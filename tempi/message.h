@@ -55,15 +55,15 @@ typedef enum
     STRING = 's',
     // TODO: UNICODE = 'u',
     POINTER = 'p'
-} ArgumentType;
+} AtomType;
 
 namespace types
 {
-    bool getArgumentTypeForAny(const boost::any &value, ArgumentType &type);
+    bool getAtomTypeForAny(const boost::any &value, AtomType &type);
 } // end of namespace
 
 /**
- * A Message contains a list of arguments whose types are one of ArgumentType.
+ * A Message contains a list of arguments whose types are one of AtomType.
  * Message objects can be stored in a Track, and passed from/to Node inlets and outlets.
  */
 class Message
@@ -85,7 +85,7 @@ class Message
          */
         void append(const char* types, ...);
         //const std::type_info *getType(unsigned int index) const;
-        bool getArgumentType(unsigned int index, ArgumentType &type) const;
+        bool getAtomType(unsigned int index, AtomType &type) const;
         //bool setArgument(unsigned int index, boost::any &value);
         unsigned int getSize() const;
 
@@ -117,49 +117,49 @@ class Message
         void prependMessage(const Message &message);
 
         bool getBoolean(unsigned int index) const
-            throw(BadArgumentTypeException, BadIndexException);
+            throw(BadAtomTypeException, BadIndexException);
         char getChar(unsigned int index) const
-            throw(BadArgumentTypeException, BadIndexException);
+            throw(BadAtomTypeException, BadIndexException);
         unsigned char getUnsignedChar(unsigned int index) const
-            throw(BadArgumentTypeException, BadIndexException);
+            throw(BadAtomTypeException, BadIndexException);
         double getDouble(unsigned int index) const
-            throw(BadArgumentTypeException, BadIndexException);
+            throw(BadAtomTypeException, BadIndexException);
         float getFloat(unsigned int index) const
-            throw(BadArgumentTypeException, BadIndexException);
+            throw(BadAtomTypeException, BadIndexException);
         int getInt(unsigned int index) const
-            throw(BadArgumentTypeException, BadIndexException);
+            throw(BadAtomTypeException, BadIndexException);
         long long int getLong(unsigned int index) const
-            throw(BadArgumentTypeException, BadIndexException);
+            throw(BadAtomTypeException, BadIndexException);
         std::string getString(unsigned int index) const
-            throw(BadArgumentTypeException, BadIndexException);
+            throw(BadAtomTypeException, BadIndexException);
         //void getString(unsigned int index, std::string &value) const
-        //  throw(BadArgumentTypeException, BadIndexException);
+        //  throw(BadAtomTypeException, BadIndexException);
         void *getPointer(unsigned int index) const
-            throw(BadArgumentTypeException, BadIndexException);
+            throw(BadAtomTypeException, BadIndexException);
 
         void setBoolean(unsigned int index, bool value)
-            throw(BadArgumentTypeException, BadIndexException);
+            throw(BadAtomTypeException, BadIndexException);
         void setChar(unsigned int index, char value)
-            throw(BadArgumentTypeException, BadIndexException);
+            throw(BadAtomTypeException, BadIndexException);
         void setUnsignedChar(unsigned int index, unsigned char value)
-            throw(BadArgumentTypeException, BadIndexException);
+            throw(BadAtomTypeException, BadIndexException);
         void setDouble(unsigned int index, double value)
-            throw(BadArgumentTypeException, BadIndexException);
+            throw(BadAtomTypeException, BadIndexException);
         void setFloat(unsigned int index, float value)
-            throw(BadArgumentTypeException, BadIndexException);
+            throw(BadAtomTypeException, BadIndexException);
         void setInt(unsigned int index, int value)
-            throw(BadArgumentTypeException, BadIndexException);
+            throw(BadAtomTypeException, BadIndexException);
         void setLong(unsigned int index, long long int value)
-            throw(BadArgumentTypeException, BadIndexException);
+            throw(BadAtomTypeException, BadIndexException);
         void setString(unsigned int index, std::string value)
-            throw(BadArgumentTypeException, BadIndexException);
+            throw(BadAtomTypeException, BadIndexException);
         void setString(unsigned int index, const char *value)
-            throw(BadArgumentTypeException, BadIndexException)
+            throw(BadAtomTypeException, BadIndexException)
         {
             setString(index, std::string(value));
         }
         void setPointer(unsigned int index, void *value)
-            throw(BadArgumentTypeException, BadIndexException);
+            throw(BadAtomTypeException, BadIndexException);
 
         // TODO: deprecate the string version
         bool typesMatch(std::string &types) const;
@@ -208,7 +208,7 @@ class Message
 
         template <typename T>
         void get(unsigned int index, T &value) const
-            throw(BadArgumentTypeException, BadIndexException)
+            throw(BadAtomTypeException, BadIndexException)
         {
             const boost::any *tmp = getArgument(index);
             if (tmp)
@@ -220,7 +220,7 @@ class Message
                 {
                     std::ostringstream os;
                     os << "Message::" << __FUNCTION__ << ": Bad argument type " << index << " " << typeid(value).name();
-                    throw BadArgumentTypeException(os.str().c_str());
+                    throw BadAtomTypeException(os.str().c_str());
                 }
             else
             {
@@ -232,7 +232,7 @@ class Message
 
         template <typename T>
         void set(unsigned int index, T value)
-            throw(BadArgumentTypeException, BadIndexException)
+            throw(BadAtomTypeException, BadIndexException)
         {
             if (index >= getSize())
             {

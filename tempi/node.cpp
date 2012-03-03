@@ -122,14 +122,14 @@ void Node::onInletTriggered(Inlet *inlet, const Message &message)
     bool is_a_attribute = false;
     if (inlet->getName() == ATTRIBUTES_INLET && message.getSize() >= 3)
     {
-        // ArgumentType type0;
-        // ArgumentType type1;
-        // if (! message.getArgumentType(0, type0))
+        // AtomType type0;
+        // AtomType type1;
+        // if (! message.getAtomType(0, type0))
         // {
         //     std::cout << "could not get arg type for index " << 0 << std::endl;
         //     // TODO: abort
         // }
-        // if (! message.getArgumentType(1, type1))
+        // if (! message.getAtomType(1, type1))
         // {
         //     std::cout << "could not get arg type for index " << 1 << std::endl;
         //     // TODO: abort
@@ -151,7 +151,7 @@ void Node::onInletTriggered(Inlet *inlet, const Message &message)
                 {
                     std::cerr << "Node(" << getTypeName() << ":" << getName() << ")::" << __FUNCTION__ << ": " << e.what();
                 }
-                catch (const BadArgumentTypeException &e)
+                catch (const BadAtomTypeException &e)
                 {
                     std::cerr << "Node(" << getTypeName() << ":" << getName() << ")::" << __FUNCTION__ << ": " << e.what();
                 }
@@ -173,7 +173,7 @@ void Node::onInletTriggered(Inlet *inlet, const Message &message)
             {
                 setAttribute(inlet->getName().c_str(), message);
             }
-            catch (const BadArgumentTypeException &e)
+            catch (const BadAtomTypeException &e)
             {
                 std::cerr << "Node(" << getTypeName() << ":" << getName() << ")::" << __FUNCTION__ << ": " << e.what();
             }

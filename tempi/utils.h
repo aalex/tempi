@@ -63,7 +63,7 @@ std::string concatenate(const char *a, const char *b);
  * Converts any type (int, etc.) to a string.
  */
 template <typename T>
-std::string to_string(T value) throw(BadArgumentTypeException);
+std::string to_string(T value) throw(BadAtomTypeException);
 
 /**
  * Checks if a value is in a vector.
@@ -78,13 +78,13 @@ bool find_in_vector(std::vector<T> &vec, const T &value)
  * Serializes a given argument from a Message.
  */
 std::string argumentToString(const Message &message, unsigned int index)
-    throw(BadArgumentTypeException, BadIndexException);
+    throw(BadAtomTypeException, BadIndexException);
 
 /**
  * Appends an argument to the given Message parsing a serialized string, if valid.
  */
-void appendArgumentFromString(Message &message, const char *atom_value, ArgumentType type)
-    throw(BadArgumentTypeException);
+void appendArgumentFromString(Message &message, const char *atom_value, AtomType type)
+    throw(BadAtomTypeException);
 
 /**
  * Simply converts a char to a string.
@@ -104,7 +104,7 @@ bool isValidAtomType(const char c);
  * Tries to cast a Message arguments to some other type tags.
  */
 Message castMessage(const Message &message, const char *type)
-    throw(BadArgumentTypeException, BadIndexException);
+    throw(BadAtomTypeException, BadIndexException);
 
 } // end of namespace
 } // end of namespace
