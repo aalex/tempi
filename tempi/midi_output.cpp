@@ -59,8 +59,8 @@ bool MidiOutput::sendMessage(const Message &message) const
         std::vector<unsigned char> event;
         for (unsigned int i = 0; i < message.getSize(); ++i)
         {
-            ArgumentType type;
-            message.getArgumentType(i, type);
+            AtomType type;
+            message.getAtomType(i, type);
             if (type == 'C')
                 event.push_back(message.getUnsignedChar(i));
         }

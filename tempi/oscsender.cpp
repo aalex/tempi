@@ -41,8 +41,8 @@ OscSender::~OscSender()
 bool OscSender::sendMessage(const Message &message)
 {
     std::string path;
-    ArgumentType firstArgType;
-    message.getArgumentType(0, firstArgType);
+    AtomType firstArgType;
+    message.getAtomType(0, firstArgType);
     if (firstArgType == 's')
         path = message.getString(0);
     else
@@ -59,8 +59,8 @@ bool OscSender::sendMessage(const Message &message)
     lo_message loMess = lo_message_new();
     for (unsigned int i = 1; i < message.getSize(); ++i)
     {
-        ArgumentType type;
-        message.getArgumentType(i, type);
+        AtomType type;
+        message.getAtomType(i, type);
         switch (type)
         {
             case BOOLEAN:

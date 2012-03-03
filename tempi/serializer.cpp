@@ -266,7 +266,7 @@ bool load_message(xmlNodePtr message_node, Message &message)
         atom_node = atom_node->next)
     { // for each atom:
         // get atom type:
-        ArgumentType atom_typetag = static_cast<ArgumentType>('\0');
+        AtomType atom_typetag = static_cast<AtomType>('\0');
         xmlChar *tmp_atom_value = xmlNodeGetContent(
             atom_node);
         std::string atom_value = std::string((char *) tmp_atom_value);
@@ -278,7 +278,7 @@ bool load_message(xmlNodePtr message_node, Message &message)
                     (char *) atom_node->name);
             if (tmp_typetag.size() == 1)
             {
-                atom_typetag = static_cast<ArgumentType>(tmp_typetag[0]);
+                atom_typetag = static_cast<AtomType>(tmp_typetag[0]);
             } // size
             else
             {
@@ -295,7 +295,7 @@ bool load_message(xmlNodePtr message_node, Message &message)
                     atom_value;
                 Logger::log(INFO, os.str().c_str());
             }
-            catch (const BadArgumentTypeException &e)
+            catch (const BadAtomTypeException &e)
             {
                 std::ostringstream os;
                 os << __FILE__ << ": " << __FUNCTION__ << " " << e.what();
@@ -476,8 +476,8 @@ bool save_message(xmlNodePtr message_node, const Message &value)
     for (unsigned int i = 0; i < value.getSize(); ++i)
     {
         std::string atom_value;
-        ArgumentType atom_type_char;
-        value.getArgumentType(i, atom_type_char);
+        AtomType atom_type_char;
+        value.getAtomType(i, atom_type_char);
         std::string atom_type = char_to_string(atom_type_char);
         try
         {
@@ -485,7 +485,7 @@ bool save_message(xmlNodePtr message_node, const Message &value)
             xmlNodePtr atom_node = xmlNewChild(message_node, NULL, 
                 XMLSTR atom_type.c_str(), XMLSTR atom_value.c_str());
         }
-        catch (const BadArgumentTypeException &e)
+        catch (const BadAtomTypeException &e)
         {
             std::cerr << e.what() << std::endl;
         }

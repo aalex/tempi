@@ -107,10 +107,10 @@ class Entity : public Documented
          * TODO: rename to setAttributeValue and delete this one.
          */
         void setAttribute(const char *name, const Message &value)
-            throw(BadIndexException, BadArgumentTypeException);
+            throw(BadIndexException, BadAtomTypeException);
 
         void setAttributeValue(const char *name, const Message &value)
-            throw(BadIndexException, BadArgumentTypeException)
+            throw(BadIndexException, BadAtomTypeException)
         {
             setAttribute(name, value);
         }

@@ -72,7 +72,7 @@ class CastNode : public Node
                 Message result = utils::castMessage(message, desired_type_.c_str());
                 this->output("0", result);
             }
-            catch (const BadArgumentTypeException &e)
+            catch (const BadAtomTypeException &e)
             {
                 Logger::log(WARNING, e.what());
             }

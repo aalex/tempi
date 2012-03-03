@@ -61,7 +61,7 @@ static bool check_properties()
         std::cout << "Should not be able to set a property with a different type.\n";
         return false;
     }
-    catch (const BadArgumentTypeException &e)
+    catch (const BadAtomTypeException &e)
     {}
 
     try

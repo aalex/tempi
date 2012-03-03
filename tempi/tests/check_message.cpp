@@ -12,12 +12,21 @@ bool check_message()
     m.appendFloat(3.14159);
     m.appendString("hello");
     m.appendInt(2);
+    m.appendBang();
+    m.appendUnsignedInt(20);
+
+    if (! m.typesMatch("fsi!u"))
+    {
+        std::cout << __FUNCTION__ << ": types tag don't match what we expect\n";
+        return false;
+    }
 
     if (VERBOSE)
     {
         std::cout << "float: " << m.getFloat(0) << std::endl;
         std::cout << "string: " << m.getString(1) << std::endl;
         std::cout << "int: " << m.getInt(2) << std::endl;
+        std::cout << "uint: " << m.getUnsignedInt(4) << std::endl;
         std::cout << "Message: " << m << std::endl;
     }
     return true;

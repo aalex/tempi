@@ -28,7 +28,7 @@ BOOST_PYTHON_MODULE(tempi)
     def("hello", hello);
     def("get_version", get_version);
 
-    enum_<ArgumentType>("ArgumentType")
+    enum_<AtomType>("AtomType")
         .value("BOOLEAN", BOOLEAN)
         .value("CHAR", CHAR)
         .value("DOUBLE", DOUBLE)
@@ -56,7 +56,7 @@ BOOST_PYTHON_MODULE(tempi)
         .def("getTypes", &Message::getTypes)
         .def("getSize", &Message::getSize)
         ;
-        //TODO: .def("getArgumentType", &Message::ArgumentType)
+        //TODO: .def("getAtomType", &Message::AtomType)
 
     // class_<Track>("Track")
     //     .def("reset", &Track::reset)
