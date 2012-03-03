@@ -68,7 +68,7 @@ Logger::Logger()
 {
     appender_ = new log4cpp::OstreamAppender("console", &std::cout);
     layout_ = new log4cpp::PatternLayout();
-    layout_->setConversionPattern("%d: %8p - %m %n");
+    layout_->setConversionPattern("%d{%H:%M:%S,%l} %8p - %m %n"); // %d: 
     appender_->setLayout(layout_);
     log4cpp::Category& category = log4cpp::Category::getInstance(category_name_);
     category.setAppender(appender_);

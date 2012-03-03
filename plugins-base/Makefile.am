@@ -44,6 +44,9 @@ libtempi_plugins_base_la_includedir = $(includedir)/tempi-$(TEMPI_API_VERSION)
 ## and the variable name derived from that.
 ## PLEASE KEEP THEM IN ALPHABETICAL ORDER
 libtempi_plugins_base_la_SOURCES = \
+	abstraction/abstractionnode.cpp \
+	abstraction/inletnode.cpp \
+	abstraction/outletnode.cpp \
     baselibrary.cpp \
     clutter/clutterstagenode.cpp \
     flow/anynode.cpp \
@@ -77,6 +80,9 @@ libtempi_plugins_base_la_SOURCES = \
     sampler/samplerwritenode.cpp
 
 EXTRA_DIST = \
+	abstraction/abstractionnode.h \
+	abstraction/inletnode.h \
+	abstraction/outletnode.h \
     baselibrary.h \
     clutter/clutterstagenode.h \
     flow/anynode.h \
