@@ -132,6 +132,11 @@ unsigned int Region::numberOfEvents()
     return events_.size();
 }
 
+std::vector<Region::Event> Region::getAllEvents() const
+{
+    return events_;
+}
+
 } // end of namespace
 } // end of namespace
 

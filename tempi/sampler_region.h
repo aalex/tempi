@@ -62,6 +62,7 @@ class Region : public NamedObject
          * Results is stored in result.
          */
          void getRange(TimePosition from, TimePosition to, std::vector<Event> &result, bool includeFirst=false);
+        std::vector<Event> getAllEvents() const;
     private:
         typedef std::vector<Event> EventVec;
         typedef EventVec::iterator EventVecIter;

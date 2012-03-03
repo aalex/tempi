@@ -2,13 +2,14 @@
 #include "tempi/graph.h"
 #include "tempi/nodefactory.h"
 #include "tempi/internals.h"
+#include "tempi/sampler_region.h"
 #include <unistd.h>
 #include <iostream>
 
 using namespace tempi;
 static const bool VERBOSE = false;
 
-static bool check_save()
+static bool check_save_graph()
 {
     NodeFactory::ptr factory = NodeFactory::ptr(new NodeFactory);
     internals::loadInternals(factory);
@@ -53,9 +54,27 @@ static bool check_save()
     return true;
 }
 
+static bool check_save_region()
+{
+    sampler::Region region;
+
+    region.add(0L, Message("s", "hello"));
+    region.add(1000L, Message("i", 2));
+    region.add(2000L, Message("f", 3.14159f));
+    std::string file_name("/tmp/tempi-example-region.xml");
+    if (VERBOSE)
+        std::cout << "Saving to " << file_name << std::endl;
+    serializer::Serializer saver;
+    saver.save(region, file_name.c_str());
+
+    return true;
+}
+
 int main(int argc, char **argv)
 {
-    if (! check_save())
+    if (! check_save_graph())
+        return 1;
+    if (! check_save_region())
         return 1;
     return 0;
 }

@@ -27,6 +27,7 @@
 
 #include "tempi/graph.h"
 #include "tempi/sharedptr.h"
+#include "tempi/sampler_region.h"
 #include <string>
 
 namespace tempi
@@ -59,6 +60,12 @@ const char * const CONNECTION_TO_PROPERTY = "to";
 const char * const CONNECTION_OUTLET_PROPERTY = "outlet";
 const char * const CONNECTION_INLET_PROPERTY = "inlet";
 
+const char * const REGION_NODE = "region";
+const char * const REGION_NAME_PROPERTY = "name";
+
+const char * const EVENT_NODE = "event";
+const char * const EVENT_TIMEPOSITION_PROPERTY = "time";
+
 /**
  * Saves and loads graphs and other stuff.
  */
@@ -72,6 +79,7 @@ class Serializer
          * @return success
          */
         static bool save(Graph &graph, const char *filename);
+        static bool save(sampler::Region &region, const char *filename);
         /** 
          * Loads a graph from an XML file.
          * @return success

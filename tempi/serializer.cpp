@@ -35,22 +35,29 @@
 #define XMLSTR BAD_CAST
 #endif
 
-namespace tempi
-{
-
-namespace serializer
-{
+namespace tempi {
+namespace serializer {
 
 /**
  * Checks if an XML node has a given name.
  * @return success or not.
  */
-bool node_name_is(xmlNode *node, const std::string &name);
+static bool node_name_is(xmlNode *node, const std::string &name);
+static bool save_message(xmlNodePtr message_node, const Message &value);
+static bool save_connections(xmlNodePtr graph_node, Graph &graph);
+bool save_region(xmlNodePtr root_node, sampler::Region &region);
 
 /**
  * Converts a char to a string.
  */
-std::string char_to_string(char c);
+static std::string char_to_string(char c);
+
+/** Returns a pointer to the XML child with the given name
+ * @return A pointer to the data, not a copy of it.
+ */
+static xmlNode *seek_child_named(xmlNode *parent, const std::string &name);
+
+// implementations:
 
 std::string char_to_string(char c)
 {
@@ -60,11 +67,6 @@ std::string char_to_string(char c)
     ss >> s;
     return s;
 }
-
-/** Returns a pointer to the XML child with the given name
- * @return A pointer to the data, not a copy of it.
- */
-xmlNode *seek_child_named(xmlNode *parent, const std::string &name);
 
 bool node_name_is(xmlNode *node, const std::string &name)
 {
@@ -94,21 +96,43 @@ Serializer::Serializer()
     // pass
 }
 
-bool Serializer::save(Graph &graph, const char *filename)
+bool save_connections(xmlNodePtr graph_node, Graph &graph)
 {
-    char buff[256]; // buff for node names and int properties
-    xmlDocPtr doc = xmlNewDoc(XMLSTR "1.0");
-    // "tempi" node with its "version" attribute
-    xmlNodePtr root_node = xmlNewNode(NULL, XMLSTR ROOT_NODE);
-    xmlDocSetRootElement(doc, root_node);
-    xmlNewProp(root_node, XMLSTR SOFTWARE_VERSION_ATTR, XMLSTR PACKAGE_VERSION);
-    // "graphs" node
-    //xmlNodePtr graphs_node = xmlNewChild(root_node, NULL, XMLSTR GRAPHS_NODE, NULL);
-    // "graph" node:
-    xmlNodePtr graph_node = xmlNewChild(root_node, NULL, XMLSTR GRAPH_NODE, NULL);
-    // TODO: add Graph name attribute
-    // nodes node: 
-    //xmlNodePtr nodes_node = xmlNewChild(graph_node, NULL, XMLSTR NODES_NODE, NULL);
+    std::vector<Graph::Connection> connections = graph.getAllConnections();
+    std::vector<Graph::Connection>::const_iterator iter4;
+    for (iter4 = connections.begin(); iter4 != connections.end(); ++iter4)
+    {
+        xmlNodePtr connection_node = xmlNewChild(graph_node, NULL,
+            XMLSTR CONNECTION_NODE, NULL);
+
+        Graph::Connection conn = (*iter4);
+        std::string from = boost::lexical_cast<std::string>(
+            conn.get<0>());
+        std::string outlet = boost::lexical_cast<std::string>(
+            conn.get<1>());
+        std::string to = boost::lexical_cast<std::string>(
+            conn.get<2>());
+        std::string inlet = boost::lexical_cast<std::string>(
+            conn.get<3>());
+
+        xmlNewProp(connection_node,
+            XMLSTR CONNECTION_FROM_PROPERTY,
+            XMLSTR from.c_str());
+        xmlNewProp(connection_node,
+            XMLSTR CONNECTION_OUTLET_PROPERTY,
+            XMLSTR outlet.c_str());
+        xmlNewProp(connection_node,
+            XMLSTR CONNECTION_TO_PROPERTY,
+            XMLSTR to.c_str());
+        xmlNewProp(connection_node,
+            XMLSTR CONNECTION_INLET_PROPERTY,
+            XMLSTR inlet.c_str());
+    }
+    return true;
+}
+
+bool save_nodes(xmlNodePtr graph_node, Graph &graph)
+{
     std::vector<std::string> node_names = graph.getNodeNames();
     std::vector<std::string>::const_iterator iter;
     for (iter = node_names.begin(); iter != node_names.end(); ++iter)
@@ -130,49 +154,31 @@ bool Serializer::save(Graph &graph, const char *filename)
             xmlNewProp(attr_node, XMLSTR ATTRIBUTE_NAME_PROPERTY, 
                 XMLSTR (*iter2).c_str());
             Message attr_value = node->getAttributeValue((*iter2).c_str());
-            for (unsigned int i = 0; i < attr_value.getSize(); ++i)
-            {
-                std::string atom_value;
-                ArgumentType atom_type_char;
-                attr_value.getArgumentType(i, atom_type_char);
-                std::string atom_type = char_to_string(atom_type_char);
-                try
-                {
-                    atom_value = utils::argumentToString(attr_value, i);
-                    xmlNodePtr atom_node = xmlNewChild(attr_node, NULL, 
-                        XMLSTR atom_type.c_str(), XMLSTR atom_value.c_str());
-                }
-                catch (const BadArgumentTypeException &e)
-                {
-                    std::cerr << e.what() << std::endl;
-                }
-            } // for atoms
+            save_message(attr_node, attr_value);
         } // for attributes
     } // for nodes
+    return true;
+}
+
+bool Serializer::save(Graph &graph, const char *filename)
+{
+    char buff[256]; // buff for node names and int properties
+    xmlDocPtr doc = xmlNewDoc(XMLSTR "1.0");
+    // "tempi" node with its "version" attribute
+    xmlNodePtr root_node = xmlNewNode(NULL, XMLSTR ROOT_NODE);
+    xmlDocSetRootElement(doc, root_node);
+    xmlNewProp(root_node, XMLSTR SOFTWARE_VERSION_ATTR, XMLSTR PACKAGE_VERSION);
+    // "graphs" node
+    //xmlNodePtr graphs_node = xmlNewChild(root_node, NULL, XMLSTR GRAPHS_NODE, NULL);
+    // "graph" node:
+    xmlNodePtr graph_node = xmlNewChild(root_node, NULL, XMLSTR GRAPH_NODE, NULL);
+    // TODO: add Graph name attribute
+    // nodes node: 
+    //xmlNodePtr nodes_node = xmlNewChild(graph_node, NULL, XMLSTR NODES_NODE, NULL);
+    save_nodes(graph_node, graph);
     
     // connections
-    std::vector<Graph::Connection> connections = graph.getAllConnections();
-    std::vector<Graph::Connection>::const_iterator iter4;
-    for (iter4 = connections.begin(); iter4 != connections.end(); ++iter4)
-    {
-        xmlNodePtr connection_node = xmlNewChild(graph_node, NULL,
-            XMLSTR CONNECTION_NODE, NULL);
-
-        Graph::Connection conn = (*iter4);
-        std::string from = boost::lexical_cast<std::string>(conn.get<0>());
-        std::string outlet = boost::lexical_cast<std::string>(conn.get<1>());
-        std::string to = boost::lexical_cast<std::string>(conn.get<2>());
-        std::string inlet = boost::lexical_cast<std::string>(conn.get<3>());
-
-        xmlNewProp(connection_node, XMLSTR CONNECTION_FROM_PROPERTY,
-            XMLSTR from.c_str());
-        xmlNewProp(connection_node, XMLSTR CONNECTION_OUTLET_PROPERTY,
-            XMLSTR outlet.c_str());
-        xmlNewProp(connection_node, XMLSTR CONNECTION_TO_PROPERTY,
-            XMLSTR to.c_str());
-        xmlNewProp(connection_node, XMLSTR CONNECTION_INLET_PROPERTY,
-            XMLSTR inlet.c_str());
-    }
+    save_connections(graph_node, graph);
 
     // Save document to file
     xmlSaveFormatFileEnc(filename, doc, "UTF-8", 1);
@@ -383,7 +389,70 @@ bool Serializer::createDirectory(const char *dirname)
     return fs::create_directory(directory);
 }
 
-} // end of namespace
+bool save_message(xmlNodePtr message_node, const Message &value)
+{
+    for (unsigned int i = 0; i < value.getSize(); ++i)
+    {
+        std::string atom_value;
+        ArgumentType atom_type_char;
+        value.getArgumentType(i, atom_type_char);
+        std::string atom_type = char_to_string(atom_type_char);
+        try
+        {
+            atom_value = utils::argumentToString(value, i);
+            xmlNodePtr atom_node = xmlNewChild(message_node, NULL, 
+                XMLSTR atom_type.c_str(), XMLSTR atom_value.c_str());
+        }
+        catch (const BadArgumentTypeException &e)
+        {
+            std::cerr << e.what() << std::endl;
+        }
+    } // for atoms
+}
 
+bool save_region(xmlNodePtr root_node, sampler::Region &region)
+{
+    xmlNodePtr region_node = xmlNewChild(root_node, NULL, XMLSTR REGION_NODE, NULL);
+    xmlNewProp(region_node, XMLSTR REGION_NAME_PROPERTY, XMLSTR region.getName().c_str());
+    const std::vector<sampler::Region::Event>& events = region.getAllEvents();
+    std::vector<sampler::Region::Event>::const_iterator iter;
+    for (iter = events.begin(); iter != events.end(); ++iter)
+    {
+        xmlNodePtr event_node = xmlNewChild(region_node, NULL, XMLSTR EVENT_NODE, NULL);
+        sampler::Region::Event event = (*iter);
+        std::string pos = boost::lexical_cast<std::string>(event.get<0>());
+        xmlNewProp(event_node, XMLSTR EVENT_TIMEPOSITION_PROPERTY, 
+            XMLSTR pos.c_str());
+        Message value = (*iter).get<1>();
+        save_message(event_node, value);
+    } // for events
+    return true;
+}
+
+bool Serializer::save(sampler::Region &region, const char *filename)
+{
+    char buff[256]; // buff for node names and int properties
+    xmlDocPtr doc = xmlNewDoc(XMLSTR "1.0");
+    // "tempi" node with its "version" attribute
+    xmlNodePtr root_node = xmlNewNode(NULL, XMLSTR ROOT_NODE);
+    xmlDocSetRootElement(doc, root_node);
+    xmlNewProp(root_node, XMLSTR SOFTWARE_VERSION_ATTR, XMLSTR PACKAGE_VERSION);
+    save_region(root_node, region);
+
+    // Save document to file
+    xmlSaveFormatFileEnc(filename, doc, "UTF-8", 1);
+    {
+        std::ostringstream os;
+        os << "Saved the region to " << filename;
+        Logger::log(INFO, os.str().c_str());
+    }
+    // Free the document + global variables that may have been
+    // allocated by the parser.
+    xmlFreeDoc(doc);
+    xmlCleanupParser();
+    return true;
+}
+
+} // end of namespace
 } // end of namespace
 
