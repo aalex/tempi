@@ -82,21 +82,12 @@ tempi/stamp-h1
 tempi/table/.dirstamp
 tempi/tempi-version.h
 tempi/tempi.pyste
-tests/check_fsm
-tests/check_graph
-tests/check_libraries
-tests/check_log
-tests/check_message
-tests/check_node
-tests/check_nodefactory
-tests/check_osc
-tests/check_osc_nodes
-tests/check_properties
-tests/check_serializer
-tests/check_table
-tests/check_timer
-tests/check_track
-tests/check_version
+tempi/tests/check_average
+tempi/tests/check_base
+tempi/tests/check_math
+tempi/tests/check_node
+tempi/tests/check_osc_nodes
+tempi/tests/check_slide
 
 # -------------------------
 # negations:
@@ -107,3 +98,20 @@ tests/check_version
 !prototypes/matrix_type/Makefile
 !prototypes/mapofsharedobjects/Makefile
 !doc/html
+
+# ------------------------- TODO
+# tests/check_fsm
+# tests/check_graph
+# tests/check_libraries
+# tests/check_log
+# tests/check_message
+# tests/check_node
+# tests/check_nodefactory
+# tests/check_osc
+# tests/check_osc_nodes
+# tests/check_properties
+# tests/check_serializer
+# tests/check_table
+# tests/check_timer
+# tests/check_track
+# tests/check_version

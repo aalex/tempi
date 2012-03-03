@@ -217,6 +217,7 @@ AC_CONFIG_FILES([
         Makefile 
         tempi/tempi-version.h
         tempi/Makefile 
+        tempi/tests/Makefile
         plugins-base/Makefile
         plugins-base/tests/Makefile
         src/Makefile
@@ -226,7 +227,6 @@ AC_CONFIG_FILES([
         src/tempi-inspect/Makefile
         src/tempi-launch/Makefile
         src/tempi-osc-looper/Makefile
-        tests/Makefile
         doxyfile 
         data/Makefile
         doc/Makefile

@@ -8,7 +8,6 @@ SUBDIRS = \
     tempi \
 	plugins-base \
     src \
-    tests \
     data \
     man \
     doc
