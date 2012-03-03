@@ -129,6 +129,10 @@ class Scheduler
          * Checks if a given named Region exists.
          */
         bool hasRegion(const char *name) const;
+        void setFactory(NodeFactory::ptr factory)
+        {
+            factory_ = factory;
+        }
     protected:
         //bool sendToAllGraphs(const Message &message);
         bool tickGraphs();

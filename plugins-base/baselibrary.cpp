@@ -123,7 +123,7 @@ void BaseLibrary::load(NodeFactory &factory, const char *prefix) const
 #endif // HAVE_GLIB
 
     factory.registerTypeT<AbstractionNode>(concatenate("abs.", "abstraction").c_str());
-    factory.registerTypeT<OutletNode>(concatenate("abs.", "oulet").c_str());
+    factory.registerTypeT<OutletNode>(concatenate("abs.", "outlet").c_str());
     factory.registerTypeT<InletNode>(concatenate("abs.", "inlet").c_str());
 }
 

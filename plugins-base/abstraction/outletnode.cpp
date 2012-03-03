@@ -30,7 +30,7 @@ OutletNode::OutletNode() :
     Node()
 {
     setShortDocumentation("Outlet in an abstraction.");
-    addInlet("incoming");
+    addInlet("outgoing");
 }
 
 void OutletNode::flush(std::vector<Message> &messages)
@@ -47,7 +47,7 @@ void OutletNode::flush(std::vector<Message> &messages)
 
 void OutletNode::processMessage(const char *inlet, const Message &message)
 {
-    if (utils::stringsMatch(inlet, "incoming"))
+    if (utils::stringsMatch(inlet, "outgoing"))
         queue_.push(message);
 }
 

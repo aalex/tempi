@@ -30,7 +30,7 @@ InletNode::InletNode() :
     Node()
 {
     setShortDocumentation("Inlet in an abstraction.");
-    addOutlet("outcoming");
+    addOutlet("incoming");
 }
 
 void InletNode::push(const Message &message)
@@ -46,7 +46,7 @@ void InletNode::doTick()
         Message message;
         got_some = queue_.try_pop(message);
         if (got_some)
-            output("outcoming", message);
+            output("incoming", message);
     }
 }
 

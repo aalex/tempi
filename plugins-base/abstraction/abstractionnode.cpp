@@ -44,6 +44,8 @@ AbstractionNode::AbstractionNode() :
     addAttribute(Attribute::ptr(new Attribute("file_path", Message("s", ""), "Path to the XML file to load the Tempi Graph from.")));
 }
 
+
+
 void AbstractionNode::onAttributeChanged(const char *name, const Message &value)
 {
     {
@@ -93,6 +95,8 @@ bool AbstractionNode::deleteGraph()
 
 bool AbstractionNode::loadGraph()
 {
+    scheduler_->setFactory(this->getGraph()->getScheduler()->getFactory()); // FIXME
+
     if (scheduler_->hasGraph("graph0"))
         scheduler_->removeGraph("graph0");
     scheduler_->createGraph("graph0");
@@ -173,7 +177,7 @@ bool hasNodeOfType(Graph &graph, const std::string &nodeName, const char *nodeTy
     if (graph.hasNode(nodeName.c_str()))
     {
         Node *node = graph.getNode(nodeName.c_str()).get();
-        if (node->getTypeName() != nodeType)
+        if (node->getTypeName() == nodeType)
         {
             return true;
         }

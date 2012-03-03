@@ -25,6 +25,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <sys/types.h>
+#include <stdlib.h> // getenv
 #include <sys/stat.h>
 #include <vector>
 #include <iostream>
@@ -84,7 +85,6 @@ bool Loader::addPath(const char *path)
     paths_.push_back(str);
     return true;
 }
-#include <stdlib.h> // getenv
 
 bool Loader::load(NodeFactory &factory, const char *name)
 {
