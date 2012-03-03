@@ -67,6 +67,13 @@ static bool check_save_region()
     serializer::Serializer saver;
     saver.save(region, file_name.c_str());
 
+    region.clear();
+    saver.load(region, file_name.c_str());
+    if (region.numberOfEvents() != 3)
+    {
+        std::cout << __FUNCTION__ << ": Expected 3 events in region but got " << region.numberOfEvents() << std::endl;
+        return false;
+    }
     return true;
 }
 

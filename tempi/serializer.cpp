@@ -20,6 +20,7 @@
 
 #include "tempi/serializer.h"
 #include "tempi/config.h"
+#include "tempi/timeposition.h"
 #include "tempi/utils.h"
 #include "tempi/log.h"
 #include <boost/lexical_cast.hpp>
@@ -51,6 +52,8 @@ static bool load_graph_connections(xmlNodePtr graph_node, Graph &graph);
  * Note: internally calls Graph.tick()
  */
 static bool load_graph(xmlNodePtr graph_node, Graph &graph);
+static TimePosition stringToTimePosition(const char *event_time);
+static bool load_message(xmlNodePtr message_node, Message &value);
 
 /**
  * Converts a char to a string.
@@ -71,6 +74,18 @@ std::string char_to_string(char c)
     std::string s;
     ss >> s;
     return s;
+}
+
+static TimePosition stringToTimePosition(const char *event_time)
+{
+    try
+    {
+        return boost::lexical_cast<TimePosition>(event_time);
+    }
+    catch (const boost::bad_lexical_cast &e)
+    {
+        Logger::log(ERROR, e.what());
+    }
 }
 
 bool node_name_is(xmlNode *node, const std::string &name)
@@ -242,6 +257,61 @@ bool load_graph_connections(xmlNodePtr graph_node, Graph &graph)
     } // for each connection
 }
 
+bool load_message(xmlNodePtr message_node, Message &message)
+{
+    bool success = true;
+    for (xmlNode *atom_node =
+        message_node->children;
+        atom_node;
+        atom_node = atom_node->next)
+    { // for each atom:
+        // get atom type:
+        ArgumentType atom_typetag = static_cast<ArgumentType>('\0');
+        xmlChar *tmp_atom_value = xmlNodeGetContent(
+            atom_node);
+        std::string atom_value = std::string((char *) tmp_atom_value);
+        xmlFree(tmp_atom_value);
+        if (atom_node->type == XML_ELEMENT_NODE
+            && atom_node->name)
+        { // is atom node
+            std::string tmp_typetag = std::string(
+                    (char *) atom_node->name);
+            if (tmp_typetag.size() == 1)
+            {
+                atom_typetag = static_cast<ArgumentType>(tmp_typetag[0]);
+            } // size
+            else
+            {
+                std::cerr << "Atom typetags should be only one char. Got " <<
+                tmp_typetag << std::endl;
+                success = false;
+            }
+            try
+            {
+                utils::appendArgumentFromString(message, atom_value.c_str(), atom_typetag);
+                std::ostringstream os;
+                os << "    * atom " <<
+                    (char) atom_typetag << ":" <<
+                    atom_value;
+                Logger::log(INFO, os.str().c_str());
+            }
+            catch (const BadArgumentTypeException &e)
+            {
+                std::ostringstream os;
+                os << __FILE__ << ": " << __FUNCTION__ << " " << e.what();
+                Logger::log(ERROR, os.str().c_str());
+                success = false;
+            }
+            {
+                std::ostringstream os;
+                os << "    * atom results in " << message;
+                Logger::log(DEBUG, os.str().c_str());
+            }
+        } // is atom node
+    } // for each atom
+    return success;
+}
+
 bool load_node_attributes(xmlNodePtr node_node, Node &node)
 {
     // ATTRIBUTES:
@@ -249,59 +319,13 @@ bool load_node_attributes(xmlNodePtr node_node, Node &node)
         attribute_node;
         attribute_node = attribute_node->next)
     { // each child of node
-        Message attr_value;
         if (node_name_is(attribute_node, ATTRIBUTE_NODE))
         { // is an attribute:
             xmlChar *attr_name = xmlGetProp(attribute_node,
                 XMLSTR ATTRIBUTE_NAME_PROPERTY);
             //std::cout << "   * attr " << attr_name << std::endl;
-            for (xmlNode *atom_node =
-                attribute_node->children;
-                atom_node;
-                atom_node = atom_node->next)
-            { // for each atom:
-                // get atom type:
-                ArgumentType atom_typetag = static_cast<ArgumentType>('\0');
-                xmlChar *tmp_atom_value = xmlNodeGetContent(
-                    atom_node);
-                std::string atom_value = std::string((char *) tmp_atom_value);
-                xmlFree(tmp_atom_value);
-                if (atom_node->type == XML_ELEMENT_NODE
-                    && atom_node->name)
-                { // is atom node
-                    std::string tmp_typetag = std::string(
-                            (char *) atom_node->name);
-                    if (tmp_typetag.size() == 1)
-                    {
-                        atom_typetag = static_cast<ArgumentType>(tmp_typetag[0]);
-                    } // size
-                    else
-                    {
-                        std::cerr << "Atom typetags should be only one char. Got " <<
-                            tmp_typetag << std::endl;
-                    }
-                    try
-                    {
-                        utils::appendArgumentFromString(attr_value, atom_value.c_str(), atom_typetag);
-                        std::ostringstream os;
-                        os << "    * atom " <<
-                            (char) atom_typetag << ":" <<
-                            atom_value;
-                        Logger::log(INFO, os.str().c_str());
-                    }
-                    catch (const BadArgumentTypeException &e)
-                    {
-                        std::ostringstream os;
-                        os << __FILE__ << ": " << __FUNCTION__ << " " << e.what();
-                        Logger::log(ERROR, os.str().c_str());
-                    }
-                    {
-                        std::ostringstream os;
-                        os << "    * atom results in " << attr_value;
-                        Logger::log(DEBUG, os.str().c_str());
-                    }
-                } // is atom node
-            } // for each atom
+            Message attr_value;
+            load_message(attribute_node, attr_value);
             node.setAttributeValue((char *) attr_name, attr_value);
             xmlFree(attr_name);
         } // is an attribute
@@ -342,6 +366,35 @@ bool load_graph(xmlNodePtr graph_node, Graph &graph)
     graph.tick(); // FIXME this is annoying
 
     load_graph_connections(graph_node, graph);
+    return true;
+}
+
+bool load_region(xmlNodePtr region_node, sampler::Region &region)
+{
+    for (xmlNode *event_node = region_node->children;
+        event_node;
+        event_node = event_node->next)
+    { // for each node:
+        if (node_name_is(event_node, EVENT_NODE))
+        { // is an event
+            // TODO: check if it has the property
+            xmlChar *event_time = xmlGetProp(event_node, 
+                XMLSTR EVENT_TIMEPOSITION_PROPERTY);
+            {
+                std::ostringstream os;
+                os << "  * event " << event_time;
+                Logger::log(DEBUG, os.str().c_str());
+            }
+            if (event_time != NULL)
+            { // event has time
+                TimePosition timePosition = stringToTimePosition((char *) event_time);
+                Message value;
+                load_message(event_node, value);
+                region.add(timePosition, value);
+            } // event has time
+            xmlFree(event_time);
+        } // is an event node
+    } // for each event
     return true;
 }
 
@@ -476,6 +529,54 @@ bool Serializer::save(sampler::Region &region, const char *filename)
     }
     // Free the document + global variables that may have been
     // allocated by the parser.
+    xmlFreeDoc(doc);
+    xmlCleanupParser();
+    return true;
+}
+
+bool Serializer::load(sampler::Region &region, const char *filename)
+{
+    bool verbose = false;
+    // parse the file and get the DOM tree
+    xmlDoc *doc = xmlReadFile(filename, NULL, 0);
+    if (doc == NULL)
+    {
+        std::ostringstream os;
+        os << "Serializer could not parse file " <<  filename;
+        Logger::log(ERROR, os.str().c_str());
+        return false;
+    }
+    {
+        std::ostringstream os;
+        os << "Loading project file " << filename;
+        Logger::log(INFO, os.str().c_str());
+    }
+    xmlNode *root = xmlDocGetRootElement(doc);
+
+    // FIXME: this method might load many regions into one!
+    Logger::log(DEBUG, "regions");
+    for (xmlNode *region_node = root->children;
+        region_node;
+        region_node = region_node->next)
+    {
+        if (node_name_is(region_node, REGION_NODE))
+        { // is a Region:
+            Logger::log(DEBUG, " * Region");
+            load_region(region_node, region);
+        } // is a Region
+    } // for each Region
+
+    {
+        std::ostringstream os;
+        os << "Loaded the Region from " << filename;
+        Logger::log(INFO, os.str().c_str());
+    }
+    if (verbose)
+    {
+        // TODO: std::cout << "The Region is now:\n";
+        // TODO: std::cout << region << std::endl;
+    }
+    // Free the document + global variables that may have been allocated by the parser.
     xmlFreeDoc(doc);
     xmlCleanupParser();
     return true;

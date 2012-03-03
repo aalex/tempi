@@ -85,6 +85,7 @@ class Serializer
          * @return success
          */
         static bool load(Graph &graph, const char *filename);
+        static bool load(sampler::Region &region, const char *filename);
         /**
          * Checks if a file exists.
          * @return success
