@@ -3,27 +3,23 @@ To do in Tempi
 
 To do for 0.2
 -------------
+* rename all tools so that their name start with tempi-*
 * abstractions: support a list of paths to be looked for files.
-* add bang atom type (!)
+* abstractions: reuse same scheduler for abstractions than their parent so that everything is "global"
 * FIXME: OscReceiver segfaults if port is busy
 * FIXME: fix path to libs
 * FIXME: removeTrailingPathSep crashes if has a trailing slash...
-* Rename ArgumentType to AtomType
-* Support unsigned int atoms
 * FIXME: onAttributeChanged is called sometime twice. If the attribute has not been changed, it should not be called again
 * FIXME: split utils.h so that compilation gets faster
 * FIXME: clutter.stage segfaults
 * tempi-launch should fail with error in case some node type could not be created
 * FIXME: Serializer::load sets node attributes twice?
-* serializer: write class before node name
-* World: containing Regions, BehaviourTrees, Tables and Graphs
 * STK MIDI: fix cflags for PPC 
 * __attr__ inlet: remove "set" prefix. Support "__list__" method.
 * loadBang: Find a better name. Node::loadBang only once? When to Graph::loadBang?
 * tempi-osc-looper: multitrack GUI configured with an XML Graph
 * Rename Filter to AbstractFilterNode.
 * AbstractFilterNode.filter should return a const&
-* Node::addMethod (i18n doc)
 * Fix segfault in, or disable, [clutter.stage]
 * [base.line]
 * [base.receive]
@@ -35,13 +31,17 @@ To do for 0.2
 * [sampler.score]
 * [sampler.writer]
 * ? rename connection to connect in XML schema
+* Scheduler: contain BehaviourTrees
+* Scheduler: contain Tables
 
 To do for 0.4
 -------------
 
+* Node::addMethod (i18n doc)
 * Atom types: replace switch/case by a hierarchy of classes
 * Allow range for int attributes?
 * abstractions: watch for changes in files (inotify CLOSE_WRITE or FAM)
+* serializer: write class before node name
 * create a validator for XML schemas
 * make documentation strings common to all objects of a same type to save memory use
 * allow pads to have types
