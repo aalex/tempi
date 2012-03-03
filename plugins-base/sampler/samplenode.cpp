@@ -27,7 +27,7 @@
 #include <vector>
 
 namespace tempi {
-namespace sampler {
+namespace plugins_base {
 
 const char * const SamplerSampleNode::ATTR_NAME = "name";
 

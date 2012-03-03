@@ -24,7 +24,7 @@
 #include <iostream>
 
 namespace tempi {
-namespace midi {
+namespace plugins_base {
 
 MidiRouteNode::MidiRouteNode() :
     Node()
@@ -39,7 +39,7 @@ MidiRouteNode::MidiRouteNode() :
 
 void MidiRouteNode::processMessage(const char *inlet, const Message &message)
 {
-    using namespace utilities;
+    using namespace midi_utilities;
     if (! message.indexMatchesType(0, 'C'))
     {
         std::cerr << "MidiRouteNode::" << __FUNCTION__ << ": First atom should be an unsigned char: " << message << std::endl;
@@ -49,7 +49,7 @@ void MidiRouteNode::processMessage(const char *inlet, const Message &message)
     Message result;
     switch (midi_event_type)
     {
-        case utilities::MIDI_NOT_SUPPORTED:
+        case midi_utilities::MIDI_NOT_SUPPORTED:
         {
             std::cerr << "Unsupported MIDI event type: " << message << std::endl;
             return;

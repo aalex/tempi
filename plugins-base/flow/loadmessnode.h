@@ -28,7 +28,7 @@
 #include "tempi/node.h"
 
 namespace tempi {
-namespace base {
+namespace plugins_base {
 
 /**
  * The LoadMessNode outputs a message at startup.

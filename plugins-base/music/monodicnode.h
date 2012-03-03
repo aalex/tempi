@@ -29,7 +29,6 @@
 
 namespace tempi {
 namespace plugins_base {
-namespace music {
 
 /**
  * Generates a stream of MIDI notes that are closed so that it's monophonic.
@@ -46,7 +45,6 @@ class MonodicNode : public Node
         void closeNote();
 };
 
-} // end of namespace
 } // end of namespace
 } // end of namespace
 

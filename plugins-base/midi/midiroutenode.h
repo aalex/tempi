@@ -28,7 +28,7 @@
 #include "tempi/node.h"
 
 namespace tempi {
-namespace midi {
+namespace plugins_base {
 
 /**
  * Node that routes MIDI messages according to their type.

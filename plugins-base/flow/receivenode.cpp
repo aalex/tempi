@@ -21,7 +21,8 @@
 #include <iostream>
 #include "plugins-base/flow/receivenode.h"
 
-namespace tempi { namespace base {
+namespace tempi {
+namespace plugins_base {
 
 ReceiveNode::ReceiveNode() :
     Node()

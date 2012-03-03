@@ -28,7 +28,6 @@ check_graph_SOURCES = check_graph.cpp
 check_message_SOURCES = check_message.cpp
 check_libraries_SOURCES = check_libraries.cpp
 check_log_SOURCES = check_log.cpp
-check_node_SOURCES = check_node.cpp
 check_nodefactory_SOURCES = check_nodefactory.cpp
 check_osc_SOURCES = check_osc.cpp
 check_properties_SOURCES = check_properties.cpp

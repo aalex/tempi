@@ -33,14 +33,7 @@
 #endif
 
 namespace tempi { 
-
-/**
- * @namespace tempi::math
- *
- * Math Tempi node types.
- */
-
-namespace math {
+namespace plugins_base { 
 
 /**
  * OneFloatMathNode is an abstract class for nodes that accept one float and output a float.

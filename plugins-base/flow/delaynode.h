@@ -31,7 +31,7 @@
 #include <boost/tuple/tuple.hpp>
 
 namespace tempi {
-namespace base {
+namespace plugins_base {
 
 /**
  * The DelayNode stores message and outputs them later after a given delay.

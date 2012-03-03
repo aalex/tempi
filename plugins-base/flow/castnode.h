@@ -30,7 +30,7 @@
 #include "tempi/log.h"
 
 namespace tempi {
-namespace base {
+namespace plugins_base {
 
 /**
  * The CastNode tries to cast incoming messages to a given type

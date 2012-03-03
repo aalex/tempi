@@ -23,7 +23,7 @@
 #include <iostream>
 
 namespace tempi {
-namespace osc {
+namespace plugins_base {
 
 OscSenderNode::OscSenderNode() :
     Node()
@@ -50,7 +50,7 @@ void OscSenderNode::onAttributeChanged(const char *name, const Message &value)
     //std::cout << "OscSenderNode::" << __FUNCTION__ << "(" << name << ", " << value << ")" << std::endl;
     if (utils::stringsMatch("host_port", name))
     {
-        osc_sender_.reset(new OscSender(value.getString(0).c_str(), value.getInt(1)));
+        osc_sender_.reset(new osc::OscSender(value.getString(0).c_str(), value.getInt(1)));
     }
 }
 

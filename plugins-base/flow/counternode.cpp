@@ -22,7 +22,8 @@
 #include "tempi/utils.h"
 #include <iostream>
 
-namespace tempi { namespace base {
+namespace tempi {
+namespace plugins_base {
 
 const char * const CounterNode::PROP_INCREMENT = "increment";
 const char * const CounterNode::PROP_COUNT = "count";

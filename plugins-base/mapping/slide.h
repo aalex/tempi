@@ -25,8 +25,8 @@
 #ifndef __TEMPI_SLIDE_H__
 #define __TEMPI_SLIDE_H__
 
-namespace tempi
-{
+namespace tempi {
+namespace plugins_base {
 
 /**
  * FIXME: Not working yet.
@@ -49,6 +49,7 @@ class Slide
         bool had_some_in_yet_;
 };
 
+} // end of namespace
 } // end of namespace
 
 #endif // ifndef

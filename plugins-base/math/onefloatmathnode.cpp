@@ -25,7 +25,7 @@
 #endif
 
 namespace tempi { 
-namespace math {
+namespace plugins_base {
 
 OneFloatMathNode::OneFloatMathNode() :
     Node()

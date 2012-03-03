@@ -38,7 +38,7 @@
 #include <tr1/memory>
 
 namespace tempi {
-namespace base {
+namespace plugins_base {
 
 /**
  * The SpatoscNode controls a spatosc::Wrapper.

@@ -27,7 +27,7 @@
 #include <vector>
 
 namespace tempi {
-namespace sampler {
+namespace plugins_base {
 
 const char * const SamplerWriteNode::ATTR_WRITING = "writing";
 const char * const SamplerWriteNode::ATTR_REGION = "region";
@@ -35,8 +35,8 @@ const char * const SamplerWriteNode::INLET_WRITE = "write";
 
 SamplerWriteNode::SamplerWriteNode() :
     Node(),
-    empty_region_(new Region()),
-    recorder_(new Recorder(empty_region_))
+    empty_region_(new sampler::Region()),
+    recorder_(new sampler::Recorder(empty_region_))
 {
     setShortDocumentation("Writes sampled messages to a Region.");
     addAttribute(Attribute::ptr(new Attribute(ATTR_WRITING, Message("b", false), "Currently writing or not.")));

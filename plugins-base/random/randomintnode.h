@@ -33,7 +33,6 @@
 
 namespace tempi {
 namespace plugins_base {
-namespace random {
 
 /**
  * The RandomIntNode outputs random integers within a certain range.
@@ -86,7 +85,6 @@ class RandomIntNode : public Node
         }
 };
 
-} // end of namespace
 } // end of namespace
 } // end of namespace
 

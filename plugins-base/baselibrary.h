@@ -30,12 +30,11 @@
 namespace tempi { 
 
 /**
- * @namespace tempi::base
+ * @namespace tempi::plugins_base
  *
- * Tempi-plugins-base node types.
+ * Tempi base plugins.
  */
-
-namespace base {
+namespace plugins_base {
 
 class BaseLibrary : public Library
 {

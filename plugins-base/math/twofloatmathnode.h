@@ -30,14 +30,7 @@
 #include "tempi/utils.h"
 
 namespace tempi { 
-
-/**
- * @namespace tempi::math
- *
- * Math Tempi node types.
- */
-
-namespace math {
+namespace plugins_base { 
 
 /**
  * TwoFloatMathNode is an abstract class for nodes that accept two floats and output a float.

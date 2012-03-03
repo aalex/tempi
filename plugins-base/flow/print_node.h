@@ -30,7 +30,7 @@
 #include <iostream>
 
 namespace tempi {
-namespace base {
+namespace plugins_base {
 
 /**
  * The PrintNode prints the contents of a Message.

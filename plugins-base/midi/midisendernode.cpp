@@ -22,7 +22,7 @@
 #include <iostream>
 
 namespace tempi {
-namespace midi {
+namespace plugins_base {
 
 MidiSenderNode::MidiSenderNode() :
     Node()
@@ -32,7 +32,7 @@ MidiSenderNode::MidiSenderNode() :
     addInlet("0", "Send MIDI received from this inlet. (list of unsigned characters)");
     Message port = Message("i", 0);
     addAttribute(Attribute::ptr(new Attribute("port", port, "STK MIDI device index.")));
-    midi_output_.reset(new MidiOutput);
+    midi_output_.reset(new midi::MidiOutput);
 }
 
 void MidiSenderNode::onAttributeChanged(const char *name, const Message &value)

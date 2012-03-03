@@ -22,7 +22,7 @@
 #include "tempi/utils.h"
 
 namespace tempi {
-namespace base {
+namespace plugins_base {
 
 AnyNode::AnyNode() :
     Node()

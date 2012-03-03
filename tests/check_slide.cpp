@@ -7,7 +7,7 @@ using namespace tempi;
 
 bool check_slide()
 {
-    Slide slide = Slide();
+    plugins_base::Slide slide = plugins_base::Slide();
     slide.setSlide(1.0);
     if (VERBOSE)
         std::cout << "slide = " << slide.getSlide() << std::endl;

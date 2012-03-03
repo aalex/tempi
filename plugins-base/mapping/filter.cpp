@@ -23,7 +23,7 @@
 #include <iostream>
 
 namespace tempi {
-namespace mapping {
+namespace plugins_base {
 
 Filter::Filter() :
     Node()

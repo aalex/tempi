@@ -31,7 +31,6 @@
 
 namespace tempi {
 namespace plugins_base {
-namespace music {
 
 namespace { // anonymous namespace
 
@@ -135,7 +134,6 @@ class NearestNoteNode : public Node
         }
 };
 
-} // end of namespace
 } // end of namespace
 } // end of namespace
 

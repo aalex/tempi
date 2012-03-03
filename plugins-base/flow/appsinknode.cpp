@@ -21,7 +21,7 @@
 #include "plugins-base/flow/appsinknode.h"
 
 namespace tempi {
-namespace base {
+namespace plugins_base {
 
 AppSinkNode::AppSinkNode() :
     Node()

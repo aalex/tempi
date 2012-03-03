@@ -56,20 +56,11 @@
 #include "tempi/utils.h"
 
 namespace tempi {
-namespace base {
+namespace plugins_base {
 
 void BaseLibrary::load(NodeFactory &factory, const char *prefix) const
 {
     using utils::concatenate;
-    using namespace tempi::clutter;
-    using namespace tempi::osc;
-    using namespace tempi::midi;
-    using namespace tempi::base;
-    using namespace tempi::math;
-    using namespace tempi::sampler;
-    using namespace tempi::plugins_base::random;
-    using namespace tempi::plugins_base::flow;
-    using namespace tempi::plugins_base::music;
 
     factory.registerTypeT<PrintNode>(concatenate("base.", "print").c_str());
     factory.registerTypeT<AppendNode>(concatenate("base.", "append").c_str());
@@ -133,11 +124,10 @@ void BaseLibrary::load(NodeFactory &factory, const char *prefix) const
 } // end of namespace
 
 extern "C"
-
 void tempi_base_setup(void *data)
 {
     tempi::NodeFactory *factory = static_cast<tempi::NodeFactory*>(data);
-    tempi::base::BaseLibrary lib;
+    tempi::plugins_base::BaseLibrary lib;
     lib.load(*factory, "UNUSED");
 }
 

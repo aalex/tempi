@@ -29,7 +29,8 @@
 #include "tempi/timeposition.h"
 #include "tempi/node.h"
 
-namespace tempi { namespace base {
+namespace tempi {
+namespace plugins_base {
 
 /**
  * A MetroNode is a Node that ticks every interval ms.

@@ -28,7 +28,7 @@
 #include "tempi/node.h"
 
 namespace tempi {
-namespace base {
+namespace plugins_base {
 
 /**
  * The AnyNode stores message and outputs them when it receives an empty message. (bang)

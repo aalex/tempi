@@ -39,7 +39,7 @@
 #include <vector>
 
 namespace tempi {
-namespace clutter {
+namespace plugins_base {
 
 // forward declarations
 class StageManager;

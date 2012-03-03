@@ -30,7 +30,7 @@
 #include "tempi/utils.h"
 
 namespace tempi {
-namespace base {
+namespace plugins_base {
 
 /**
  * The AppendNode appends some atoms to a message.

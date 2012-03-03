@@ -27,8 +27,8 @@
 
 #include <vector>
 
-namespace tempi
-{
+namespace tempi {
+namespace plugins_base {
 
 /**
  * Average smooths changes in a stream of numbers by outputting the average of the last n numbers.
@@ -100,6 +100,7 @@ class Average
         bool first_in_;
 };
 
+} // end of namespace
 } // end of namespace
 
 #endif // ifndef

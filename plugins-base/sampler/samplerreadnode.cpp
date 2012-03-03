@@ -27,7 +27,7 @@
 #include <vector>
 
 namespace tempi {
-namespace sampler {
+namespace plugins_base {
 
 const char * const SamplerReadNode::ATTR_READING = "reading";
 const char * const SamplerReadNode::ATTR_REGION = "region";
@@ -35,8 +35,8 @@ const char * const SamplerReadNode::OUTLET_READ = "read";
 
 SamplerReadNode::SamplerReadNode() :
     Node(),
-    empty_region_(new Region()),
-    player_(new Player(empty_region_))
+    empty_region_(new sampler::Region()),
+    player_(new sampler::Player(empty_region_))
 {
     setShortDocumentation("Reads sampled messages from a Region.");
     addAttribute(Attribute::ptr(new Attribute(ATTR_READING, Message("b", false), "Currently playing or not.")));

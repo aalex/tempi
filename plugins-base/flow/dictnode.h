@@ -31,7 +31,6 @@
 
 namespace tempi {
 namespace plugins_base {
-namespace flow {
 
 /**
  * Stores key-value pairs.
@@ -110,7 +109,6 @@ class DictNode : public Node
         }
 };
 
-} // end of namespace
 } // end of namespace
 } // end of namespace
 

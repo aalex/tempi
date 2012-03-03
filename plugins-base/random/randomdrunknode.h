@@ -31,7 +31,6 @@
 
 namespace tempi {
 namespace plugins_base {
-namespace random {
 
 /**
  * The RandomDrunkNode outputs random integers following a random walk with a certain range.
@@ -101,7 +100,6 @@ class RandomDrunkNode : public Node
         }
 };
 
-} // end of namespace
 } // end of namespace
 } // end of namespace
 

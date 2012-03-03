@@ -21,7 +21,8 @@
 #include <iostream>
 #include "plugins-base/flow/nop_node.h"
 
-namespace tempi { namespace base {
+namespace tempi {
+namespace plugins_base {
 
 NopNode::NopNode() :
     Node()

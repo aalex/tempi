@@ -23,7 +23,8 @@
 #include "tempi/sharedptr.h"
 #include <iostream>
 
-namespace tempi { namespace mapping {
+namespace tempi {
+namespace plugins_base {
 
 SlideFilter::SlideFilter() :
     Filter(),

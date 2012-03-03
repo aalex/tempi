@@ -29,7 +29,7 @@
 #include "tempi/node.h"
 
 namespace tempi {
-namespace osc {
+namespace plugins_base {
 
 /**
  * Node that receives OSC messages.
@@ -45,7 +45,7 @@ class OscReceiverNode : public Node
         virtual void onAttributeChanged(const char *name, const Message &value);
     private:
         unsigned int port_number_;
-        OscReceiver::ptr osc_receiver_;
+        osc::OscReceiver::ptr osc_receiver_;
 };
 
 } // end of namespace

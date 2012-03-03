@@ -26,8 +26,8 @@
 #define __TEMPI_MIDI_MIDIUTILITIES_H__
 
 namespace tempi {
-namespace midi {
-namespace utilities {
+namespace plugins_base {
+namespace midi_utilities {
 
 const unsigned char MIDINOTEOFF =       0x80; // channel, pitch, velocity
 const unsigned char MIDINOTEON =        0x90; // channel, pitch, velocity

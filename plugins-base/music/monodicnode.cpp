@@ -25,7 +25,6 @@
 
 namespace tempi {
 namespace plugins_base {
-namespace music {
 
 MonodicNode::MonodicNode() :
     Node(),
@@ -69,7 +68,6 @@ void MonodicNode::closeNote()
     has_open_note_ = false;
 }
 
-} // end of namespace
 } // end of namespace
 } // end of namespace
 

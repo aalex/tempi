@@ -30,7 +30,7 @@
 #include <string>
 
 namespace tempi {
-namespace base {
+namespace plugins_base {
 
 /**
  * The RouteNode routes messages to its different outlets according to the first string in each message.

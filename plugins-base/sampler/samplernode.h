@@ -37,7 +37,7 @@
 //#include "tempi/sampler/marker.h"
 
 namespace tempi {
-namespace sampler {
+namespace plugins_base {
 
 /**
  * A SamplerNode is a node with a Score in it.
@@ -62,9 +62,9 @@ class SamplerNode : public Node
     private:
 //        bool recording_;
 //        bool playing_;
-        Region::ptr region_;
-        Recorder::ptr recorder_;
-        Player::ptr player_;
+        sampler::Region::ptr region_;
+        sampler::Recorder::ptr recorder_;
+        sampler::Player::ptr player_;
 
         void play(bool enabled);
         void record(bool enabled);

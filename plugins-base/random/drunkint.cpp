@@ -27,7 +27,6 @@
 
 namespace tempi {
 namespace plugins_base {
-namespace random {
 
 DrunkInt::DrunkInt() :
     from_(0),
@@ -121,7 +120,6 @@ int DrunkInt::getStepRangeMax() const
     return max_step_;
 }
 
-} // end of namespace
 } // end of namespace
 } // end of namespace
 

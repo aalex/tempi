@@ -23,7 +23,7 @@
 #include "tempi/utils.h"
 
 namespace tempi {
-namespace base {
+namespace plugins_base {
 
 PrependNode::PrependNode() :
     Node()

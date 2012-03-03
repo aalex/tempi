@@ -24,13 +24,13 @@
 #include <vector>
 
 namespace tempi {
-namespace sampler {
+namespace plugins_base {
 
 SamplerNode::SamplerNode() :
     Node(),
-    region_(new Region()),
-    recorder_(new Recorder(region_)),
-    player_(new Player(region_))
+    region_(new sampler::Region()),
+    recorder_(new sampler::Recorder(region_)),
+    player_(new sampler::Player(region_))
 {
     setShortDocumentation("Contains a Region, a Recorder and a Player to loop data samples.");
     Message recording = Message("b", false);

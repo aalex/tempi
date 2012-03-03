@@ -36,7 +36,7 @@
 #include "tempi/node.h"
 
 namespace tempi {
-namespace sampler {
+namespace plugins_base {
 
 /**
  * Reads Regions.
@@ -49,8 +49,8 @@ class SamplerReadNode : public Node
         virtual void processMessage(const char *inlet, const Message &message);
         virtual void onAttributeChanged(const char *name, const Message &value);
     private:
-        Region::ptr empty_region_;
-        Player::ptr player_;
+        sampler::Region::ptr empty_region_;
+        sampler::Player::ptr player_;
         void play(bool enabled);
         virtual void doTick();
         void setRegion(const std::string &name);

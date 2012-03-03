@@ -27,7 +27,8 @@
 
 #include "tempi/node.h"
 
-namespace tempi { namespace base {
+namespace tempi {
+namespace plugins_base {
 
 /**
  * The ReceiveNode receives messages.

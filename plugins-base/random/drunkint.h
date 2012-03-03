@@ -27,7 +27,6 @@
 
 namespace tempi {
 namespace plugins_base {
-namespace random {
 
 class DrunkInt
 {
@@ -50,7 +49,6 @@ class DrunkInt
         int max_step_;
 };
 
-} // end of namespace
 } // end of namespace
 } // end of namespace
 

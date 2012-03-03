@@ -24,7 +24,7 @@
 #include <iostream>
 
 namespace tempi {
-namespace osc {
+namespace plugins_base {
 
 OscReceiverNode::OscReceiverNode() :
     Node(),
@@ -68,9 +68,9 @@ void OscReceiverNode::onAttributeChanged(const char *name, const Message &value)
             Logger::log(INFO, os.str().c_str());
         }
         if (portNumber == 0)
-            osc_receiver_.reset((OscReceiver *) 0);
+            osc_receiver_.reset((osc::OscReceiver *) 0);
         else
-            osc_receiver_.reset(new OscReceiver(portNumber));
+            osc_receiver_.reset(new osc::OscReceiver(portNumber));
     }
 }
 

@@ -29,7 +29,7 @@
 #include "tempi/node.h"
 
 namespace tempi {
-namespace midi {
+namespace plugins_base {
 
 /**
  * Node that sends MIDI messages.
@@ -44,7 +44,7 @@ class MidiSenderNode : public Node
         virtual void doTick()
         {}
     private:
-        MidiOutput::ptr midi_output_;
+        midi::MidiOutput::ptr midi_output_;
 };
 
 } // end of namespace

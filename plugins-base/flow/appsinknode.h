@@ -28,7 +28,8 @@
 #include "tempi/node.h"
 #include "tempi/concurrentqueue.h"
 
-namespace tempi { namespace base {
+namespace tempi {
+namespace plugins_base {
 
 /**
  * The AppSinkNode stores message and outputs them when it receives an empty message. (bang)

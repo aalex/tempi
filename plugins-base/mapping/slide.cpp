@@ -20,8 +20,8 @@
 
 #include "plugins-base/mapping/slide.h"
 
-namespace tempi
-{
+namespace tempi {
+namespace plugins_base {
 
 Slide::Slide() :
     slide_(1.0),
@@ -59,5 +59,6 @@ bool Slide::setSlide(double slide)
         return false;
 }
 
+} // end of namespace
 } // end of namespace
 

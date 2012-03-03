@@ -36,7 +36,7 @@
 #include "tempi/node.h"
 
 namespace tempi {
-namespace sampler {
+namespace plugins_base {
 
 /**
  * Writes Messages into a Region.
@@ -49,8 +49,8 @@ class SamplerWriteNode : public Node
         virtual void processMessage(const char *inlet, const Message &message);
         virtual void onAttributeChanged(const char *name, const Message &value);
     private:
-        Region::ptr empty_region_;
-        Recorder::ptr recorder_;
+        sampler::Region::ptr empty_region_;
+        sampler::Recorder::ptr recorder_;
         void record(bool enabled);
         virtual void doTick();
         void setRegion(const std::string &name);

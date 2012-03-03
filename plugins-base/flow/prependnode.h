@@ -28,7 +28,7 @@
 #include "tempi/node.h"
 
 namespace tempi {
-namespace base {
+namespace plugins_base {
 
 /**
  * The PrependNode prepends some atoms to a message.

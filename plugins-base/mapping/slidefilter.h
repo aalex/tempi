@@ -27,7 +27,8 @@
 
 #include "plugins-base/mapping/filter.h"
 
-namespace tempi { namespace mapping {
+namespace tempi {
+namespace plugins_base {
 
 /**
  * The slide filter smooths changes in streams of numbers.

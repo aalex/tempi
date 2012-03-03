@@ -32,7 +32,7 @@
 #include "tempi/inlet.h"
 
 namespace tempi {
-namespace mapping {
+namespace plugins_base {
 
 /**
  * A Filter is Node who has a sink and source and usually filters data.

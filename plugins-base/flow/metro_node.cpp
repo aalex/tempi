@@ -22,7 +22,7 @@
 #include "tempi/timeposition.h"
 
 namespace tempi {
-namespace base {
+namespace plugins_base {
 
 MetroNode::MetroNode() :
     Node()

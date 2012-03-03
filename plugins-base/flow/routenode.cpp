@@ -24,7 +24,7 @@
 #include "tempi/log.h"
 
 namespace tempi {
-namespace base {
+namespace plugins_base {
 
 RouteNode::RouteNode() :
     Node()

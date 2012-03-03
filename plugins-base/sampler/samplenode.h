@@ -36,7 +36,7 @@
 #include "tempi/node.h"
 
 namespace tempi {
-namespace sampler {
+namespace plugins_base {
 
 /**
  * Creates a Region accessible by all nodes within the same scheduler.

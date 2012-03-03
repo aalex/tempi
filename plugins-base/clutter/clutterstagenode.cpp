@@ -37,7 +37,7 @@
 //TODO #include <mx/mx.h>
 
 namespace tempi {
-namespace clutter {
+namespace plugins_base {
 
 // Color constants:
 static ClutterColor black = { 0x00, 0x00, 0x00, 0xff };

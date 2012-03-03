@@ -21,8 +21,8 @@
 #include "plugins-base/midi/midiutilities.h"
 
 namespace tempi {
-namespace midi {
-namespace utilities {
+namespace plugins_base {
+namespace midi_utilities {
 
 unsigned char getMidiEventType(const unsigned char first_byte)
 {

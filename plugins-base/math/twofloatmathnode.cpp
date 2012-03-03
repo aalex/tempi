@@ -22,7 +22,7 @@
 #include <iostream>
 
 namespace tempi { 
-namespace math {
+namespace plugins_base {
 
 TwoFloatMathNode::TwoFloatMathNode() :
     Node()

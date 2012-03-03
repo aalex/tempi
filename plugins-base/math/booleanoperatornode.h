@@ -24,7 +24,7 @@
 #include "tempi/node.h"
 
 namespace tempi { 
-namespace math {
+namespace plugins_base { 
 
 /**
  * BooleanMathNode is an abstract class for nodes that accept two floats and output a boolean.

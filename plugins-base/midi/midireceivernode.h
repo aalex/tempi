@@ -29,7 +29,7 @@
 #include "tempi/node.h"
 
 namespace tempi {
-namespace midi {
+namespace plugins_base {
 
 /**
  * Node that receives MIDI messages.
@@ -44,7 +44,7 @@ class MidiReceiverNode : public Node
         {}
         virtual void onAttributeChanged(const char *name, const Message &value);
     private:
-        MidiInput::ptr midi_input_;
+        midi::MidiInput::ptr midi_input_;
 };
 
 } // end of namespace

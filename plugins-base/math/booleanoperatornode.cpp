@@ -22,7 +22,7 @@
 #include "tempi/utils.h"
 
 namespace tempi { 
-namespace math {
+namespace plugins_base {
 
 BooleanMathNode::BooleanMathNode() :
     Node()
