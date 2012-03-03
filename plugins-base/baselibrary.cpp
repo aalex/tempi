@@ -51,6 +51,9 @@
 #include "plugins-base/sampler/samplerreadnode.h"
 #include "plugins-base/random/randomdrunknode.h"
 #include "plugins-base/random/randomintnode.h"
+#include "plugins-base/abstraction/abstractionnode.h"
+#include "plugins-base/abstraction/outletnode.h"
+#include "plugins-base/abstraction/inletnode.h"
 #include "tempi/config.h"
 #include "tempi/nodefactory.h"
 #include "tempi/utils.h"
@@ -118,6 +121,10 @@ void BaseLibrary::load(NodeFactory &factory, const char *prefix) const
     factory.registerTypeT<RandomDrunkNode>(concatenate("random.", "drunk").c_str());
     factory.registerTypeT<RandomIntNode>(concatenate("random.", "int").c_str());
 #endif // HAVE_GLIB
+
+    factory.registerTypeT<AbstractionNode>(concatenate("abs.", "abstraction").c_str());
+    factory.registerTypeT<OutletNode>(concatenate("abs.", "oulet").c_str());
+    factory.registerTypeT<InletNode>(concatenate("abs.", "inlet").c_str());
 }
 
 } // end of namespace

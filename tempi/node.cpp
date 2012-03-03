@@ -422,6 +422,21 @@ bool Node::removeOutlet(const char *name)
     if (hasOutlet(name))
     {
         outlets_.erase(outlets_.find(nameStr));
+        Message message("ss", this->getName().c_str(), name); // node, inlet
+        getSignal(OUTLET_DELETED_SIGNAL)->trigger(message);
+        return true;
+    }
+    return false;
+}
+
+bool Node::removeInlet(const char *name)
+{
+    std::string nameStr(name);
+    if (hasInlet(name))
+    {
+        inlets_.erase(inlets_.find(nameStr));
+        Message message("ss", this->getName().c_str(), name); // node, inlet
+        getSignal(INLET_DELETED_SIGNAL)->trigger(message);
         return true;
     }
     return false;

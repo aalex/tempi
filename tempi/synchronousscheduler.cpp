@@ -31,7 +31,9 @@ bool SynchronousScheduler:: isRunning() const
 bool SynchronousScheduler::tick()
 {
     this->tickGraphs();
+    return true;
 }
+
 
 } // end of namespace
 

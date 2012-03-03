@@ -18,34 +18,38 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * @file The SynchronousScheduler class.
- */
-
-#ifndef __TEMPI_SYNCHRONOUSSCHEDULER_H__
-#define __TEMPI_SYNCHRONOUSSCHEDULER_H__
-
-#include "tempi/scheduler.h"
-#include <tr1/memory>
+#include "plugins-base/abstraction/inletnode.h"
+#include "tempi/utils.h"
+#include "tempi/log.h"
+#include <iostream>
 
 namespace tempi {
+namespace plugins_base {
 
-class SynchronousScheduler : public Scheduler
+InletNode::InletNode() :
+    Node()
 {
-    public:
-        typedef std::tr1::shared_ptr<SynchronousScheduler> ptr;
-        virtual bool isRunning() const;
-        bool tick();
-    protected:
-        virtual ScopedLock::ptr doAcquireLock()
-        {
-            return ScopedLock::ptr(new ScopedLock(mutex_));
-        }
-    private:
-        boost::mutex mutex_; // FIXME: useless!!!
-};
+    setShortDocumentation("Inlet in an abstraction.");
+    addOutlet("outcoming");
+}
+
+void InletNode::push(const Message &message)
+{
+    queue_.push(message);
+}
+
+void InletNode::doTick()
+{
+    bool got_some = true;
+    while (got_some)
+    {
+        Message message;
+        got_some = queue_.try_pop(message);
+        if (got_some)
+            output("outcoming", message);
+    }
+}
 
 } // end of namespace
-
-#endif // ifndef
+} // end of namespace
 

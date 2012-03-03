@@ -19,32 +19,34 @@
  */
 
 /**
- * @file The SynchronousScheduler class.
+ * @file
+ * The OutletNode class.
  */
+#ifndef __TEMPI_ABSTRACTION_OUTLETNODE_H__
+#define __TEMPI_ABSTRACTION_OUTLETNODE_H__
 
-#ifndef __TEMPI_SYNCHRONOUSSCHEDULER_H__
-#define __TEMPI_SYNCHRONOUSSCHEDULER_H__
-
-#include "tempi/scheduler.h"
-#include <tr1/memory>
+#include "tempi/oscreceiver.h"
+#include "tempi/node.h"
+#include "tempi/concurrentqueue.h"
 
 namespace tempi {
+namespace plugins_base {
 
-class SynchronousScheduler : public Scheduler
+/**
+ * Outlet in an abstraction.
+ */
+class OutletNode : public Node
 {
     public:
-        typedef std::tr1::shared_ptr<SynchronousScheduler> ptr;
-        virtual bool isRunning() const;
-        bool tick();
+        OutletNode();
+        void flush(std::vector<Message> &messages);
     protected:
-        virtual ScopedLock::ptr doAcquireLock()
-        {
-            return ScopedLock::ptr(new ScopedLock(mutex_));
-        }
+        virtual void processMessage(const char *inlet, const Message &message);
     private:
-        boost::mutex mutex_; // FIXME: useless!!!
+        ConcurrentQueue<Message> queue_;
 };
 
+} // end of namespace
 } // end of namespace
 
 #endif // ifndef

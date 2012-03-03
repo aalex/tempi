@@ -168,6 +168,7 @@ class Node : public Entity
          * Removes an outlet.
          */
         bool removeOutlet(const char *name);
+        bool removeInlet(const char *name);
         /**
          * Adds an inlet.
          */

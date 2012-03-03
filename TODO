@@ -4,6 +4,7 @@ To do in Tempi
 To do for 0.2
 -------------
 * create a validator for XML schemas
+* make documentation strings common to all objects of a same type to save memory use
 * rename connection to connect in XML schema
 * FIXME: OscReceiver segfaults if port is busy
 * FIXME: fix path to libs
