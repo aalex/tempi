@@ -76,6 +76,7 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     sampler_track.cpp \
     scheduler.cpp \
     serializer.cpp \
+    synchronousscheduler.cpp \
     table.cpp \
     table_player.cpp \
     table_writer.cpp \
@@ -129,6 +130,7 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     sampler_track.h \
     scheduler.h \
     serializer.h \
+    synchronousscheduler.h \
     sharedptr.h \
     table.h \
     table_player.h \
