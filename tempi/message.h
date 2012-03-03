@@ -51,11 +51,19 @@ typedef enum
     DOUBLE = 'd',
     FLOAT = 'f',
     INT = 'i',
+    UNSIGNED_INT = 'u',
+    BANG = '!',
     LONG = 'l',
     STRING = 's',
     // TODO: UNICODE = 'u',
     POINTER = 'p'
 } AtomType;
+
+class Bang
+{
+    public:
+        Bang() {}
+};
 
 namespace types
 {
@@ -89,9 +97,11 @@ class Message
         //bool setArgument(unsigned int index, boost::any &value);
         unsigned int getSize() const;
 
+        void appendBang();
         void appendBoolean(bool value);
         void appendChar(char value);
         void appendUnsignedChar(unsigned char value);
+        void appendUnsignedInt(unsigned int value);
         void appendDouble(double value);
         void appendFloat(float value);
         void appendInt(int value);
@@ -102,9 +112,11 @@ class Message
         }
         void appendPointer(void *value);
 
+        void prependBang();
         void prependBoolean(bool value);
         void prependChar(char value);
         void prependUnsignedChar(unsigned char value);
+        void prependUnsignedInt(unsigned int value);
         void prependDouble(double value);
         void prependFloat(float value);
         void prependInt(int value);
@@ -121,6 +133,8 @@ class Message
         char getChar(unsigned int index) const
             throw(BadAtomTypeException, BadIndexException);
         unsigned char getUnsignedChar(unsigned int index) const
+            throw(BadAtomTypeException, BadIndexException);
+        unsigned int getUnsignedInt(unsigned int index) const
             throw(BadAtomTypeException, BadIndexException);
         double getDouble(unsigned int index) const
             throw(BadAtomTypeException, BadIndexException);
@@ -142,6 +156,8 @@ class Message
         void setChar(unsigned int index, char value)
             throw(BadAtomTypeException, BadIndexException);
         void setUnsignedChar(unsigned int index, unsigned char value)
+            throw(BadAtomTypeException, BadIndexException);
+        void setUnsignedInt(unsigned int index, unsigned int value)
             throw(BadAtomTypeException, BadIndexException);
         void setDouble(unsigned int index, double value)
             throw(BadAtomTypeException, BadIndexException);

@@ -56,6 +56,11 @@ void Message::appendVaList(const char *types, va_list arguments)
     {
         switch (types[i])
         {
+            case BANG:
+            {
+                appendBang();
+                break;
+            }
             case FLOAT:
             {
                 float value = va_arg(arguments, double);
@@ -104,6 +109,13 @@ void Message::appendVaList(const char *types, va_list arguments)
                 unsigned char value = (unsigned char) va_arg(arguments, int);
                 //std::cout << "Caught a char : " <<  value;
                 appendChar(value);
+                break;
+            }
+            case UNSIGNED_INT:
+            {
+                unsigned int value = (unsigned int) va_arg(arguments, int);
+                //std::cout << "Caught an unsigned int: " <<  value;
+                appendUnsignedInt(value);
                 break;
             }
             case LONG:
@@ -170,6 +182,21 @@ void Message::prependInt(int value)
     prepend(boost::any(value));
 }
 
+void Message::prependUnsignedInt(unsigned int value)
+{
+    prepend(boost::any(value));
+}
+
+void Message::prependBang()
+{
+    prepend(boost::any(Bang()));
+}
+
+void Message::appendBang()
+{
+    append(boost::any(Bang()));
+}
+
 void Message::prependLong(long long int value)
 {
     prepend(boost::any(value));
@@ -206,6 +233,11 @@ void Message::appendFloat(float value)
 }
 
 void Message::appendInt(int value)
+{
+    append(boost::any(value));
+}
+
+void Message::appendUnsignedInt(unsigned int value)
 {
     append(boost::any(value));
 }
@@ -249,6 +281,13 @@ int Message::getInt(unsigned int index) const throw(BadAtomTypeException, BadInd
 {
     int value;
     get<int>(index, value);
+    return value;
+}
+
+unsigned int Message::getUnsignedInt(unsigned int index) const throw(BadAtomTypeException, BadIndexException)
+{
+    unsigned int value;
+    get<unsigned int>(index, value);
     return value;
 }
 
@@ -337,6 +376,10 @@ void Message::setInt(unsigned int index, int value) throw(BadAtomTypeException, 
 {
     set<int>(index, value);
 }
+void Message::setUnsignedInt(unsigned int index, unsigned int value) throw(BadAtomTypeException, BadIndexException)
+{
+    set<unsigned int>(index, value);
+}
 
 void Message::setLong(unsigned int index, long long int value) throw(BadAtomTypeException, BadIndexException)
 {
@@ -367,6 +410,8 @@ bool getAtomTypeForAny(const boost::any &value, AtomType &type)
         type = CHAR;
     else if (actual == typeid(unsigned char))
         type = UNSIGNED_CHAR;
+    else if (actual == typeid(unsigned int))
+        type = UNSIGNED_INT;
     else if (actual == typeid(double))
         type = DOUBLE;
     else if (actual == typeid(float))
@@ -377,6 +422,8 @@ bool getAtomTypeForAny(const boost::any &value, AtomType &type)
         type = LONG;
     else if (actual == typeid(std::string))
         type = STRING;
+    else if (actual == typeid(Bang))
+        type = BANG;
     else if (actual == typeid(void *))
         type = POINTER;
     else
@@ -465,6 +512,13 @@ bool Message::operator==(const Message &other) const
             case UNSIGNED_CHAR:
                 if (getUnsignedChar(i) != other.getUnsignedChar(i))
                     return false;
+                break;
+            case UNSIGNED_INT:
+                if (getUnsignedInt(i) != other.getUnsignedInt(i))
+                    return false;
+                break;
+            case BANG:
+                // always matches
                 break;
             case DOUBLE:
                 if (getDouble(i) != other.getDouble(i))
@@ -579,6 +633,12 @@ void Message::prependMessage(const Message &message)
                 break;
             case INT:
                 prependInt(message.getInt(i));
+                break;
+            case UNSIGNED_INT:
+                prependUnsignedInt(message.getUnsignedInt(i));
+                break;
+            case BANG:
+                prependBang();
                 break;
             case LONG:
                 prependLong(message.getLong(i));

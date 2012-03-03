@@ -237,6 +237,8 @@ bool isValidAtomType(const char c)
         case BOOLEAN:
         case CHAR:
         case UNSIGNED_CHAR:
+        case UNSIGNED_INT:
+        case BANG:
         case DOUBLE:
         case FLOAT:
         case INT:
@@ -312,6 +314,12 @@ Message castMessage(const Message &message, const char *type)
                     case UNSIGNED_CHAR:
                         result.appendFloat((float) message.getUnsignedChar(i));
                         break;
+                    case UNSIGNED_INT:
+                        result.appendFloat((float) message.getUnsignedInt(i));
+                        break;
+                    case BANG:
+                        result.appendFloat(0.0f);
+                        break;
                     case DOUBLE:
                         result.appendFloat((float) message.getDouble(i));
                         break;
@@ -372,6 +380,12 @@ Message castMessage(const Message &message, const char *type)
                         break;
                     case UNSIGNED_CHAR:
                         result.appendUnsignedChar(message.getUnsignedChar(i));
+                        break;
+                    case UNSIGNED_INT:
+                        result.appendUnsignedChar((unsigned char) message.getUnsignedInt(i));
+                        break;
+                    case BANG:
+                        result.appendUnsignedChar(' ');
                         break;
                     case DOUBLE:
                         result.appendUnsignedChar((unsigned char) message.getDouble(i));
