@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tempi version="0.1.9">
+  <graph>
+    <node id="loadmess0" class="base.loadmess">
+      <attribute name="value">
+        <f>100</f><f>1000</f>
+        <f>0</f><f>1000</f>
+      </attribute>
+    </node>
+    <node id="line0" class="flow.line">
+      <attribute name="rate">
+        <l>100</l>
+      </attribute>
+    </node>
+    <node id="print_line" class="base.print">
+      <attribute name="prefix"><s>line:   </s></attribute>
+    </node>
+    <node id="print_mapped" class="base.print">
+      <attribute name="prefix"><s>mapped: </s></attribute>
+      <attribute name="enabled"><b>false</b></attribute>
+    </node>
+    <node id="map0" class="math.map">
+      <attribute name="input_range"><f>0</f><f>100</f></attribute>
+      <attribute name="output_range"><f>0</f><f>1</f></attribute>
+    </node>
+    <connection from="loadmess0" outlet="0" to="line0" inlet="targets"/>
+    <connection from="line0" outlet="ramp" to="print_line" inlet="0"/>
+    <connection from="line0" outlet="ramp" to="map0" inlet="0"/>
+    <connection from="map0" outlet="0" to="print_mapped" inlet="0"/>
+  </graph>
+</tempi>
