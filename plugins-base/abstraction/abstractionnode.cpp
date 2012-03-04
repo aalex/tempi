@@ -43,8 +43,13 @@ AbstractionNode::AbstractionNode() :
     scheduler_(new SynchronousScheduler),
     loader_(new serializer::Serializer)
 {
-    setShortDocumentation("Loads a Graph from an XML file and allows one to send and receives messages to and from its nodes.");
-    addAttribute(Attribute::ptr(new Attribute("file_path", Message("s", ""), "Path to the XML file to load the Tempi Graph from.")));
+    this->setShortDocumentation("Loads a Graph from an XML file and allows one to send and receives messages to and from its nodes.");
+    this->setLongDocumentation(
+        "Tempi XML files should comply with the Tempi standard. "
+        "If there are [abs.inlet] or [abs.outlet] nodes in the XML file that is loaded, Tempi will create inlets and outlets to this [abs.abstraction] node, and these pads will be named the same way as the nodes within the abstractions. "
+        "That means that if you have a [abs.inlet] whose name is \"hello\" in the XML file loaded by the [abs.abstraction] node, the [abs.abstraction] will have an inlet named \"hello\". "
+        );
+    this->addAttribute(Attribute::ptr(new Attribute("file_path", Message("s", ""), "Path to the XML file to load the Tempi Graph from.")));
 }
 
 void AbstractionNode::onAttributeChanged(const char *name, const Message &value)
