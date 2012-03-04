@@ -46,6 +46,8 @@
 #include "plugins-base/music/monodicnode.h"
 #include "plugins-base/osc/oscreceivernode.h"
 #include "plugins-base/osc/oscsendernode.h"
+#include "plugins-base/osc/oscprependnode.h"
+#include "plugins-base/osc/oscroutenode.h"
 #include "plugins-base/sampler/samplernode.h"
 #include "plugins-base/sampler/samplenode.h"
 #include "plugins-base/sampler/samplerwritenode.h"
@@ -114,6 +116,8 @@ void BaseLibrary::load(NodeFactory &factory, const char *prefix) const
     factory.registerTypeT<OscReceiverNode>(concatenate("osc.", "receive").c_str());
     factory.registerTypeT<OscSenderNode>(concatenate("osc.", "send").c_str());
 // TODO #endif // HAVE_LIBLO
+    factory.registerTypeT<OscPrependNode>(concatenate("osc.", "prepend").c_str());
+    factory.registerTypeT<OscRouteNode>(concatenate("osc.", "route").c_str());
 
     factory.registerTypeT<SamplerSampleNode>(concatenate("sampler.", "sample").c_str());
     factory.registerTypeT<SamplerNode>(concatenate("sampler.", "sampler").c_str());

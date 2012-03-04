@@ -72,7 +72,9 @@ libtempi_plugins_base_la_SOURCES = \
     midi/midisendernode.cpp \
     midi/midiutilities.cpp \
     music/monodicnode.cpp \
+    osc/oscprependnode.cpp \
     osc/oscreceivernode.cpp \
+    osc/oscroutenode.cpp \
     osc/oscsendernode.cpp \
     random/drunkint.cpp \
     sampler/samplenode.cpp \
@@ -114,7 +116,9 @@ EXTRA_DIST = \
     midi/midiroutenode.h \
     midi/midisendernode.h \
     midi/midiutilities.h \
+    osc/oscprependnode.h \
     osc/oscreceivernode.h \
+    osc/oscroutenode.h \
     osc/oscsendernode.h \
     random/drunkint.h \
     random/randomintnode.h \

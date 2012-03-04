@@ -35,6 +35,7 @@ SamplerSampleNode::SamplerSampleNode() :
     Node()
 {
     setShortDocumentation("Manages one Region that is accessible by all nodes.");
+    setLongDocumentation("Use [sampler.read] and [sampler.write] nodes to read/write from/to the Region created by this node. When you create an instance of this node type, a sampling Region is created in the Tempi scheduler, and it is accessible by all nodes in all the graphs within that scheduler.");
     addAttribute(Attribute::ptr(new Attribute(ATTR_NAME, Message("s", ""), "Name of the region to create. An empty string means it is invalid.")));
 }
 

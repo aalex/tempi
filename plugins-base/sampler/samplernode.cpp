@@ -33,6 +33,7 @@ SamplerNode::SamplerNode() :
     player_(new sampler::Player(region_))
 {
     setShortDocumentation("Contains a Region, a Recorder and a Player to loop data samples.");
+    setLongDocumentation("Note that the Region within this node is not accessible by the other Tempi objects. This node is a simplified version of a sampler, with very limiter features.");
     Message recording = Message("b", false);
     addAttribute(Attribute::ptr(new Attribute("recording", recording, "Currently recording or not.")));
 

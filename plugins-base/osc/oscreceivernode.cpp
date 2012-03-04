@@ -31,6 +31,7 @@ OscReceiverNode::OscReceiverNode() :
     port_number_(0)
 {
     setShortDocumentation("Receives OSC messages.");
+    setLongDocumentation("Warning: If UDP port is already in use, it should crash your application."); // FIXME
     addOutlet("incoming");
     Message port = Message("i", 0);
     addAttribute(Attribute::ptr(new Attribute("port", port, "Receive OSC messages on this port number.")));
