@@ -50,7 +50,7 @@ std::string removeTrailingPathSep(const char *path)
     {
         std::ostringstream os;
         os << __FILE__ << ": " << __FUNCTION__ << ": TODO\n";
-        Logger::log(WARNING, os.str().c_str());
+        Logger::log(WARNING, os);
         return false;
     }
         //return ret.clone(0, ret.size() - 2);
@@ -92,13 +92,13 @@ bool Loader::load(NodeFactory &factory, const char *name)
     {
         std::ostringstream os;
         os << "pwd: " << getenv("PWD");
-        Logger::log(DEBUG, os.str().c_str());
+        Logger::log(DEBUG, os);
     }
     if (isLoaded(name))
     {
         std::ostringstream os;
         os << "Loader." << __FUNCTION__ << ": Plugin already loaded: " << name;
-        Logger::log(ERROR, os.str().c_str());
+        Logger::log(INFO, os);
         return false;
     }
     std::vector<std::string>::const_iterator iter;
@@ -110,21 +110,21 @@ bool Loader::load(NodeFactory &factory, const char *name)
         {
             std::ostringstream os;
             os << __FUNCTION__ << ": Trying " << fileName;
-            Logger::log(DEBUG, os.str().c_str());
+            Logger::log(DEBUG, os);
         }
         if (fileExists(fileName.c_str()))
         {
             {
                 std::ostringstream os;
                 os << "dlopen()...\n";
-                Logger::log(DEBUG, os.str().c_str());
+                Logger::log(DEBUG, os);
             }
             void *dlobj = dlopen(fileName.c_str(), RTLD_NOW | RTLD_GLOBAL);
             if (! dlobj)
             {
                 std::ostringstream os;
                 os << "Loader." << __FUNCTION__ << ": Error loading " << fileName << ": " << dlerror();
-                Logger::log(ERROR, os.str().c_str());
+                Logger::log(ERROR, os);
                 return false;
             }
             std::string functionName;
@@ -132,27 +132,27 @@ bool Loader::load(NodeFactory &factory, const char *name)
             {
                 std::ostringstream os;
                 os << "Loader." << __FUNCTION__ << ": Retrieve symbol " <<  functionName.c_str();
-                Logger::log(DEBUG, os.str().c_str());
+                Logger::log(DEBUG, os);
             }
             SetupFunc functionPtr = (SetupFunc) dlsym(dlobj,  functionName.c_str());
             if (! functionPtr)
             {
                 std::ostringstream os;
                 os << "Loader." << __FUNCTION__ << ": Failed to retrieve symbol " <<  functionName.c_str() << "in " << fileName;
-                Logger::log(ERROR, os.str().c_str());
+                Logger::log(ERROR, os);
                 return false;
             }
             {
                 std::ostringstream os;
                 os << "Loader." << __FUNCTION__ << ": calling %s()..." <<  functionName;
-                Logger::log(DEBUG, os.str().c_str());
+                Logger::log(DEBUG, os);
             }
             (*functionPtr)(static_cast<void*>(&factory));
             loaded_.push_back(std::string(name));
             {
                 std::ostringstream os;
                 os << "Loader::" << __FUNCTION__ << ": Succesfully called " << functionName << " from " << fileName;
-                Logger::log(DEBUG, os.str().c_str());
+                Logger::log(DEBUG, os);
             }
             return true;
         }
@@ -160,13 +160,13 @@ bool Loader::load(NodeFactory &factory, const char *name)
         {
             std::ostringstream os;
             os << "Loader::" << __FUNCTION__ << ": Could not find " << fileName;
-            Logger::log(DEBUG, os.str().c_str());
+            Logger::log(DEBUG, os);
         }
     }
     {
         std::ostringstream os;
         os << "Loader::" << __FUNCTION__ << ": Failed to load plugin " << name;
-        Logger::log(ERROR, os.str().c_str());
+        Logger::log(ERROR, os);
     }
     return false;
 }
