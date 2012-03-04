@@ -48,6 +48,7 @@ typedef enum
 class Logger
 {
     public:
+        typedef std::ostringstream Output;
         /**
          * Retrieves the singleton.
          */
@@ -59,7 +60,9 @@ class Logger
         /**
          * Logs a message.
          */
-        static log4cpp::Category& log(LogLevel level, const char *message);
+        static void log(LogLevel level, const char *message);
+        static void log(LogLevel level, const std::ostringstream &os);
+        static void log(LogLevel level, const std::string &text);
         ~Logger();
     private:
         log4cpp::Appender *appender_;

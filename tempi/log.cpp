@@ -35,7 +35,17 @@ void Logger::setLevel(LogLevel level)
     category.setPriority(level);
 }
 
-log4cpp::Category& Logger::log(LogLevel level, const char *message)
+void Logger::log(LogLevel level, const std::ostringstream &os)
+{
+    Logger::log(level, os.str().c_str());
+}
+
+void Logger::log(LogLevel level, const std::string &text)
+{
+    Logger::log(level, text.c_str());
+}
+
+void Logger::log(LogLevel level, const char *message)
 {
     Logger &self = Logger::getInstance();
     log4cpp::Category& category = log4cpp::Category::getInstance(self.category_name_);

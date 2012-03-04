@@ -59,6 +59,17 @@ class DegToRadNode : public OneFloatMathNode
         virtual float calculate(float operand);
 };
 
+/**
+ * Converts a float from a range to another.
+ */
+class MapNode : public OneFloatMathNode
+{
+    public:
+        MapNode();
+    private:
+        virtual float calculate(float operand);
+};
+
 } // end of namespace
 } // end of namespace
 

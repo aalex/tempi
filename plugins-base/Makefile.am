@@ -53,6 +53,7 @@ libtempi_plugins_base_la_SOURCES = \
     flow/appsinknode.cpp \
     flow/counternode.cpp \
     flow/delaynode.cpp \
+    flow/linenode.cpp \
     flow/loadmessnode.cpp \
     flow/metro_node.cpp \
     flow/nop_node.cpp \
@@ -92,6 +93,7 @@ EXTRA_DIST = \
     flow/counternode.h \
     flow/delaynode.h \
     flow/dictnode.h \
+    flow/linenode.h \
     flow/loadmessnode.h \
     flow/metro_node.h \
     flow/nop_node.h \

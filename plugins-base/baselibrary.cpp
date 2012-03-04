@@ -26,6 +26,7 @@
 #include "plugins-base/flow/counternode.h"
 #include "plugins-base/flow/delaynode.h"
 #include "plugins-base/flow/dictnode.h"
+#include "plugins-base/flow/linenode.h"
 #include "plugins-base/flow/loadmessnode.h"
 #include "plugins-base/flow/metro_node.h"
 #include "plugins-base/flow/nop_node.h"
@@ -77,6 +78,7 @@ void BaseLibrary::load(NodeFactory &factory, const char *prefix) const
     factory.registerTypeT<SpigotNode>(concatenate("base.", "spigot").c_str());
     factory.registerTypeT<PrependNode>(concatenate("base.", "prepend").c_str());
     factory.registerTypeT<RouteNode>(concatenate("base.", "route").c_str());
+    factory.registerTypeT<LineNode>(concatenate("flow.", "line").c_str());
     factory.registerTypeT<LoadMessNode>(concatenate("base.", "loadmess").c_str());
     factory.registerTypeT<CastNode>(concatenate("base.", "cast").c_str());
 
@@ -91,6 +93,7 @@ void BaseLibrary::load(NodeFactory &factory, const char *prefix) const
     factory.registerTypeT<IsGreaterNode>(concatenate("math.", ">").c_str());
     factory.registerTypeT<IsLessNode>(concatenate("math.", "<").c_str());
     factory.registerTypeT<SubtractNode>(concatenate("math.", "-").c_str());
+    factory.registerTypeT<MapNode>(concatenate("math.", "map").c_str());
     factory.registerTypeT<MultNode>(concatenate("math.", "*").c_str());
     factory.registerTypeT<DegToRadNode>(concatenate("math.", "deg2rad").c_str());
 

@@ -7,16 +7,13 @@ To do for 0.2
 * abstractions: support a list of paths to be looked for files.
 * abstractions: reuse same scheduler for abstractions than their parent so that everything is "global"
 * FIXME: OscReceiver segfaults if port is busy
+* FIXME: Serializer::load sets node attributes twice?
 * FIXME: fix path to libs
 * FIXME: removeTrailingPathSep crashes if has a trailing slash...
 * FIXME: onAttributeChanged is called sometime twice. If the attribute has not been changed, it should not be called again
-* FIXME: split utils.h so that compilation gets faster
-* FIXME: clutter.stage segfaults
 * tempi-launch should fail with error in case some node type could not be created
-* FIXME: Serializer::load sets node attributes twice?
 * STK MIDI: fix cflags for PPC 
 * __attr__ inlet: remove "set" prefix. Support "__list__" method.
-* loadBang: Find a better name. Node::loadBang only once? When to Graph::loadBang?
 * tempi-osc-looper: multitrack GUI configured with an XML Graph
 * Rename Filter to AbstractFilterNode.
 * AbstractFilterNode.filter should return a const&
@@ -33,10 +30,13 @@ To do for 0.2
 * ? rename connection to connect in XML schema
 * Scheduler: contain BehaviourTrees
 * Scheduler: contain Tables
+* FIXME: split utils.h so that compilation gets faster
+* FIXME: clutter.stage segfaults
 
 To do for 0.4
 -------------
 
+* loadBang: Find a better name. Node::loadBang only once? When to Graph::loadBang?
 * Node::addMethod (i18n doc)
 * Atom types: replace switch/case by a hierarchy of classes
 * Allow range for int attributes?

@@ -19,6 +19,7 @@
  */
 
 #include "plugins-base/math/onefloatmathnode.h"
+#include "tempi/utils.h"
 #include <iostream>
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
@@ -56,6 +57,23 @@ DegToRadNode::DegToRadNode() :
 float DegToRadNode::calculate(float operand)
 {
     return operand * (M_PI / 180.0f);
+}
+
+MapNode::MapNode() :
+    OneFloatMathNode()
+{
+    this->setShortDocumentation("Convert a float from a range to another.");
+    this->addAttribute(Attribute::ptr(new Attribute("input_range", Message("ff", 0.0f, 1.0f), "Input range to map from.")));
+    this->addAttribute(Attribute::ptr(new Attribute("output_range", Message("ff", 0.0f, 1.0f), "Output range to map to.")));
+}
+
+float MapNode::calculate(float operand)
+{
+    Message input = this->getAttributeValue("input_range");
+    Message output = this->getAttributeValue("output_range");
+    return utils::map_float(operand,
+        input.getFloat(0), input.getFloat(1),
+        output.getFloat(0), output.getFloat(1));
 }
 
 } // end of namespace
