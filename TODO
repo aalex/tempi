@@ -3,6 +3,8 @@ To do in Tempi
 
 To do for 0.2
 -------------
+* send / receive!
+* on closed/killed signal (message sent)
 * rename all tools so that their name start with tempi-*
 * abstractions: support a list of paths to be looked for files.
 * abstractions: reuse same scheduler for abstractions than their parent so that everything is "global"
@@ -24,9 +26,6 @@ To do for 0.2
 * [base.timer]
 * [flow.delta]
 * [flow.smooth]
-* [sampler.reader]
-* [sampler.score]
-* [sampler.writer]
 * ? rename connection to connect in XML schema
 * Scheduler: contain BehaviourTrees
 * Scheduler: contain Tables
