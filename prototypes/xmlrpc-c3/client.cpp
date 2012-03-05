@@ -22,36 +22,30 @@
 #include <xmlrpc-c/base.hpp>
 #include <xmlrpc-c/client.hpp>
 
-using namespace std;
-
-int
-main(int argc, char **) {
-
-    if (argc-1 > 0) {
-        cerr << "This program has no arguments" << endl;
+int main(int argc, char **)
+{
+    if (argc - 1 > 0)
+    {
+        std::cerr << "This program has no arguments" << std::endl;
         exit(1);
     }
-
-    try {
+    try
+    {
         xmlrpc_c::clientXmlTransport_curl myTransport(
             xmlrpc_c::clientXmlTransport_curl::constrOpt()
-            .timeout(10000)  // milliseconds
-            .user_agent("sample_add/1.0"));
-
+                .timeout(10000)  // milliseconds
+                .user_agent("sample_add/1.0"));
         xmlrpc_c::client_xml myClient(&myTransport);
-
-        string const methodName("sample.add");
+        std::string const methodName("sample.add");
 
         xmlrpc_c::paramList sampleAddParms;
         sampleAddParms.add(xmlrpc_c::value_int(5));
         sampleAddParms.add(xmlrpc_c::value_int(7));
-
         xmlrpc_c::rpcPtr myRpcP(methodName, sampleAddParms);
 
-        string const serverUrl("http://localhost:8080/RPC2");
+        std::string const serverUrl("http://localhost:8080/RPC2");
 
         xmlrpc_c::carriageParm_curl0 myCarriageParm(serverUrl);
-
         myRpcP->call(&myClient, &myCarriageParm);
 
         assert(myRpcP->isFinished());
@@ -59,14 +53,17 @@ main(int argc, char **) {
         int const sum(xmlrpc_c::value_int(myRpcP->getResult()));
             // Assume the method returned an integer; throws error if not
 
-        cout << "Result of RPC (sum of 5 and 7): " << sum << endl;
+        std::cout << "Result of RPC (sum of 5 and 7): " << sum << std::endl;
 
-    } catch (exception const& e) {
-        cerr << "Client threw error: " << e.what() << endl;
-    } catch (...) {
-        cerr << "Client threw unexpected error." << endl;
     }
-
+    catch (std::exception const& e)
+    {
+        std::cerr << "Client threw error: " << e.what() << std::endl;
+    }
+    catch (...)
+    {
+        std::cerr << "Client threw unexpected error." << std::endl;
+    }
     return 0;
 }
 
