@@ -47,7 +47,7 @@ bool AbstractFactory::registerTypePtr(const char *name, AbstractInstanceCreator:
     return true;
 }
 
-Instance::ptr AbstractFactory::create(const char *name)
+Instance* AbstractFactory::create(const char *name)
     throw(BadInstanceNameException)
 {
     if (! hasType(name))
@@ -58,7 +58,7 @@ Instance::ptr AbstractFactory::create(const char *name)
     }
     std::string nameString(name);
     AbstractInstanceCreator *creator = entries_[nameString].get();
-    Instance::ptr instance(creator->create());
+    Instance* instance(creator->create());
     instance->setTypeName(name);
     return instance;
 }

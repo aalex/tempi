@@ -77,8 +77,10 @@ class AbstractFactory
         bool hasType(const char *name);
         /**
          * Creates an Instance.
+         * You are responsible for freeing the memory allocated to this pointer.
+         * No memory is allocated if it throws an exception.
          */
-        Instance::ptr create(const char *name)
+        Instance* create(const char *name)
             throw(BadInstanceNameException);
         /**
          * Returns all entries in this AbstractFactory.
