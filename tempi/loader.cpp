@@ -51,7 +51,7 @@ std::string removeTrailingPathSep(const char *path)
         std::ostringstream os;
         os << __FILE__ << ": " << __FUNCTION__ << ": TODO\n";
         Logger::log(WARNING, os);
-        return false;
+        return ret; // FIXME
     }
         //return ret.clone(0, ret.size() - 2);
     return ret;
