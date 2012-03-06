@@ -1,0 +1,23 @@
+# Sequence diagram for a multitrack looper in which tracks are in sync with track 0.
+# mscgen -T png -i looper.msc -o looper.png
+# gnome-open looper.png
+msc {
+  track0,track1,track2;
+
+  track0->track0 [ label = "beginning" ] ;
+  track0->track1 [ label = "start()"];
+  track0->track2 [ label = "start()"];
+  ...;
+  track1->track1 [ label = "end"];
+  ...;
+  track0->track0 [ label = "end"];
+  track0->track1 [ label = "start()"];
+  ...;
+  track2->track2 [ label = "end"];
+  ...;
+  track0->track0 [ label = "end"];
+  track0->track1 [ label = "start()"];
+  track0->track2 [ label = "start()"];
+  ...;
+  ---  [ label = "And so on...", ID="*" ];
+}
