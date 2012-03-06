@@ -31,11 +31,6 @@ Node::Node()
 {
     load_banged_ = false;
     // XXX: Add Signals BEFORE adding inlets/outlets!
-    // TODO: intercept ATTRIBUTE_LOG when set to make sure it's in the right range.
-    //addAttribute(ATTRIBUTE_LOG, Message("i", 1), "How much [1-5] to print debug info in the console. 1=ERROR, 2=CRITICAL, 3=WARNING, 4=INFO, 5=DEBUG");
-    //TODO: __attr__ and __log__ ?
-    //std::cout << __FUNCTION__ << "()" << std::enD
-
     addSignal(NodeSignal::ptr(new NodeSignal(OUTLET_DELETED_SIGNAL,
         "Triggered when an outlet is deleted. Arguments are: the name of this node, the name of the outlet.", "TODO", "ss")));
     addSignal(NodeSignal::ptr(new NodeSignal(INLET_DELETED_SIGNAL,
@@ -44,9 +39,8 @@ Node::Node()
         "Triggered when an outlet is created. Arguments are: the name of this node, the name of the outlet.", "TODO", "ss")));
     addSignal(NodeSignal::ptr(new NodeSignal(INLET_CREATED_SIGNAL,
         "Triggered when an inlet is created. Arguments are: the name of this node, the name of the inlet.", "TODO", "ss")));
-
-    addInlet(ATTRIBUTES_INLET, "Set attribute value with (s:\"set\", s:name, ...)"); // all nodes have at least one inlet for attributes
-    //addAttribute("log-level", Message("i", 1), "How much [1-5] to print debug info in the console. 1=ERROR, 2=CRITICAL, 3=WARNING, 4=INFO, 5=DEBUG");
+    addInlet(ATTRIBUTES_INLET, "Set attribute value with (s:\"set\", s:<name>, ...) and list them via the __attr__ outlet with the (s:\"list\") message."); // all nodes have at least one inlet for attributes
+    addInlet(ATTRIBUTES_OUTLET, "Outputs value of each attribute, prefixed by their respective name, and also the list of all attributes name, prefixed with s:\"__list__\"."); // all nodes have at least one outlet for attributes
 }
 
 bool Node::isInitiated() const
@@ -67,16 +61,6 @@ bool Node::init()
     {
         initiated_ = true; // very important!
         onInit();
-        std::vector<std::string> attributes = listAttributes();
-        std::vector<std::string>::const_iterator iter;
-        for (iter = attributes.begin(); iter != attributes.end(); ++iter)
-        {
-            // Updates properties, etc.
-            Attribute* attribute = getAttribute((*iter).c_str());
-            onAttributeChanged((*iter).c_str(), attribute->getValue());
-            // add an inlet for each attribute
-            addInlet((*iter).c_str(), attribute->getShortDocumentation().c_str());
-        }
         return true;
     }
 }
@@ -118,72 +102,56 @@ std::map<std::string, Outlet::ptr> Node::getOutlets()
 
 void Node::onInletTriggered(Inlet *inlet, const Message &message)
 {
-    //std::cout << __FUNCTION__ << std::endl;
-    bool is_a_attribute = false;
-    if (inlet->getName() == ATTRIBUTES_INLET && message.getSize() >= 3)
+    if (inlet->getName() == ATTRIBUTES_INLET)
     {
-        // AtomType type0;
-        // AtomType type1;
-        // if (! message.getAtomType(0, type0))
-        // {
-        //     std::cout << "could not get arg type for index " << 0 << std::endl;
-        //     // TODO: abort
-        // }
-        // if (! message.getAtomType(1, type1))
-        // {
-        //     std::cout << "could not get arg type for index " << 1 << std::endl;
-        //     // TODO: abort
-        // }
-        //if (type0 == STRING && type1 == STRING && 
-        if (message.getTypes().compare(0, 2, "ss") == 0)
+        if (&& message.getSize() >= 3)
         {
-            if (message.getString(0).compare("set") == 0)
+            if (message.getTypes().compare(0, 2, "ss") == 0)
             {
-                try
+                if (message.getString(0).compare("set") == 0)
                 {
-                    Message attribute = message.cloneRange(2, message.getSize() - 1);
-                    std::string name = message.getString(1);
-                    setAttribute(name.c_str(), attribute);
-                    // std::cout << "Node::" << __FUNCTION__ << ": set attribute " << name << ": " << attribute << std::endl;
-                    is_a_attribute = true;
-                }
-                catch (const BadIndexException &e)
-                {
-                    std::cerr << "Node(" << getTypeName() << ":" << getName() << ")::" << __FUNCTION__ << ": " << e.what();
-                }
-                catch (const BadAtomTypeException &e)
-                {
-                    std::cerr << "Node(" << getTypeName() << ":" << getName() << ")::" << __FUNCTION__ << ": " << e.what();
-                }
-            }
-        }
-    }
-
-    if (is_a_attribute)
-        return;
-    
-    // Attribute inlet:
-    std::vector<std::string> attributes = listAttributes();
-    std::vector<std::string>::const_iterator iter;
-    for (iter = attributes.begin(); iter != attributes.end(); ++iter)
-    {
-        if (inlet->getName() == (*iter))
+                    try
+                    {
+                        Message attribute = message.cloneRange(2, message.getSize() - 1);
+                        std::string name = message.getString(1);
+                        if (this->getAttribute(name.c_str())->isMutable())
+                        {
+                            setAttribute(name.c_str(), attribute);
+                            return;
+                        }
+                        else
+                        {
+                            std::ostringstream os;
+                            os << "Node." << __FUNCTION__ << ": " << name << " is not mutable! Cannot change it via messages.";
+                            Logger::log(ERROR, os);
+                            return;
+                        }
+                    }
+                    catch (const BadIndexException &e)
+                    {
+                        std::cerr << "Node(" << getTypeName() << ":" << getName() << ")::" << __FUNCTION__ << ": " << e.what();
+                    }
+                    catch (const BadAtomTypeException &e)
+                    {
+                        std::cerr << "Node(" << getTypeName() << ":" << getName() << ")::" << __FUNCTION__ << ": " << e.what();
+                    }
+                } // set
+            } // ss
+        } // size >= 3
+        // ---------- list:
+        else if (message.getString(0).compare(ATTRIBUTES_LIST_METHOD_SELECTOR) == 0)
         {
-            try
+            std::vector<std::string> attributes = this->listAttributes();
+            Message attributes_message("s", ATTRIBUTES_LIST_OUTPUT_PREFIX);
+            std::vector<std::string> iter;
+            for (iter = attributes.begin(); iter != attributes.end(); ++iter)
             {
-                setAttribute(inlet->getName().c_str(), message);
+                attributes_message.appendString((*iter).c_str());
             }
-            catch (const BadAtomTypeException &e)
-            {
-                std::cerr << "Node(" << getTypeName() << ":" << getName() << ")::" << __FUNCTION__ << ": " << e.what();
-            }
-            is_a_attribute = true;
-        }
-    }
-    if (! is_a_attribute)
-    {
-        processMessage(inlet->getName().c_str(), message);
-    }
+            this->output(ATTRIBUTES_OUTLET, attributes_message);
+        } // list attributes
+    } // ATTRIBUTES_INLET
+    processMessage(inlet->getName().c_str(), message);
 }
 
 std::map<std::string, Inlet::ptr> Node::getInlets()
@@ -372,7 +340,6 @@ bool Node::message(const char *inlet, const Message &message)
         if (inletPtr == 0)
         {
             std::cerr << "Error: Node::message(): Node of type " << getTypeName() << " has no inlet named " << inlet << "!!" << std::endl;
-            // : Called " << __FUNCTION__ << "() on Node of type " << getTypeName() << " via inlet " << inlet << " but could not find such an inlet. Message is: " << message << std::endl;
             return false;
         }
         inletPtr->trigger(message);
@@ -385,7 +352,8 @@ bool Node::message(const char *inlet, const Message &message)
     }
 }
 
-void Node::output(const char *outlet, const Message &message) const throw(BadIndexException)
+void Node::output(const char *outlet, const Message &message) const
+    throw(BadIndexException)
 {
     Outlet::ptr outlet_ptr = getOutletSharedPtr(outlet);
     outlet_ptr->trigger(message);

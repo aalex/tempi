@@ -45,6 +45,9 @@ const char * const INLET_CREATED_SIGNAL = "__create_inlet__";
 const char * const INLET_DELETED_SIGNAL = "__delete_inlet__";
 const char * const OUTLET_CREATED_SIGNAL = "__create_outlet__";
 const char * const OUTLET_DELETED_SIGNAL = "__delete_outlet__";
+const char * const ATTRIBUTES_OUTLET = "__attr__";
+const char * const ATTRIBUTES_LIST_METHOD_SELECTOR = "list";
+const char * const ATTRIBUTES_LIST_OUTPUT_PREFIX = "list";
 
 class Graph; // forward declaration
 
