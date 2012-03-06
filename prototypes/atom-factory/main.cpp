@@ -1,17 +1,25 @@
-#include "tempi/nodefactory.h"
+#include "abstractfactory.h"
+#include "instancecreator.h"
 #include <boost/any.hpp>
 #include <iostream>
+#include <vector>
 #include <tr1/memory>
 
-class Atom : public tempi::Node
+using namespace tempi;
+
+// ----------------------------------------------------------------------
+/**
+ * The Atom class
+ */
+class Atom : public Instance
 {
     public:
-        typedef std::tr1::shared_ptr<Atom> ptr;
-        Atom();
-        Atom(const boost::any &value);
-        virtual char getTypeTag() const = 0;
         const boost::any &getValue() const;
         bool setValue(const boost::any &value);
+        // bool is(const char *name) const = 0;
+    protected:
+        Atom();
+        Atom(const boost::any &value);
     private:
         boost::any value_;
 };
@@ -38,101 +46,162 @@ bool Atom::setValue(const boost::any &value)
     return true;
 }
 
-class AtomFactory : public tempi::NodeFactory
+class BadAtomIndex : public std::runtime_error
 {
     public:
-        template <class T>
-        bool registerAtomType()
-        {
-            using namespace tempi;
-            AbstractNodeType *tmp = (AbstractNodeType*) new NodeType<T>();
-            Atom *atomType = dynamic_cast<Atom*>(tmp);
-            AbstractNodeType::ptr ret(tmp);
-            std::string typeName;
-            typeName.push_back(atomType->getTypeTag());
-            if (! this->registerType(typeName.c_str(), ret))
-            {
-                std::cerr << "Could not register type " << atomType->getTypeTag() << std::endl;
-                return false;
-            }
-            return true;
-        }
-        // Atom::ptr createAtom(const char typeTag)
-        //     throw(BadNodeTypeException)
-        // {
-        //     Atom::ptr ret;
-        //     ret.reset(create(std::string(typeTag).c_str()).get());
-        //     return ret;
-        // }
+        BadAtomIndex(const char *message) :
+            std::runtime_error(message)
+        {}
 };
 
+// ----------------------------------------------------------------------
+/**
+ * An implementation of the Message class.
+ */
 class Message
 {
     public:
         bool append(const Atom::ptr &atom);
-        bool get(unsigned int index, Atom::ptr &result);
+        Instance::ptr get(unsigned int index)
+            throw(BadAtomIndex);
         std::string getTypeTags() const;
+        std::vector<Instance::ptr> getAtoms() const
+        {
+            return atoms_;
+        }
     private:
-        std::vector<Atom::ptr> atoms_;
+        std::vector<Instance::ptr> atoms_;
 };
+
+// std::ostream &operator<<(std::ostream &os, const Message &message);
 
 bool Message::append(const Atom::ptr &atom)
 {
-    atoms_.push_back(Atom::ptr(atom.get()));
+    atoms_.push_back(atom);
     return true;
 }
 
-bool Message::get(unsigned int index, Atom::ptr &result)
+Instance::ptr Message::get(unsigned int index)
+    throw(BadAtomIndex)
 {
     if (index >= atoms_.size())
-        return false;
+    {
+        std::ostringstream os;
+        os << "Bad index for atom " << index;
+        throw(BadAtomIndex(os.str().c_str()));
+    }
     else
     {
-        result.reset(atoms_[index].get());
-        return true;
+        return atoms_[index];
     }
 }
 
 std::string Message::getTypeTags() const
 {
     std::string ret;
-    std::vector<Atom::ptr>::const_iterator iter;
+    std::vector<Instance::ptr>::const_iterator iter;
     for (iter = atoms_.begin(); iter != atoms_.end(); ++iter)
-        ret.push_back((*iter)->getTypeTag());
+        ret += (*iter)->getTypeName();
     return ret;
 }
 
+std::ostream &operator<<(std::ostream &os, const Message &message)
+{
+    os << "Message:" << std::endl;
+    std::vector<Instance::ptr> atoms = message.getAtoms();
+    std::vector<Instance::ptr>::const_iterator iter;
+    for (iter = atoms.begin(); iter != atoms.end(); ++iter)
+    {
+        os << " * " << (*iter) << std::endl;
+    }
+    os << "----------------" << std::endl;
+    return os;
+}
+
+// ----------------------------------------------------------------------
+/**
+ * This IntAtom class.
+ */
 class IntAtom : public Atom
 {
+    // pass
     public:
-        virtual char getTypeTag() const;
+        static void append(Message &message, int value);
+        static int get(const Message &message, unsigned int index)
+            throw(BadElementTypeError, BadIndexError);
+        static void set(Message &message, unsigned int index, int value)
+            throw(BadElementTypeError, BadIndexError);
 };
 
-char IntAtom::getTypeTag() const
+static void IntAtom::append(Message &message, int value)
 {
-    return 'i';
+    message.append(boost::any(
+
 }
 
+int get_int(const Instance &instance)
+    throw(BadElementTypeError)
+{
+    Atom *atom = dynamic_cast<Atom>(instance.get());
+    if (atom->getTypeName() == "i")
+        return ())->;
+    
+}
+void setInt(Message::ptr &instance, int value)
+    throw(BadElementTypeError);
+
+int getInt(const Instance::ptr &instance)
+    throw(BadElementTypeError);
+
+void setInt(Instance::ptr &instance, int value)
+    throw(BadElementTypeError)
+{
+    if (instance.getTypeName() == "i")
+        return <IntAtom*>(instance.get())->;
+
+}
+
+int getInt(const Instance::ptr &instance)
+    throw(BadElementTypeError);
+{
+    
+}
+
+    Atom *atom = dynamic_cast<Atom>(instance.get());
+    if (atom->getTypeName() == "i")
+        return ())->;
+
+// ----------------------------------------------------------------------
+/**
+ * This FloatAtom class.
+ */
 class FloatAtom : public Atom
 {
-    public:
-        virtual char getTypeTag() const;
+    // pass
 };
 
-char FloatAtom::getTypeTag() const
-{
-    return 'f';
-}
-
+// ----------------------------------------------------------------------
 int main(int argc, char *argv[])
 {
-    AtomFactory factory;
-    factory.registerAtomType<IntAtom>();
-    factory.registerAtomType<FloatAtom>();
+    AbstractFactory factory;
+    factory.registerType<IntAtom>("i");
+    factory.registerType<FloatAtom>("f");
 
-    tempi::Node::ptr atom = factory.create("i");
-    Atom *pAtom = (Atom * ) atom.get();
-    std::cout << pAtom->getTypeTag() << ": " << std::endl;
+    Message m;
+    {
+        Instance::ptr atom = factory.create("i");
+        Atom *pAtom = (Atom * ) atom.get();
+        std::cout << "Created atom of type " << pAtom->getTypeName() << std::endl;
+        m.append(atom);
+    }
+    {
+        Instance::ptr atom = factory.create("f");
+        Atom *pAtom = (Atom * ) atom.get();
+        std::cout << "Created atom of type " << pAtom->getTypeName() << std::endl;
+        m.append(atom);
+    }
+
+    std::cout << "Resulting type tag: " << m.getTypeTags() << std::endl;
     return 0;
 }
 
