@@ -104,46 +104,43 @@ void Node::onInletTriggered(Inlet *inlet, const Message &message)
 {
     if (inlet->getName() == ATTRIBUTES_INLET)
     {
-        if (&& message.getSize() >= 3)
+        if (message.getSize() >= 3 && (message.getTypes().compare(0, 2, "ss") == 0))
         {
-            if (message.getTypes().compare(0, 2, "ss") == 0)
+            if (message.getString(0).compare("set") == 0)
             {
-                if (message.getString(0).compare("set") == 0)
+                try
                 {
-                    try
+                    Message attribute = message.cloneRange(2, message.getSize() - 1);
+                    std::string name = message.getString(1);
+                    if (this->getAttribute(name.c_str())->getMutable())
                     {
-                        Message attribute = message.cloneRange(2, message.getSize() - 1);
-                        std::string name = message.getString(1);
-                        if (this->getAttribute(name.c_str())->isMutable())
-                        {
-                            setAttribute(name.c_str(), attribute);
-                            return;
-                        }
-                        else
-                        {
-                            std::ostringstream os;
-                            os << "Node." << __FUNCTION__ << ": " << name << " is not mutable! Cannot change it via messages.";
-                            Logger::log(ERROR, os);
-                            return;
-                        }
+                        setAttribute(name.c_str(), attribute);
+                        return;
                     }
-                    catch (const BadIndexException &e)
+                    else
                     {
-                        std::cerr << "Node(" << getTypeName() << ":" << getName() << ")::" << __FUNCTION__ << ": " << e.what();
+                        std::ostringstream os;
+                        os << "Node." << __FUNCTION__ << ": " << name << " is not mutable! Cannot change it via messages.";
+                        Logger::log(ERROR, os);
+                        return;
                     }
-                    catch (const BadAtomTypeException &e)
-                    {
-                        std::cerr << "Node(" << getTypeName() << ":" << getName() << ")::" << __FUNCTION__ << ": " << e.what();
-                    }
-                } // set
-            } // ss
-        } // size >= 3
+                }
+                catch (const BadIndexException &e)
+                {
+                    std::cerr << "Node(" << getTypeName() << ":" << getName() << ")::" << __FUNCTION__ << ": " << e.what();
+                }
+                catch (const BadAtomTypeException &e)
+                {
+                    std::cerr << "Node(" << getTypeName() << ":" << getName() << ")::" << __FUNCTION__ << ": " << e.what();
+                }
+            } // set
+        } // size >= 3 && types == ss
         // ---------- list:
         else if (message.getString(0).compare(ATTRIBUTES_LIST_METHOD_SELECTOR) == 0)
         {
             std::vector<std::string> attributes = this->listAttributes();
             Message attributes_message("s", ATTRIBUTES_LIST_OUTPUT_PREFIX);
-            std::vector<std::string> iter;
+            std::vector<std::string>::const_iterator iter;
             for (iter = attributes.begin(); iter != attributes.end(); ++iter)
             {
                 attributes_message.appendString((*iter).c_str());

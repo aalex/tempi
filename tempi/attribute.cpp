@@ -52,7 +52,7 @@ bool Attribute::getMutable() const
     return mutable_;
 }
 
-void setMutable(bool is_mutable)
+void Attribute::setMutable(bool is_mutable)
 {
     mutable_ = is_mutable;
 }
