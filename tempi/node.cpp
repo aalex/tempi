@@ -39,8 +39,8 @@ Node::Node()
         "Triggered when an outlet is created. Arguments are: the name of this node, the name of the outlet.", "TODO", "ss")));
     addSignal(NodeSignal::ptr(new NodeSignal(INLET_CREATED_SIGNAL,
         "Triggered when an inlet is created. Arguments are: the name of this node, the name of the inlet.", "TODO", "ss")));
-    addInlet(ATTRIBUTES_INLET, "Set attribute value with (s:\"set\", s:<name>, ...) and list them via the __attr__ outlet with the (s:\"list\") message."); // all nodes have at least one inlet for attributes
-    addInlet(ATTRIBUTES_OUTLET, "Outputs value of each attribute, prefixed by their respective name, and also the list of all attributes name, prefixed with s:\"__list__\"."); // all nodes have at least one outlet for attributes
+    addInlet(ATTRIBUTES_INLET, "Set attribute value with (s:\"set\", s:<name>, ...) and list them via the __attr__ outlet with the (s:\"list\") message. Get attribute value with (s:\"get\", s:<name>)"); // all nodes have at least one inlet for attributes
+    addOutlet(ATTRIBUTES_OUTLET, "Outputs value of each attribute, prefixed by their respective name, and also the list of all attributes name, prefixed with s:\"__list__\"."); // all nodes have at least one outlet for attributes
 }
 
 bool Node::isInitiated() const
@@ -104,6 +104,21 @@ void Node::onInletTriggered(Inlet *inlet, const Message &message)
 {
     if (inlet->getName() == ATTRIBUTES_INLET)
     {
+        if (message.getSize() >= 3 && (message.getTypes().compare(0, 2, "ss") == 0))
+        {
+            std::string name = message.getString(1);
+            if (message.getString(0).compare("set") == 0)
+            {
+                this->output(ATTRIBUTES_OUTLET, this->getAttribute(name.c_str())->getValue());
+            }
+            else
+            {
+                std::ostringstream os;
+                os << "Node." << __FUNCTION__ << ": " << name << " not enough atom in incoming message " << message << "for inlet " << ATTRIBUTES_INLET << " and it does not start with the set message...";
+                Logger::log(ERROR, os);
+                return;
+            }
+        }
         if (message.getSize() >= 3 && (message.getTypes().compare(0, 2, "ss") == 0))
         {
             if (message.getString(0).compare("set") == 0)

@@ -24,7 +24,8 @@
 namespace tempi {
 
 Attribute::Attribute(const char *name, const Message &value, const char *short_doc, bool type_strict) :
-    Documented(name, short_doc, "")
+    Documented(name, short_doc, ""),
+    mutable_(true)
 {
     value_ = value;
     type_strict_ = type_strict;
