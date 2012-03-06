@@ -3,7 +3,18 @@ To do in Tempi
 
 To do for 0.2
 -------------
-* send / receive!
+* Add __call__ inlet for methods, and __return__ for their return value. (prefixed by method name)
+* Rename [counter,metro,dict] to have [utils.] prefix
+* Node::addMethod
+* Inlet/Outlet must be a child of Pad. give pads some signals
+* Abstraction: share the same scheduler. (use a NameGenerator to manage their names)
+* Abstraction: provide unique id, via a [abs.uuid]
+* Abstraction: support an arguments attribute. Read it from the abstraction via [abs.arguments]
+* Abstraction: deg2rad should be one in /usr/share/tempi/math.deg2rad.xml
+* Abstraction: provide [abs.doc] and doc for inlets/outlets
+* Abstraction: [abs.uuid]
+* Scheduler should provide a map of config options. (messages) Default path for externals should be in /etc/tempi
+* send / receive! (provide "global" receive symbols as signals) /send <symbol> ...
 * on closed/killed signal (message sent)
 * rename all tools so that their name start with tempi-*
 * abstractions: support a list of paths to be looked for files.
@@ -16,15 +27,15 @@ To do for 0.2
 * FIXME: onAttributeChanged is called sometime twice. If the attribute has not been changed, it should not be called again
 * tempi-launch should fail with error in case some node type could not be created
 * STK MIDI: fix cflags for PPC 
-* __attr__ inlet: remove "set" prefix. Support "__list__" method.
-* tempi-osc-looper: multitrack GUI configured with an XML Graph
+* __attr__ inlet: Support "list" and "get" messages.
+* tempi-looper: multitrack GUI configured with an XML Graph
 * Rename Filter to AbstractFilterNode.
 * AbstractFilterNode.filter should return a const&
 * Fix segfault in, or disable, [clutter.stage]
-* [base.line]
-* [base.receive]
-* [base.send]
-* [base.timer]
+* [flow.line]
+* [flow.receive]
+* [flow.send]
+* [flow.timer]
 * [flow.delta]
 * [flow.smooth]
 * [flow.map]
@@ -36,9 +47,9 @@ To do for 0.2
 
 To do for 0.4
 -------------
-
+* Add homogenous list type for attributes/messages/atoms
+* Add symbol data type. (map of strings "globally" accessible and passed around as an index.
 * loadBang: Find a better name. Node::loadBang only once? When to Graph::loadBang?
-* Node::addMethod (i18n doc)
 * Atom types: replace switch/case by a hierarchy of classes
 * Allow range for int attributes?
 * abstractions: watch for changes in files (inotify CLOSE_WRITE or FAM)
@@ -47,7 +58,6 @@ To do for 0.4
 * make documentation strings common to all objects of a same type to save memory use
 * allow pads to have types
 * [base.metro]: fix unit tests
-* give pads some signals
 * Support lists of messages?
 * (WONTFIX) list/configure MIDI ports by their ALSA ID, not an index
 * Bugfix: Message.*(...): avoid segfault if length does not match

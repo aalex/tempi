@@ -10,6 +10,7 @@ SUBDIRS = \
     src \
     data \
     man \
+    abstractions \
     doc
 
 EXTRA_DIST = \
