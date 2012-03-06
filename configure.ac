@@ -231,6 +231,7 @@ AC_CONFIG_FILES([
         data/Makefile
         doc/Makefile
         man/Makefile
+        abstractions/Makefile
         tempi-${TEMPI_API_VERSION}.pc:tempi.pc.in
         ])
 
