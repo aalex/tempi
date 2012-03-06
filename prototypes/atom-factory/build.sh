@@ -1,3 +1,5 @@
 #!/bin/bash
-g++ -Wall -I../.. -o run main.cpp -l../../tempi/libtempi-0.1.la
+g++ -Wall -c -o abstractfactory.o abstractfactory.cpp
+g++ -Wall -c -o main.o main.cpp
+g++ -Wall -o run main.o abstractfactory.o
 
