@@ -63,9 +63,18 @@ class Attribute : public Documented
          * If it is type-strict, one can only set its value to another value with the same type tags.
          */
         bool isTypeStrict() const;
+        /**
+         * Nodes should call this to make this attribute impossible to change via messages received from other nodes.
+         */
+        void setMutable(bool is_mutable);
+        /**
+         * Whether or not users can change the value of this attribute via messages.
+         */
+        bool getMutable() const;
     private:
         Message value_;
         bool type_strict_;
+        bool mutable_;
 };
 
 } // end of namespace

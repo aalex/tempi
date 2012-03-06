@@ -47,5 +47,15 @@ bool Attribute::isTypeStrict() const
     return type_strict_;
 }
 
+bool Attribute::getMutable() const
+{
+    return mutable_;
+}
+
+void setMutable(bool is_mutable)
+{
+    mutable_ = is_mutable;
+}
+
 } // end of namespace
 
