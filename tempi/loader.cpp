@@ -90,9 +90,9 @@ bool Loader::load(NodeFactory &factory, const char *name)
 {
     if (getenv("PWD") != NULL)
     {
-        std::ostringstream os;
-        os << "pwd: " << getenv("PWD");
-        Logger::log(DEBUG, os);
+        //std::ostringstream os;
+        //os << "pwd: " << getenv("PWD");
+        //Logger::log(DEBUG, os);
     }
     if (isLoaded(name))
     {
@@ -144,14 +144,14 @@ bool Loader::load(NodeFactory &factory, const char *name)
             }
             {
                 std::ostringstream os;
-                os << "Loader." << __FUNCTION__ << ": calling %s()..." <<  functionName;
+                os << "Loader." << __FUNCTION__ << ": calling " << functionName << "()...";
                 Logger::log(DEBUG, os);
             }
             (*functionPtr)(static_cast<void*>(&factory));
             loaded_.push_back(std::string(name));
             {
                 std::ostringstream os;
-                os << "Loader::" << __FUNCTION__ << ": Succesfully called " << functionName << " from " << fileName;
+                os << "Loader." << __FUNCTION__ << ": Successfully called " << functionName << " from " << fileName;
                 Logger::log(DEBUG, os);
             }
             return true;
@@ -159,13 +159,13 @@ bool Loader::load(NodeFactory &factory, const char *name)
         else
         {
             std::ostringstream os;
-            os << "Loader::" << __FUNCTION__ << ": Could not find " << fileName;
+            os << "Loader." << __FUNCTION__ << ": Could not find " << fileName;
             Logger::log(DEBUG, os);
         }
     }
     {
         std::ostringstream os;
-        os << "Loader::" << __FUNCTION__ << ": Failed to load plugin " << name;
+        os << "Loader." << __FUNCTION__ << ": Failed to load plugin " << name;
         Logger::log(ERROR, os);
     }
     return false;
