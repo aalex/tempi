@@ -8,6 +8,7 @@ To do for 0.2
 * rename all tools so that their name start with tempi-*
 * abstractions: support a list of paths to be looked for files.
 * abstractions: reuse same scheduler for abstractions than their parent so that everything is "global"
+* FIXME: midi.send channel number should be easy to use. (must be added to event type)
 * FIXME: OscReceiver segfaults if port is busy
 * FIXME: Serializer::load sets node attributes twice?
 * FIXME: fix path to libs
@@ -26,6 +27,7 @@ To do for 0.2
 * [base.timer]
 * [flow.delta]
 * [flow.smooth]
+* [flow.map]
 * ? rename connection to connect in XML schema
 * Scheduler: contain BehaviourTrees
 * Scheduler: contain Tables
@@ -65,7 +67,7 @@ To do for 0.4
 * [mapping.curve]
 * [base.trigger]
 * [base.typematches]
-* [base.python]
+* [script.python]
 * [math.clip]
 * [math.rsqrt]
 * [math.sqrt]
@@ -76,8 +78,6 @@ To do for 0.4
 * [midi.route.controls]
 * [midi.route.note]
 * [midi.route.notes]
-* [osc.prepend]
-* [osc.route]
 * [osc.pop]
 * [table.read]
 * [table.write]
