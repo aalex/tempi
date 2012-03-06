@@ -63,3 +63,17 @@ Here is how to build and install it on Debian GNU/Linux or Ubuntu::
   $ make
   $ sudo make install
 
+
+More about dataflow programming
+-------------------------------
+
+Tempi is a new dataflow programming environment inspired by Miller Puckette's Pure Data and Max/MSP software. Dataflow programming is a programming paradigm that models a program as a directed graph of the data flowing between operations. Tempi has been created in the will to fix some design flaws present in Pure Data, in order to provide artists a great tool to build digital artworks. Here is a list of differences from the Pure Data software:
+
+* Tempi is strongly-typed. A string "2" will no be interpreted as a float if its type is "s". (string)
+* Tempi proposes a real separation between the graphical user interface and the underlying engine. (right now, there is no graphical user interface at all, but it is usable)
+* Tempi provides named entities, not numbered ones. Inlets, outlets as well as node attributes are named, which makes the file format suitable to be be managed by revision control systems, such as Git, CVS or Subversion. 
+* Tempi provides no internal node (objetct) types. The audio engines should be written as separate external libraries, if any.
+* The file format is XML, which allows comments and an arbitrary order in the tags. It is easy to understand by a human.
+* Tempi (will soon) provide system-wide configuration files (for default paths for libraries) as well as per-user configuration files.
+* Being a C++ library, Tempi is easy to embed in programs written in C++, or via some of its language bindings.
+
