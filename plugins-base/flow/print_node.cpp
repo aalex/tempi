@@ -51,7 +51,7 @@ void PrintNode::processMessage(const char *inlet, const Message &message)
     }
 }
 
-void PrintNode::onAttributeChanged(const char *name, const Message &value)
+void PrintNode::onNodeAttibuteChanged(const char *name, const Message &value)
 {
     // pass
 }

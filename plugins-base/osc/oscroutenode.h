@@ -41,7 +41,7 @@ class OscRouteNode : public Node
         OscRouteNode();
     protected:
         virtual void processMessage(const char *inlet, const Message &message);
-        virtual void onAttributeChanged(const char *name, const Message &value);
+        virtual void onNodeAttibuteChanged(const char *name, const Message &value);
     private:
         std::vector<std::string> paths_;
         void printOutletsInfo() const;

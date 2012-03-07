@@ -45,7 +45,7 @@ SamplerReadNode::SamplerReadNode() :
     addOutlet(OUTLET_READ, "Played back messages.");
 }
 
-void SamplerReadNode::onAttributeChanged(const char *name, const Message &value)
+void SamplerReadNode::onNodeAttibuteChanged(const char *name, const Message &value)
 {
     const static std::string playing(ATTR_READING);
     const static std::string region(ATTR_REGION);

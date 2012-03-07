@@ -52,7 +52,7 @@ AbstractionNode::AbstractionNode() :
     this->addAttribute(Attribute::ptr(new Attribute("file_path", Message("s", ""), "Path to the XML file to load the Tempi Graph from.")));
 }
 
-void AbstractionNode::onAttributeChanged(const char *name, const Message &value)
+void AbstractionNode::onNodeAttibuteChanged(const char *name, const Message &value)
 {
     {
         std::ostringstream os;

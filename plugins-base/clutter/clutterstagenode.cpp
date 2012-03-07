@@ -281,7 +281,7 @@ void TempiClutterStageNode::processMessage(const char *inlet, const Message &mes
 {
     // TODO: implement processMessage
 }
-void TempiClutterStageNode::onAttributeChanged(const char *name, const Message &value)
+void TempiClutterStageNode::onNodeAttibuteChanged(const char *name, const Message &value)
 {
     if (utils::stringsMatch(name, "visible"))
     {

@@ -40,7 +40,7 @@ class OscSenderNode : public Node
         OscSenderNode();
     protected:
         virtual void processMessage(const char *inlet, const Message &message);
-        virtual void onAttributeChanged(const char *name, const Message &value);
+        virtual void onNodeAttibuteChanged(const char *name, const Message &value);
     private:
         osc::OscSender::ptr osc_sender_;
 };

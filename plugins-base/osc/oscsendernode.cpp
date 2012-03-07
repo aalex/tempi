@@ -45,7 +45,7 @@ void OscSenderNode::processMessage(const char *inlet, const Message &message)
         osc_sender_->sendMessage(message);
 }
 
-void OscSenderNode::onAttributeChanged(const char *name, const Message &value)
+void OscSenderNode::onNodeAttibuteChanged(const char *name, const Message &value)
 {
     //std::cout << "OscSenderNode::" << __FUNCTION__ << "(" << name << ", " << value << ")" << std::endl;
     if (utils::stringsMatch("host_port", name))

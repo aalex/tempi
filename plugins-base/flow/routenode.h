@@ -41,7 +41,7 @@ class RouteNode : public Node
         RouteNode();
     protected:
         virtual void processMessage(const char *inlet, const Message &message);
-        virtual void onAttributeChanged(const char *name, const Message &value);
+        virtual void onNodeAttibuteChanged(const char *name, const Message &value);
     private:
         std::vector<std::string> selectors_;
         void printOutletsInfo() const;

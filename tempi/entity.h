@@ -65,7 +65,13 @@ class Entity : public Documented
             throw(BadIndexException);
 
         // TODO: protected?
-        virtual void onAttributeChanged(const char *name, const Message &value)
+        /**
+         * Called just before changing the value of an Attribute.
+         * Entities return true if it's ok to change its value.
+         * They can still query the former/current value of that attribute.
+         * Return false, and the value is not going to be changed.
+         */
+        virtual bool onAttributeChanged(const char *name, const Message &value)
         {}
         /**
          * Returns the value of a given named attribute of this Entity.

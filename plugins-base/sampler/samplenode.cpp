@@ -39,7 +39,7 @@ SamplerSampleNode::SamplerSampleNode() :
     addAttribute(Attribute::ptr(new Attribute(ATTR_NAME, Message("s", ""), "Name of the region to create. An empty string means it is invalid.")));
 }
 
-void SamplerSampleNode::onAttributeChanged(const char *name, const Message &value)
+void SamplerSampleNode::onNodeAttibuteChanged(const char *name, const Message &value)
 {
     const static std::string region(ATTR_NAME);
     if (region == name)

@@ -35,7 +35,7 @@ MidiSenderNode::MidiSenderNode() :
     midi_output_.reset(new midi::MidiOutput);
 }
 
-void MidiSenderNode::onAttributeChanged(const char *name, const Message &value)
+void MidiSenderNode::onNodeAttibuteChanged(const char *name, const Message &value)
 {
     //std::cout << "MidiSenderNode::" << __FUNCTION__ << "(" << name << ", " << value << ")" << std::endl;
     static std::string key("port");

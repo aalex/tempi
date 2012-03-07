@@ -39,7 +39,7 @@ OscReceiverNode::OscReceiverNode() :
     this->getAttribute("listening")->setMutable(false);
 }
 
-void OscReceiverNode::onAttributeChanged(const char *name, const Message &value)
+void OscReceiverNode::onNodeAttibuteChanged(const char *name, const Message &value)
 {
     {
         std::ostringstream os;

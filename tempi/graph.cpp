@@ -76,9 +76,9 @@ bool Graph::addNode(const char *type, const char *name)
         try
         {
             //std::cout << "Graph.addNode: node->getSignal()\n";
-            node->getSignal(INLET_DELETED_SIGNAL)->getSignal().connect(
+            node->getSignal(Node::INLET_DELETED_SIGNAL)->getSignal().connect(
                 boost::bind(&Graph::onInletDeleted, this, _1));
-            node->getSignal(OUTLET_DELETED_SIGNAL)->getSignal().connect(
+            node->getSignal(Node::OUTLET_DELETED_SIGNAL)->getSignal().connect(
                 boost::bind(&Graph::onOutletDeleted, this, _1));
         }
         catch (const BadIndexException &e)

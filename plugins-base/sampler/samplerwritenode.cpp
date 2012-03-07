@@ -45,7 +45,7 @@ SamplerWriteNode::SamplerWriteNode() :
     addInlet(INLET_WRITE, "Messages to write.");
 }
 
-void SamplerWriteNode::onAttributeChanged(const char *name, const Message &value)
+void SamplerWriteNode::onNodeAttibuteChanged(const char *name, const Message &value)
 {
     const static std::string writing(ATTR_WRITING);
     const static std::string region(ATTR_REGION);

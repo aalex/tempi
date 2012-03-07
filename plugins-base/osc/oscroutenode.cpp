@@ -94,7 +94,7 @@ void OscRouteNode::printOutletsInfo() const
     }
 }
 
-void OscRouteNode::onAttributeChanged(const char *name, const Message &value)
+void OscRouteNode::onNodeAttibuteChanged(const char *name, const Message &value)
 {
     if (! utils::stringsMatch("paths", name))
         return;
