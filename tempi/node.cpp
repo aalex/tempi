@@ -34,6 +34,7 @@ const char * const Node::ATTRIBUTES_LIST_METHOD_SELECTOR = "list";
 const char * const Node::ATTRIBUTES_LIST_OUTPUT_PREFIX = "list";
 const char * const Node::ATTRIBUTES_OUTLET = "__attr__";
 const char * const Node::ATTRIBUTES_SET_METHOD_SELECTOR = "set";
+const char * const Node::ATTRIBUTES_SET_OUTPUT_PREFIX = "set";
 const char * const Node::ATTRIBUTE_LOG = "__log__";
 const char * const Node::INLET_CREATED_SIGNAL = "__create_inlet__";
 const char * const Node::INLET_DELETED_SIGNAL = "__delete_inlet__";
@@ -111,6 +112,19 @@ void Node::onLoadBang()
 std::map<std::string, Outlet::ptr> Node::getOutlets()
 {
     return outlets_;
+}
+
+bool Node::onAttributeChanged(const char *name, const Message &value)
+{
+    bool ok = this->onNodeAttributeChanged(name, value);
+    if (ok)
+    {
+        Message mess = value;
+        mess.prependString(name);
+        mess.prependString(ATTRIBUTES_SET_OUTPUT_PREFIX);
+        output(ATTRIBUTES_OUTLET, mess);
+    }
+    return ok;
 }
 
 void Node::onInletTriggered(Inlet *inlet, const Message &message)

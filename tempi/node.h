@@ -56,6 +56,7 @@ class Node : public Entity
         static const char * const ATTRIBUTES_LIST_OUTPUT_PREFIX;
         static const char * const ATTRIBUTES_OUTLET;
         static const char * const ATTRIBUTES_SET_METHOD_SELECTOR;
+        static const char * const ATTRIBUTES_SET_OUTPUT_PREFIX;
         static const char * const ATTRIBUTE_LOG;
         static const char * const INLET_CREATED_SIGNAL;
         static const char * const INLET_DELETED_SIGNAL;
@@ -154,6 +155,17 @@ class Node : public Entity
          */
         bool hasOutlet(const char *name) const;
         bool isLoadBanged() const;
+        /**
+         * Children of Node should not override this method.
+         */
+        virtual bool onAttributeChanged(const char *name, const Message &value);
+        /**
+         * Return ok if it is fine to change it to that new value.
+         */
+        virtual bool onNodeAttributeChanged(const char *name, const Message &value)
+        {
+            return true;
+        }
     protected:
         void enableHandlingReceiveSymbol(const char *selector);
         virtual void onHandleReceive(const char *selector, const Message &message)

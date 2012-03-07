@@ -112,7 +112,7 @@ void LineNode::computeTargets(const Message &message)
     }
 }
 
-void LineNode::onAttributeChanged(const char *name, const Message &value)
+void LineNode::onNodeAttibuteChanged(const char *name, const Message &value)
 {
     if (utils::stringsMatch(ATTR_RATE, name))
     {

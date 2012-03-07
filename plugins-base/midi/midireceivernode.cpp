@@ -34,7 +34,7 @@ MidiReceiverNode::MidiReceiverNode() :
     midi_input_.reset(new midi::MidiInput);
 }
 
-void MidiReceiverNode::onAttributeChanged(const char *name, const Message &value)
+void MidiReceiverNode::onNodeAttibuteChanged(const char *name, const Message &value)
 {
     //std::cout << "MidiReceiverNode::" << __FUNCTION__ << "(" << name << ", " << value << ")" << std::endl;
     static std::string key("port");

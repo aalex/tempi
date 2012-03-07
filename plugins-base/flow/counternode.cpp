@@ -66,7 +66,7 @@ void CounterNode::processMessage(const char *inlet, const Message &message)
     }
 }
 
-void CounterNode::onAttributeChanged(const char *name, const Message &value)
+void CounterNode::onNodeAttibuteChanged(const char *name, const Message &value)
 {
     if (utils::stringsMatch("increment", name))
     {

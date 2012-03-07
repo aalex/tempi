@@ -76,14 +76,15 @@ void Entity::setAttribute(const char *name, const Message &value)
     // do it:
     if (ok_to_change)
     {
-        current->setValue(value);
         // TODO: //if (isInitiated())
         {
             std::ostringstream os;
             os << "Entity." << __FUNCTION__ << ": (" << this->getName() << ") \"" << name << "\"=" << value;
             Logger::log(DEBUG, os.str().c_str());
         }
-        onAttributeChanged(name, value);
+        ok_to_change = onAttributeChanged(name, value);
+        if (ok_to_change)
+            current->setValue(value);
     }
 }
 

@@ -83,7 +83,7 @@ void RouteNode::printOutletsInfo() const
     }
 }
 
-void RouteNode::onAttributeChanged(const char *name, const Message &value)
+void RouteNode::onNodeAttibuteChanged(const char *name, const Message &value)
 {
     if (! utils::stringsMatch("selectors", name))
         return;

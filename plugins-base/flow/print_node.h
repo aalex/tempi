@@ -41,7 +41,7 @@ class PrintNode : public Node
         PrintNode();
     protected:
         virtual void processMessage(const char *inlet, const Message &message);
-        virtual void onAttributeChanged(const char *name, const Message &value);
+        virtual void onNodeAttibuteChanged(const char *name, const Message &value);
 };
 
 } // end of namespace

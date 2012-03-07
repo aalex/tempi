@@ -37,7 +37,7 @@ MetroNode::MetroNode() :
     this->addOutlet("0");
 }
 
-void MetroNode::onAttributeChanged(const char *name, const Message &value)
+void MetroNode::onNodeAttibuteChanged(const char *name, const Message &value)
 {
     const static std::string running("running");
 //  const static std::string interval("interval");
