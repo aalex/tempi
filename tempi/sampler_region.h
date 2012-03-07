@@ -1,0 +1,83 @@
+/*
+ * Copyright (C) 2011 Alexandre Quessy
+ * Copyright (C) 2011 Michal Seta
+ * Copyright (C) 2012 Nicolas Bouillot
+ *
+ * This file is part of Tempi.
+ *
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Tempi is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/**
+ * @file
+ * The Region class.
+ */
+#ifndef __TEMPI_SAMPLER_REGION_H__
+#define __TEMPI_SAMPLER_REGION_H__
+
+#include <boost/tuple/tuple.hpp>
+#include <vector>
+#include "tempi/timer.h"
+#include "tempi/message.h"
+#include "tempi/namedobject.h"
+#include "tempi/sharedptr.h"
+
+namespace tempi {
+namespace sampler {
+
+/**
+ * A Region contains timed Message objects. 
+ */
+class Region : public NamedObject
+{
+    public:
+        typedef std::tr1::shared_ptr<Region> ptr;
+        typedef boost::tuple<TimePosition, Message> Event;
+        Region();
+        /**
+         * Clears this Region.
+         */
+        void clear();
+        /**
+         * Adds an event to this track.
+         */
+        void add(TimePosition time, Message message);
+        bool setDuration(TimePosition position);
+        TimePosition getDuration();
+        unsigned int numberOfEvents();
+        bool getClosestBefore(TimePosition target, Region::Event &result);
+        /**
+         * Retrieves events whose time is after a given time and before or equal to another one.
+         * Range is: ]from, to]
+         * Results is stored in result.
+         */
+         void getRange(TimePosition from, TimePosition to, std::vector<Event> &result, bool includeFirst=false);
+        std::vector<Event> getAllEvents() const;
+    private:
+        typedef std::vector<Event> EventVec;
+        typedef EventVec::iterator EventVecIter;
+        EventVec events_;
+        TimePosition duration_;
+        /**
+         * Useful to insert an event before what it returns.
+         */
+        EventVecIter getIteratorAfter(TimePosition target);
+        //TODO: TimePosition offset_;
+        //TODO: std::string track_name_;
+};
+
+} // end of namespace
+} // end of namespace
+
+#endif // ifndef
+

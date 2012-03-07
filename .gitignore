@@ -24,6 +24,8 @@ config.sub
 configure
 conftest.c
 depcomp
+doc/html/*.html
+doc/html/doxygen/
 doxyfile
 doxyfile.stamp
 examples/particules/COPYING
@@ -44,19 +46,24 @@ m4/ltsugar.m4
 m4/ltversion.m4
 m4/lt~obsolete.m4
 missing
+plugins-base/tests/check_average
+plugins-base/tests/check_base
+plugins-base/tests/check_math
+plugins-base/tests/check_slide
+plugins-base/tests/test
 prototypes/any
 prototypes/fusion/vec
 prototypes/kinect/freedraw
-prototypes/midi/alsalist
-prototypes/midi/midiprobe
-prototypes/midilooper-gui/run
-prototypes/midilooper-gui/signals_to_messages
-prototypes/modules/main
 prototypes/matrix_type/blobreceiver
 prototypes/matrix_type/blobsender
 prototypes/matrix_type/check_array
 prototypes/matrix_type/matrix
 prototypes/matrix_type/proto_armadillo
+prototypes/midi/alsalist
+prototypes/midi/midiprobe
+prototypes/midilooper-gui/run
+prototypes/midilooper-gui/signals_to_messages
+prototypes/modules/main
 prototypes/nodefactory
 prototypes/phoenix/findif
 prototypes/tuples
@@ -76,25 +83,27 @@ tempi/stamp-h1
 tempi/table/.dirstamp
 tempi/tempi-version.h
 tempi/tempi.pyste
-tests/check_average
-tests/check_base
-tests/check_fsm
-tests/check_graph
-tests/check_libraries
-tests/check_log
-tests/check_math
-tests/check_message
-tests/check_node
-tests/check_nodefactory
-tests/check_osc
-tests/check_osc_nodes
-tests/check_properties
-tests/check_serializer
-tests/check_slide
-tests/check_table
-tests/check_timer
-tests/check_track
-tests/check_version
+tempi/tests/check_average
+tempi/tests/check_base
+tempi/tests/check_fsm
+tempi/tests/check_graph
+tempi/tests/check_libraries
+tempi/tests/check_log
+tempi/tests/check_math
+tempi/tests/check_message
+tempi/tests/check_node
+tempi/tests/check_nodefactory
+tempi/tests/check_osc
+tempi/tests/check_osc_nodes
+tempi/tests/check_properties
+tempi/tests/check_serializer
+tempi/tests/check_slide
+tempi/tests/check_table
+tempi/tests/check_timer
+tempi/tests/check_track
+tempi/tests/check_version
+tempi/tests/test
+
 
 # -------------------------
 # negations:
@@ -104,3 +113,21 @@ tests/check_version
 !prototypes/modules/Makefile
 !prototypes/matrix_type/Makefile
 !prototypes/mapofsharedobjects/Makefile
+!doc/html
+
+# ------------------------- TODO
+# tests/check_fsm
+# tests/check_graph
+# tests/check_libraries
+# tests/check_log
+# tests/check_message
+# tests/check_node
+# tests/check_nodefactory
+# tests/check_osc
+# tests/check_osc_nodes
+# tests/check_properties
+# tests/check_serializer
+# tests/check_table
+# tests/check_timer
+# tests/check_track
+# tests/check_version

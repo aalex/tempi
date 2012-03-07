@@ -1,26 +1,24 @@
+SUBDIRS = tests
+
 AM_CXXFLAGS = \
-	$(LOG4CPP_CFLAGS) \
+    $(LOG4CPP_CFLAGS) \
     $(BOOST_CPPFLAGS) \
-    $(CLUTTER_CFLAGS) \
-    $(LIBLO_CFLAGS) \
     $(LIBXML_CFLAGS) \
-    $(SPATOSC_CFLAGS) \
+    $(LIBLO_CFLAGS) \
     $(STK_CXXFLAGS) \
     -I$(top_srcdir) \
+    -I$(top_srcdir)/plugins-base \
     -I$(top_srcdir)/tempi
 
 AM_LIBS = \
-	$(LOG4CPP_LIBS) \
     $(BOOST_FILESYSTEM_LIB) \
     $(BOOST_LDFLAGS) \
     $(BOOST_LIBS)  \
     $(BOOST_SYSTEM_LIB) \
     $(BOOST_THREAD_LIB) \
-    $(CLUTTER_LIBS) \
-    $(GLIB_LIBS) \
     $(LIBLO_LIBS) \
-    $(SPATOSC_LIBS) \
     $(LIBXML_LIBS) \
+    $(LOG4CPP_LIBS) \
     $(STK_LIBS)
 
 # this file is not installed, just included by .cpp files at compile time.
@@ -44,158 +42,103 @@ libtempi_@TEMPI_API_VERSION@_la_includedir = $(includedir)/tempi-$(TEMPI_API_VER
 ## PLEASE KEEP THEM IN ALPHABETICAL ORDER
 libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     attribute.cpp \
-    base/anynode.cpp \
-    base/appendnode.h \
-    base/appsinknode.cpp \
-    base/baselibrary.cpp \
-    base/counternode.cpp \
-    base/castnode.h \
-    base/loadmessnode.cpp \
-    base/delaynode.cpp \
-    base/metro_node.cpp \
-    base/nop_node.cpp \
-    base/prependnode.cpp \
-    base/print_node.cpp \
-    base/routenode.cpp \
-    base/spigotnode.cpp \
-    base/spatosc/spatoscnode.h \
-    clutter/clutterlibrary.cpp \
-    clutter/clutterstagenode.cpp \
     documented.cpp \
-    mapping/filter.cpp \
-    fsm/rule.cpp \
-    fsm/state.cpp \
-    fsm/statemachine.cpp \
+    dict.cpp \
+    entity.cpp \
+    fsm_rule.cpp \
+    fsm_state.cpp \
+    fsm_statemachine.cpp \
     graph.cpp \
+    inlet.cpp \
     internals.cpp \
-	log.cpp \
-    mapping/slide.cpp \
-    mapping/slidefilter.cpp \
-    math/mathlibrary.cpp \
+    loader.cpp \
+    log.cpp \
     message.cpp \
-    midi/midiinput.cpp \
-    midi/midilibrary.cpp \
-    midi/midireceivernode.cpp \
-    midi/midiroutenode.cpp \
-    midi/midioutput.cpp \
-    midi/midisendernode.cpp \
-    midi/midiutilities.cpp \
+    midi_input.cpp \
+    midi_output.cpp \
+    nameallocator.cpp \
     namedobject.cpp \
     node.cpp \
     nodefactory.cpp \
     nodesignal.cpp \
-    entity.cpp \
-    osc/osclibrary.cpp \
-    osc/oscreceiver.cpp \
-    osc/oscreceivernode.cpp \
-    osc/oscsender.cpp \
-    osc/oscsendernode.cpp \
+    oscreceiver.cpp \
+    oscsender.cpp \
+    outlet.cpp \
     pad.cpp \
-    sampler/samplerlibrary.cpp \
-    sampler/loopingplayback.cpp \
-    sampler/marker.cpp \
-    sampler/pingpongplayback.cpp \
-    sampler/player.cpp \
-    sampler/region.cpp \
-    sampler/recorder.cpp \
-    sampler/samplernode.cpp \
-    sampler/simpleplayback.cpp \
-    sampler/score.cpp \
-    sampler/track.cpp \
+    sampler_loopingplayback.cpp \
+    sampler_marker.cpp \
+    sampler_pingpongplayback.cpp \
+    sampler_player.cpp \
+    sampler_recorder.cpp \
+    sampler_region.cpp \
+    sampler_score.cpp \
+    sampler_simpleplayback.cpp \
+    sampler_track.cpp \
     scheduler.cpp \
     serializer.cpp \
-    inlet.cpp \
-    outlet.cpp \
-    table/table.cpp \
-    table/table_player.cpp \
-    table/table_writer.cpp \
+    synchronousscheduler.cpp \
+    table.cpp \
+    table_player.cpp \
+    table_writer.cpp \
     tempi.cpp \
+    threadedscheduler.cpp \
     timeposition.cpp \
     timer.cpp \
-    threadedscheduler.cpp \
     utils.cpp
-
-# TODO base/receivenode.cpp
-# TODO base/receivenode.h
 
 ## PLEASE KEEP THEM IN ALPHABETICAL ORDER
 libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     attribute.h \
-    base/anynode.h \
-    base/appsinknode.h \
-    base/baselibrary.h \
-    base/counternode.h \
-    base/loadmessnode.h \
-    base/delaynode.h \
-    base/metro_node.h \
-    base/nop_node.h \
-    base/prependnode.h \
-    base/print_node.h \
-    base/routenode.h \
-    base/spigotnode.h \
-    clutter/clutterlibrary.h \
-    clutter/clutterstagenode.h \
     concurrentqueue.h \
+    dict.h \
     documented.h \
+    entity.h \
     exceptions.h \
-    mapping/filter.h \
-    fsm/rule.h \
-    fsm/state.h \
-    fsm/statemachine.h \
+    fsm_rule.h \
+    fsm_state.h \
+    fsm_statemachine.h \
     graph.h \
+    oscreceiver.h \
+    oscsender.h \
     identifier.h \
+    inlet.h \
     internals.h \
-	log.h \
     library.h \
-    mapping/average.h \
-    mapping/slide.h \
-    mapping/slidefilter.h \
-    math/mathlibrary.h \
+    loader.h \
+    log.h \
     message.h \
-    midi/midiinput.h \
-    midi/midilibrary.h \
-    midi/midireceivernode.h \
-    midi/midiroutenode.h \
-    midi/midioutput.h \
-    midi/midisendernode.h \
-    midi/midiutilities.h \
+    midi_input.h \
+    midi_output.h \
+    nameallocator.h \
     namedobject.h \
     namedobjectmap.h \
     node.h \
     nodefactory.h \
     nodesignal.h \
     nodetype.h \
-    osc/osclibrary.h \
-    osc/oscreceiver.h \
-    osc/oscreceivernode.h \
-    osc/oscsender.h \
-    osc/oscsendernode.h \
-    sampler/samplerlibrary.h \
-    sampler/loopingplayback.h \
-    sampler/marker.h \
-    sampler/pingpongplayback.h \
-    sampler/playback.h \
-    sampler/player.h \
-    sampler/region.h \
-    sampler/recorder.h \
-    sampler/samplernode.h \
-    sampler/simpleplayback.h \
-    sampler/score.h \
-    sampler/track.h \
-    scheduler.h \
-    serializer.h \
-    sharedptr.h \
-    inlet.h \
-    entity.h \
     outlet.h \
     pad.h \
-    table/table.h \
-    table/table_player.h \
-    table/table_writer.h \
+    sampler_loopingplayback.h \
+    sampler_marker.h \
+    sampler_pingpongplayback.h \
+    sampler_playback.h \
+    sampler_player.h \
+    sampler_recorder.h \
+    sampler_region.h \
+    sampler_score.h \
+    sampler_simpleplayback.h \
+    sampler_track.h \
+    scheduler.h \
+    serializer.h \
+    synchronousscheduler.h \
+    sharedptr.h \
+    table.h \
+    table_player.h \
+    table_writer.h \
     tempi-version.h \
     tempi.h \
+    threadedscheduler.h \
     timeposition.h \
     timer.h \
-    threadedscheduler.h \
     utils.h
 

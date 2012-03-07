@@ -22,8 +22,7 @@
 #include <boost/bind.hpp>
 #include <iostream>
 
-namespace tempi
-{
+namespace tempi {
 
 NodeSignal::NodeSignal(
         const char *name,

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tempi version="0.1.9">
+  <graph>
+    <node id="inlet0" class="abs.inlet">
+    </node>
+    <node id="op0" class="math.*">
+      <attribute name="operand"><f>0.017453293</f></attribute>
+    </node>
+    <node id="outlet0" class="abs.outlet">
+    </node>
+    <connection from="inlet0" outlet="incoming" to="op0" inlet="0"/>
+    <connection from="op0" outlet="0" to="outlet0" inlet="outgoing"/>
+  </graph>
+</tempi>

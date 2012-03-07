@@ -23,6 +23,7 @@
 #include "tempi/graph.h"
 #include "tempi/message.h"
 #include "tempi/scheduler.h"
+#include "tempi/log.h"
 #include <iostream>
 
 // more thread-safety with mutexes
@@ -36,22 +37,21 @@ Scheduler::Scheduler()
     internals::loadInternals(*(factory_.get()));
 }
 
-bool Scheduler::createGraph(const char *name)
+void Scheduler::createGraph(const char *name)
+    throw(BadIndexException)
 {
-    //if (! makeSureLockIsAcquired())
-    //    return false;
-    if (hasGraph(name))
-    {
-        std::cout << "Already has a Graph named "
-            << name << std::endl;
-        return false;
-    }
-    else
-    {
-        Graph::ptr graph(new Graph(factory_));
-        graphs_[name] = graph;
-        return true;
-    }
+    Graph::ptr graph(new Graph(factory_));
+    graph->setName(name);
+    graph->setScheduler(this);
+    graphs_.add(graph);
+}
+
+void Scheduler::createRegion(const char *name)
+    throw(BadIndexException)
+{
+    sampler::Region::ptr region(new sampler::Region);
+    region->setName(name);
+    regions_.add(region);
 }
 
 //void Scheduler::sendMessage(const Message &message)
@@ -75,34 +75,35 @@ bool Scheduler::createGraph(const char *name)
 // }
 
 Graph::ptr Scheduler::getGraph(const char *name) const
+    throw(BadIndexException)
 {
     //if (! makeSureLockIsAcquired())
     //    return Graph::ptr();
-    if (! hasGraph(name))
-    {
-        std::cout << "No Graph named "
-            << name << std::endl;
-        return Graph::ptr(); // NULL pointer!!
-    }
-    return (* (graphs_.find(std::string(name)))).second;
+    return graphs_.get(name);
 }
 
-std::vector<std::string> Scheduler::getGraphNames() const
+std::vector<std::string> Scheduler::listGraphs() const
 {
 //    ScopedLock lock = acquireLock();
-    std::vector<std::string> ret;
-    std::map<std::string, Graph::ptr>::const_iterator iter;
-    for (iter = graphs_.begin(); iter != graphs_.end(); ++iter)
-    {
-        ret.push_back((*iter).first);
-    }
-    return ret;
+    return graphs_.listNames();
+}
+
+std::vector<std::string> Scheduler::listRegions() const
+{
+//    ScopedLock lock = acquireLock();
+    return regions_.listNames();
 }
 
 bool Scheduler::hasGraph(const char *name) const
 {
 //    ScopedLock lock = acquireLock();
-    return graphs_.find(std::string(name)) != graphs_.end();
+    return graphs_.has(name);
+}
+
+bool Scheduler::hasRegion(const char *name) const
+{
+//    ScopedLock lock = acquireLock();
+    return regions_.has(name);
 }
 
 NodeFactory::ptr Scheduler::getFactory() const
@@ -117,10 +118,11 @@ bool Scheduler::tickGraphs()
     //    return false;
     if (! isRunning())
         return false;
-    std::map<std::string, Graph::ptr>::const_iterator iter;
-    for (iter = graphs_.begin(); iter != graphs_.end(); ++iter)
+    std::vector<std::string> names = listGraphs();
+    std::vector<std::string>::const_iterator iter;
+    for (iter = names.begin(); iter != names.end(); ++iter)
     {
-        (*iter).second.get()->tick();
+        getGraph((*iter).c_str())->tick();
     }
     return true;
 }
@@ -137,13 +139,31 @@ bool Scheduler::tickGraphs()
 //     }
 // }
 
+sampler::Region::ptr Scheduler::getRegion(const char *name) const
+    throw(BadIndexException)
+{
+    return regions_.get(name);
+}
+
+void Scheduler::removeGraph(const char *name)
+    throw(BadIndexException)
+{
+    graphs_.remove(name);
+}
+
+void Scheduler::removeRegion(const char *name)
+    throw(BadIndexException)
+{
+    regions_.remove(name);
+}
+
 std::ostream &operator<<(std::ostream &os, const Scheduler &scheduler)
 {
     //if (! scheduler.makeSureLockIsAcquired())
     //    return os;
     os << "Scheduler:" << std::endl;
     os << (* scheduler.getFactory().get()) << std::endl;
-    std::vector<std::string> graphsNames = scheduler.getGraphNames();
+    std::vector<std::string> graphsNames = scheduler.listGraphs();
     std::vector<std::string>::const_iterator iter;
     for (iter = graphsNames.begin(); iter != graphsNames.end(); ++iter)
         os << (* scheduler.getGraph((*iter).c_str()).get()) << std::endl;

@@ -3,37 +3,62 @@ To do in Tempi
 
 To do for 0.2
 -------------
-* FIXME: clutter.stage segfaults
-* FIXME: base.spatosc seems not to work after the initial OSC messages sent
+* Add __call__ inlet for methods, and __return__ for their return value. (prefixed by method name)
+* Rename [counter,metro,dict] to have [utils.] prefix
+* Node::addMethod
+* Inlet/Outlet must be a child of Pad. give pads some signals
+* Abstraction: share the same scheduler. (use a NameGenerator to manage their names)
+* Abstraction: provide unique id, via a [abs.uuid]
+* Abstraction: support an arguments attribute. Read it from the abstraction via [abs.arguments]
+* Abstraction: deg2rad should be one in /usr/share/tempi/math.deg2rad.xml
+* Abstraction: provide [abs.doc] and doc for inlets/outlets
+* Abstraction: [abs.uuid]
+* Scheduler should provide a map of config options. (messages) Default path for externals should be in /etc/tempi
+* send / receive! (provide "global" receive symbols as signals) /send <symbol> ...
+* on closed/killed signal (message sent)
+* rename all tools so that their name start with tempi-*
+* abstractions: support a list of paths to be looked for files.
+* abstractions: reuse same scheduler for abstractions than their parent so that everything is "global"
+* FIXME: midi.send channel number should be easy to use. (must be added to event type)
+* FIXME: OscReceiver segfaults if port is busy
 * FIXME: Serializer::load sets node attributes twice?
-* serializer: write class before node name
-* World: containing Regions, BehaviourTrees, Tables and Graphs
+* FIXME: fix path to libs
+* FIXME: removeTrailingPathSep crashes if has a trailing slash...
+* FIXME: onAttributeChanged is called sometime twice. If the attribute has not been changed, it should not be called again
+* tempi-launch should fail with error in case some node type could not be created
 * STK MIDI: fix cflags for PPC 
-* __attr__ inlet: remove "set" prefix. Support "__list__" method.
-* loadBang: Find a better name. Node::loadBang only once? When to Graph::loadBang?
-* move tests to tempi/tests and plugins-base/tests
-* Move nodes to plugins-base // FIXME: header files are not installed in subdirectories, but flat
-* tempi-osc-looper: multitrack GUI configured with an XML Graph
-* [math.***]: create base classes FloatMathNode and BoolMathNode
-* Rename Filter to FilterNode.
-* FilterNode.filter should return a const&
-* Node::addMethod (i18n doc)
-* Scheduler::deleteGraph()
-* Score::load(fileName)
-* Score::save(fileName)
+* __attr__ inlet: Support "list" and "get" messages.
+* tempi-looper: multitrack GUI configured with an XML Graph
+* Rename Filter to AbstractFilterNode.
+* AbstractFilterNode.filter should return a const&
 * Fix segfault in, or disable, [clutter.stage]
-* Fix segfault in [base.route] when using tempi-launch
-* [base.line]
-* [base.receive]
-* [base.send]
-* [base.timer]
-* [sampler.reader]
-* [sampler.score]
-* [sampler.writer]
-* [base.metro]: fix unit tests
+* [flow.line]
+* [flow.receive]
+* [flow.send]
+* [flow.timer]
+* [flow.delta]
+* [flow.smooth]
+* [flow.map]
+* ? rename connection to connect in XML schema
+* Scheduler: contain BehaviourTrees
+* Scheduler: contain Tables
+* FIXME: split utils.h so that compilation gets faster
+* FIXME: clutter.stage segfaults
 
 To do for 0.4
 -------------
+* Add homogenous list type for attributes/messages/atoms
+* Add symbol data type. (map of strings "globally" accessible and passed around as an index.
+* loadBang: Find a better name. Node::loadBang only once? When to Graph::loadBang?
+* Atom types: replace switch/case by a hierarchy of classes
+* Allow range for int attributes?
+* abstractions: watch for changes in files (inotify CLOSE_WRITE or FAM)
+* serializer: write class before node name
+* create a validator for XML schemas
+* make documentation strings common to all objects of a same type to save memory use
+* allow pads to have types
+* [base.metro]: fix unit tests
+* Support lists of messages?
 * (WONTFIX) list/configure MIDI ports by their ALSA ID, not an index
 * Bugfix: Message.*(...): avoid segfault if length does not match
 * Bugfix: Message.*(...): avoid segfault if types do not match
@@ -50,10 +75,9 @@ To do for 0.4
 * tempi::LIST
 * [mapping.*] should be provided a typetag argument. (and support types fdi)
 * [mapping.curve]
-* [base.converttype]
 * [base.trigger]
 * [base.typematches]
-* [base.python]
+* [script.python]
 * [math.clip]
 * [math.rsqrt]
 * [math.sqrt]
@@ -64,8 +88,6 @@ To do for 0.4
 * [midi.route.controls]
 * [midi.route.note]
 * [midi.route.notes]
-* [osc.prepend]
-* [osc.route]
 * [osc.pop]
 * [table.read]
 * [table.write]

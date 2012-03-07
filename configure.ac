@@ -14,7 +14,7 @@
 # - increase tempi_interface_version to the next odd number
 m4_define([tempi_major_version], [0])
 m4_define([tempi_minor_version], [1])
-m4_define([tempi_micro_version], [10])
+m4_define([tempi_micro_version], [11])
 
 m4_define([tempi_release_status],
           [m4_if(m4_eval(tempi_micro_version % 2), [1], [git],
@@ -76,6 +76,8 @@ TEMPI_LT_AGE=lt_age
 TEMPI_LT_VERSION="$TEMPI_LT_CURRENT:$TEMPI_LT_REV:$TEMPI_LT_AGE"
 AC_SUBST([TEMPI_LT_VERSION], "$TEMPI_LT_VERSION")
 TEMPI_LT_LDFLAGS="-version-info $TEMPI_LT_VERSION"
+
+AC_DEFINE_UNQUOTED(TEMPI_PLUGINS_DIR,["tempi-$TEMPI_API_VERSION"],[Path to Tempi plugins])
 
 # Checks for programs.
 AC_PROG_CC
@@ -147,7 +149,7 @@ fi
 # log4cpp
 PKG_CHECK_MODULES([LOG4CPP], [log4cpp], have_log4cpp=true, have_log4cpp=false)
 if test "x${have_log4cpp}" = "xfalse" ; then
-    AC_MSG_ERROR([missing package: libilog4cpp5-dev])
+    AC_MSG_ERROR([missing package: liblog4cpp5-dev])
 fi
 
 PKG_CHECK_MODULES([SPATOSC], [spatosc-0.3], have_spatosc=true, have_spatosc=false)
@@ -196,7 +198,7 @@ if test "x${ax_cv_boost_system}" = "xno" ; then
 	AC_MSG_ERROR([missing package: libboost-system-dev])
 fi
 
-CFLAGS+=" -Wall -Wextra -Wfatal-errors -Werror "
+CFLAGS+=" -Wall -g -Wextra -Wfatal-errors -Werror "
 
 # GNU help2man creates man pages from --help output; in many cases, this
 # is sufficient, and obviates the need to maintain man pages separately.
@@ -215,6 +217,9 @@ AC_CONFIG_FILES([
         Makefile 
         tempi/tempi-version.h
         tempi/Makefile 
+        tempi/tests/Makefile
+        plugins-base/Makefile
+        plugins-base/tests/Makefile
         src/Makefile
         src/midilooper/Makefile
         src/osc-forward/Makefile
@@ -222,11 +227,11 @@ AC_CONFIG_FILES([
         src/tempi-inspect/Makefile
         src/tempi-launch/Makefile
         src/tempi-osc-looper/Makefile
-        tests/Makefile
         doxyfile 
         data/Makefile
         doc/Makefile
         man/Makefile
+        abstractions/Makefile
         tempi-${TEMPI_API_VERSION}.pc:tempi.pc.in
         ])
 

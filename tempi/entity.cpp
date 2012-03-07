@@ -19,6 +19,7 @@
  */
 
 #include "tempi/entity.h"
+#include "tempi/log.h"
 
 namespace tempi
 {
@@ -52,7 +53,7 @@ const Message &Entity::getAttributeValue(const char *name) const
 
 // TODO: rename to setAttributeValue
 void Entity::setAttribute(const char *name, const Message &value)
-    throw(BadIndexException, BadArgumentTypeException)
+    throw(BadIndexException, BadAtomTypeException)
 {
     bool ok_to_change = false;
     Attribute* current = getAttribute(name); // might throw BadIndexException
@@ -67,7 +68,7 @@ void Entity::setAttribute(const char *name, const Message &value)
         {
             std::ostringstream os;
             os << "Entity::" << __FUNCTION__ << ": Attribute " << name << ": Bad type " << value.getTypes() << " while expecting " << current->getValue().getTypes();
-            throw (BadArgumentTypeException(os.str().c_str()));
+            throw (BadAtomTypeException(os.str().c_str()));
         }
     }
     else
@@ -75,9 +76,15 @@ void Entity::setAttribute(const char *name, const Message &value)
     // do it:
     if (ok_to_change)
     {
-        current->setValue(value);
         // TODO: //if (isInitiated())
-        onAttributeChanged(name, value);
+        {
+            std::ostringstream os;
+            os << "Entity." << __FUNCTION__ << ": (" << this->getName() << ") \"" << name << "\"=" << value;
+            Logger::log(DEBUG, os.str().c_str());
+        }
+        ok_to_change = onAttributeChanged(name, value);
+        if (ok_to_change)
+            current->setValue(value);
     }
 }
 

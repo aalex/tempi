@@ -6,10 +6,11 @@ AUTOMAKE_OPTIONS = foreign
 
 SUBDIRS = \
     tempi \
+	plugins-base \
     src \
-    tests \
     data \
     man \
+    abstractions \
     doc
 
 EXTRA_DIST = \

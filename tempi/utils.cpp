@@ -84,7 +84,7 @@ std::string concatenate(const char *a, const char *b)
 }
 
 template <typename T>
-std::string to_string(T value) throw(BadArgumentTypeException)
+std::string to_string(T value) throw(BadAtomTypeException)
 {
     try
     {
@@ -92,22 +92,28 @@ std::string to_string(T value) throw(BadArgumentTypeException)
     }
     catch (const boost::bad_lexical_cast &e)
     {
-        throw BadArgumentTypeException(e.what());
+        throw BadAtomTypeException(e.what());
     }
 }
 
-void appendArgumentFromString(Message &message, const char *atom_value, ArgumentType type)
-    throw(BadArgumentTypeException)
+void appendArgumentFromString(Message &message, const char *atom_value, AtomType type)
+    throw(BadAtomTypeException)
 {
     try
     {
         switch (type)
         {
             case BOOLEAN:
-                if (atom_value == "0")
+                if (stringsMatch(atom_value, "1"))
+                    message.appendBoolean(true);
+                else if (stringsMatch(atom_value, "true"))
+                    message.appendBoolean(true);
+                else if (stringsMatch(atom_value, "0"))
+                    message.appendBoolean(false);
+                else if (stringsMatch(atom_value, "false"))
                     message.appendBoolean(false);
                 else
-                    message.appendBoolean(true);
+                    message.appendBoolean(false);
                 break;
             case CHAR:
                 message.appendChar(
@@ -143,7 +149,7 @@ void appendArgumentFromString(Message &message, const char *atom_value, Argument
                     os << "ERROR: " << __FUNCTION__ << 
                         ": Unsupported type tag to unserialize: " <<
                         (char) type;
-                    throw BadArgumentTypeException(os.str().c_str());
+                    throw BadAtomTypeException(os.str().c_str());
                 }
                 break;
         } // switch typetag
@@ -153,12 +159,12 @@ void appendArgumentFromString(Message &message, const char *atom_value, Argument
         std::ostringstream os;
         os << "ERROR: " << __FUNCTION__ << 
             ": Bad value \"" << atom_value << "\" to unserialize for type tag \"" << type << "\". " << e.what();
-        throw BadArgumentTypeException(os.str().c_str());
+        throw BadAtomTypeException(os.str().c_str());
     }
 }
 
 std::string argumentToString(const Message &message, unsigned int index)
-    throw(BadArgumentTypeException, BadIndexException)
+    throw(BadAtomTypeException, BadIndexException)
 {
     if (index >= message.getSize())
     {
@@ -166,13 +172,17 @@ std::string argumentToString(const Message &message, unsigned int index)
         os << __FUNCTION__ << ": Invalid index " << index << " in message " << message;
         throw BadIndexException(os.str().c_str());
     }
-    ArgumentType atom_type;
-    message.getArgumentType(index, atom_type);
+    AtomType atom_type;
+    message.getAtomType(index, atom_type);
     switch (atom_type)
     {
         case BOOLEAN:
-            return boost::lexical_cast<std::string>(
-                message.getBoolean(index));
+            if (message.getBoolean(index))
+                return std::string("true");
+            else
+                return std::string("false");
+            //return boost::lexical_cast<std::string>(
+            //    message.getBoolean(index));
             break;
         case CHAR:
             return boost::lexical_cast<std::string>(
@@ -209,7 +219,7 @@ std::string argumentToString(const Message &message, unsigned int index)
             {
                 std::ostringstream os;
                 os << __FUNCTION__ << ": Unsupported atom type \"" << atom_type << "\" to serialize at index " << index << " " << atom_type;
-                throw BadArgumentTypeException(os.str().c_str());
+                throw BadAtomTypeException(os.str().c_str());
             }
             break;
     } // end of switch/case
@@ -227,6 +237,8 @@ bool isValidAtomType(const char c)
         case BOOLEAN:
         case CHAR:
         case UNSIGNED_CHAR:
+        case UNSIGNED_INT:
+        case BANG:
         case DOUBLE:
         case FLOAT:
         case INT:
@@ -260,13 +272,13 @@ bool isValidType(const char *type)
 }
 
 Message castMessage(const Message &message, const char *type)
-    throw(BadArgumentTypeException, BadIndexException)
+    throw(BadAtomTypeException, BadIndexException)
 {
     if (! isValidType(type))
     {
         std::ostringstream os;
         os << __FUNCTION__ << ": Bad type tag: " << type;
-        throw BadArgumentTypeException(os.str().c_str());
+        throw BadAtomTypeException(os.str().c_str());
     }
     std::string desiredTypeTag(type);
     if (desiredTypeTag.size() != message.getSize())
@@ -279,9 +291,9 @@ Message castMessage(const Message &message, const char *type)
     Message result;
     for (unsigned int i = 0; i < size; ++i)
     {
-        ArgumentType current;
-        message.getArgumentType(i, current);
-        ArgumentType desired = (ArgumentType) desiredTypeTag[i];
+        AtomType current;
+        message.getAtomType(i, current);
+        AtomType desired = (AtomType) desiredTypeTag[i];
 
         // CONVERSION
         bool success = true;
@@ -302,6 +314,12 @@ Message castMessage(const Message &message, const char *type)
                     case UNSIGNED_CHAR:
                         result.appendFloat((float) message.getUnsignedChar(i));
                         break;
+                    case UNSIGNED_INT:
+                        result.appendFloat((float) message.getUnsignedInt(i));
+                        break;
+                    case BANG:
+                        result.appendFloat(0.0f);
+                        break;
                     case DOUBLE:
                         result.appendFloat((float) message.getDouble(i));
                         break;
@@ -317,14 +335,14 @@ Message castMessage(const Message &message, const char *type)
                             appendArgumentFromString(result,
                                 message.getString(i).c_str(), FLOAT);
                         }
-                        catch(const BadArgumentTypeException &e)
+                        catch(const BadAtomTypeException &e)
                         {
                             std::cerr << e.what() << std::endl;
                             success = false;
                         }
                         break;
                     case POINTER:
-                        result.appendFloat((float) (int) message.getPointer(i));
+                        result.appendFloat((float) (long) message.getPointer(i));
                         break;
                     case INVALID:
                     default:
@@ -342,15 +360,65 @@ Message castMessage(const Message &message, const char *type)
                     std::cerr << e.what() << std::endl;
                     success = false;
                 }
-                catch (const BadArgumentTypeException &e)
+                catch (const BadAtomTypeException &e)
                 {
                     std::cerr << e.what() << std::endl;
                     success = false;
                 }
                 break; // case STRING
+            case UNSIGNED_CHAR: // desired is UNSIGNED_CHAR
+                switch (current)
+                {
+                    case FLOAT:
+                        result.appendUnsignedChar((unsigned char) message.getFloat(i));
+                        break;
+                    case BOOLEAN:
+                        result.appendUnsignedChar((unsigned char) message.getBoolean(i));
+                        break;
+                    case CHAR:
+                        result.appendUnsignedChar((unsigned char) message.getChar(i));
+                        break;
+                    case UNSIGNED_CHAR:
+                        result.appendUnsignedChar(message.getUnsignedChar(i));
+                        break;
+                    case UNSIGNED_INT:
+                        result.appendUnsignedChar((unsigned char) message.getUnsignedInt(i));
+                        break;
+                    case BANG:
+                        result.appendUnsignedChar(' ');
+                        break;
+                    case DOUBLE:
+                        result.appendUnsignedChar((unsigned char) message.getDouble(i));
+                        break;
+                    case INT:
+                        result.appendUnsignedChar((unsigned char) message.getInt(i));
+                        break;
+                    case LONG:
+                        result.appendUnsignedChar((unsigned char) message.getLong(i));
+                        break;
+                    case STRING:
+                        try
+                        {
+                            appendArgumentFromString(result,
+                                message.getString(i).c_str(), UNSIGNED_CHAR);
+                        }
+                        catch(const BadAtomTypeException &e)
+                        {
+                            std::cerr << e.what() << std::endl;
+                            success = false;
+                        }
+                        break;
+                    case POINTER:
+                        result.appendUnsignedChar((unsigned char) (long) message.getPointer(i));
+                        break;
+                    case INVALID:
+                    default:
+                        success = false;
+                        break;
+                } // switch desired
+                break; // case UNSIGNED_CHAR
             // TODO: support casting to BOOLEAN
             // TODO: support casting to CHAR
-            // TODO: support casting to UNSIGNED_CHAR
             // TODO: support casting to DOUBLE
             // TODO: support casting to INT
             // TODO: support casting to LONG
@@ -363,7 +431,7 @@ Message castMessage(const Message &message, const char *type)
                 std::ostringstream os;
                 os << "ERROR: " << __FUNCTION__ << 
                     ": Could not cast message to \"" << desired << "\": " << message;
-                throw BadArgumentTypeException(os.str().c_str());
+                throw BadAtomTypeException(os.str().c_str());
             }
         } // switch current
     }

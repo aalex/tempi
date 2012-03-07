@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tempi version="0.1.9">
+  <graph>
+    <node id="midireceive0" class="midi.receive">
+      <attribute name="port">
+        <i>0</i>
+      </attribute>
+    </node>
+    <node id="print_midi" class="base.print">
+      <attribute name="prefix">
+        <s>MIDI: </s>
+      </attribute>
+    </node>
+    <connection from="midireceive0" outlet="0" to="print_midi" inlet="0" />
+  </graph>
+</tempi>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tempi version="0.1.9">
+  <graph>
+    <node id="loadmess0" class="base.loadmess">
+      <attribute name="value">
+        <s>pi</s>
+        <f>3.14159</f>
+      </attribute>
+    </node>
+    <node id="loadmess1" class="base.loadmess">
+      <attribute name="value">
+        <s>planet</s>
+        <s>Earth</s>
+      </attribute>
+    </node>
+    <node id="loadmess2" class="base.loadmess">
+    </node>
+    <node id="loadmess3" class="base.loadmess">
+      <attribute name="value">
+        <s>planet</s>
+      </attribute>
+    </node>
+    <node id="loadmess4" class="base.loadmess">
+    </node>
+    <node id="dict0" class="base.dict">
+    </node>
+    <node id="print_list" class="base.print">
+      <attribute name="prefix"><s>list: </s></attribute>
+      <attribute name="enabled"><b>1</b></attribute>
+    </node>
+    <node id="print_values" class="base.print">
+      <attribute name="prefix"><s>value: </s></attribute>
+      <attribute name="enabled"><b>1</b></attribute>
+    </node>
+    <connection from="loadmess0" outlet="0" to="dict0" inlet="set"/>
+    <connection from="loadmess1" outlet="0" to="dict0" inlet="set"/>
+    <connection from="loadmess2" outlet="0" to="dict0" inlet="list"/>
+    <connection from="loadmess3" outlet="0" to="dict0" inlet="remove"/>
+    <connection from="loadmess4" outlet="0" to="dict0" inlet="list"/>
+    <connection from="dict0" outlet="0" to="print_values" inlet="0"/>
+    <connection from="dict0" outlet="list" to="print_list" inlet="0"/>
+  </graph>
+</tempi>
