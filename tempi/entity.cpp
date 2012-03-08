@@ -45,6 +45,12 @@ NodeSignal* Entity::getSignal(const char *name) const
     return signals_.get(name).get();
 }
 
+NodeSignal* Entity::getMethod(const char *name) const
+    throw(BadIndexException)
+{
+    return methods_.get(name).get();
+}
+
 const Message &Entity::getAttributeValue(const char *name) const
     throw(BadIndexException)
 {
@@ -111,6 +117,12 @@ bool Entity::hasSignal(const char *name) const
     return signals_.has(name);
 }
 
+bool Entity::hasMethod(const char *name) const
+    throw(BadIndexException)
+{
+    return methods_.has(name);
+}
+
 void Entity::addSignal(NodeSignal::ptr signal) // TODO: rename to newSignal?
     throw(BadIndexException)
 {
@@ -122,9 +134,25 @@ void Entity::addSignal(NodeSignal::ptr signal) // TODO: rename to newSignal?
     // deletes the NamedObject* if name is already taken
 }
 
+void Entity::addMethod(NodeSignal::ptr method) // TODO: rename to newMethod?
+    throw(BadIndexException)
+{
+    if (method.get() == 0)
+    {
+        throw(BadIndexException("Null pointer!")); // FIXME: throw another exception type
+    }
+    methods_.add(method);
+    // deletes the NamedObject* if name is already taken
+}
+
 std::vector<std::string> Entity::listSignals() const
 {
     return signals_.listNames();
+}
+
+std::vector<std::string> Entity::listMethods() const
+{
+    return methods_.listNames();
 }
 
 } // end of namespace

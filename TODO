@@ -3,9 +3,7 @@ To do in Tempi
 
 To do for 0.2
 -------------
-* Add __call__ inlet for methods, and __return__ for their return value. (prefixed by method name)
 * Rename [counter,metro,dict] to have [utils.] prefix
-* Node::addMethod
 * Inlet/Outlet must be a child of Pad. give pads some signals
 * Abstraction: share the same scheduler. (use a NameGenerator to manage their names)
 * Abstraction: provide unique id, via a [abs.uuid]

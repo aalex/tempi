@@ -176,7 +176,7 @@ bool TempiInspect::printClass(const std::string &name)
         cout << endl;
         {
             if (node->listAttributes().size() == 0)
-                cout << "(No attributes)" << endl << endl;
+                cout << "* (No attributes)" << endl; // << endl;
             else
             {
                 vector<string> attributes = node->listAttributes();
@@ -200,8 +200,33 @@ bool TempiInspect::printClass(const std::string &name)
                 }
             }
         }
+        {
+            if (node->listMethods().size() == 0)
+                cout << "* (No methods)" << endl;
+            else
+            {
+                vector<string> methods = node->listMethods();
+                vector<string>::const_iterator iter;
+                for (iter = methods.begin(); iter != methods.end(); ++iter)
+                {
+                    NodeSignal* method = node->getMethod((*iter).c_str());
+                    cout << "* Method \"" << method->getName() << "\" : ";
+                    if (method->isTypeStrict())
+                        cout << "(Arguments types: " << method->getType() << ")";
+                    else
+                        cout << "(argument of variable type)";
+                    cout << " ";
+                    if (method->getShortDocumentation() != "")
+                        cout << method->getShortDocumentation();
+                    else
+                        cout << "(method not documented)";
+                    cout << " ";
+                    cout << endl;
+                }
+            }
+        }
         if (node->getInlets().size() == 0)
-            cout << "(No inlet)" << endl;
+            cout << "* (No inlet)" << endl;
         else
         {
             map<string, Inlet::ptr> inlets = node->getInlets();
@@ -216,7 +241,7 @@ bool TempiInspect::printClass(const std::string &name)
             }
         }
         if (node->getOutlets().size() == 0)
-            cout << endl << "(No outlet)" << endl;
+            cout << "* (No outlet)" << endl;
         else
         {
             map<string, Outlet::ptr> outlets = node->getOutlets();
