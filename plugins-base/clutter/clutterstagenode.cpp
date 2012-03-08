@@ -281,7 +281,7 @@ void TempiClutterStageNode::processMessage(const char *inlet, const Message &mes
 {
     // TODO: implement processMessage
 }
-void TempiClutterStageNode::onNodeAttibuteChanged(const char *name, const Message &value)
+bool TempiClutterStageNode::onNodeAttributeChanged(const char *name, const Message &value)
 {
     if (utils::stringsMatch(name, "visible"))
     {
@@ -289,6 +289,7 @@ void TempiClutterStageNode::onNodeAttibuteChanged(const char *name, const Messag
             startClutterThread();
     }
     // TODO: implement more attributes support
+    return true;
 }
 
 // static bool tempi_clutter_set_obj_property(GObject *object, const char *name, const Message &value)

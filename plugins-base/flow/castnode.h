@@ -50,7 +50,7 @@ class CastNode : public Node
         }
     private:
         std::string desired_type_;
-        virtual void onNodeAttibuteChanged(const char *name, const Message &value)
+        virtual bool onNodeAttributeChanged(const char *name, const Message &value)
         {
             if (utils::stringsMatch("type", name))
             {

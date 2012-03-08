@@ -94,10 +94,10 @@ void OscRouteNode::printOutletsInfo() const
     }
 }
 
-void OscRouteNode::onNodeAttibuteChanged(const char *name, const Message &value)
+bool OscRouteNode::onNodeAttributeChanged(const char *name, const Message &value)
 {
     if (! utils::stringsMatch("paths", name))
-        return;
+        return true;
     {
         std::ostringstream os;
         os << "[osc.route] " << __FUNCTION__ << ": name=\"" << name << "\" value=" << value;
@@ -157,6 +157,7 @@ void OscRouteNode::onNodeAttibuteChanged(const char *name, const Message &value)
         }
     }
     this->printOutletsInfo();
+    return true;
 }
 
 } // end of namespace

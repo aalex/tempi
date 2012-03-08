@@ -58,7 +58,7 @@ class SamplerNode : public Node
         // TimePosition getDuration ();
     protected:
         virtual void processMessage(const char *inlet, const Message &message);
-        virtual void onNodeAttibuteChanged(const char *name, const Message &value);
+        virtual bool onNodeAttributeChanged(const char *name, const Message &value);
     private:
 //        bool recording_;
 //        bool playing_;

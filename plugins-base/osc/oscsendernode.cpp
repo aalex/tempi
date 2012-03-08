@@ -45,13 +45,14 @@ void OscSenderNode::processMessage(const char *inlet, const Message &message)
         osc_sender_->sendMessage(message);
 }
 
-void OscSenderNode::onNodeAttibuteChanged(const char *name, const Message &value)
+bool OscSenderNode::onNodeAttributeChanged(const char *name, const Message &value)
 {
     //std::cout << "OscSenderNode::" << __FUNCTION__ << "(" << name << ", " << value << ")" << std::endl;
     if (utils::stringsMatch("host_port", name))
     {
         osc_sender_.reset(new osc::OscSender(value.getString(0).c_str(), value.getInt(1)));
     }
+    return true;
 }
 
 } // end of namespace

@@ -39,7 +39,7 @@ OscReceiverNode::OscReceiverNode() :
     this->getAttribute("listening")->setMutable(false);
 }
 
-void OscReceiverNode::onNodeAttibuteChanged(const char *name, const Message &value)
+bool OscReceiverNode::onNodeAttributeChanged(const char *name, const Message &value)
 {
     {
         std::ostringstream os;
@@ -54,8 +54,8 @@ void OscReceiverNode::onNodeAttibuteChanged(const char *name, const Message &val
             std::ostringstream os;
             os << "OscReceiverNode::" << __FUNCTION__ << ": Negative port numbers are not supported: " << tmp;
             Logger::log(ERROR, os.str().c_str());
-            this->getAttribute("listening")->setValue(Message("b", false));
-            return;
+            //this->getAttribute("listening")->setValue(Message("b", false));
+            return false;
         }
         unsigned int portNumber = (unsigned int) tmp;
         if (portNumber == port_number_)
@@ -63,7 +63,7 @@ void OscReceiverNode::onNodeAttibuteChanged(const char *name, const Message &val
             std::ostringstream os;
             os << "OscReceiver::" << __FUNCTION__ << " already listening on port " << portNumber;
             Logger::log(DEBUG, os.str().c_str());
-            return;
+            return false;
         }
         port_number_ = portNumber;
         {
@@ -71,11 +71,13 @@ void OscReceiverNode::onNodeAttibuteChanged(const char *name, const Message &val
             os << "OscReceiver::" << __FUNCTION__ << " listen on port " << portNumber;
             Logger::log(INFO, os.str().c_str());
             this->getAttribute("listening")->setValue(Message("b", true));
+            return true;
         }
         if (portNumber == 0)
             osc_receiver_.reset((osc::OscReceiver *) 0);
         else
             osc_receiver_.reset(new osc::OscReceiver(portNumber));
+        return true;
     }
 }
 

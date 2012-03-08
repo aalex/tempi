@@ -83,10 +83,10 @@ void RouteNode::printOutletsInfo() const
     }
 }
 
-void RouteNode::onNodeAttibuteChanged(const char *name, const Message &value)
+bool RouteNode::onNodeAttributeChanged(const char *name, const Message &value)
 {
     if (! utils::stringsMatch("selectors", name))
-        return;
+        return true;
     {
         std::ostringstream os;
         os << "[route] " << __FUNCTION__ << ": name=\"" << name << "\" value=" << value;
@@ -146,6 +146,7 @@ void RouteNode::onNodeAttibuteChanged(const char *name, const Message &value)
         }
     }
     this->printOutletsInfo();
+    return true;
 }
 
 } // end of namespace

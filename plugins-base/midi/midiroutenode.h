@@ -39,7 +39,7 @@ class MidiRouteNode : public Node
         MidiRouteNode();
     protected:
         virtual void processMessage(const char *inlet, const Message &message);
-        // virtual void onNodeAttibuteChanged(const char *name, const Message &value);
+        // virtual bool onNodeAttributeChanged(const char *name, const Message &value);
 };
 
 } // end of namespace

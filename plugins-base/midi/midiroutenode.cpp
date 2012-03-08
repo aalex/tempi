@@ -114,7 +114,7 @@ void MidiRouteNode::processMessage(const char *inlet, const Message &message)
     output("0", result);
 }
 
-// void MidiRouteNode::onNodeAttibuteChanged(const char *name, const Message &value)
+// void MidiRouteNode::onNodeAttributeChanged(const char *name, const Message &value)
 // {
 //     using utils::stringsMatch;
 //     if (stringsMatch(name, "types"))
