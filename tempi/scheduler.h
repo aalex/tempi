@@ -31,6 +31,7 @@
 #include "tempi/message.h"
 #include "tempi/sampler_region.h"
 #include <boost/thread.hpp>
+#include "tempi/sharedptr.h"
 #include <boost/thread/locks.hpp>
 
 namespace tempi {
@@ -53,6 +54,7 @@ class ScopedLock
 class Scheduler
 {
     public:
+        typedef std::tr1::shared_ptr<Scheduler> ptr;
         Scheduler();
         /**
          * Returns if the scheduler is running or not.

@@ -18,6 +18,8 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "tempi/message.h"
+#include "tempi/wrapper.h"
 #include "tempi/tempi.h"
 #include <boost/python.hpp>
 
@@ -25,7 +27,7 @@ BOOST_PYTHON_MODULE(tempi)
 {
     using namespace boost::python;
     using namespace tempi;
-    def("hello", hello);
+    // def("hello", hello);
     def("get_version", get_version);
 
     enum_<AtomType>("AtomType")
@@ -58,36 +60,34 @@ BOOST_PYTHON_MODULE(tempi)
         ;
         //TODO: .def("getAtomType", &Message::AtomType)
 
-    // class_<Track>("Track")
-    //     .def("reset", &Track::reset)
-    //     .def("add", &Track::add)
-    //     .def("numberOfEvents", &Track::numberOfEvents)
-    //     .def("getDuration", &Track::getDuration)
-    //     ;
-
-        //TODO: .def("getFirst", &Track::getFirst, return_internal_reference<return_internal_reference>)
-        //TODO: .def("getLast", &Track::getLast)
-        //TODO: .def("getClosest", &Track::getClosest)
-
-    // class_<Recorder>("Recorder", init<Track*>())
-    //     .def("setTrack", &Recorder::setTrack)
-    //     .def("getTrack", &Recorder::getTrack)
-    //     .def("reset", &Recorder::reset)
-    //     .def("setPosition", &Recorder::setPosition)
-    //     .def("add", &Recorder::add)
-    //     ;
-
-    // class_<Player>("Player", init<Track*>())
-    //     .def("setTrack", &Player::setTrack)
-    //     .def("getTrack", &Player::getTrack)
-    //     .def("getTimer", &Player::getTimer)
-    //     .def("reset", &Player::reset)
-    //     .def("setPosition", &Player::setPosition)
-    //     .def("read", &Player::read)
-    //     .def("getSpeed", &Player::getSpeed)
-    //     .def("setSpeed", &Player::setSpeed)
-    //     // TODO setPlaybackMode
-    //     // TODO getPlaybackMode
-    //     ;
+    class_<Wrapper>("Wrapper") // , init<bool>())
+        .def("addLibraryPath", &Wrapper::addLibraryPath)
+        .def("connect", &Wrapper::connect)
+        .def("createGraph", &Wrapper::createGraph)
+        .def("createNode", &Wrapper::createNode)
+        .def("destroyGraph", &Wrapper::destroyGraph)
+        .def("destroyNode", &Wrapper::destroyNode)
+        .def("disconnect", &Wrapper::disconnect)
+        .def("getNodeAttributeDocumentation", &Wrapper::getNodeAttributeDocumentation)
+        .def("getNodeAttributeValue", &Wrapper::getNodeAttributeValue)
+        .def("getNodeInletDocumentation", &Wrapper::getNodeInletDocumentation)
+        .def("getNodeOutletDocumentation", &Wrapper::getNodeOutletDocumentation)
+        .def("getNodeTypeName", &Wrapper::getNodeTypeName)
+        .def("hasGraph", &Wrapper::hasGraph)
+        .def("listGraphs", &Wrapper::listGraphs)
+        .def("listNodeAttributes", &Wrapper::listNodeAttributes)
+        .def("listNodeInlets", &Wrapper::listNodeInlets)
+        .def("listNodeMethods", &Wrapper::listNodeMethods)
+        .def("listNodeOutlets", &Wrapper::listNodeOutlets)
+        .def("listNodeTypes", &Wrapper::listNodeTypes)
+        .def("loadGraph", &Wrapper::loadGraph)
+        .def("loadLibrary", &Wrapper::loadLibrary)
+        .def("messageInlet", &Wrapper::messageInlet)
+        .def("saveGraph", &Wrapper::saveGraph)
+        .def("setLogLevel", &Wrapper::setLogLevel)
+        .def("setSynchronous", &Wrapper::setSynchronous)
+        .def("setNodeAttributeValue", &Wrapper::setNodeAttributeValue)
+        .def("tick", &Wrapper::tick)
+        ;
 }
 

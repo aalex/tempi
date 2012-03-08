@@ -9,9 +9,7 @@ AM_CXXFLAGS = \
     $(LIBXML_CFLAGS) \
     $(SPATOSC_CFLAGS) \
     $(STK_CXXFLAGS) \
-    -I$(top_srcdir) \
-    -I$(top_srcdir)/plugins-base \
-    -I$(top_srcdir)/tempi
+    -I$(top_srcdir)
 
 AM_LIBS = \
     $(BOOST_FILESYSTEM_LIB) \
@@ -27,13 +25,15 @@ AM_LIBS = \
     $(SPATOSC_LIBS) \
     $(STK_LIBS)
 
+LDADD = $(top_builddir)/tempi/libtempi-@TEMPI_API_VERSION@.la
+
 # use lib_LTLIBRARIES to build a shared lib:
 lib_LTLIBRARIES = libtempi-plugins-base.la
 
 ## Instruct libtool to include ABI version information in the generated shared
 ## library file (.so).  The library ABI version is defined in configure.ac, so
 ## that all version information is kept in one place.
-libtempi_plugins_base_la_LDFLAGS = -export-dynamic -version-info $(TEMPI_LT_VERSION) $(AM_LIBS)
+libtempi_plugins_base_la_LDFLAGS = -export-dynamic -version-info $(TEMPI_LT_VERSION) $(AM_LIBS) $(LDADD)
 libtempi_plugins_base_la_LIBS = $(AM_LIBS)
 libtempi_plugins_base_la_CXXFLAGS = $(AM_CXXFLAGS)
 libtempi_plugins_base_la_includedir = $(includedir)/tempi-$(TEMPI_API_VERSION)
