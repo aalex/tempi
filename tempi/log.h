@@ -40,6 +40,7 @@ typedef enum
 {
     DEBUG = log4cpp::Priority::DEBUG,
     INFO = log4cpp::Priority::INFO,
+    NOTICE = log4cpp::Priority::NOTICE,
     WARNING = log4cpp::Priority::WARN,
     CRITICAL = log4cpp::Priority::CRIT,
     ERROR = log4cpp::Priority::ERROR
