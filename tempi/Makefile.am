@@ -84,7 +84,8 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     threadedscheduler.cpp \
     timeposition.cpp \
     timer.cpp \
-    utils.cpp
+    utils.cpp \
+    wrapper.cpp
 
 ## PLEASE KEEP THEM IN ALPHABETICAL ORDER
 libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
@@ -140,5 +141,6 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     threadedscheduler.h \
     timeposition.h \
     timer.h \
-    utils.h
+    utils.h \
+    wrapper.h
 
