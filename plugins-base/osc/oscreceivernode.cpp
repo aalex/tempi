@@ -70,13 +70,17 @@ bool OscReceiverNode::onNodeAttributeChanged(const char *name, const Message &va
             std::ostringstream os;
             os << "OscReceiver::" << __FUNCTION__ << " listen on port " << portNumber;
             Logger::log(INFO, os.str().c_str());
-            this->getAttribute("listening")->setValue(Message("b", true));
-            return true;
         }
         if (portNumber == 0)
+        {
             osc_receiver_.reset((osc::OscReceiver *) 0);
+            this->getAttribute("listening")->setValue(Message("b", false));
+        }
         else
+        {
             osc_receiver_.reset(new osc::OscReceiver(portNumber));
+            this->getAttribute("listening")->setValue(Message("b", true));
+        }
         return true;
     }
 }
