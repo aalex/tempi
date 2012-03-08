@@ -52,7 +52,7 @@ AbstractionNode::AbstractionNode() :
     this->addAttribute(Attribute::ptr(new Attribute("file_path", Message("s", ""), "Path to the XML file to load the Tempi Graph from.")));
 }
 
-void AbstractionNode::onNodeAttibuteChanged(const char *name, const Message &value)
+bool AbstractionNode::onNodeAttributeChanged(const char *name, const Message &value)
 {
     {
         std::ostringstream os;
@@ -67,14 +67,14 @@ void AbstractionNode::onNodeAttibuteChanged(const char *name, const Message &val
             std::ostringstream os;
             os << "AbstractionNode::" << __FUNCTION__ << ": Emtpy file_path string doesn't load any patch." << path;
             Logger::log(INFO, os.str().c_str());
-            return;
+            return false;
         }
         if (path == file_path_)
         {
             std::ostringstream os;
             os << "AbstractionNode::" << __FUNCTION__ << " already loaded file at path " << path;
             Logger::log(INFO, os.str().c_str());
-            return;
+            return false;
         }
         file_path_ = path;
         {
@@ -86,6 +86,7 @@ void AbstractionNode::onNodeAttibuteChanged(const char *name, const Message &val
             deleteGraph();
         else
             loadGraph();
+        return true;
     }
 }
 

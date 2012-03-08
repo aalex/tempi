@@ -34,15 +34,17 @@ MidiReceiverNode::MidiReceiverNode() :
     midi_input_.reset(new midi::MidiInput);
 }
 
-void MidiReceiverNode::onNodeAttibuteChanged(const char *name, const Message &value)
+bool MidiReceiverNode::onNodeAttributeChanged(const char *name, const Message &value)
 {
     //std::cout << "MidiReceiverNode::" << __FUNCTION__ << "(" << name << ", " << value << ")" << std::endl;
     static std::string key("port");
     if (key == name)
     {
         //std::cout << "MidiInput::" << __FUNCTION__ << " open port " << value.getInt(0) << std::endl;
+        // FIXME
         midi_input_->open((unsigned int) value.getInt(0));
     }
+    return true;
 }
 
 void MidiReceiverNode::doTick()

@@ -49,7 +49,7 @@ class RandomIntNode : public Node
             this->addAttribute(Attribute::ptr(new Attribute("range", Message("ii", 0, 1), "Bounds of the range of output numbers.")));
         }
     protected:
-        virtual void onNodeAttibuteChanged(const char *name, const Message &value)
+        virtual bool onNodeAttributeChanged(const char *name, const Message &value)
         {
             {
                 std::ostringstream os;

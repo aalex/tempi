@@ -35,7 +35,7 @@ MidiSenderNode::MidiSenderNode() :
     midi_output_.reset(new midi::MidiOutput);
 }
 
-void MidiSenderNode::onNodeAttibuteChanged(const char *name, const Message &value)
+bool MidiSenderNode::onNodeAttributeChanged(const char *name, const Message &value)
 {
     //std::cout << "MidiSenderNode::" << __FUNCTION__ << "(" << name << ", " << value << ")" << std::endl;
     static std::string key("port");
@@ -44,6 +44,7 @@ void MidiSenderNode::onNodeAttibuteChanged(const char *name, const Message &valu
         //std::cout << "MidiSenderNode::" << __FUNCTION__ << " open port " << value.getInt(0) << std::endl;
         midi_output_->open((unsigned int) value.getInt(0));
     }
+    return true;
 }
 
 // TODO: output the list of devices upon query

@@ -39,7 +39,7 @@ SamplerSampleNode::SamplerSampleNode() :
     addAttribute(Attribute::ptr(new Attribute(ATTR_NAME, Message("s", ""), "Name of the region to create. An empty string means it is invalid.")));
 }
 
-void SamplerSampleNode::onNodeAttibuteChanged(const char *name, const Message &value)
+bool SamplerSampleNode::onNodeAttributeChanged(const char *name, const Message &value)
 {
     const static std::string region(ATTR_NAME);
     if (region == name)
@@ -49,7 +49,7 @@ void SamplerSampleNode::onNodeAttibuteChanged(const char *name, const Message &v
             std::ostringstream os;
             os << "FIXME: attributes are set twice.";
             Logger::log(INFO, os.str().c_str());
-            return;
+            return false;
         }
         bool ok = setRegionName(value.getString(0));
         if (! ok)
@@ -60,8 +60,10 @@ void SamplerSampleNode::onNodeAttibuteChanged(const char *name, const Message &v
             Logger::log(ERROR, os.str().c_str());
             this->setAttributeValue(ATTR_NAME, Message("s", ""));
             previous_region_name_ = "";
+            return true;
         }
     }
+    return true;
 }
 
 bool SamplerSampleNode::setRegionName(const std::string &name)

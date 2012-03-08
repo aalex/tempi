@@ -66,12 +66,13 @@ void CounterNode::processMessage(const char *inlet, const Message &message)
     }
 }
 
-void CounterNode::onNodeAttibuteChanged(const char *name, const Message &value)
+bool CounterNode::onNodeAttributeChanged(const char *name, const Message &value)
 {
     if (utils::stringsMatch("increment", name))
     {
         increment_ = value.getInt(0);
     }
+    return true;
 }
 
 } // end of namespace

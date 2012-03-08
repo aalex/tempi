@@ -49,7 +49,7 @@ class RandomDrunkNode : public Node
             this->addAttribute(Attribute::ptr(new Attribute("step", Message("ii", 0, 1), "Minimum size of the steps")));
         }
     protected:
-        virtual void onNodeAttibuteChanged(const char *name, const Message &value)
+        virtual bool onNodeAttributeChanged(const char *name, const Message &value)
         {
             {
                 std::ostringstream os;

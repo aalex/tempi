@@ -37,11 +37,12 @@ void LoadMessNode::processMessage(const char *inlet, const Message &message)
 {
     // pass
 }
-void LoadMessNode::onNodeAttibuteChanged(const char *name, const Message &value)
+bool LoadMessNode::onNodeAttributeChanged(const char *name, const Message &value)
 {
     std::ostringstream os;
     os << "[base.loadmess](" << getName() << ")." << __FUNCTION__ << ": " << name << "=" << value;
     Logger::log(INFO, os.str().c_str());
+    return true;
 }
 
 void LoadMessNode::onLoadBang()
