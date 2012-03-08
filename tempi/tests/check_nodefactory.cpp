@@ -151,9 +151,9 @@ bool check_print()
     graph.message("sampler0", "__attr__", recording);
     // print something (or not is disabled)
     Message fis_message = Message("fis", 3.14159f, 2, "hello");
-    graph.message("nop0", "__attr__", fis_message);
+    graph.message("nop0", "0", fis_message);
     graph.tick();
-    graph.message("nop0", "__attr__", fis_message);
+    graph.message("nop0", "0", fis_message);
     graph.tick();
 
     recording.setBoolean(2, false);

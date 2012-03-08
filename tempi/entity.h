@@ -110,16 +110,9 @@ class Entity : public Documented
          * Sets a attribute value.
          * You can also do this by sending a message in the form s:"set" s:name ...
          * WARNING: if the value has not changed, it won't call onAttributeChanged.
-         * TODO: rename to setAttributeValue and delete this one.
          */
-        void setAttribute(const char *name, const Message &value)
-            throw(BadIndexException, BadAtomTypeException);
-
         void setAttributeValue(const char *name, const Message &value)
-            throw(BadIndexException, BadAtomTypeException)
-        {
-            setAttribute(name, value);
-        }
+            throw(BadIndexException, BadAtomTypeException);
 //     protected:
         /**
          * Adds an attribute to this Entity.

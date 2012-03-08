@@ -165,7 +165,7 @@ static bool check_any()
     Graph graph(factory);
     graph.addNode("base.any", "any0");
     Node::ptr any0 = graph.getNode("any0");
-    any0->setAttribute("value", Message("f", 3.14159f));
+    any0->setAttributeValue("value", Message("f", 3.14159f));
     return true;
 }
 

@@ -153,7 +153,8 @@ void Node::onInletTriggered(Inlet *inlet, const Message &message)
                         message << " in inlet " << ATTRIBUTES_INLET;
                     Logger::log(ERROR, os);
                 }
-            } // get
+            } // end get
+            // set:
             else if (message.getString(0) == ATTRIBUTES_SET_METHOD_SELECTOR)
             {
                 if ((message.getSize() >= 3) &&
@@ -167,7 +168,7 @@ void Node::onInletTriggered(Inlet *inlet, const Message &message)
                         std::string attr_name = message.getString(1);
                         if (this->getAttribute(attr_name.c_str())->getMutable())
                         {
-                            setAttribute(attr_name.c_str(), attribute);
+                            setAttributeValue(attr_name.c_str(), attribute);
                             return;
                         }
                         else
@@ -204,7 +205,7 @@ void Node::onInletTriggered(Inlet *inlet, const Message &message)
                     Logger::log(ERROR, os);
                     return;
                 }
-            } // set
+            } // end set
             // ---------- list:
             else if (message.getString(0) == ATTRIBUTES_LIST_METHOD_SELECTOR)
             {
@@ -216,7 +217,7 @@ void Node::onInletTriggered(Inlet *inlet, const Message &message)
                     attributes_message.appendString((*iter).c_str());
                 }
                 this->output(ATTRIBUTES_OUTLET, attributes_message);
-            } // list
+            } // end list
             else
             {
                 std::ostringstream os;

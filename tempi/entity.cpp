@@ -51,8 +51,7 @@ const Message &Entity::getAttributeValue(const char *name) const
     return getAttribute(name)->getValue();
 }
 
-// TODO: rename to setAttributeValue
-void Entity::setAttribute(const char *name, const Message &value)
+void Entity::setAttributeValue(const char *name, const Message &value)
     throw(BadIndexException, BadAtomTypeException)
 {
     bool ok_to_change = false;

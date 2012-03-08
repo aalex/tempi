@@ -153,7 +153,7 @@ bool App::addSender(const char *host, unsigned int port)
     graph_->tick(); // calls Node::init()
     Node::ptr node = graph_->getNode(name.c_str());
     Message mess = Message("si", host, port);
-    node->setAttribute("host_port", mess);
+    node->setAttributeValue("host_port", mess);
 
     graph_->connect("nop0", "0", name.c_str(), "0");
     return true;
@@ -171,7 +171,7 @@ bool App::addReceiver(unsigned int port)
     graph_->tick(); // calls Node::init()
     Node::ptr node = graph_->getNode(name.c_str());
     Message mess = Message("i", port);
-    node->setAttribute("port", mess);
+    node->setAttributeValue("port", mess);
 
     graph_->connect(name.c_str(), "0", "nop0", "0");
     return true;
