@@ -60,10 +60,11 @@ class RandomIntNode : public Node
             {
                 if (! drunk_.setRange(value.getInt(0), value.getInt(1)))
                 {
-                    //setAttributeValue("range", Message("ii", drunk_.getRangeFrom(), drunk_.getRangeTo()));
                     Logger::log(WARNING, "[random.drunk]: Failed to set range");
+                    return false;
                 }
             }
+            return true;
         }
     private:
         DrunkInt drunk_;

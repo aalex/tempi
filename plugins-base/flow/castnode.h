@@ -55,11 +55,15 @@ class CastNode : public Node
             if (utils::stringsMatch("type", name))
             {
                 if (utils::isValidType(value.getString(0).c_str()))
+                {
                     desired_type_ = value.getString(0);
+                    return true;
+                }
                 else
                 {
                     // back to previous
-                    setAttributeValue("type", Message("s", desired_type_.c_str()));
+                    //setAttributeValue("type", Message("s", desired_type_.c_str()));
+                    return false;
                 }
             }
         }

@@ -36,7 +36,7 @@ OscReceiverNode::OscReceiverNode() :
     Message port = Message("i", 0);
     addAttribute(Attribute::ptr(new Attribute("port", port, "Receive OSC messages on this port number.")));
     addAttribute(Attribute::ptr(new Attribute("listening", Message("b", false), "Internal status of the object.")));
-    this->getAttribute("listening")->setMutable(false);
+    this->getAttribute("listening")->setMutable(false); // Cannot be changed via messages to the __attr__ inlet
 }
 
 bool OscReceiverNode::onNodeAttributeChanged(const char *name, const Message &value)
@@ -54,7 +54,6 @@ bool OscReceiverNode::onNodeAttributeChanged(const char *name, const Message &va
             std::ostringstream os;
             os << "OscReceiverNode::" << __FUNCTION__ << ": Negative port numbers are not supported: " << tmp;
             Logger::log(ERROR, os.str().c_str());
-            //this->getAttribute("listening")->setValue(Message("b", false));
             return false;
         }
         unsigned int portNumber = (unsigned int) tmp;
@@ -83,6 +82,8 @@ bool OscReceiverNode::onNodeAttributeChanged(const char *name, const Message &va
         }
         return true;
     }
+    else
+        return true;
 }
 
 void OscReceiverNode::doTick()

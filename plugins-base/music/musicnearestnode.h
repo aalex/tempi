@@ -108,8 +108,15 @@ class NearestNoteNode : public Node
                 {
                     Logger::log(DEBUG, "NearestNoteNode: calling setAttributeValue within onNodeAttributeChanged might cause infinite recursion.");
                     setAttributeValue("scale", corrected);
+                    return false; // XXX very important since we just called setAttributeValue
                 }
-            }
+                else
+                {
+                    return true;
+                }
+            } // end scale
+            else
+                return true;
         }
     private:
         virtual void processMessage(const char *inlet, const Message &message)
