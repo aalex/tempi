@@ -29,6 +29,10 @@
 #include "tempi/message.h"
 
 namespace tempi {
+/**
+ * @namespace tempi::table
+ * Table utilities.
+ */
 namespace table {
 
 /**

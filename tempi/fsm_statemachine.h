@@ -33,11 +33,8 @@
 #include "tempi/fsm_state.h"
 #include "tempi/fsm_rule.h"
 
-namespace tempi
-{
-
-namespace fsm
-{
+namespace tempi {
+namespace fsm {
 
 /**
  * Finite state machine.
@@ -62,7 +59,6 @@ class StateMachine
 };
 
 } // end of namespace
-
 } // end of namespace
 
 #endif // ifndef

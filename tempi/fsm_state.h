@@ -29,11 +29,13 @@
 #include <tr1/memory>
 #include <string>
 
-namespace tempi
-{
+namespace tempi {
 
-namespace fsm
-{
+/**
+ * @namespace tempi::fsm
+ * Behavivour tree utilities (Finite State Machines)
+ */
+namespace fsm {
 
 /**
  * State in a finite state machine.
@@ -53,7 +55,6 @@ class State
 };
 
 } // end of namespace
-
 } // end of namespace
 
 #endif // ifndef
