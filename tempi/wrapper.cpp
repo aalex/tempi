@@ -31,8 +31,9 @@
 
 namespace tempi {
 
-Wrapper::Wrapper(bool synchronous) :
-    synchronous_(synchronous)
+// TODO: allow to set synchronous
+Wrapper::Wrapper() : // bool synchronous) :
+    synchronous_(false)
 {
     if (synchronous_)
         scheduler_.reset(new SynchronousScheduler);
@@ -57,20 +58,20 @@ Wrapper::~Wrapper()
     }
 }
 
-bool Wrapper::setLogLevel(const char *level)
+bool Wrapper::setLogLevel(const std::string &level)
 {
     LogLevel new_level;
-    if (utils::stringsMatch(level, "DEBUG"))
+    if (utils::stringsMatch(level.c_str(), "DEBUG"))
         new_level = DEBUG;
-    else if (utils::stringsMatch(level, "INFO"))
+    else if (utils::stringsMatch(level.c_str(), "INFO"))
         new_level = INFO;
-    else if (utils::stringsMatch(level, "NOTICE"))
+    else if (utils::stringsMatch(level.c_str(), "NOTICE"))
         new_level = NOTICE;
-    else if (utils::stringsMatch(level, "WARNING"))
+    else if (utils::stringsMatch(level.c_str(), "WARNING"))
         new_level = WARNING;
-    else if (utils::stringsMatch(level, "CRITICAL"))
+    else if (utils::stringsMatch(level.c_str(), "CRITICAL"))
         new_level = CRITICAL;
-    else if (utils::stringsMatch(level, "ERROR"))
+    else if (utils::stringsMatch(level.c_str(), "ERROR"))
         new_level = ERROR;
     else
     {
@@ -90,10 +91,10 @@ bool Wrapper::setLogLevel(const char *level)
     return true;
 }
 
-bool Wrapper::loadGraph(const char *name, const char *fileName)
+bool Wrapper::loadGraph(const std::string &name, const std::string &fileName)
 {
     tempi::ScopedLock::ptr lock = scheduler_->acquireLock();
-    if (scheduler_->hasGraph(name))
+    if (scheduler_->hasGraph(name.c_str()))
     {
         std::ostringstream os;
         os << "Wrapper." << __FUNCTION__ <<
@@ -102,7 +103,7 @@ bool Wrapper::loadGraph(const char *name, const char *fileName)
         return false;
     }
     // Check for XML file
-    if (! saver_->fileExists(fileName))
+    if (! saver_->fileExists(fileName.c_str()))
     {
         std::ostringstream os;
         os << "Wrapper" << __FUNCTION__ << ": " <<
@@ -116,11 +117,11 @@ bool Wrapper::loadGraph(const char *name, const char *fileName)
             "Found " << fileName;
         tempi::Logger::log(DEBUG, os);
     }
-    scheduler_->createGraph(name);
-    Graph::ptr graph = scheduler_->getGraph(name);
+    scheduler_->createGraph(name.c_str());
+    Graph::ptr graph = scheduler_->getGraph(name.c_str());
 
     // load graph
-    saver_->load(*(graph.get()), fileName);
+    saver_->load(*(graph.get()), fileName.c_str());
     graph->tick(); // FIXME
     {
         std::ostringstream os;
@@ -159,11 +160,11 @@ bool Wrapper::listGraphs(std::vector<std::string> &names) const
     return true;
 }
 
-bool Wrapper::createGraph(const char *name)
+bool Wrapper::createGraph(const std::string &name)
 {
     try
     {
-        this->scheduler_->createGraph(name);
+        this->scheduler_->createGraph(name.c_str());
         return true;
     }
     catch (const BaseException &e)
@@ -175,11 +176,11 @@ bool Wrapper::createGraph(const char *name)
     }
 }
 
-bool Wrapper::destroyGraph(const char *name)
+bool Wrapper::destroyGraph(const std::string &name)
 {
     try
     {
-        this->scheduler_->removeGraph(name);
+        this->scheduler_->removeGraph(name.c_str());
         return true;
     }
     catch (const BaseException &e)
@@ -191,17 +192,17 @@ bool Wrapper::destroyGraph(const char *name)
     }
 }
 
-bool Wrapper::hasGraph(const char *name)
+bool Wrapper::hasGraph(const std::string &name)
 {
-    return this->scheduler_->hasGraph(name);
+    return this->scheduler_->hasGraph(name.c_str());
 }
 
-bool Wrapper::createNode(const char *graph, const char *nodeType,
-    const char *nodeName)
+bool Wrapper::createNode(const std::string &graph, const std::string &nodeType,
+    const std::string &nodeName)
 {
     try
     {
-        return this->scheduler_->getGraph(graph)->addNode(nodeType, nodeName);
+        return this->scheduler_->getGraph(graph.c_str())->addNode(nodeType.c_str(), nodeName.c_str());
     }
     catch (const BaseException &e)
     {
@@ -212,12 +213,12 @@ bool Wrapper::createNode(const char *graph, const char *nodeType,
     }
 }
 
-bool Wrapper::destroyNode(const char *graph, const char *nodeName)
+bool Wrapper::destroyNode(const std::string &graph, const std::string &nodeName)
 {
     try
     {
-        return this->scheduler_->getGraph(graph)->
-            deleteNode(nodeName);
+        return this->scheduler_->getGraph(graph.c_str())->
+            deleteNode(nodeName.c_str());
     }
     catch (const BaseException &e)
     {
@@ -228,13 +229,13 @@ bool Wrapper::destroyNode(const char *graph, const char *nodeName)
     }
 }
 
-bool Wrapper::messageInlet(const char *graph, const char *nodeName,
-    const char *nodeInlet, const Message &message)
+bool Wrapper::messageInlet(const std::string &graph, const std::string &nodeName,
+    const std::string &nodeInlet, const Message &message)
 {
     try
     {
-        return this->scheduler_->getGraph(graph)->
-            message(nodeName, nodeInlet, message);
+        return this->scheduler_->getGraph(graph.c_str())->
+            message(nodeName.c_str(), nodeInlet.c_str(), message);
     }
     catch (const BaseException &e)
     {
@@ -245,14 +246,14 @@ bool Wrapper::messageInlet(const char *graph, const char *nodeName,
     }
 }
 
-bool Wrapper::connect(const char *graph,
-    const char *from, const char *outlet,
-    const char *to, const char *inlet)
+bool Wrapper::connect(const std::string &graph,
+    const std::string &from, const std::string &outlet,
+    const std::string &to, const std::string &inlet)
 {
     try
     {
-        return this->scheduler_->getGraph(graph)->
-            connect(from, outlet, to, inlet);
+        return this->scheduler_->getGraph(graph.c_str())->
+            connect(from.c_str(), outlet.c_str(), to.c_str(), inlet.c_str());
     }
     catch (const BaseException &e)
     {
@@ -263,14 +264,14 @@ bool Wrapper::connect(const char *graph,
     }
 }
 
-bool Wrapper::disconnect(const char *graph,
-    const char *from, const char *outlet,
-    const char *to, const char *inlet)
+bool Wrapper::disconnect(const std::string &graph,
+    const std::string &from, const std::string &outlet,
+    const std::string &to, const std::string &inlet)
 {
     try
     {
-        return this->scheduler_->getGraph(graph)->
-            disconnect(from, outlet, to, inlet);
+        return this->scheduler_->getGraph(graph.c_str())->
+            disconnect(from.c_str(), outlet.c_str(), to.c_str(), inlet.c_str());
     }
     catch (const BaseException &e)
     {
@@ -293,15 +294,15 @@ bool Wrapper::listNodeTypes(std::vector<std::string> &names) const
 }
 
 bool Wrapper::setNodeAttributeValue(
-    const char *graph,
-    const char *node,
-    const char *attribute,
+    const std::string &graph,
+    const std::string &node,
+    const std::string &attribute,
     const Message &value)
 {
     try
     {
-        return this->scheduler_->getGraph(graph)->
-            setNodeAttribute(node, attribute, value);
+        return this->scheduler_->getGraph(graph.c_str())->
+            setNodeAttribute(node.c_str(), attribute.c_str(), value);
     }
     catch (const BaseException &e)
     {
@@ -313,14 +314,14 @@ bool Wrapper::setNodeAttributeValue(
 }
 
 bool Wrapper::listNodeAttributes(
-    const char *graph,
-    const char *node,
+    const std::string &graph,
+    const std::string &node,
     std::vector<std::string> &names) const
 {
     try
     {
-        names = this->scheduler_->getGraph(graph)->
-            getNode(node)->listAttributes();
+        names = this->scheduler_->getGraph(graph.c_str())->
+            getNode(node.c_str())->listAttributes();
         return true;
     }
     catch (const BaseException &e)
@@ -333,14 +334,14 @@ bool Wrapper::listNodeAttributes(
 }
 
 bool Wrapper::listNodeMethods(
-    const char *graph,
-    const char *node,
+    const std::string &graph,
+    const std::string &node,
     std::vector<std::string> &names) const
 {
     try
     {
-        names = this->scheduler_->getGraph(graph)->
-            getNode(node)->listMethods();
+        names = this->scheduler_->getGraph(graph.c_str())->
+            getNode(node.c_str())->listMethods();
         return true;
     }
     catch (const BaseException &e)
@@ -353,14 +354,14 @@ bool Wrapper::listNodeMethods(
 }
 
 bool Wrapper::listNodeInlets(
-    const char *graph,
-    const char *node,
+    const std::string &graph,
+    const std::string &node,
     std::vector<std::string> &names) const
 {
     try
     {
-        names = this->scheduler_->getGraph(graph)->
-            getNode(node)->listInlets();
+        names = this->scheduler_->getGraph(graph.c_str())->
+            getNode(node.c_str())->listInlets();
         return true;
     }
     catch (const BaseException &e)
@@ -373,14 +374,14 @@ bool Wrapper::listNodeInlets(
 }
 
 bool Wrapper::listNodeOutlets(
-    const char *graph,
-    const char *node,
+    const std::string &graph,
+    const std::string &node,
     std::vector<std::string> &names) const
 {
     try
     {
-        names = this->scheduler_->getGraph(graph)->
-            getNode(node)->listOutlets();
+        names = this->scheduler_->getGraph(graph.c_str())->
+            getNode(node.c_str())->listOutlets();
         return true;
     }
     catch (const BaseException &e)
@@ -393,14 +394,14 @@ bool Wrapper::listNodeOutlets(
 }
 
 bool Wrapper::getNodeTypeName(
-    const char *graph,
-    const char *node,
+    const std::string &graph,
+    const std::string &node,
     std::string &typeName) const
 {
     try
     {
-        typeName = this->scheduler_->getGraph(graph)->
-            getNode(node)->getTypeName();
+        typeName = this->scheduler_->getGraph(graph.c_str())->
+            getNode(node.c_str())->getTypeName();
         return true;
     }
     catch (const BaseException &e)
@@ -413,15 +414,15 @@ bool Wrapper::getNodeTypeName(
 }
 
 bool Wrapper::getNodeAttributeValue(
-    const char *graph,
-    const char *node,
-    const char *attribute,
+    const std::string &graph,
+    const std::string &node,
+    const std::string &attribute,
     Message &value) const
 {
     try
     {
-        value = this->scheduler_->getGraph(graph)->
-            getNode(node)->getAttributeValue(attribute);
+        value = this->scheduler_->getGraph(graph.c_str())->
+            getNode(node.c_str())->getAttributeValue(attribute.c_str());
         return true;
     }
     catch (const BaseException &e)
@@ -434,15 +435,15 @@ bool Wrapper::getNodeAttributeValue(
 }
 
 bool Wrapper::getNodeAttributeDocumentation(
-    const char *graph,
-    const char *node,
-    const char *attribute,
+    const std::string &graph,
+    const std::string &node,
+    const std::string &attribute,
     std::string &value) const
 {
     try
     {
-        value = this->scheduler_->getGraph(graph)->
-            getNode(node)->getAttribute(attribute)->
+        value = this->scheduler_->getGraph(graph.c_str())->
+            getNode(node.c_str())->getAttribute(attribute.c_str())->
             getShortDocumentation();
         return true;
     }
@@ -456,15 +457,15 @@ bool Wrapper::getNodeAttributeDocumentation(
 }
 
 bool Wrapper::getNodeInletDocumentation(
-    const char *graph,
-    const char *node,
-    const char *inlet,
+    const std::string &graph,
+    const std::string &node,
+    const std::string &inlet,
     std::string &value) const
 {
     try
     {
-        value = this->scheduler_->getGraph(graph)->
-            getNode(node)->getInlet(inlet)->
+        value = this->scheduler_->getGraph(graph.c_str())->
+            getNode(node.c_str())->getInlet(inlet.c_str())->
             getDocumentation();
         return true;
     }
@@ -478,15 +479,15 @@ bool Wrapper::getNodeInletDocumentation(
 }
 
 bool Wrapper::getNodeOutletDocumentation(
-    const char *graph,
-    const char *node,
-    const char *outlet,
+    const std::string &graph,
+    const std::string &node,
+    const std::string &outlet,
     std::string &value) const
 {
     try
     {
-        value = this->scheduler_->getGraph(graph)->
-            getNode(node)->getOutlet(outlet)->
+        value = this->scheduler_->getGraph(graph.c_str())->
+            getNode(node.c_str())->getOutlet(outlet.c_str())->
             getDocumentation();
         return true;
     }
@@ -500,7 +501,7 @@ bool Wrapper::getNodeOutletDocumentation(
 }
 
 
-bool Wrapper::addLibraryPath(const char *path)
+bool Wrapper::addLibraryPath(const std::string &path)
 {
     std::ostringstream os;
     os << "Wrapper." << __FUNCTION__ << ": TODO";
@@ -508,7 +509,7 @@ bool Wrapper::addLibraryPath(const char *path)
     return false;
 }
 
-bool Wrapper::loadLibrary(const char *name)
+bool Wrapper::loadLibrary(const std::string &name)
 {
     std::ostringstream os;
     os << "Wrapper." << __FUNCTION__ << ": TODO";
@@ -516,10 +517,10 @@ bool Wrapper::loadLibrary(const char *name)
     return false;
 }
 
-bool Wrapper::saveGraph(const char *name, const char *fileName)
+bool Wrapper::saveGraph(const std::string &name, const std::string &fileName)
 {
     tempi::ScopedLock::ptr lock = scheduler_->acquireLock();
-    if (! scheduler_->hasGraph(name))
+    if (! scheduler_->hasGraph(name.c_str()))
     {
         std::ostringstream os;
         os << "Wrapper." << __FUNCTION__ <<
@@ -527,10 +528,10 @@ bool Wrapper::saveGraph(const char *name, const char *fileName)
         tempi::Logger::log(ERROR, os);
         return false;
     }
-    Graph::ptr graph = scheduler_->getGraph(name);
+    Graph::ptr graph = scheduler_->getGraph(name.c_str());
 
     // save graph
-    return saver_->save(*(graph.get()), fileName);
+    return saver_->save(*(graph.get()), fileName.c_str());
 }
 
 } // end of namespace
