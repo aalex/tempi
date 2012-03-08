@@ -8,7 +8,8 @@ import time
 
 def run():
     engine = tempi.Wrapper()
-    # engine.setLogLevel("INFO")
+    engine.setLogLevel("DEBUG")
+    engine.setSynchronous(False)
     engine.createGraph("graph0")
     engine.createNode("graph0", "base.metro", "metro0")
     engine.createNode("graph0", "base.print", "print0")
@@ -19,6 +20,7 @@ def run():
     try:
         while True:
             time.sleep(0.1)
+            engine.tick()
     except KeyboardInterrupt, e:
         print("")
 

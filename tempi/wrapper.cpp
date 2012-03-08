@@ -33,15 +33,31 @@ namespace tempi {
 
 // TODO: allow to set synchronous
 Wrapper::Wrapper() : // bool synchronous) :
-    synchronous_(false)
+    synchronous_(true)
 {
+    this->setSynchronous(synchronous_);
+}
+
+bool Wrapper::setSynchronous(bool synchronous)
+{
+    synchronous_ = synchronous;
     if (synchronous_)
+    {
+        std::ostringstream os;
+        os << "Wrapper." << __FUNCTION__ << ": " <<
+            "Using SynchronousScheduler";
+        Logger::log(INFO, os);
         scheduler_.reset(new SynchronousScheduler);
+    }
     else
     {
         scheduler_.reset(new ThreadedScheduler);
         ThreadedScheduler *threaded = dynamic_cast<ThreadedScheduler*>(scheduler_.get());
         threaded->start(5); // 5 ms
+        std::ostringstream os;
+        os << "Wrapper." << __FUNCTION__ << ": " <<
+            "Starting ThreadedScheduler";
+        Logger::log(INFO, os);
     }
 }
 

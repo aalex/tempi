@@ -46,7 +46,8 @@ class Wrapper
          * Constructor.
          * @param synchronous If true, you must call tick() repeatedly so that the graphs do their thing, (30 Hz is fine) otherwise it is ticked in a separate thread and there is no need to tick it.
          */
-        Wrapper(); //bool synchronous=true);
+        Wrapper(); //bool synchronous);
+        bool setSynchronous(bool synchronous);
         ~Wrapper();
         /**
          * Set log level.

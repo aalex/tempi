@@ -60,7 +60,7 @@ BOOST_PYTHON_MODULE(tempi)
         ;
         //TODO: .def("getAtomType", &Message::AtomType)
 
-    class_<Wrapper>("Wrapper")
+    class_<Wrapper>("Wrapper") // , init<bool>())
         .def("addLibraryPath", &Wrapper::addLibraryPath)
         .def("connect", &Wrapper::connect)
         .def("createGraph", &Wrapper::createGraph)
@@ -85,6 +85,7 @@ BOOST_PYTHON_MODULE(tempi)
         .def("messageInlet", &Wrapper::messageInlet)
         .def("saveGraph", &Wrapper::saveGraph)
         .def("setLogLevel", &Wrapper::setLogLevel)
+        .def("setSynchronous", &Wrapper::setSynchronous)
         .def("setNodeAttributeValue", &Wrapper::setNodeAttributeValue)
         .def("tick", &Wrapper::tick)
         ;
