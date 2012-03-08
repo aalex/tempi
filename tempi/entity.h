@@ -77,7 +77,9 @@ class Entity : public Documented
          * Return false, and the value is not going to be changed.
          */
         virtual bool onAttributeChanged(const char *name, const Message &value)
-        {}
+        {
+            return true;
+        }
         /**
          * Returns the value of a given named attribute of this Entity.
          */
