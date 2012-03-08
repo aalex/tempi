@@ -36,7 +36,7 @@
 namespace po = boost::program_options;
 using namespace tempi;
 
-static const char *PROGRAM_NAME = "osc-forward";
+static const char *PROGRAM_NAME = "tempi-osc-forward";
 
 class App
 {

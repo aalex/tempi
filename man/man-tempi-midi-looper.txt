@@ -2,7 +2,7 @@
 Loops MIDI events.
 
 [SYNOPSIS]
-midilooper [options]
+tempi-midi-looper [options]
 
 [INTERACTIVE USAGE]
 To start/stop recording, press the space bar.
@@ -27,4 +27,4 @@ See http://tempi.toonloop.com
 Copyright (c) 2011 Alexandre Quessy <alexandre@quessy.net>
 
 [SEE ALSO]
-osc-forward(1), tempi-draw(1), tempi-launch(1), tempi-inspect(1)
+tempi-osc-forward(1), tempi-draw(1), tempi-launch(1), tempi-inspect(1)

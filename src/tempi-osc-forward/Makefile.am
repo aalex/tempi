@@ -1,5 +1,5 @@
 bin_PROGRAMS = \
-    osc-forward
+    tempi-osc-forward
 
 AM_CXXFLAGS = \
     $(BOOST_CPPFLAGS) \
@@ -16,9 +16,9 @@ LDADD = \
     $(LIBLO_LIBS) \
     $(top_builddir)/tempi/libtempi-@TEMPI_API_VERSION@.la
 
-osc_forward_CXXFLAGS = $(AM_CXXFLAGS)
-osc_forward_LDADD = $(LDADD)
+tempi_osc_forward_CXXFLAGS = $(AM_CXXFLAGS)
+tempi_osc_forward_LDADD = $(LDADD)
 
-osc_forward_SOURCES = \
+tempi_osc_forward_SOURCES = \
     main.cpp
 
