@@ -33,6 +33,10 @@
 #include "tempi/sharedptr.h"
 
 namespace tempi {
+/**
+ * @namespace tempi::sampler
+ * Sampling utilities.
+ */
 namespace sampler {
 
 /**

@@ -463,7 +463,7 @@ bool Graph::setNodeAttribute(const char *nodeName, const char *attributeName, co
     }
     try
     {
-        nodePtr->setAttribute(attributeName, value);
+        nodePtr->setAttributeValue(attributeName, value);
         return true;
     }
     catch (const BadIndexException &e)

@@ -49,7 +49,7 @@ class LineNode : public Node
         Timer rate_timer_;
         std::vector<Target> targets_;
         Timer timer_;
-        virtual void onNodeAttibuteChanged(const char *name, const Message &value);
+        virtual bool onNodeAttributeChanged(const char *name, const Message &value);
         void computeTargets(const Message &message);
         static const char * const OUTLET_RAMP;
         static const char * const INLET_TARGETS;

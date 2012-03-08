@@ -1,0 +1,3 @@
+#!/bin/sh
+./tempi-midi-looper -i 1 -v
+

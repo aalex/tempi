@@ -40,6 +40,8 @@ const char * const Node::INLET_CREATED_SIGNAL = "__create_inlet__";
 const char * const Node::INLET_DELETED_SIGNAL = "__delete_inlet__";
 const char * const Node::OUTLET_CREATED_SIGNAL = "__create_outlet__";
 const char * const Node::OUTLET_DELETED_SIGNAL = "__delete_outlet__";
+const char * const Node::INLET_CALL = "__call__";
+const char * const Node::OUTLET_RETURN = "__return__";
 
 Node::Node()
 {
@@ -55,6 +57,8 @@ Node::Node()
         "Triggered when an inlet is created. Arguments are: the name of this node, the name of the inlet.", "TODO", "ss")));
     addInlet(ATTRIBUTES_INLET, "Set attribute value with (s:\"set\", s:<name>, ...) and list them via the __attr__ outlet with the (s:\"list\") message. Get attribute value with (s:\"get\", s:<name>)"); // all nodes have at least one inlet for attributes
     addOutlet(ATTRIBUTES_OUTLET, "Outputs value of each attribute, prefixed by their respective name, and also the list of all attributes name, prefixed with s:\"__list__\"."); // all nodes have at least one outlet for attributes
+    addOutlet(OUTLET_RETURN, "Outputs return value for every method called, prefixed by the name of the method called.");
+    addInlet(INLET_CALL, "Inlet to call methods of this node. Their return value should be output by the __return__ outlet, prefixed by the name of the method called.");
 }
 
 bool Node::isInitiated() const
@@ -153,7 +157,8 @@ void Node::onInletTriggered(Inlet *inlet, const Message &message)
                         message << " in inlet " << ATTRIBUTES_INLET;
                     Logger::log(ERROR, os);
                 }
-            } // get
+            } // end get
+            // set:
             else if (message.getString(0) == ATTRIBUTES_SET_METHOD_SELECTOR)
             {
                 if ((message.getSize() >= 3) &&
@@ -167,7 +172,7 @@ void Node::onInletTriggered(Inlet *inlet, const Message &message)
                         std::string attr_name = message.getString(1);
                         if (this->getAttribute(attr_name.c_str())->getMutable())
                         {
-                            setAttribute(attr_name.c_str(), attribute);
+                            setAttributeValue(attr_name.c_str(), attribute);
                             return;
                         }
                         else
@@ -204,7 +209,7 @@ void Node::onInletTriggered(Inlet *inlet, const Message &message)
                     Logger::log(ERROR, os);
                     return;
                 }
-            } // set
+            } // end set
             // ---------- list:
             else if (message.getString(0) == ATTRIBUTES_LIST_METHOD_SELECTOR)
             {
@@ -216,7 +221,7 @@ void Node::onInletTriggered(Inlet *inlet, const Message &message)
                     attributes_message.appendString((*iter).c_str());
                 }
                 this->output(ATTRIBUTES_OUTLET, attributes_message);
-            } // list
+            } // end list
             else
             {
                 std::ostringstream os;
@@ -232,6 +237,19 @@ void Node::onInletTriggered(Inlet *inlet, const Message &message)
         }
         return;
     } // ATTRIBUTES_INLET
+    // CALL INLET:
+    else if (inlet->getName() == INLET_CALL)
+    {
+        if (message.indexMatchesType(0, STRING))
+        {
+            if (this->hasMethod(message.getString(0).c_str()))
+            {
+                this->getMethod(message.getString(0).c_str())->
+                    trigger(message.cloneRange(1, message.getSize()));
+                return;
+            }
+        }
+    }
     processMessage(inlet->getName().c_str(), message);
 }
 

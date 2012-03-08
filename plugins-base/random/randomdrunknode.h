@@ -49,7 +49,7 @@ class RandomDrunkNode : public Node
             this->addAttribute(Attribute::ptr(new Attribute("step", Message("ii", 0, 1), "Minimum size of the steps")));
         }
     protected:
-        virtual void onNodeAttibuteChanged(const char *name, const Message &value)
+        virtual bool onNodeAttributeChanged(const char *name, const Message &value)
         {
             {
                 std::ostringstream os;
@@ -60,26 +60,26 @@ class RandomDrunkNode : public Node
             {
                 if (! drunk_.setCurrent(value.getInt(0)))
                 {
-                    //setAttributeValue("current", Message("i", drunk_.getCurrent()));
                     Logger::log(WARNING, "[random.drunk]: Failed to set current");
+                    return false;
                 }
             }
             else if (utils::stringsMatch(name, "range"))
             {
                 if (! drunk_.setRange(value.getInt(0), value.getInt(1)))
                 {
-                    //setAttributeValue("range", Message("ii", drunk_.getRangeFrom(), drunk_.getRangeTo()));
                     Logger::log(WARNING, "[random.drunk]: Failed to set range");
+                    return false;
                 }
             }
             else if (utils::stringsMatch(name, "step"))
             {
                 if (! drunk_.setStepRange(value.getInt(0), value.getInt(1)))
                 {
-                    //setAttributeValue("step", Message("ii", drunk_.getStepRangeMin(), drunk_.getStepRangeMax()));
                     Logger::log(WARNING, "[random.drunk]: Failed to set step");
                 }
             }
+            return true;
         }
     private:
         DrunkInt drunk_;

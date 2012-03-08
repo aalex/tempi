@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
 namespace po = boost::program_options;
 
 // String constants:
-static const char *PROGRAM_NAME = "midilooper";
+static const char *PROGRAM_NAME = "tempi-midi-looper";
 
 // Color constants:
 static ClutterColor black = { 0x00, 0x00, 0x00, 0xff };

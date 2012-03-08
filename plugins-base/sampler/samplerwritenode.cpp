@@ -45,7 +45,7 @@ SamplerWriteNode::SamplerWriteNode() :
     addInlet(INLET_WRITE, "Messages to write.");
 }
 
-void SamplerWriteNode::onNodeAttibuteChanged(const char *name, const Message &value)
+bool SamplerWriteNode::onNodeAttributeChanged(const char *name, const Message &value)
 {
     const static std::string writing(ATTR_WRITING);
     const static std::string region(ATTR_REGION);
@@ -54,6 +54,7 @@ void SamplerWriteNode::onNodeAttibuteChanged(const char *name, const Message &va
         record(value.getBoolean(0));
     if (region == name)
         setRegion(value.getString(0));
+    return true;
 }
 
 void SamplerWriteNode::record(bool enabled)

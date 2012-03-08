@@ -49,7 +49,7 @@ class RandomIntNode : public Node
             this->addAttribute(Attribute::ptr(new Attribute("range", Message("ii", 0, 1), "Bounds of the range of output numbers.")));
         }
     protected:
-        virtual void onNodeAttibuteChanged(const char *name, const Message &value)
+        virtual bool onNodeAttributeChanged(const char *name, const Message &value)
         {
             {
                 std::ostringstream os;
@@ -60,10 +60,11 @@ class RandomIntNode : public Node
             {
                 if (! drunk_.setRange(value.getInt(0), value.getInt(1)))
                 {
-                    //setAttributeValue("range", Message("ii", drunk_.getRangeFrom(), drunk_.getRangeTo()));
                     Logger::log(WARNING, "[random.drunk]: Failed to set range");
+                    return false;
                 }
             }
+            return true;
         }
     private:
         DrunkInt drunk_;

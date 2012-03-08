@@ -59,6 +59,11 @@ class Entity : public Documented
         NodeSignal* getSignal(const char *name) const
             throw(BadIndexException);
         /**
+         * Retrieves a Method.
+         */
+        NodeSignal* getMethod(const char *name) const
+            throw(BadIndexException);
+        /**
          * Retrieves an Attribute.
          */
         Attribute* getAttribute(const char *name) const
@@ -88,6 +93,11 @@ class Entity : public Documented
          * Note that some signals can appear/disappear at run time.
          */
         std::vector<std::string> listSignals() const;
+        /**
+         * Return the list of all the methods names for this Entity.
+         * Note that some methods can appear/disappear at run time.
+         */
+        std::vector<std::string> listMethods() const;
 
         /**
          * Returns the value of a given named attribute of this Entity.
@@ -102,24 +112,23 @@ class Entity : public Documented
             throw(BadIndexException);
         /**
          * Checks if this Entity has a given signal.
-         * @return True if this Entity has such an signal.
+         * @return True if this Entity has such a signal.
          */
         bool hasSignal(const char *signal_name) const
+            throw(BadIndexException);
+        /**
+         * Checks if this Entity has a given method.
+         * @return True if this Entity has such a method.
+         */
+        bool hasMethod(const char *method_name) const
             throw(BadIndexException);
         /**
          * Sets a attribute value.
          * You can also do this by sending a message in the form s:"set" s:name ...
          * WARNING: if the value has not changed, it won't call onAttributeChanged.
-         * TODO: rename to setAttributeValue and delete this one.
          */
-        void setAttribute(const char *name, const Message &value)
-            throw(BadIndexException, BadAtomTypeException);
-
         void setAttributeValue(const char *name, const Message &value)
-            throw(BadIndexException, BadAtomTypeException)
-        {
-            setAttribute(name, value);
-        }
+            throw(BadIndexException, BadAtomTypeException);
 //     protected:
         /**
          * Adds an attribute to this Entity.
@@ -131,9 +140,15 @@ class Entity : public Documented
          */
         void addSignal(NodeSignal::ptr signal)
             throw(BadIndexException);
+        /**
+         * Adds a method to this Entity.
+         */
+        void addMethod(NodeSignal::ptr method)
+            throw(BadIndexException);
     private:
         NamedObjectMap<Attribute> attributes_;
         NamedObjectMap<NodeSignal> signals_;
+        NamedObjectMap<NodeSignal> methods_;
 };
 
 } // end of namespace

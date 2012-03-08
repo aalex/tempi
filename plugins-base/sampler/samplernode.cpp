@@ -44,7 +44,7 @@ SamplerNode::SamplerNode() :
     addOutlet("0", "Played back messages.");
 }
 
-void SamplerNode::onNodeAttibuteChanged(const char *name, const Message &value)
+bool SamplerNode::onNodeAttributeChanged(const char *name, const Message &value)
 {
     const static std::string playing("playing");
     const static std::string recording("recording");
@@ -55,6 +55,7 @@ void SamplerNode::onNodeAttibuteChanged(const char *name, const Message &value)
         play(value.getBoolean(0));
     else if (recording == name)
         record(value.getBoolean(0));
+    return true;
 }
 
 void SamplerNode::play(bool enabled)

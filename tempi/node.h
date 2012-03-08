@@ -62,6 +62,9 @@ class Node : public Entity
         static const char * const INLET_DELETED_SIGNAL;
         static const char * const OUTLET_CREATED_SIGNAL;
         static const char * const OUTLET_DELETED_SIGNAL;
+        static const char * const OUTLET_RETURN;
+        static const char * const INLET_CALL;
+
         typedef std::tr1::shared_ptr<Node> ptr;
         Node();
         virtual ~Node() {}

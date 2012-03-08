@@ -62,6 +62,7 @@ Here is how to build and install it on Debian GNU/Linux or Ubuntu::
   $ ./configure
   $ make
   $ sudo make install
+  $ sudo ldconfig
 
 
 More about dataflow programming
@@ -76,4 +77,31 @@ Tempi is a new dataflow programming environment inspired by Miller Puckette's Pu
 * The file format is XML, which allows comments and an arbitrary order in the tags. It is easy to understand by a human.
 * Tempi (will soon) provide system-wide configuration files (for default paths for libraries) as well as per-user configuration files.
 * Being a C++ library, Tempi is easy to embed in programs written in C++, or via some of its language bindings.
+
+
+How to use it
+-------------
+
+For now, there is no graphical user interface to write your graphs. Use a text editor to edit XML files readable by Tempi. Some examples files are in the "examples" directory in Tempi's source code repository. (check out the "develop" branch if you want the bleeding edge latest version of the source code) To know which node types are available and what are their attributes, methods, inlets and outlets, use tempi-inspect. The tempi-inspect utility is located in the src/tempi-inspect directory. Once it is installed in your system, it should be available system-wide. To run your graph, use tempi-launch. (located in src/tempi-launch)
+
+Nodes' attributes can be set via each node's "__attr__" inlet. When they are changed, their new value is output via the "__attr__" outlet, prefixed by the name of the attribute. Nodes' methods can be called via the "__call__" inlet. Their return value is output via the "__return__" outlet, prefixed by the name of the method.
+
+
+Documentation
+-------------
+
+To build the web documentation, run the bash script ./utils/gen-web-pages.sh
+
+To build the Doxygen-generated C++ documentation, run `make html`.
+
+
+Utilities
+---------
+
+* tempi-draw: Simple example on how one can use samplers in Tempi.
+* tempi-launch: Launches XML Tempi graphs and run them.
+* tempi-inspect: Prints information about Tempi nodes, formatted in ReStructuredText.
+* tempi-osc-looper: Loops OSC messages.
+* tempi-midi-looper: Loops MIDI events.
+* tempi-osc-forward: Forwards OSC messages.
 

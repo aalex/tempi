@@ -29,6 +29,10 @@
 #include "tempi/message.h"
 
 namespace tempi {
+/**
+ * @namespace tempi::dict
+ * Dictionnaries which are key-value pairs.
+ */
 namespace dict {
 
 /**

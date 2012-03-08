@@ -51,9 +51,10 @@ void PrintNode::processMessage(const char *inlet, const Message &message)
     }
 }
 
-void PrintNode::onNodeAttibuteChanged(const char *name, const Message &value)
+bool PrintNode::onNodeAttributeChanged(const char *name, const Message &value)
 {
     // pass
+    return true;
 }
 
 } // end of namespace

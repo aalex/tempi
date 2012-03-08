@@ -81,7 +81,7 @@ class NearestNoteNode : public Node
             this->addAttribute(Attribute::ptr(new Attribute("scale", Message("fffff", 0.0f, 2.0f, 4.0f, 7.0f, 9.0f), "Musical scale to pick the note from, in any octava. Default is a pentatonic major scale in C.", false)));
         }
     protected:
-        virtual void onNodeAttibuteChanged(const char *name, const Message &value)
+        virtual bool onNodeAttributeChanged(const char *name, const Message &value)
         {
             {
                 std::ostringstream os;
@@ -106,10 +106,17 @@ class NearestNoteNode : public Node
                 }
                 if (to_be_corrected)
                 {
-                    Logger::log(DEBUG, "NearestNoteNode: calling setAttributeValue within onNodeAttibuteChanged might cause infinite recursion.");
+                    Logger::log(DEBUG, "NearestNoteNode: calling setAttributeValue within onNodeAttributeChanged might cause infinite recursion.");
                     setAttributeValue("scale", corrected);
+                    return false; // XXX very important since we just called setAttributeValue
                 }
-            }
+                else
+                {
+                    return true;
+                }
+            } // end scale
+            else
+                return true;
         }
     private:
         virtual void processMessage(const char *inlet, const Message &message)

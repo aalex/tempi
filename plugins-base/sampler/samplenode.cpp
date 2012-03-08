@@ -39,7 +39,7 @@ SamplerSampleNode::SamplerSampleNode() :
     addAttribute(Attribute::ptr(new Attribute(ATTR_NAME, Message("s", ""), "Name of the region to create. An empty string means it is invalid.")));
 }
 
-void SamplerSampleNode::onNodeAttibuteChanged(const char *name, const Message &value)
+bool SamplerSampleNode::onNodeAttributeChanged(const char *name, const Message &value)
 {
     const static std::string region(ATTR_NAME);
     if (region == name)
@@ -49,19 +49,19 @@ void SamplerSampleNode::onNodeAttibuteChanged(const char *name, const Message &v
             std::ostringstream os;
             os << "FIXME: attributes are set twice.";
             Logger::log(INFO, os.str().c_str());
-            return;
+            return false;
         }
         bool ok = setRegionName(value.getString(0));
-        if (! ok)
+        if (ok)
         {
-            std::ostringstream os;
-            os << "SamplerSampleNode." << __FUNCTION__ << ": " <<
-                "Could not set region name to " << name << ". Will fallback to an empty string.";
-            Logger::log(ERROR, os.str().c_str());
-            this->setAttributeValue(ATTR_NAME, Message("s", ""));
-            previous_region_name_ = "";
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
+    return true;
 }
 
 bool SamplerSampleNode::setRegionName(const std::string &name)
@@ -81,7 +81,7 @@ bool SamplerSampleNode::setRegionName(const std::string &name)
     if (scheduler->hasRegion(name.c_str()))
     {
         std::ostringstream os;
-        os << "SamplerSampleNode.setRegionName: Already has region: " << name;
+        os << "SamplerSampleNode.setRegionName: Scheduler does not have region \"" << name << "\"";
         Logger::log(ERROR, os.str().c_str());
         return false;
     }

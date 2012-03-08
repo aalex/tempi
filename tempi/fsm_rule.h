@@ -28,11 +28,8 @@
 #include <string>
 #include <tr1/memory>
 
-namespace tempi
-{
-
-namespace fsm
-{
+namespace tempi {
+namespace fsm {
 
 /**
  * A Rule is used to configure how to switch between States in a StateMachine, upon Events occurrign.
@@ -55,7 +52,6 @@ class Rule
 };
 
 } // end of namespace
-
 } // end of namespace
 
 #endif // ifndef

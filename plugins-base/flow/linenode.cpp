@@ -112,12 +112,13 @@ void LineNode::computeTargets(const Message &message)
     }
 }
 
-void LineNode::onNodeAttibuteChanged(const char *name, const Message &value)
+bool LineNode::onNodeAttributeChanged(const char *name, const Message &value)
 {
     if (utils::stringsMatch(ATTR_RATE, name))
     {
         // not needed here: rate_timer_.reset();
     }
+    return true;
 }
 
 TimePosition floatToTimePosition(float f)

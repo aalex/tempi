@@ -34,6 +34,10 @@
 #include "tempi/sharedptr.h"
 
 namespace tempi {
+/**
+ * @namespace tempi::osc
+ * OpenSoundControl utilities.
+ */
 namespace osc {
 
 /**

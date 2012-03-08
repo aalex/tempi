@@ -1,7 +1,7 @@
 man_MANS = \
 	tempi-draw.1 \
-	osc-forward.1 \
-	midilooper.1 \
+	tempi-osc-forward.1 \
+	tempi-midi-looper.1 \
 	tempi-launch.1 \
 	tempi-osc-looper.1 \
 	tempi-inspect.1
@@ -23,11 +23,11 @@ common_mandeps = $(top_srcdir)/configure.ac
 # binary when any source file changes, only the main one.
 # Use -o so that the `missing' program can infer the output file.
 
-midilooper.1: $(top_srcdir)/src/midilooper/main.cpp $(common_mandeps) $(top_srcdir)/man/man-midilooper.txt
-	$(HELP2MAN) --include=man-midilooper.txt --name="midilooper" --no-info $(top_builddir)/src/midilooper/midilooper -o $@
+tempi-midi-looper.1: $(top_srcdir)/src/tempi-midi-looper/main.cpp $(common_mandeps) $(top_srcdir)/man/man-tempi-midi-looper.txt
+	$(HELP2MAN) --include=man-tempi-midi-looper.txt --name="tempi-midi-looper" --no-info $(top_builddir)/src/tempi-midi-looper/tempi-midi-looper -o $@
 
-osc-forward.1: $(top_srcdir)/src/osc-forward/main.cpp $(common_mandeps) $(top_srcdir)/man/man-osc-forward.txt
-	$(HELP2MAN) --include=man-osc-forward.txt --name="osc-forward" --no-info $(top_builddir)/src/osc-forward/osc-forward -o $@
+tempi-osc-forward.1: $(top_srcdir)/src/tempi-osc-forward/main.cpp $(common_mandeps) $(top_srcdir)/man/man-tempi-osc-forward.txt
+	$(HELP2MAN) --include=man-tempi-osc-forward.txt --name="tempi-osc-forward" --no-info $(top_builddir)/src/tempi-osc-forward/tempi-osc-forward -o $@
 
 tempi-draw.1: $(top_srcdir)/src/tempi-draw/main.cpp $(common_mandeps) $(top_srcdir)/man/man-tempi-draw.txt
 	$(HELP2MAN) --include=man-tempi-draw.txt --name="tempi-draw" --no-info $(top_builddir)/src/tempi-draw/tempi-draw -o $@

@@ -36,10 +36,10 @@ OscReceiverNode::OscReceiverNode() :
     Message port = Message("i", 0);
     addAttribute(Attribute::ptr(new Attribute("port", port, "Receive OSC messages on this port number.")));
     addAttribute(Attribute::ptr(new Attribute("listening", Message("b", false), "Internal status of the object.")));
-    this->getAttribute("listening")->setMutable(false);
+    this->getAttribute("listening")->setMutable(false); // Cannot be changed via messages to the __attr__ inlet
 }
 
-void OscReceiverNode::onNodeAttibuteChanged(const char *name, const Message &value)
+bool OscReceiverNode::onNodeAttributeChanged(const char *name, const Message &value)
 {
     {
         std::ostringstream os;
@@ -54,8 +54,7 @@ void OscReceiverNode::onNodeAttibuteChanged(const char *name, const Message &val
             std::ostringstream os;
             os << "OscReceiverNode::" << __FUNCTION__ << ": Negative port numbers are not supported: " << tmp;
             Logger::log(ERROR, os.str().c_str());
-            this->getAttribute("listening")->setValue(Message("b", false));
-            return;
+            return false;
         }
         unsigned int portNumber = (unsigned int) tmp;
         if (portNumber == port_number_)
@@ -63,20 +62,28 @@ void OscReceiverNode::onNodeAttibuteChanged(const char *name, const Message &val
             std::ostringstream os;
             os << "OscReceiver::" << __FUNCTION__ << " already listening on port " << portNumber;
             Logger::log(DEBUG, os.str().c_str());
-            return;
+            return false;
         }
         port_number_ = portNumber;
         {
             std::ostringstream os;
             os << "OscReceiver::" << __FUNCTION__ << " listen on port " << portNumber;
             Logger::log(INFO, os.str().c_str());
-            this->getAttribute("listening")->setValue(Message("b", true));
         }
         if (portNumber == 0)
+        {
             osc_receiver_.reset((osc::OscReceiver *) 0);
+            this->getAttribute("listening")->setValue(Message("b", false));
+        }
         else
+        {
             osc_receiver_.reset(new osc::OscReceiver(portNumber));
+            this->getAttribute("listening")->setValue(Message("b", true));
+        }
+        return true;
     }
+    else
+        return true;
 }
 
 void OscReceiverNode::doTick()
