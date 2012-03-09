@@ -1,8 +1,23 @@
 To do in Tempi
 ==============
 
+TODO ASAP
+---------
+* [flow.pack]
+* [flow.unpack]
+* [flow.line]
+* [flow.trigger]
+* [flow.map]
+* [3d.speed]
+* [3d.orientation]
+* [3d.smooth]
+* [midi.eventtype]
+* [midi.setchannel]
+
 To do for 0.2
 -------------
+* [3d.line]
+* Scheduler: contain Tables
 * Rename [counter,metro,dict] to have [utils.] prefix
 * Inlet/Outlet must be a child of Pad. give pads some signals
 * Abstraction: share the same scheduler. (use a NameGenerator to manage their names)
@@ -17,7 +32,6 @@ To do for 0.2
 * rename all tools so that their name start with tempi-*
 * abstractions: support a list of paths to be looked for files.
 * abstractions: reuse same scheduler for abstractions than their parent so that everything is "global"
-* FIXME: midi.send channel number should be easy to use. (must be added to event type)
 * FIXME: When we create a second Scheduler, the Loader refuses to load again base lib
 * FIXME: OscReceiver segfaults if port is busy
 * FIXME: Serializer::load sets node attributes twice?
@@ -31,16 +45,12 @@ To do for 0.2
 * Rename Filter to AbstractFilterNode.
 * AbstractFilterNode.filter should return a const&
 * Fix segfault in, or disable, [clutter.stage]
-* [flow.line]
 * [flow.receive]
 * [flow.send]
 * [flow.timer]
-* [flow.delta]
 * [flow.smooth]
-* [flow.map]
 * ? rename connection to connect in XML schema
 * Scheduler: contain BehaviourTrees
-* Scheduler: contain Tables
 * FIXME: split utils.h so that compilation gets faster
 * FIXME: clutter.stage segfaults
 
@@ -74,7 +84,6 @@ To do for 0.4
 * tempi::LIST
 * [mapping.*] should be provided a typetag argument. (and support types fdi)
 * [mapping.curve]
-* [base.trigger]
 * [base.typematches]
 * [script.python]
 * [math.clip]
