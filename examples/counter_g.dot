@@ -1,0 +1,16 @@
+# an example of a tempi graph  
+# dot -Kdot -Tpng counter_g.dot -o counter_graph.png
+  digraph G {
+          size = "6,6"
+          fontsize = 12
+          rankdir = "LR"
+          node [shape=record,width=0.5,style=filled,color=black,fillcolor=lightblue3]; 
+          metro0 [label="<f0> base.metro|<f1> interval: 100|<f2> running: t", shape=record]
+          counter0 [label="<f0>base.counter|<f1>increment: 1"]
+          print0 [label="<f0> prefix: count| <f0> enabled: t"]
+          metro0:f0 -> counter0:f0 [color=darkgreen]
+          counter0:f0 -> print0:f0 [color=darkgreen]
+          label="Counter in Tempi"
+  }
+
+
