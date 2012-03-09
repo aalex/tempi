@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tempi version="0.1.9">
+  <graph>
+    <node id="oscreceive0" class="osc.receive">
+      <attribute name="port">
+	<i>7110</i>
+      </attribute>
+    </node>
+    <node id="route_kinect" class="osc.route">
+      <attribute name="paths">
+	<s>/user</s>
+      </attribute>
+    </node>
+    <node id="route_users" class="osc.route">
+      <attribute name="paths">
+	<s>/1</s>
+	<s>/2</s>
+	<s>/3</s>
+	<s>/4</s>
+      </attribute>
+    </node>
+    <node id="route_joints" class="osc.route">
+      <attribute name="paths">
+	<s>/joint</s>
+      </attribute>
+    </node>
+    <node id="print_user1" class="base.print">
+      <attribute name="prefix">
+        <s>kinect user 1 joints: </s>
+      </attribute>
+    </node>
+    <connection from="oscreceive0" outlet="incoming" to="route_kinect" inlet="incoming" />
+    <connection from="route_kinect" outlet="/user" to="route_users" inlet="incoming" />
+    <connection from="route_users" outlet="/1" to="route_joints" inlet="incoming" />
+    <connection from="route_joints" outlet="/joint" to="print_user1" inlet="0" />
+  </graph>
+</tempi>
