@@ -56,6 +56,7 @@ class Scheduler
     public:
         typedef std::tr1::shared_ptr<Scheduler> ptr;
         Scheduler();
+        virtual ~Scheduler() {}
         /**
          * Returns if the scheduler is running or not.
          */

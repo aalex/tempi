@@ -16,7 +16,8 @@ check_PROGRAMS = \
     check_table \
     check_timer \
     check_track \
-    check_version
+    check_version \
+    check_wrapper
 
 TESTS = $(check_PROGRAMS)
 
@@ -33,4 +34,5 @@ check_table_SOURCES = check_table.cpp
 check_timer_SOURCES = check_timer.cpp
 check_track_SOURCES = check_track.cpp
 check_version_SOURCES = check_version.cpp
+check_wrapper_SOURCES = check_wrapper.cpp
 

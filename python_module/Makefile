@@ -1,11 +1,10 @@
 #!/bin/bash
 CFLAGS = `python-config --cflags` `pkg-config --cflags tempi-0.1` -I.. -enable-lib64 -fPIC -Wall
-LIBS = `python-config --libs` `pkg-config --libs tempi-0.1` --enable-lib64 -fPIC -shared --start-group -lutil -lpthread --end-group
 
 ifeq ($(shell uname -s),Darwin)
-  LIBS := -lboost_python-mt -L/opt/local/lib
+  LIBS = `python-config --libs` `pkg-config --libs tempi-0.1` --enable-lib64 -fPIC -shared --start-group -lutil -lpthread --end-group -lboost_python-mt -L/opt/local/lib
 else
-  LIBS := -lboost_python-py26
+  LIBS = `python-config --libs` `pkg-config --libs tempi-0.1` --enable-lib64 -fPIC -shared --start-group -lutil -lpthread --end-group -lboost_python-py26
 endif
 
 all: tempi.so

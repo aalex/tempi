@@ -47,7 +47,6 @@ class Wrapper
          * @param synchronous If true, you must call tick() repeatedly so that the graphs do their thing, (30 Hz is fine) otherwise it is ticked in a separate thread and there is no need to tick it.
          */
         Wrapper(); //bool synchronous);
-        bool setSynchronous(bool synchronous);
         ~Wrapper();
         /**
          * Set log level.
@@ -139,8 +138,10 @@ class Wrapper
 
     private:
         bool synchronous_;
-        Scheduler::ptr scheduler_;
+        Scheduler *scheduler_;
         serializer::Serializer::ptr saver_;
+        // TODO
+        bool setSynchronous(bool synchronous);
 };
 
 } // end of namespace

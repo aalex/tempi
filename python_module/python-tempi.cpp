@@ -85,9 +85,9 @@ BOOST_PYTHON_MODULE(tempi)
         .def("messageInlet", &Wrapper::messageInlet)
         .def("saveGraph", &Wrapper::saveGraph)
         .def("setLogLevel", &Wrapper::setLogLevel)
-        .def("setSynchronous", &Wrapper::setSynchronous)
         .def("setNodeAttributeValue", &Wrapper::setNodeAttributeValue)
         .def("tick", &Wrapper::tick)
         ;
+        // .def("setSynchronous", &Wrapper::setSynchronous)
 }
 
