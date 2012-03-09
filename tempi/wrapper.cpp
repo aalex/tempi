@@ -556,5 +556,22 @@ bool Wrapper::saveGraph(const std::string &name, const std::string &fileName)
     return saver_->save(*(graph.get()), fileName.c_str());
 }
 
+std::vector<std::string> Wrapper::listNodes(const std::string &graph)
+{
+    tempi::ScopedLock::ptr lock = scheduler_->acquireLock();
+    try
+    {
+        return this->scheduler_->getGraph(graph.c_str())->getNodeNames();
+    }
+    catch (const BaseException &e)
+    {
+        std::ostringstream os;
+        os << "Wrapper." << __FUNCTION__ << ": " << e.what();
+        Logger::log(ERROR, os);
+        std::vector<std::string> ret;
+        return ret;
+    }
+}
+
 } // end of namespace
 
