@@ -8,11 +8,11 @@ def mess(*args):
     for arg in args:
         if type(arg) == int:
             ret.appendInt(arg)
-        if type(arg) == str:
+        elif type(arg) == str:
             ret.appendString(arg)
-        if type(arg) == float:
+        elif type(arg) == float:
             ret.appendFloat(arg)
-        if type(arg) == bool:
+        elif type(arg) == bool:
             ret.appendBoolean(arg)
         else:
             print("Unsupported atom type: %s" % (type(arg)))
