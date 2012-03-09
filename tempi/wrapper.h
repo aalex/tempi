@@ -47,7 +47,6 @@ class Wrapper
          * @param synchronous If true, you must call tick() repeatedly so that the graphs do their thing, (30 Hz is fine) otherwise it is ticked in a separate thread and there is no need to tick it.
          */
         Wrapper(); //bool synchronous);
-        bool setSynchronous(bool synchronous);
         ~Wrapper();
         /**
          * Set log level.
@@ -66,6 +65,7 @@ class Wrapper
          */
         bool tick();
 
+        // TODO: return vector<string>
         bool listGraphs(std::vector<std::string> &names) const;
         bool createGraph(const std::string &name);
         bool destroyGraph(const std::string &name);
@@ -83,6 +83,7 @@ class Wrapper
             const std::string &from, const std::string &outlet,
             const std::string &to, const std::string &inlet);
 
+        // TODO: return vector<string>
         bool listNodeTypes(std::vector<std::string> &names) const;
 
         bool setNodeAttributeValue(
@@ -91,41 +92,58 @@ class Wrapper
             const std::string &attribute,
             const Message &value);
 
+        // TODO: return vector<string>
         bool listNodeAttributes(
             const std::string &graph,
             const std::string &node,
             std::vector<std::string> &names) const;
+
+        // TODO: return vector<string>
         bool listNodeMethods(
             const std::string &graph,
             const std::string &node,
             std::vector<std::string> &names) const;
+
+        // TODO: return vector<string>
         bool listNodeInlets(
             const std::string &graph,
             const std::string &node,
             std::vector<std::string> &names) const;
+
+        // TODO: return vector<string>
         bool listNodeOutlets(
             const std::string &graph,
             const std::string &node,
             std::vector<std::string> &names) const;
+
+        // TODO: return string
         bool getNodeTypeName(
             const std::string &graph,
             const std::string &node,
             std::string &typeName) const;
+
+        // TODO: return Message
         bool getNodeAttributeValue(
             const std::string &graph,
             const std::string &node,
             const std::string &attribute,
             Message &value) const;
+
+        // TODO: return string
         bool getNodeAttributeDocumentation(
             const std::string &graph,
             const std::string &node,
             const std::string &attribute,
             std::string &value) const;
+
+        // TODO: return string
         bool getNodeInletDocumentation(
             const std::string &graph,
             const std::string &node,
             const std::string &inlet,
             std::string &value) const;
+
+        // TODO: return string
         bool getNodeOutletDocumentation(
             const std::string &graph,
             const std::string &node,
@@ -134,13 +152,18 @@ class Wrapper
 
         // TODO
         bool addLibraryPath(const std::string &path);
+
         // TODO
         bool loadLibrary(const std::string &name);
 
+        std::vector<std::string> listNodes(const std::string &graph);
+
     private:
         bool synchronous_;
-        Scheduler::ptr scheduler_;
+        Scheduler *scheduler_;
         serializer::Serializer::ptr saver_;
+        // TODO
+        bool setSynchronous(bool synchronous);
 };
 
 } // end of namespace

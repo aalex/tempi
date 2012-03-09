@@ -80,14 +80,15 @@ BOOST_PYTHON_MODULE(tempi)
         .def("listNodeMethods", &Wrapper::listNodeMethods)
         .def("listNodeOutlets", &Wrapper::listNodeOutlets)
         .def("listNodeTypes", &Wrapper::listNodeTypes)
+        .def("listNodes", &Wrapper::listNodes)
         .def("loadGraph", &Wrapper::loadGraph)
         .def("loadLibrary", &Wrapper::loadLibrary)
         .def("messageInlet", &Wrapper::messageInlet)
         .def("saveGraph", &Wrapper::saveGraph)
         .def("setLogLevel", &Wrapper::setLogLevel)
-        .def("setSynchronous", &Wrapper::setSynchronous)
         .def("setNodeAttributeValue", &Wrapper::setNodeAttributeValue)
         .def("tick", &Wrapper::tick)
         ;
+        // .def("setSynchronous", &Wrapper::setSynchronous)
 }
 

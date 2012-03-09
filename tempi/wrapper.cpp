@@ -32,30 +32,35 @@
 namespace tempi {
 
 // TODO: allow to set synchronous
-Wrapper::Wrapper() : // bool synchronous) :
-    synchronous_(true)
+Wrapper::Wrapper()
 {
+    synchronous_ = false;
+    // FIXME: setSynchronous must only be called once for now!!
     this->setSynchronous(synchronous_);
 }
 
 bool Wrapper::setSynchronous(bool synchronous)
 {
     synchronous_ = synchronous;
+    // FIXME
+    // if (scheduler_)
+    //    delete scheduler_;
     if (synchronous_)
     {
         std::ostringstream os;
         os << "Wrapper." << __FUNCTION__ << ": " <<
-            "Using SynchronousScheduler";
+            "Using SynchronousScheduler.";
         Logger::log(INFO, os);
-        scheduler_.reset(new SynchronousScheduler);
+        scheduler_ = new SynchronousScheduler;
     }
     else
     {
-        scheduler_.reset(new ThreadedScheduler);
-        ThreadedScheduler *threaded = dynamic_cast<ThreadedScheduler*>(scheduler_.get());
+        scheduler_ = new ThreadedScheduler;
+        ThreadedScheduler *threaded = dynamic_cast<ThreadedScheduler*>(scheduler_);
         threaded->start(5); // 5 ms
         std::ostringstream os;
         os << "Wrapper." << __FUNCTION__ << ": " <<
+            "Using ThreadedScheduler. ";
             "Starting ThreadedScheduler";
         Logger::log(INFO, os);
     }
@@ -65,13 +70,14 @@ Wrapper::~Wrapper()
 {
     if (! synchronous_)
     {
-        ThreadedScheduler *threaded = dynamic_cast<ThreadedScheduler*>(scheduler_.get());
+        ThreadedScheduler *threaded = dynamic_cast<ThreadedScheduler*>(scheduler_);
         std::ostringstream os;
         os << "Wrapper." << __FUNCTION__ <<
             "(): Waiting for Scheduler's thread to join.";
         Logger::log(DEBUG, os);
         threaded->stop();
     }
+    delete scheduler_;
 }
 
 bool Wrapper::setLogLevel(const std::string &level)
@@ -157,14 +163,14 @@ bool Wrapper::tick()
 {
     if (synchronous_)
     {
-        SynchronousScheduler *scheduler = dynamic_cast<SynchronousScheduler*>(scheduler_.get());
+        SynchronousScheduler *scheduler = dynamic_cast<SynchronousScheduler*>(scheduler_);
         scheduler->tick();
     }
     else
     {
         std::ostringstream os;
         os << "Wrapper" << __FUNCTION__ << ": " <<
-            "Do not call tick if using a synchronous is false. ";
+            "Do not call tick if using a synchronous is false.";
         tempi::Logger::log(ERROR, os);
         return false;
     }
@@ -548,6 +554,23 @@ bool Wrapper::saveGraph(const std::string &name, const std::string &fileName)
 
     // save graph
     return saver_->save(*(graph.get()), fileName.c_str());
+}
+
+std::vector<std::string> Wrapper::listNodes(const std::string &graph)
+{
+    tempi::ScopedLock::ptr lock = scheduler_->acquireLock();
+    try
+    {
+        return this->scheduler_->getGraph(graph.c_str())->getNodeNames();
+    }
+    catch (const BaseException &e)
+    {
+        std::ostringstream os;
+        os << "Wrapper." << __FUNCTION__ << ": " << e.what();
+        Logger::log(ERROR, os);
+        std::vector<std::string> ret;
+        return ret;
+    }
 }
 
 } // end of namespace

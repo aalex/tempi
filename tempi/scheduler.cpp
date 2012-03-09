@@ -32,6 +32,9 @@ namespace tempi {
 
 Scheduler::Scheduler()
 {
+    std::ostringstream os;
+    os << "Scheduler.Scheduler: Reset this NodeFactory and loadInternals...";
+    Logger::log(INFO, os);
     factory_.reset(new NodeFactory);
     // TODO: do not load internals by default?
     internals::loadInternals(*(factory_.get()));

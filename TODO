@@ -18,6 +18,7 @@ To do for 0.2
 * abstractions: support a list of paths to be looked for files.
 * abstractions: reuse same scheduler for abstractions than their parent so that everything is "global"
 * FIXME: midi.send channel number should be easy to use. (must be added to event type)
+* FIXME: When we create a second Scheduler, the Loader refuses to load again base lib
 * FIXME: OscReceiver segfaults if port is busy
 * FIXME: Serializer::load sets node attributes twice?
 * FIXME: fix path to libs
