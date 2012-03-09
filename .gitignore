@@ -114,6 +114,7 @@ tempi/tests/test
 !prototypes/matrix_type/Makefile
 !prototypes/mapofsharedobjects/Makefile
 !doc/html
+!python_module/Makefile
 
 # ------------------------- TODO
 # tests/check_fsm
