@@ -8,5 +8,5 @@ Description: Multimodal sampling library
 URL: @PACKAGE_URL@
 Version: @PACKAGE_VERSION@
 Requires.private:
-Libs: -L${libdir} -ltempi-@TEMPI_API_VERSION@ -ltempi-@TEMPI_API_VERSION@-plugins-base
+Libs: -L${libdir} -ltempi-@TEMPI_API_VERSION@
 Cflags: -I${includedir}/tempi-@TEMPI_API_VERSION@
