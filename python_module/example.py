@@ -6,7 +6,7 @@ Simple Tempi example
 import tempi
 import time
 
-VERBOSE = False
+VERBOSE = True
 
 def print_info(engine):
     # TODO: (not working yet)
