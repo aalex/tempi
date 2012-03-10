@@ -50,11 +50,6 @@ LineNode::LineNode() :
 
 void LineNode::computeTargets(const Message &message)
 {
-    {
-        Logger::Output os;
-        os << "[line]: " << __FUNCTION__ << ": " << message;
-        Logger::log(INFO, os);
-    }
     unsigned int size = message.getSize();
     for (unsigned int i = 0; i < size; ++i)
     {
@@ -85,7 +80,7 @@ void LineNode::computeTargets(const Message &message)
         {
             Logger::Output os;
             os << "[line]: Jump to target: " << value;
-            Logger::log(INFO, os);
+            Logger::log(DEBUG, os);
         }
         return;
     }
@@ -110,12 +105,12 @@ void LineNode::computeTargets(const Message &message)
                     Logger::log(ERROR, "line: wrong type for arg.");
                     return;
                 }
-                duration = floatToTimePosition(message.getFloat(i + 1));
+                float ms = message.getFloat(i + 1);
+                duration = floatToTimePosition(ms);
+                Logger::Output os;
+                os << "[line]: add target: " << target << " " << ms;
+                Logger::log(INFO, os);
             }
-            Logger::Output os;
-            os << "[line]: add target: " << target << " " << duration;
-            Logger::log(INFO, os);
-
             targets_.push_back(Target(target, duration));
         }
     }
@@ -166,7 +161,7 @@ bool LineNode::tryPopTarget(Target &result)
     {
         Logger::Output os;
         os << "[line]: target " << result.get<0>() << " " << result.get<1>();
-        Logger::log(DEBUG, os);
+        Logger::log(INFO, os);
     }
     true;
 }
@@ -187,7 +182,7 @@ bool LineNode::isTimeToOutput()
     {
         Logger::Output os;
         os << "[line]: time to output a new value since last rate: " << rate_timer_.elapsed();
-        Logger::log(INFO, os);
+        Logger::log(DEBUG, os);
     }
     rate_timer_.reset(); // very important!!
     return true;

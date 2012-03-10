@@ -9,7 +9,7 @@
     </node>
     <node id="line0" class="flow.line">
       <attribute name="rate">
-        <l>100</l>
+        <i>100</i>
       </attribute>
     </node>
     <node id="print_line" class="base.print">
