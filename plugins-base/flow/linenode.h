@@ -34,6 +34,28 @@ namespace tempi {
 namespace plugins_base {
 
 /**
+ * Generates a ramp.
+ */
+class Line
+{
+    public:
+        Line();
+        void start(float target, float duration_ms);
+        void jumpTo(float target);
+        float calculateCurrent();
+        bool isAlreadyArrived();
+        float getOrigin() const;
+        float getTarget() const;
+        float getDuration() const;
+    private:
+        float origin_;
+        float target_;
+        float position_;
+        TimePosition duration_;
+        Timer timer_;
+};
+
+/**
  * The LineNode generates ramps
  */
 class LineNode : public Node
@@ -44,17 +66,18 @@ class LineNode : public Node
         virtual void processMessage(const char *inlet, const Message &message);
         virtual void doTick();
     private:
+        Line line_;
         typedef boost::tuple<float, TimePosition> Target;
-        float origin_;
         Timer rate_timer_;
         std::vector<Target> targets_;
-        Timer timer_;
         virtual bool onNodeAttributeChanged(const char *name, const Message &value);
         void computeTargets(const Message &message);
         static const char * const OUTLET_RAMP;
         static const char * const INLET_TARGETS;
         static const char * const INLET_CLEAR;
         static const char * const ATTR_RATE;
+        bool isTimeToOutput();
+        bool tryPopTarget(Target &result);
 };
 
 } // end of namespace

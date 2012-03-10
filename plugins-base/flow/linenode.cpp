@@ -31,15 +31,15 @@ const char * const LineNode::INLET_TARGETS = "targets";
 const char * const LineNode::INLET_CLEAR = "clear";
 const char * const LineNode::ATTR_RATE = "rate";
 
-
 static TimePosition floatToTimePosition(float f);
+static float timePositionToFloat(TimePosition f);
 
 LineNode::LineNode() :
     Node()
 {
     setShortDocumentation("Generates ramps.");
     Message rate;
-    rate.appendLong(20);
+    rate.appendInt(20);
     addAttribute(Attribute::ptr(new Attribute(ATTR_RATE, rate, "Interval between each output in milliseconds.")));
     //addAttribute(Attribute::ptr(new Attribute("target", Message("f", 0.0f), "Target.")));
     //addAttribute(Attribute::ptr(new Attribute("time", Message("f", 0.0f), "Time before reaching target.")));
@@ -76,18 +76,17 @@ void LineNode::computeTargets(const Message &message)
 
     targets_.clear();
     rate_timer_.reset(); // very important!!
-    timer_.reset();
 
-    if (size == 1)
+    if (size == 1 && message.indexMatchesType(0, FLOAT))
     {
         float value = message.getFloat(0);
+        line_.jumpTo(value);
         this->output(OUTLET_RAMP, Message("f", value)); // Jump to target
         {
             Logger::Output os;
             os << "[line]: Jump to target: " << value;
             Logger::log(INFO, os);
         }
-        origin_ = value;
         return;
     }
 
@@ -96,11 +95,21 @@ void LineNode::computeTargets(const Message &message)
     {
         for (unsigned int i; i < size; i = i + 2)
         {
+            if (! message.indexMatchesType(i, FLOAT))
+            {
+                Logger::log(ERROR, "line: wrong type for arg.");
+                return;
+            }
             float target = message.getFloat(i);
             bool has_duration = (size > (i + 1));
             TimePosition duration = 0L;
             if (has_duration)
             {
+                if (! message.indexMatchesType(i + 1, FLOAT))
+                {
+                    Logger::log(ERROR, "line: wrong type for arg.");
+                    return;
+                }
                 duration = floatToTimePosition(message.getFloat(i + 1));
             }
             Logger::Output os;
@@ -126,6 +135,11 @@ TimePosition floatToTimePosition(float f)
     return timeposition::from_ms((unsigned long long) f);
 }
 
+float timePositionToFloat(TimePosition pos)
+{
+    return (float) timeposition::to_ms(pos);
+}
+
 void LineNode::processMessage(const char *inlet, const Message &message)
 {
     if (utils::stringsMatch(inlet, INLET_TARGETS))
@@ -138,27 +152,36 @@ void LineNode::processMessage(const char *inlet, const Message &message)
     }
 }
 
-void LineNode::doTick()
+bool LineNode::tryPopTarget(Target &result)
 {
-    using timeposition::from_ms;
-    using timeposition::to_ms;
-
     if (targets_.size() == 0)
     {
         Logger::Output os;
         os << "[line]: No more target.";
         Logger::log(DEBUG, os);
-        return;
+        return false;
     }
-    TimePosition rate = from_ms(
-        (unsigned long long) getAttributeValue(ATTR_RATE).getLong(0));
+    result = targets_[0];
+    targets_.erase(targets_.begin());
+    {
+        Logger::Output os;
+        os << "[line]: target " << result.get<0>() << " " << result.get<1>();
+        Logger::log(DEBUG, os);
+    }
+    true;
+}
+
+bool LineNode::isTimeToOutput()
+{
+    TimePosition rate = timeposition::from_ms(
+        (unsigned long long) getAttributeValue(ATTR_RATE).getInt(0));
 
     if (rate_timer_.elapsed() < rate)
     {
         Logger::Output os;
         os << "[line]: Not yet time to output a new value.";
-        Logger::log(INFO, os);
-        return;
+        Logger::log(DEBUG, os);
+        return false;
     }
     else
     {
@@ -167,38 +190,115 @@ void LineNode::doTick()
         Logger::log(INFO, os);
     }
     rate_timer_.reset(); // very important!!
-    TimePosition elapsed = timer_.elapsed();
-    TimePosition duration = targets_[0].get<1>();
-    float target = targets_[0].get<0>();
-    if (elapsed >= duration || duration == 0L)
+    return true;
+}
+
+void LineNode::doTick()
+{
+    if (! isTimeToOutput())
+        return;
+
+    bool output_something = false;
+    if (line_.isAlreadyArrived())
     {
+        Target target;
+        bool has_new_target = tryPopTarget(target);
+        if (has_new_target)
         {
-            Logger::Output os;
-            os << "[line]: Reached a new target! time=" <<
-                duration << " target=" << target;
-            Logger::log(INFO, os);
+            output_something = true;
         }
-        this->output(OUTLET_RAMP, Message("f", target));
-        targets_.erase(targets_.begin());
-        rate_timer_.reset(); // IMPORTANT
-        timer_.reset();
-        origin_ = target;
+        else
+            output_something = false;
     }
     else
     {
-        float current = utils::map_float(
-            (float) ((float) elapsed / (float) duration), // duration != 0L
-            0.0f, (float) duration,
-            origin_, target);
-        {
-            Logger::Output os;
-            os << "[line]: map " << ((float) elapsed / (float) duration) << 
-                "  from [0, " << (float) duration << "] to [" <<
-                origin_ << ", " << target << "] = " << current;
-            Logger::log(INFO, os);
-        }
+        output_something = true;
+    }
+
+    if (output_something)
+    {
+        float current = line_.calculateCurrent();
         this->output(OUTLET_RAMP, Message("f", current));
     }
+}
+
+Line::Line() :
+    origin_(0.0f),
+    target_(0.0f),
+    position_(0.0f),
+    duration_(0L)
+{
+    timer_.reset();
+}
+
+void Line::jumpTo(float target)
+{
+    origin_ = target;
+    target_ = target;
+    position_ = target;
+    duration_ = 0L;
+    timer_.reset();
+}
+
+float Line::getOrigin() const
+{
+    return origin_;
+}
+
+float Line::getTarget() const
+{
+    return target_;
+}
+
+float Line::getDuration() const
+{
+    return timePositionToFloat(duration_);
+}
+
+void Line::start(float target, float duration_ms)
+{
+    if (duration_ms == 0.0f)
+    {
+        jumpTo(target);
+        return;
+    }
+    origin_ = calculateCurrent(); // position_
+    target_ = target;
+    duration_ = floatToTimePosition(duration_ms);
+    timer_.reset();
+}
+
+float Line::calculateCurrent()
+{
+    if (this->isAlreadyArrived())
+        return target_;
+    TimePosition elapsed = timer_.elapsed();
+
+    if (duration_ == 0L)
+        return target_; // avoid division by zero
+    float progress = (float) elapsed / (float) duration_;
+    float current = utils::map_float(
+        progress,
+        0.0f, (float) duration_,
+        origin_, target_);
+    if (true)
+    {
+        Logger::Output os;
+        os << "Line: map " << progress <<
+            "  from [0, " << (float) duration_ << "] to [" <<
+            origin_ << ", " << target_ << "] = " << current;
+        Logger::log(INFO, os);
+    }
+    return current;
+}
+
+bool Line::isAlreadyArrived()
+{
+    if (timer_.elapsed() > duration_)
+        return true;
+    if (duration_ == 0L)
+        return true;
+    return false;
 }
 
 } // end of namespace
