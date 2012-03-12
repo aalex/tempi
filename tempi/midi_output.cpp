@@ -61,10 +61,10 @@ bool MidiOutput::sendMessage(const Message &message) const
         {
             AtomType type;
             message.getAtomType(i, type);
-            if (type == 'C')
+            if (type == UNSIGNED_CHAR)
                 event.push_back(message.getUnsignedChar(i));
         }
-        // TODO: build event
+
         try
         {
             midi_out_->sendMessage(&event);
