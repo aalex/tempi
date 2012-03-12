@@ -49,6 +49,7 @@ libtempi_plugins_base_la_SOURCES = \
 	abstraction/outletnode.cpp \
     baselibrary.cpp \
     clutter/clutterstagenode.cpp \
+    clutter/clutterhello.cpp \
     flow/anynode.cpp \
     flow/appsinknode.cpp \
     flow/counternode.cpp \
@@ -88,6 +89,7 @@ EXTRA_DIST = \
 	abstraction/outletnode.h \
     baselibrary.h \
     clutter/clutterstagenode.h \
+    clutter/clutterhello.h \
     flow/anynode.h \
     flow/appendnode.h \
     flow/appsinknode.h \

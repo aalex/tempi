@@ -36,6 +36,7 @@
 #include "plugins-base/spatosc/spatoscnode.h"
 #include "plugins-base/flow/spigotnode.h"
 #include "plugins-base/clutter/clutterstagenode.h"
+#include "plugins-base/clutter/clutterhello.h"
 #include "plugins-base/math/onefloatmathnode.h"
 #include "plugins-base/math/twofloatmathnode.h"
 #include "plugins-base/math/booleanoperatornode.h"
@@ -101,6 +102,7 @@ void BaseLibrary::load(NodeFactory &factory, const char *prefix) const
 
 #ifdef HAVE_CLUTTER
     factory.registerTypeT<TempiClutterStageNode>(concatenate("clutter.", "stage").c_str());
+    factory.registerTypeT<TempiClutterHelloNode>(concatenate("clutter.", "hello").c_str());
 #endif // HAVE_CLUTTER
 
 // TODO: #ifdef HAVE_STK
