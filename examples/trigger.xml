@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tempi version="0.1.9">
+  <graph>
+    <node id="loadmess0" class="base.loadmess">
+      <attribute name="value"><s>hello</s><i>2</i><f>3.14159</f></attribute>
+    </node>
+    <node id="trigger0" class="flow.trigger">
+      <attribute name="types"><s>baba</s></attribute>
+    </node>
+    <node id="print0" class="base.print">
+      <attribute name="prefix"><s>0th: </s></attribute>
+    </node>
+    <node id="print1" class="base.print">
+      <attribute name="prefix"><s>1th: </s></attribute>
+    </node>
+    <node id="print2" class="base.print">
+      <attribute name="prefix"><s>2th: </s></attribute>
+    </node>
+    <node id="print3" class="base.print">
+      <attribute name="prefix"><s>3rd </s></attribute>
+    </node>
+    <connection from="loadmess0" outlet="0" to="trigger0" inlet="input"/>
+    <connection from="trigger0" outlet="0" to="print0" inlet="0"/>
+    <connection from="trigger0" outlet="1" to="print1" inlet="0"/>
+    <connection from="trigger0" outlet="2" to="print2" inlet="0"/>
+    <connection from="trigger0" outlet="3" to="print3" inlet="0"/>
+  </graph>
+</tempi>
