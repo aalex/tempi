@@ -33,6 +33,7 @@
 #include "plugins-base/flow/prependnode.h"
 #include "plugins-base/flow/print_node.h"
 #include "plugins-base/flow/routenode.h"
+#include "plugins-base/flow/unpacknode.h"
 #include "plugins-base/spatosc/spatoscnode.h"
 #include "plugins-base/flow/spigotnode.h"
 #include "plugins-base/clutter/clutterstagenode.h"
@@ -80,6 +81,7 @@ void BaseLibrary::load(NodeFactory &factory, const char *prefix) const
     factory.registerTypeT<SpigotNode>(concatenate("base.", "spigot").c_str());
     factory.registerTypeT<PrependNode>(concatenate("base.", "prepend").c_str());
     factory.registerTypeT<RouteNode>(concatenate("base.", "route").c_str());
+    factory.registerTypeT<UnpackNode>(concatenate("flow.", "unpack").c_str());
     factory.registerTypeT<LineNode>(concatenate("flow.", "line").c_str());
     factory.registerTypeT<LoadMessNode>(concatenate("base.", "loadmess").c_str());
     factory.registerTypeT<CastNode>(concatenate("base.", "cast").c_str());
