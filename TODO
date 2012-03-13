@@ -13,18 +13,17 @@ TODO ASAP
 
 To do for 0.2
 -------------
-* Should we rename all object names with underscores?
 * Should all attributes and pad names use underscores?
 * Delete unused node types: [base.appsink]
 * Rename:
-  * sample.sampler -> sampler.simple
+  * sampler.sampler -> sampler.simple
   * midi.send -> midi.output
   * midi.receive -> midi.input
   * base.any -> flow.any
   * base.append -> flow.append
   * base.cast -> flow.cast
   * base.counter -> utils.counter
-  * base.delay -> flow.delay
+  * base.delay -> time.delay
   * base.dict -> utils.dict
   * base.loadmess -> flow.loadmess
   * base.metro -> time.metro
@@ -32,7 +31,7 @@ To do for 0.2
   * base.prepend -> flow.prepend
   * base.print -> utils.print
   * base.route -> flow.route
-  * base.spatosc -> osc.spatosc
+  * base.spatosc -> spatosc.send
   * base.spigot -> flow.spigot
 * implement message.appendMessage()
 * [3d.line]
@@ -43,7 +42,6 @@ To do for 0.2
 * Abstraction: support an arguments attribute. Read it from the abstraction via [abs.argument]
 * Abstraction: deg2rad should be one in /usr/share/tempi/math.deg2rad.xml
 * Abstraction: provide [abs.doc] and doc for inlets/outlets
-* Abstraction: [abs.uuid]
 * Scheduler should provide a map of config options. (messages) Default path for externals should be in /etc/tempi
 * send / receive! (provide "global" receive symbols as signals) /send <symbol> ...
 * on closed/killed signal (message sent)
