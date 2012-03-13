@@ -16,6 +16,7 @@ TODO ASAP
 
 To do for 0.2
 -------------
+* implement message.appendMessage()
 * [3d.line]
 * Scheduler: contain Tables
 * Rename [counter,metro,dict] to have [utils.] prefix

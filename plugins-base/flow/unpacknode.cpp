@@ -33,7 +33,7 @@ UnpackNode::UnpackNode() :
     Node(),
     current_number_of_outlets_(0)
 {
-    addAttribute(Attribute::ptr(new Attribute(TYPES_ATTR, Message(), "List of atom types. An outlet is created for each of these. Outlets are numbers from 0 to n-1", false)));
+    addAttribute(Attribute::ptr(new Attribute(TYPES_ATTR, Message("s", ""), "List of atom types. An outlet is created for each of these. Outlets are numbers from 0 to n-1")));
     Logger::log(DEBUG, "[unpack] constructor: types = (s:\"\")");
     addInlet(INPUT_INLET, "Incoming messages go here. Their type should match the expected type tags.");
     setShortDocumentation("Splits messages into atoms.");

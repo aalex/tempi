@@ -30,6 +30,7 @@
 #include "plugins-base/flow/loadmessnode.h"
 #include "plugins-base/flow/metro_node.h"
 #include "plugins-base/flow/nop_node.h"
+#include "plugins-base/flow/packnode.h"
 #include "plugins-base/flow/prependnode.h"
 #include "plugins-base/flow/print_node.h"
 #include "plugins-base/flow/routenode.h"
@@ -72,6 +73,7 @@ void BaseLibrary::load(NodeFactory &factory, const char *prefix) const
     factory.registerTypeT<PrintNode>(concatenate("base.", "print").c_str());
     factory.registerTypeT<AppendNode>(concatenate("base.", "append").c_str());
     factory.registerTypeT<NopNode>(concatenate("base.", "nop").c_str());
+    factory.registerTypeT<PackNode>(concatenate("flow.", "pack").c_str());
     factory.registerTypeT<MetroNode>(concatenate("base.", "metro").c_str());
     factory.registerTypeT<AnyNode>(concatenate("base.", "any").c_str());
     factory.registerTypeT<CounterNode>(concatenate("base.", "counter").c_str());
