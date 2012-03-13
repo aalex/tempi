@@ -110,8 +110,8 @@ void BaseLibrary::load(NodeFactory &factory, const char *prefix) const
 #endif // HAVE_CLUTTER
 
 // TODO: #ifdef HAVE_STK
-    factory.registerTypeT<MidiReceiverNode>(concatenate("midi.", "receive").c_str());
-    factory.registerTypeT<MidiSenderNode>(concatenate("midi.", "send").c_str());
+    factory.registerTypeT<MidiReceiverNode>(concatenate("midi.", "input").c_str());
+    factory.registerTypeT<MidiSenderNode>(concatenate("midi.", "output").c_str());
     factory.registerTypeT<MidiRouteNode>(concatenate("midi.", "route").c_str());
 // TODO: #endif // HAVE_STK
 

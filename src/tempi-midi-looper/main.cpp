@@ -283,9 +283,9 @@ bool App::setupGraph()
     if (verbose_)
         std::cout << "Add nodes\n";
     // Create objects:
-    graph->addNode("midi.receive", "midi.recv0");
+    graph->addNode("midi.input", "midi.recv0");
     graph->addNode("sampler.sampler", "sampler.sampler0");
-    graph->addNode("midi.send", "midi.send0");
+    graph->addNode("midi.output", "midi.send0");
     graph->addNode("base.print", "base.print0");
     graph->addNode("base.print", "base.print1");
 

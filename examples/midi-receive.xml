@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tempi version="0.1.9">
   <graph>
-    <node id="midireceive0" class="midi.receive">
+    <node id="midireceive0" class="midi.input">
       <attribute name="port">
         <i>0</i>
       </attribute>
