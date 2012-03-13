@@ -20,6 +20,7 @@
 
 #include "tempi/message.h"
 #include "tempi/exceptions.h"
+#include "tempi/log.h"
 #include <iostream>
 #include <sstream>
 #include <ostream>
@@ -555,7 +556,7 @@ bool Message::operator==(const Message &other) const
 std::ostream &operator<<(std::ostream &os, const Message &message)
 {
     os << "(";
-    for (unsigned int i = 0; i < message.getSize(); ++i)
+    for (int i = 0; i < (int) message.getSize(); ++i)
     {
         AtomType type;
         message.getAtomType(i, type);
@@ -599,20 +600,31 @@ std::ostream &operator<<(std::ostream &os, const Message &message)
 
 void Message::prependMessage(const Message &message)
 {
-    if (message.getSize() == 0L)
+    {
+        std::ostringstream os;
+        os << "Message." << __FUNCTION__ << ": " << message << " to " << (*this);
+        Logger::log(INFO, os);
+    }
+    if (message.getSize() == 0)
     {
         //std::cout << __FUNCTION__ << " empty message. nothing to append\n";
         return;
     }
-    for (unsigned int i = message.getSize() - 1; i >= 0; --i)
+    for (int i = (unsigned int) message.getSize() - 1; i >= 0; --i)
     {
         AtomType type;
         //std::cout << __FUNCTION__ << " " << i << std::endl;
         try
         {
-            message.getAtomType(i, type);
+            bool ok = message.getAtomType(i, type);
+            if (! ok)
+            {
+                std::cerr << "Error trying to access atom out of bound: " << i
+                    << " in " << message;
+                break;
+            }
         }
-        catch (const BadIndexException &e)
+        catch (const BadIndexException &e) // FIXME: getAtomType doesn't throw any exception!
         {
             std::cerr << __FUNCTION__ << " " << e.what() << std::endl;
             //throw (e);
@@ -650,7 +662,7 @@ void Message::prependMessage(const Message &message)
                 std::cerr << "Message::" << __FUNCTION__ << "(): Unknow type of atom: " << type << std::endl;
                 break;
         }
-        if (i == 0L)
+        if (i == 0)
             break; // FIXME
     }
 }

@@ -30,9 +30,12 @@
 #include "plugins-base/flow/loadmessnode.h"
 #include "plugins-base/flow/metro_node.h"
 #include "plugins-base/flow/nop_node.h"
+#include "plugins-base/flow/packnode.h"
 #include "plugins-base/flow/prependnode.h"
 #include "plugins-base/flow/print_node.h"
 #include "plugins-base/flow/routenode.h"
+#include "plugins-base/flow/triggernode.h"
+#include "plugins-base/flow/unpacknode.h"
 #include "plugins-base/spatosc/spatoscnode.h"
 #include "plugins-base/flow/spigotnode.h"
 #include "plugins-base/clutter/clutterstagenode.h"
@@ -72,6 +75,7 @@ void BaseLibrary::load(NodeFactory &factory, const char *prefix) const
     factory.registerTypeT<PrintNode>(concatenate("base.", "print").c_str());
     factory.registerTypeT<AppendNode>(concatenate("base.", "append").c_str());
     factory.registerTypeT<NopNode>(concatenate("base.", "nop").c_str());
+    factory.registerTypeT<PackNode>(concatenate("flow.", "pack").c_str());
     factory.registerTypeT<MetroNode>(concatenate("base.", "metro").c_str());
     factory.registerTypeT<AnyNode>(concatenate("base.", "any").c_str());
     factory.registerTypeT<CounterNode>(concatenate("base.", "counter").c_str());
@@ -81,6 +85,8 @@ void BaseLibrary::load(NodeFactory &factory, const char *prefix) const
     factory.registerTypeT<SpigotNode>(concatenate("base.", "spigot").c_str());
     factory.registerTypeT<PrependNode>(concatenate("base.", "prepend").c_str());
     factory.registerTypeT<RouteNode>(concatenate("base.", "route").c_str());
+    factory.registerTypeT<TriggerNode>(concatenate("flow.", "trigger").c_str());
+    factory.registerTypeT<UnpackNode>(concatenate("flow.", "unpack").c_str());
     factory.registerTypeT<LineNode>(concatenate("flow.", "line").c_str());
     factory.registerTypeT<LoadMessNode>(concatenate("base.", "loadmess").c_str());
     factory.registerTypeT<CastNode>(concatenate("base.", "cast").c_str());
@@ -106,8 +112,8 @@ void BaseLibrary::load(NodeFactory &factory, const char *prefix) const
 
 // TODO: #ifdef HAVE_STK
     factory.registerTypeT<NoteBuilderNode>(concatenate("midi.", "note").c_str());
-    factory.registerTypeT<MidiReceiverNode>(concatenate("midi.", "receive").c_str());
-    factory.registerTypeT<MidiSenderNode>(concatenate("midi.", "send").c_str());
+    factory.registerTypeT<MidiReceiverNode>(concatenate("midi.", "input").c_str());
+    factory.registerTypeT<MidiSenderNode>(concatenate("midi.", "output").c_str());
     factory.registerTypeT<MidiRouteNode>(concatenate("midi.", "route").c_str());
 // TODO: #endif // HAVE_STK
 

@@ -57,10 +57,13 @@ libtempi_plugins_base_la_SOURCES = \
     flow/loadmessnode.cpp \
     flow/metro_node.cpp \
     flow/nop_node.cpp \
+    flow/packnode.cpp \
     flow/prependnode.cpp \
     flow/print_node.cpp \
     flow/routenode.cpp \
     flow/spigotnode.cpp \
+    flow/triggernode.cpp \
+    flow/unpacknode.cpp \
     mapping/filter.cpp \
     mapping/slide.cpp \
     mapping/slidefilter.cpp \
@@ -101,10 +104,13 @@ EXTRA_DIST = \
     flow/loadmessnode.h \
     flow/metro_node.h \
     flow/nop_node.h \
+    flow/packnode.h \
     flow/prependnode.h \
     flow/print_node.h \
     flow/routenode.h \
     flow/spigotnode.h \
+    flow/triggernode.h \
+    flow/unpacknode.h \
     mapping/average.h \
     mapping/filter.h \
     mapping/slide.h \

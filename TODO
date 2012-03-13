@@ -3,10 +3,7 @@ To do in Tempi
 
 TODO ASAP
 ---------
-* [flow.pack]
-* [flow.unpack]
 * [flow.line]
-* [flow.trigger]
 * [flow.map]
 * [3d.speed]
 * [3d.orientation]
@@ -16,16 +13,36 @@ TODO ASAP
 
 To do for 0.2
 -------------
+* Should all attributes and pad names use underscores?
+* Delete unused node types: [base.appsink]
+* Rename:
+  * sampler.sampler -> sampler.simple
+  * midi.send -> midi.output
+  * midi.receive -> midi.input
+  * base.any -> flow.any
+  * base.append -> flow.append
+  * base.cast -> flow.cast
+  * base.counter -> utils.counter
+  * base.delay -> time.delay
+  * base.dict -> utils.dict
+  * base.loadmess -> flow.loadmess
+  * base.metro -> time.metro
+  * base.nop -> flow.nop
+  * base.prepend -> flow.prepend
+  * base.print -> utils.print
+  * base.route -> flow.route
+  * base.spatosc -> spatosc.send
+  * base.spigot -> flow.spigot
+* XML: rename "id" to "name"
+* implement message.appendMessage()
 * [3d.line]
 * Scheduler: contain Tables
-* Rename [counter,metro,dict] to have [utils.] prefix
 * Inlet/Outlet must be a child of Pad. give pads some signals
 * Abstraction: share the same scheduler. (use a NameGenerator to manage their names)
 * Abstraction: provide unique id, via a [abs.uuid]
-* Abstraction: support an arguments attribute. Read it from the abstraction via [abs.arguments]
+* Abstraction: support an arguments attribute. Read it from the abstraction via [abs.argument]
 * Abstraction: deg2rad should be one in /usr/share/tempi/math.deg2rad.xml
 * Abstraction: provide [abs.doc] and doc for inlets/outlets
-* Abstraction: [abs.uuid]
 * Scheduler should provide a map of config options. (messages) Default path for externals should be in /etc/tempi
 * send / receive! (provide "global" receive symbols as signals) /send <symbol> ...
 * on closed/killed signal (message sent)
@@ -47,7 +64,7 @@ To do for 0.2
 * Fix segfault in, or disable, [clutter.stage]
 * [flow.receive]
 * [flow.send]
-* [flow.timer]
+* [time.timer]
 * [flow.smooth]
 * ? rename connection to connect in XML schema
 * Scheduler: contain BehaviourTrees
