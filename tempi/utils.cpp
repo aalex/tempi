@@ -135,6 +135,10 @@ void appendArgumentFromString(Message &message, const char *atom_value, AtomType
                 message.appendInt(
                     boost::lexical_cast<int>(atom_value));
                 break;
+            case UNSIGNED_INT:
+                message.appendUnsignedInt(
+                    boost::lexical_cast<unsigned int>(atom_value));
+                break;
             case LONG:
                 message.appendLong(
                     boost::lexical_cast<unsigned long long>(atom_value));
@@ -203,6 +207,10 @@ std::string argumentToString(const Message &message, unsigned int index)
         case INT:
             return boost::lexical_cast<std::string>(
                 message.getInt(index));
+            break;
+        case UNSIGNED_INT:
+            return boost::lexical_cast<std::string>(
+                message.getUnsignedInt(index));
             break;
         case LONG:
             return boost::lexical_cast<std::string>(
