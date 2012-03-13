@@ -64,7 +64,7 @@
     <connection from="close0" outlet="0" to="prepend_channel" inlet="0"/>
     <connection from="prepend_channel" outlet="0" to="cast_CCC" inlet="0"/>
 
-    <node id="midi_out" class="midi.send">
+    <node id="midi_out" class="midi.output">
       <attribute name="port"><i>0</i></attribute>
     </node>
     <connection from="cast_CCC" outlet="0" to="midi_out" inlet="0"/>
