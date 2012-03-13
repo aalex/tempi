@@ -33,6 +33,7 @@ To do for 0.2
   * base.route -> flow.route
   * base.spatosc -> spatosc.send
   * base.spigot -> flow.spigot
+* XML: rename "id" to "name"
 * implement message.appendMessage()
 * [3d.line]
 * Scheduler: contain Tables
