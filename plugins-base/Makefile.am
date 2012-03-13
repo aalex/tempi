@@ -67,6 +67,8 @@ libtempi_plugins_base_la_SOURCES = \
     math/booleanoperatornode.cpp \
     math/onefloatmathnode.cpp \
     math/twofloatmathnode.cpp \
+    midi/abstractmidifilter.cpp \
+    midi/midibuildernodes.cpp \
     midi/midireceivernode.cpp \
     midi/midiroutenode.cpp \
     midi/midisendernode.cpp \
@@ -113,6 +115,8 @@ EXTRA_DIST = \
     music/musicnearestnode.h \
     music/monodicnode.h \
     midi/midireceivernode.h \
+    midi/abstractmidifilter.h \
+    midi/midibuildernodes.h \
     midi/midiroutenode.h \
     midi/midisendernode.h \
     midi/midiutilities.h \

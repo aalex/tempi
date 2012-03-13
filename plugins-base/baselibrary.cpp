@@ -39,6 +39,7 @@
 #include "plugins-base/math/onefloatmathnode.h"
 #include "plugins-base/math/twofloatmathnode.h"
 #include "plugins-base/math/booleanoperatornode.h"
+#include "plugins-base/midi/midibuildernodes.h"
 #include "plugins-base/midi/midireceivernode.h"
 #include "plugins-base/midi/midiroutenode.h"
 #include "plugins-base/midi/midisendernode.h"
@@ -104,6 +105,7 @@ void BaseLibrary::load(NodeFactory &factory, const char *prefix) const
 #endif // HAVE_CLUTTER
 
 // TODO: #ifdef HAVE_STK
+    factory.registerTypeT<NoteBuilderNode>(concatenate("midi.", "note").c_str());
     factory.registerTypeT<MidiReceiverNode>(concatenate("midi.", "receive").c_str());
     factory.registerTypeT<MidiSenderNode>(concatenate("midi.", "send").c_str());
     factory.registerTypeT<MidiRouteNode>(concatenate("midi.", "route").c_str());
