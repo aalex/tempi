@@ -61,6 +61,7 @@ libtempi_plugins_base_la_SOURCES = \
     flow/print_node.cpp \
     flow/routenode.cpp \
     flow/spigotnode.cpp \
+    flow/unpacknode.cpp \
     mapping/filter.cpp \
     mapping/slide.cpp \
     mapping/slidefilter.cpp \
@@ -103,6 +104,7 @@ EXTRA_DIST = \
     flow/print_node.h \
     flow/routenode.h \
     flow/spigotnode.h \
+    flow/unpacknode.h \
     mapping/average.h \
     mapping/filter.h \
     mapping/slide.h \
