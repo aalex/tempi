@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tempi version="0.1.9">
+  <graph>
+    <node id="loadmess0" class="base.loadmess">
+      <attribute name="value">
+	<f>67</f><f>100</f>
+</attribute>
+</node>
+    <node id="midinote0" class="midi.note">
+      <attribute name="channel">
+        <i>1</i>
+      </attribute>
+    </node>
+    <node id="print_midi" class="base.print">
+      <attribute name="prefix">
+        <s>MIDI: </s>
+      </attribute>
+    </node>
+    <connection from="loadmess0" outlet="0" to="midinote0" inlet="ints" />
+    <connection from="midinote0" outlet="midi_event" to="print_midi" inlet="0" />
+  </graph>
+</tempi>
