@@ -54,7 +54,6 @@ void AbstractMidiEventBuilderNode::processMessage(const char *inlet, const Messa
         std::ostringstream os;
         os << "AbstractMidiEventBuilderNode." << __FUNCTION__ << ": " << message;
         Logger::log(INFO, os);
-
     }
     if (! utils::stringsMatch(INTS_INLET, inlet))
         return;
