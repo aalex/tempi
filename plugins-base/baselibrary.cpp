@@ -57,6 +57,7 @@
 #include "plugins-base/sampler/samplenode.h"
 #include "plugins-base/sampler/samplerwritenode.h"
 #include "plugins-base/sampler/samplerreadnode.h"
+#include "plugins-base/string/stringcharactersnode.h"
 #include "plugins-base/string/stringjoinnode.h"
 #include "plugins-base/string/stringsplitnode.h"
 #include "plugins-base/random/randomdrunknode.h"
@@ -136,6 +137,7 @@ void BaseLibrary::load(NodeFactory &factory, const char *prefix) const
     factory.registerTypeT<SamplerReadNode>(concatenate("sampler.", "read").c_str());
     factory.registerTypeT<SamplerWriteNode>(concatenate("sampler.", "write").c_str());
 
+    factory.registerTypeT<StringCharactersNode>(concatenate("string.","characters").c_str());
     factory.registerTypeT<StringJoinNode>(concatenate("string.","join").c_str());
     factory.registerTypeT<StringSplitNode>(concatenate("string.","split").c_str());
 

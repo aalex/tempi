@@ -88,6 +88,7 @@ libtempi_plugins_base_la_SOURCES = \
     sampler/samplernode.cpp \
     sampler/samplerreadnode.cpp \
     sampler/samplerwritenode.cpp \
+    string/stringcharactersnode.cpp \
     string/stringjoinnode.cpp \
     string/stringsplitnode.cpp
 
@@ -143,6 +144,7 @@ EXTRA_DIST = \
     sampler/samplerreadnode.h \
     sampler/samplerwritenode.h \
     spatosc/spatoscnode.h \
+    string/stringcharactersnode.h \
     string/stringjoinnode.h \
     string/stringsplitnode.h
 
