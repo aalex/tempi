@@ -4,11 +4,11 @@
 *.la
 *.lo
 *.o
+*.patch
 *.pc
 *.so
 *.swp
 *~
-*.patch
 .deps/
 .dirstamp
 .libs/
@@ -69,12 +69,11 @@ prototypes/phoenix/findif
 prototypes/tuples
 prototypes/va_list/var_types
 prototypes/variant
-src/midilooper/midilooper
-src/midilooper/threadedscheduler
-src/osc-forward/osc-forward
 src/tempi-draw/tempi-draw
 src/tempi-inspect/tempi-inspect
 src/tempi-launch/tempi-launch
+src/tempi-midi-looper/tempi-midi-looper
+src/tempi-osc-forward/tempi-osc-forward
 src/tempi-osc-looper/tempi-osc-looper
 tempi-*.tar.gz
 tempi/config.h
@@ -102,33 +101,16 @@ tempi/tests/check_table
 tempi/tests/check_timer
 tempi/tests/check_track
 tempi/tests/check_version
+tempi/tests/check_wrapper
 tempi/tests/test
 
-
-# -------------------------
-# negations:
+# NEGATIONS:
+!doc/html
 !prototypes/kinect/Makefile
+!prototypes/mapofsharedobjects/Makefile
+!prototypes/matrix_type/Makefile
 !prototypes/midi/Makefile
 !prototypes/midilooper-gui/Makefile
 !prototypes/modules/Makefile
-!prototypes/matrix_type/Makefile
-!prototypes/mapofsharedobjects/Makefile
-!doc/html
 !python_module/Makefile
 
-# ------------------------- TODO
-# tests/check_fsm
-# tests/check_graph
-# tests/check_libraries
-# tests/check_log
-# tests/check_message
-# tests/check_node
-# tests/check_nodefactory
-# tests/check_osc
-# tests/check_osc_nodes
-# tests/check_properties
-# tests/check_serializer
-# tests/check_table
-# tests/check_timer
-# tests/check_track
-# tests/check_version
