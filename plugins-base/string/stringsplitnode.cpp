@@ -19,6 +19,10 @@
  */
 
 #include <iostream>
+#include <string>
+#include <vector>
+#include <boost/regex.hpp>
+#include <boost/algorithm/string/regex.hpp>
 #include "plugins-base/string/stringsplitnode.h"
 #include "tempi/utils.h"
 #include "tempi/log.h"
@@ -27,14 +31,24 @@ namespace tempi {
 namespace plugins_base {
 
 const char * const StringSplitNode::STRING_INLET = "string";
-const char * const StringSplitNode::CHARACTERS_OUTLET = "chars";
+const char * const StringSplitNode::TOKENS_OUTLET = "tokens";
+const char * const StringSplitNode::SEPARATOR_ATTR = "regex";
+
+static void split(std::vector<std::string> &result, const std::string &text, const std::string &regex);
+
+void split(std::vector<std::string> &result, const std::string &text, const std::string &regex)
+{
+    boost::algorithm::split_regex(result, text, boost::regex(regex));
+}
 
 StringSplitNode::StringSplitNode() :
     Node()
 {
-    this->setShortDocumentation("Splits a string into its characters.");
+    this->setShortDocumentation("Splits a string using a regular expression.");
+    this->addAttribute(Attribute::ptr(new Attribute(SEPARATOR_ATTR,
+        Message("s", " "), "Separator between elements. (A Perl-compatible regular expression.)")));
     this->addInlet(STRING_INLET, "String to split.");
-    this->addOutlet(CHARACTERS_OUTLET, "Message containing all the characters of the strings, as chars.");
+    this->addOutlet(TOKENS_OUTLET, "Message containing the resulting string tokens.");
 }
 
 void StringSplitNode::processMessage(const char *inlet, const Message &message)
@@ -50,13 +64,21 @@ void StringSplitNode::processMessage(const char *inlet, const Message &message)
         return;
     }
     Message ret;
-    std::string s = message.getString(0);
-    for (unsigned int i = 0; i < s.size(); ++i)
+    std::string incoming = message.getString(0);
+    std::vector<std::string> result;
+    split(result, incoming, this->getAttributeValue(SEPARATOR_ATTR).getString(0));
+    std::vector<std::string>::const_iterator iter;
+    for (iter = result.begin(); iter != result.end(); ++iter)
     {
-        ret.appendChar(s[i]);
+        ret.appendString((*iter).c_str());
     }
-    this->output(CHARACTERS_OUTLET, ret);
+    this->output(TOKENS_OUTLET, ret);
 }
+
+// bool StringSplitNode::onNodeAttributeChanged(const char *name, const Message &value)
+// {
+//     return true;
+// }
 
 } // end of namespace
 } // end of namespace

@@ -15,6 +15,7 @@ AM_LIBS = \
     $(BOOST_FILESYSTEM_LIB) \
     $(BOOST_LDFLAGS) \
     $(BOOST_LIBS)  \
+    $(BOOST_REGEX_LIB)  \
     $(BOOST_SYSTEM_LIB) \
     $(BOOST_THREAD_LIB) \
     $(CLUTTER_LIBS) \

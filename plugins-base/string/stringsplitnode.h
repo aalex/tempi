@@ -37,10 +37,13 @@ class StringSplitNode : public Node
 {
     public:
         StringSplitNode();
+    //protected:
+    //    virtual bool onNodeAttributeChanged(const char *name, const Message &value);
     private:
         virtual void processMessage(const char *inlet, const Message &message);
         static const char * const STRING_INLET;
-        static const char * const CHARACTERS_OUTLET;;
+        static const char * const TOKENS_OUTLET;
+        static const char * const SEPARATOR_ATTR;
 };
 
 } // end of namespace
