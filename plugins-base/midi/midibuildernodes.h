@@ -55,6 +55,18 @@ class ControlBuilderNode : public AbstractMidiEventBuilderNode
         int value_;
         virtual bool buildMidiEvent(const std::vector<int>& ints, Message &result);
 };
+
+/**
+ * Program change messages
+ */
+class ProgramChangeBuilderNode : public AbstractMidiEventBuilderNode
+{
+    public:
+        ProgramChangeBuilderNode();
+    private:
+        int program_;
+        virtual bool buildMidiEvent(const std::vector<int>& ints, Message &result);
+};
 } // end of namespace
 } // end of namespace
 

@@ -121,6 +121,7 @@ void BaseLibrary::load(NodeFactory &factory, const char *prefix) const
     factory.registerTypeT<MidiReceiverNode>(concatenate("midi.", "input").c_str());
     factory.registerTypeT<MidiSenderNode>(concatenate("midi.", "output").c_str());
     factory.registerTypeT<MidiRouteNode>(concatenate("midi.", "route").c_str());
+    factory.registerTypeT<ProgramChangeBuilderNode>(concatenate("midi.", "program").c_str());
 // TODO: #endif // HAVE_STK
 
     factory.registerTypeT<NearestNoteNode>(concatenate("music.", "nearest.note").c_str());

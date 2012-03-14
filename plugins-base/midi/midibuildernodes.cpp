@@ -103,6 +103,35 @@ bool ControlBuilderNode::buildMidiEvent(const std::vector<int>& ints, Message &r
     result.appendUnsignedChar((unsigned char) clip(value_, 0, 127));
     return true;
 }
+
+ProgramChangeBuilderNode::ProgramChangeBuilderNode() :
+    AbstractMidiEventBuilderNode()
+{
+    setShortDocumentation("Build a program change message out of an integer");
+    program_ = 0;
+}
+
+bool ProgramChangeBuilderNode::buildMidiEvent(const std::vector<int>& ints, Message &result)
+{
+    
+    switch(ints.size())
+    {
+        case 0:
+            break;
+        case 1:
+            program_ = ints[0];
+            break;
+        case 2:
+            program_ = ints[0];
+            Message channel;
+            channel.appendInt(ints[2]);
+            this->setAttributeValue(CHANNEL_ATTR, channel);
+    }
+
+    result.appendUnsignedChar((unsigned char) this->getAttributeValue(CHANNEL_ATTR).getInt(0) - 1 + 0xC0);
+    result.appendUnsignedChar((unsigned char) clip(program_, 0, 127));
+    return true;
+}
 } // end of namespace
 } // end of namespace
 
