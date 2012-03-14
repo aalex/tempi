@@ -13,6 +13,7 @@ TODO ASAP
 
 To do for 0.2
 -------------
+* FIXME: prevent from stack overflows
 * Should all attributes and pad names use underscores?
 * Delete unused node types: [base.appsink]
 * Rename:
