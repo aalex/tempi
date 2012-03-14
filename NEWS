@@ -7,8 +7,10 @@ This release is a developer snapshot in the 0.1 series.
 
 New features:
 
-* Supprt abstractions: [abs.abstraction], [abs.inlet], [abs.outlet]
-* New node types: [sampler.read], [sample.write], [sampler.sample]
+* Support abstractions: [abs.abstraction], [abs.inlet], [abs.outlet]
+* New sampler node types: [sampler.read], [sample.write], [sampler.sample]
+* New string node types: [string.join], [string.characters], [string.split]
+* Rename [midi.send] to [midi.output] and [midi.receive] to [midi.input]
 * Nodes can access the regions owned by their scheduler.
 * Add NameAllocator (not used yet)
 * New node types: [music.nearest.note], [music.monodic], [base.dict], [random.int], [random.drunk]
