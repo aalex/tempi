@@ -22,8 +22,8 @@
  * @file
  * The TypeNode class.
  */
-#ifndef __TEMPI_BASE_NOPNODE_H__
-#define __TEMPI_BASE_NOPNODE_H__
+#ifndef __TEMPI_BASE_TYPE_NODE_H__
+#define __TEMPI_BASE_TYPE_NODE_H__
 
 #include "tempi/node.h"
 
