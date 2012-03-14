@@ -116,6 +116,7 @@ void BaseLibrary::load(NodeFactory &factory, const char *prefix) const
 #endif // HAVE_CLUTTER
 
 // TODO: #ifdef HAVE_STK
+    factory.registerTypeT<ControlBuilderNode>(concatenate("midi.", "control").c_str());
     factory.registerTypeT<NoteBuilderNode>(concatenate("midi.", "note").c_str());
     factory.registerTypeT<MidiReceiverNode>(concatenate("midi.", "input").c_str());
     factory.registerTypeT<MidiSenderNode>(concatenate("midi.", "output").c_str());

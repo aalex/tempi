@@ -43,6 +43,18 @@ class NoteBuilderNode : public AbstractMidiEventBuilderNode
         virtual bool buildMidiEvent(const std::vector<int>& ints, Message &result);
 };
 
+/**
+ * MIDI control messages
+ */
+class ControlBuilderNode : public AbstractMidiEventBuilderNode
+{
+    public:
+        ControlBuilderNode();
+    private:
+        int controller_;
+        int value_;
+        virtual bool buildMidiEvent(const std::vector<int>& ints, Message &result);
+};
 } // end of namespace
 } // end of namespace
 

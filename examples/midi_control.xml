@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tempi version="0.1.9">
+  <graph>
+    <node id="loadmess0" class="base.loadmess">
+      <attribute name="value">
+	<s>bang</s>
+      </attribute>
+    </node>
+    <node id="trigger0" class="flow.trigger">
+      <attribute name="types">
+	<s>bbbb</s>
+      </attribute>
+    </node>
+    <node id="any0" class="base.any">
+      <attribute name="value">
+	<i>64</i><i>127</i><i>5</i>
+      </attribute>
+    </node>
+    <node id="any1" class="base.any">
+      <attribute name="value">
+	<i>64</i>
+      </attribute>
+    </node>
+    <node id="any2" class="base.any">
+      <attribute name="value">
+	<i>64</i><i>127</i>
+      </attribute>
+    </node>
+    <node id="midictl0" class="midi.control">
+      <attribute name="channel">
+        <i>1</i>
+      </attribute>
+    </node>
+    <node id="print_midi" class="base.print">
+      <attribute name="prefix">
+        <s>MIDI: </s>
+      </attribute>
+    </node>
+    <connection from="loadmess0" outlet="0" to="trigger0" inlet="input" />
+    <connection from="trigger0" outlet="3" to="any2" inlet="0" />
+    <connection from="trigger0" outlet="2" to="any1" inlet="0" />
+    <connection from="trigger0" outlet="1" to="any0" inlet="0" />
+    <connection from="trigger0" outlet="0" to="midictl0" inlet="ints" />
+    <connection from="any2" outlet="0" to="midictl0" inlet="ints" />
+    <connection from="any1" outlet="0" to="midictl0" inlet="ints" />
+    <connection from="any0" outlet="0" to="midictl0" inlet="ints" />
+    <connection from="midictl0" outlet="midi_event" to="print_midi" inlet="0" />
+  </graph>
+</tempi>
