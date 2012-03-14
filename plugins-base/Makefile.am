@@ -15,6 +15,7 @@ AM_LIBS = \
     $(BOOST_FILESYSTEM_LIB) \
     $(BOOST_LDFLAGS) \
     $(BOOST_LIBS)  \
+    $(BOOST_REGEX_LIB)  \
     $(BOOST_SYSTEM_LIB) \
     $(BOOST_THREAD_LIB) \
     $(CLUTTER_LIBS) \
@@ -62,6 +63,7 @@ libtempi_plugins_base_la_SOURCES = \
     flow/print_node.cpp \
     flow/routenode.cpp \
     flow/spigotnode.cpp \
+    flow/typenode.cpp \
     flow/triggernode.cpp \
     flow/unpacknode.cpp \
     mapping/filter.cpp \
@@ -85,7 +87,10 @@ libtempi_plugins_base_la_SOURCES = \
     sampler/samplenode.cpp \
     sampler/samplernode.cpp \
     sampler/samplerreadnode.cpp \
-    sampler/samplerwritenode.cpp
+    sampler/samplerwritenode.cpp \
+    string/stringcharactersnode.cpp \
+    string/stringjoinnode.cpp \
+    string/stringsplitnode.cpp
 
 EXTRA_DIST = \
 	abstraction/abstractionnode.h \
@@ -109,6 +114,7 @@ EXTRA_DIST = \
     flow/print_node.h \
     flow/routenode.h \
     flow/spigotnode.h \
+    flow/typenode.h \
     flow/triggernode.h \
     flow/unpacknode.h \
     mapping/average.h \
@@ -137,7 +143,10 @@ EXTRA_DIST = \
     sampler/samplernode.h \
     sampler/samplerreadnode.h \
     sampler/samplerwritenode.h \
-    spatosc/spatoscnode.h
+    spatosc/spatoscnode.h \
+    string/stringcharactersnode.h \
+    string/stringjoinnode.h \
+    string/stringsplitnode.h
 
 # TODO base/receivenode.cpp
 # TODO base/receivenode.h

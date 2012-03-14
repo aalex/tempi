@@ -35,6 +35,7 @@
 #include "plugins-base/flow/print_node.h"
 #include "plugins-base/flow/routenode.h"
 #include "plugins-base/flow/triggernode.h"
+#include "plugins-base/flow/typenode.h"
 #include "plugins-base/flow/unpacknode.h"
 #include "plugins-base/spatosc/spatoscnode.h"
 #include "plugins-base/flow/spigotnode.h"
@@ -56,6 +57,9 @@
 #include "plugins-base/sampler/samplenode.h"
 #include "plugins-base/sampler/samplerwritenode.h"
 #include "plugins-base/sampler/samplerreadnode.h"
+#include "plugins-base/string/stringcharactersnode.h"
+#include "plugins-base/string/stringjoinnode.h"
+#include "plugins-base/string/stringsplitnode.h"
 #include "plugins-base/random/randomdrunknode.h"
 #include "plugins-base/random/randomintnode.h"
 #include "plugins-base/abstraction/abstractionnode.h"
@@ -86,6 +90,7 @@ void BaseLibrary::load(NodeFactory &factory, const char *prefix) const
     factory.registerTypeT<PrependNode>(concatenate("base.", "prepend").c_str());
     factory.registerTypeT<RouteNode>(concatenate("base.", "route").c_str());
     factory.registerTypeT<TriggerNode>(concatenate("flow.", "trigger").c_str());
+    factory.registerTypeT<TypeNode>(concatenate("flow.", "type").c_str());
     factory.registerTypeT<UnpackNode>(concatenate("flow.", "unpack").c_str());
     factory.registerTypeT<LineNode>(concatenate("flow.", "line").c_str());
     factory.registerTypeT<LoadMessNode>(concatenate("base.", "loadmess").c_str());
@@ -132,6 +137,10 @@ void BaseLibrary::load(NodeFactory &factory, const char *prefix) const
     factory.registerTypeT<SamplerNode>(concatenate("sampler.", "sampler").c_str());
     factory.registerTypeT<SamplerReadNode>(concatenate("sampler.", "read").c_str());
     factory.registerTypeT<SamplerWriteNode>(concatenate("sampler.", "write").c_str());
+
+    factory.registerTypeT<StringCharactersNode>(concatenate("string.","characters").c_str());
+    factory.registerTypeT<StringJoinNode>(concatenate("string.","join").c_str());
+    factory.registerTypeT<StringSplitNode>(concatenate("string.","split").c_str());
 
 #ifdef HAVE_GLIB
     factory.registerTypeT<RandomDrunkNode>(concatenate("random.", "drunk").c_str());

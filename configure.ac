@@ -187,6 +187,11 @@ if test "x${ax_cv_boost_thread}" = "xno" ; then
     AC_MSG_ERROR([missing package: libboost-thread-dev])
 fi
 
+AX_BOOST_REGEX
+if test "x${ax_cv_boost_regex}" = "xno" ; then
+    AC_MSG_ERROR([missing package: libboost-regex-dev])
+fi
+
 dnl AX_BOOST_DATE_TIME
 dnl if test "x${ax_cv_boost_date_time}" = "xno" ; then
 dnl 	AC_MSG_ERROR([missing package: libboost-date-time-dev])
