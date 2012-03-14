@@ -18,31 +18,34 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <iostream>
-#include "plugins-base/flow/typenode.h"
-#include "tempi/utils.h"
+/**
+ * @file
+ * The StringJoinNode class.
+ */
+#ifndef __TEMPI_STRING_JOIN_NODE_H__
+#define __TEMPI_STRING_JOIN_NODE_H__
+
+#include "tempi/node.h"
 
 namespace tempi {
 namespace plugins_base {
 
-const char * const TypeNode::MESSAGE_INLET = "message";
-const char * const TypeNode::TYPES_OUTLET = "types";
-
-TypeNode::TypeNode() :
-    Node()
+/**
+ * Joins atoms to create a string.
+ */
+class StringJoinNode : public Node
 {
-    this->setShortDocumentation("Outputs the type tags of the messages sent to it. (as a string)");
-    this->addInlet(MESSAGE_INLET, "Receives messages and detect its type tags.");
-    this->addOutlet(TYPES_OUTLET, "Outputs the type tags of the atoms of the incoming messages. (as a string)");
-}
-
-void TypeNode::processMessage(const char *inlet, const Message &message)
-{
-    if (! utils::stringsMatch(inlet, MESSAGE_INLET))
-        return;
-    this->output(TYPES_OUTLET, Message("s", message.getTypes().c_str()));
-}
+    public:
+        StringJoinNode();
+    private:
+        virtual void processMessage(const char *inlet, const Message &message);
+        static const char * const ATOMS_INLET;
+        static const char * const STRING_OUTLET;
+        static const char * const SEPARATOR_ATTR;
+};
 
 } // end of namespace
 } // end of namespace
+
+#endif // ifndef
 

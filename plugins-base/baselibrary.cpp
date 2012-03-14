@@ -57,6 +57,8 @@
 #include "plugins-base/sampler/samplenode.h"
 #include "plugins-base/sampler/samplerwritenode.h"
 #include "plugins-base/sampler/samplerreadnode.h"
+#include "plugins-base/string/stringjoinnode.h"
+#include "plugins-base/string/stringsplitnode.h"
 #include "plugins-base/random/randomdrunknode.h"
 #include "plugins-base/random/randomintnode.h"
 #include "plugins-base/abstraction/abstractionnode.h"
@@ -133,6 +135,9 @@ void BaseLibrary::load(NodeFactory &factory, const char *prefix) const
     factory.registerTypeT<SamplerNode>(concatenate("sampler.", "sampler").c_str());
     factory.registerTypeT<SamplerReadNode>(concatenate("sampler.", "read").c_str());
     factory.registerTypeT<SamplerWriteNode>(concatenate("sampler.", "write").c_str());
+
+    factory.registerTypeT<StringJoinNode>(concatenate("string.","join").c_str());
+    factory.registerTypeT<StringSplitNode>(concatenate("string.","split").c_str());
 
 #ifdef HAVE_GLIB
     factory.registerTypeT<RandomDrunkNode>(concatenate("random.", "drunk").c_str());
