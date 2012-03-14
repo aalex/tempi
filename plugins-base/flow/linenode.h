@@ -48,11 +48,11 @@ class Line
         float getTarget() const;
         float getDuration() const;
     private:
-        float origin_;
-        float target_;
-        float position_;
-        TimePosition duration_;
-        Timer timer_;
+        float origin_; // whatever start value
+        float target_; // whatever end value
+        float position_; // previous value output
+        TimePosition duration_; // total duration (ns)
+        Timer timer_; // ns timer
 };
 
 /**
