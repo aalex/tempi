@@ -21,7 +21,7 @@ bool check_internals()
     if (! didRegister(factory, "base.metro")) return false;
     if (! didRegister(factory, "base.nop")) return false;
     if (! didRegister(factory, "base.print")) return false;
-    if (! didRegister(factory, "midi.receive")) return false;
+    if (! didRegister(factory, "midi.input")) return false;
     if (! didRegister(factory, "osc.receive")) return false;
     if (! didRegister(factory, "osc.send")) return false;
     if (! didRegister(factory, "sampler.sampler")) return false;
