@@ -50,13 +50,13 @@ void StringJoinNode::processMessage(const char *inlet, const Message &message)
         this->output(STRING_OUTLET, Message("s", ""));
         return;
     }
-    std::string result;
+    std::ostringstream result;
     std::string separator = this->getAttributeValue(SEPARATOR_ATTR).getString(0);
     for (unsigned int i = 0; i < size; ++i)
     {
         try
         {
-            result += utils::argumentToString(message, i);
+            result << utils::argumentToString(message, i);
         }
         catch (const BadIndexException &e)
         {
@@ -74,10 +74,15 @@ void StringJoinNode::processMessage(const char *inlet, const Message &message)
         }
         if (i != (size - 1)) // if not last atom
         {
-            result += separator;
+            result << separator;
         }
     }
-    this->output(STRING_OUTLET, Message("s", result.c_str()));
+    {
+        std::ostringstream os;
+        os << "StringJoinNode." << __FUNCTION__ << ": " << "output " << result.str();
+        Logger::log(DEBUG, os);
+    }
+    this->output(STRING_OUTLET, Message("s", result.str().c_str()));
 }
 
 } // end of namespace
