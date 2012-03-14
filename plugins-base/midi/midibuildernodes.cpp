@@ -58,7 +58,9 @@ bool NoteBuilderNode::buildMidiEvent(const std::vector<int>& ints, Message &resu
         case 3:
             note_ = ints[0];
             velocity_ = ints[1];
-            this->setAttributeValue(CHANNEL_ATTR, (const char*) ints[2]);
+            Message channel;
+            channel.appendInt(ints[2]);
+            this->setAttributeValue(CHANNEL_ATTR, channel);
     }
 
     result.appendUnsignedChar((unsigned char) this->getAttributeValue(CHANNEL_ATTR).getInt(0) - 1 + 0x90);
