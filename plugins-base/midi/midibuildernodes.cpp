@@ -29,6 +29,8 @@ NoteBuilderNode::NoteBuilderNode() :
     AbstractMidiEventBuilderNode()
 {
     setShortDocumentation("Build note out of a list of integers");
+    note_ = 0;
+    velocity_ = 0;
 }
 
 int clip(int value, int from, int to)
@@ -42,13 +44,27 @@ int clip(int value, int from, int to)
 }
 bool NoteBuilderNode::buildMidiEvent(const std::vector<int>& ints, Message &result)
 {
-    if (ints.size() == 2)
+    
+    switch(ints.size())
     {
-        result.appendUnsignedChar((unsigned char) this->getAttributeValue(CHANNEL_ATTR).getInt(0) - 1 + 0x90);
-        result.appendUnsignedChar((unsigned char) clip(ints[0], 0, 127));
-        result.appendUnsignedChar((unsigned char) clip(ints[1], 0, 127));
-        return true;
+        case 0:
+            break;
+        case 1:
+            note_ = ints[0];
+            break;
+        case 2:
+            note_ = ints[0];
+            velocity_ = ints[1];
+        case 3:
+            note_ = ints[0];
+            velocity_ = ints[1];
+            this->setAttributeValue(CHANNEL_ATTR, (const char*) ints[2]);
     }
+
+    result.appendUnsignedChar((unsigned char) this->getAttributeValue(CHANNEL_ATTR).getInt(0) - 1 + 0x90);
+    result.appendUnsignedChar((unsigned char) clip(note_, 0, 127));
+    result.appendUnsignedChar((unsigned char) clip(velocity_, 0, 127));
+    return true;
 }
 } // end of namespace
 } // end of namespace

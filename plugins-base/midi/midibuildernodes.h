@@ -38,6 +38,8 @@ class NoteBuilderNode : public AbstractMidiEventBuilderNode
     public:
         NoteBuilderNode();
     private:
+        int note_;
+        int velocity_;
         virtual bool buildMidiEvent(const std::vector<int>& ints, Message &result);
 };
 
