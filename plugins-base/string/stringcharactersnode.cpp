@@ -19,7 +19,7 @@
  */
 
 #include <iostream>
-#include "plugins-base/string/stringsplitnode.h"
+#include "plugins-base/string/stringcharactersnode.h"
 #include "tempi/utils.h"
 #include "tempi/log.h"
 
