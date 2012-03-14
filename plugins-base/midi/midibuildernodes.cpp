@@ -62,10 +62,45 @@ bool NoteBuilderNode::buildMidiEvent(const std::vector<int>& ints, Message &resu
             channel.appendInt(ints[2]);
             this->setAttributeValue(CHANNEL_ATTR, channel);
     }
-
+    
     result.appendUnsignedChar((unsigned char) this->getAttributeValue(CHANNEL_ATTR).getInt(0) - 1 + 0x90);
     result.appendUnsignedChar((unsigned char) clip(note_, 0, 127));
     result.appendUnsignedChar((unsigned char) clip(velocity_, 0, 127));
+    return true;
+}
+
+ControlBuilderNode::ControlBuilderNode() :
+    AbstractMidiEventBuilderNode()
+{
+    setShortDocumentation("Build controller message out of a list of integers");
+    controller_ = 0;
+    value_ = 0;
+}
+
+bool ControlBuilderNode::buildMidiEvent(const std::vector<int>& ints, Message &result)
+{
+    
+    switch(ints.size())
+    {
+        case 0:
+            break;
+        case 1:
+            controller_ = ints[0];
+            break;
+        case 2:
+            controller_ = ints[0];
+            value_ = ints[1];
+        case 3:
+            controller_ = ints[0];
+            value_ = ints[1];
+            Message channel;
+            channel.appendInt(ints[2]);
+            this->setAttributeValue(CHANNEL_ATTR, channel);
+    }
+
+    result.appendUnsignedChar((unsigned char) this->getAttributeValue(CHANNEL_ATTR).getInt(0) - 1 + 0xB0);
+    result.appendUnsignedChar((unsigned char) clip(controller_, 0, 127));
+    result.appendUnsignedChar((unsigned char) clip(value_, 0, 127));
     return true;
 }
 } // end of namespace
