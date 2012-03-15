@@ -35,6 +35,7 @@ To do for 0.2
   * base.spatosc -> spatosc.send
   * base.spigot -> flow.spigot
 * libmapper nodes: libmapper.{in,out}put device="tempi", name="default", type=f
+* 3d.angle: should not depend on spatosc
 * validate names with echo example | grep -P -e "^([A-Za-z0-9\.\-_])+$"
 * Scheduler: support OSC messages in the form /graph0/node0/__attr__ s:foo i:2 f:3.14159
 * Node: add this->send("path", ...) and this->addReceiver("path")
