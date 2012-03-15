@@ -34,6 +34,9 @@ To do for 0.2
   * base.route -> flow.route
   * base.spatosc -> spatosc.send
   * base.spigot -> flow.spigot
+* validate names with echo example | grep -P -e "^([A-Za-z0-9_\[\]])+$"
+* Scheduler: support OSC messages in the form /graph0/node0/__attr__ s:foo i:2 f:3.14159
+* Node: add this->send("path", ...) and this->addReceiver("path")
 * XML: rename "id" to "name"
 * implement message.appendMessage()
 * [3d.line]
@@ -79,7 +82,7 @@ To do for 0.4
 * loadBang: Find a better name. Node::loadBang only once? When to Graph::loadBang?
 * Atom types: replace switch/case by a hierarchy of classes
 * Allow range for int attributes?
-* abstractions: watch for changes in files (inotify CLOSE_WRITE or FAM)
+* abstractions and tempi-launch: watch for changes in files with GFileMonitor
 * serializer: write class before node name
 * create a validator for XML schemas
 * make documentation strings common to all objects of a same type to save memory use
