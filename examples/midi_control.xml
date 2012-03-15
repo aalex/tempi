@@ -23,7 +23,7 @@
     </node>
     <node id="any2" class="base.any">
       <attribute name="value">
-	<i>60</i><i>127</i>
+	<i>60</i><i>107</i>
       </attribute>
     </node>
     <node id="midictl0" class="midi.control">
