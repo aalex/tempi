@@ -38,6 +38,9 @@ class Graph(object):
                 time.sleep(0.1)
         except KeyboardInterrupt, e:
             pass
+
+    def save(self, filename):
+        _wrapper.saveGraph(self._graph_name, filename)
     
     def attr(self, node, attribute, value):
         _wrapper.setNodeAttributeValue(self._graph_name, node, attribute, value)
