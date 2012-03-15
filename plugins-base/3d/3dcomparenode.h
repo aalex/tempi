@@ -46,7 +46,7 @@ class Abstract3dCompareNode : public Node
     protected:
         virtual void processMessage(const char *inlet, const Message &message);
     private:
-        virtual void compare(const spatosc::Vector3 &left, const spatosc::Vector3 &right);
+        virtual void compare(const spatosc::Vector3 &left, const spatosc::Vector3 &right) = 0;
         static const char * const HOT_INLET;
         static const char * const COLD_INLET;
         static const char * const OPERAND_ATTR;

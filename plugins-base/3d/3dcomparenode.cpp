@@ -27,8 +27,8 @@
 namespace tempi { 
 namespace plugins_base {
 
-const char * const Abstract3dCompareNode::HOT_INLET = "0-hot";
-const char * const Abstract3dCompareNode::COLD_INLET = "1-cold";
+const char * const Abstract3dCompareNode::HOT_INLET = "0";
+const char * const Abstract3dCompareNode::COLD_INLET = "1";
 const char * const Abstract3dCompareNode::OPERAND_ATTR = "operand";
 
 Abstract3dCompareNode::Abstract3dCompareNode() :
@@ -71,13 +71,13 @@ void Abstract3dCompareNode::processMessage(const char *inlet, const Message &mes
     }
 }
 
-
 const char * const Angle3dNode::ANGLE_ELEVATION_OUTLET = "angle_elevation";
 
 Angle3dNode::Angle3dNode() :
     Abstract3dCompareNode()
 {
     setShortDocumentation("Outputs the angle and elevation between two 3-float XYZ vectors.");
+    addOutlet(ANGLE_ELEVATION_OUTLET, "Outputs f:angle, f:elevation (in radians)");
 }
 
 void Angle3dNode::compare(const spatosc::Vector3 &left, const spatosc::Vector3 &right)

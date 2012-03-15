@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tempi version="0.1.9">
+  <graph>
+    <node id="loadmess0" class="base.loadmess">
+      <attribute name="value"><f>1.0</f><f>0.0</f><f>0.0</f></attribute>
+    </node>
+    <node id="angle" class="3d.angle">
+      <attribute name="operand"><f>0.0</f><f>1.0</f><f>1.0</f></attribute>
+    </node>
+    <node id="print0" class="base.print">
+    </node>
+    <connection from="loadmess0" outlet="0" to="angle" inlet="0"/>
+    <connection from="angle" outlet="angle_elevation" to="print0" inlet="0"/>
+  </graph>
+</tempi>
