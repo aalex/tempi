@@ -33,9 +33,9 @@ const char * const PackNode::ALL_HOT_ATTR = "all-hot";
 PackNode::PackNode() :
     Node()
 {
-    addAttribute(Attribute::ptr(new Attribute(NUM_ATTR, Message("u", 0), "Number of atoms to pack together. The object creates as many inlets numbered from 0 to n-1.")));
+    addAttribute(Attribute::ptr(new Attribute(NUM_ATTR, Message("i", 0), "Number of atoms to pack together. The object creates as many inlets numbered from 0 to n-1.")));
     addAttribute(Attribute::ptr(new Attribute(ALL_HOT_ATTR, Message("b", false), "If true, makes all inlets hot. (output the results when a message is received.")));
-    Logger::log(DEBUG, "[pack] constructor:  = (u:0");
+    Logger::log(DEBUG, "[pack] constructor:  = (i:0");
     addOutlet(RESULT_OUTLET, "Resulting packed message goes here.");
     setShortDocumentation("Combines several atoms into one message.");
 }
@@ -43,10 +43,10 @@ PackNode::PackNode() :
 void PackNode::processMessage(const char *inlet, const Message &message)
 {
     bool is_a_packing_inlet = false;
-    unsigned int current_number_of_inlets =
-        this->getAttributeValue(NUM_ATTR).getUnsignedInt(0);
+    int current_number_of_inlets =
+        this->getAttributeValue(NUM_ATTR).getInt(0);
     bool all_hot = this->getAttributeValue(ALL_HOT_ATTR).getBoolean(0);
-    for (int i = 0; i < (unsigned int) current_number_of_inlets; ++i)
+    for (int i = 0; i < current_number_of_inlets; ++i)
     {
         std::ostringstream name_os;
         name_os << i;
@@ -64,16 +64,25 @@ void PackNode::processMessage(const char *inlet, const Message &message)
 void PackNode::outputResult()
 {
     Message ret;
-    unsigned int current_number_of_inlets =
-        this->getAttributeValue(NUM_ATTR).getUnsignedInt(0);
-    for (unsigned int i = current_number_of_inlets; i >= 0; --i)
+    int current_number_of_inlets =
+        this->getAttributeValue(NUM_ATTR).getInt(0);
+    for (int i = current_number_of_inlets - 1; i >= 0; --i)
     {
         std::ostringstream name_os;
         name_os << i;
-        ret.prependMessage(stored_messages_[i]);
+        unsigned int index = (unsigned int) i; // XXX
+        {
+            std::ostringstream os;
+            os << "[pack] " << __FUNCTION__ << ": add atom to output: " << i;
+            Logger::log(INFO, os);
+        }
+        {
+            std::ostringstream os;
+            os << "[pack] " << __FUNCTION__ << ": add atom to output: " << i << " " << stored_messages_[index];
+            Logger::log(INFO, os);
+        }
+        ret.prependMessage(stored_messages_[index]);
         // TODO: implement appendMessage
-        if (i == 0)
-            break; // IMPORTANT
     }
     output(RESULT_OUTLET, ret);
 }
@@ -100,13 +109,20 @@ bool PackNode::onNodeAttributeChanged(const char *name, const Message &value)
     }
     this->printInletsInfo();
 
-    unsigned int new_size = value.getUnsignedInt(0);
-    unsigned int current_number_of_inlets =
-        this->getAttributeValue(NUM_ATTR).getUnsignedInt(0);
+    int new_size = value.getInt(0);
+    if (new_size < 0)
+    {
+        std::ostringstream os;
+        os << "[pack] " << __FUNCTION__ << ": Could not change attr to a negative value. name=\"" << name << "\" value=" << value;
+        Logger::log(ERROR, os);
+        return false;
+    }
+    int current_number_of_inlets =
+        this->getAttributeValue(NUM_ATTR).getInt(0);
     if (new_size > current_number_of_inlets)
     {
         Message empty;
-        for (unsigned int i = current_number_of_inlets; i < new_size; ++i)
+        for (int i = current_number_of_inlets; i < new_size; ++i)
         {
             std::ostringstream name_os;
             name_os << i;
@@ -123,14 +139,14 @@ bool PackNode::onNodeAttributeChanged(const char *name, const Message &value)
     }
     else if (new_size < current_number_of_inlets)
     {
-        for (unsigned int i = new_size; i < current_number_of_inlets; ++i)
+        for (int i = new_size; i < current_number_of_inlets; ++i)
         {
             std::ostringstream name_os;
             name_os << i;
             {
-                std::ostringstream os;
-                os << "[pack] " << __FUNCTION__ << ": remove inlet " << i;
-                Logger::log(INFO, os);
+                // std::ostringstream os;
+                // os << "[pack] " << __FUNCTION__ << ": remove inlet " << i;
+                // Logger::log(INFO, os);
             }
             removeInlet(name_os.str().c_str());
         }

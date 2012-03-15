@@ -45,11 +45,16 @@ void RouteNode::processMessage(const char *inlet, const Message &message)
     {
         std::ostringstream os;
         os << "[route] processMessage: First atom is not a string: " << message;
-        Logger::log(DEBUG, os.str().c_str());
+        Logger::log(DEBUG, os);
         return;
     }
     std::string selector = message.getString(0);
     Message ret = message.cloneRange(1, message.getSize() - 1);
+    {
+        std::ostringstream os;
+        os << "[route] processMessage: result is : " << ret;
+        Logger::log(DEBUG, os);
+    }
     if (std::find(selectors_.begin(), selectors_.end(), selector) != selectors_.end())
         output(selector.c_str(), ret);
     else
