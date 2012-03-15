@@ -18,6 +18,7 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "plugins-base/3d/3dcomparenode.h"
 #include "plugins-base/baselibrary.h"
 #include "plugins-base/flow/anynode.h"
 #include "plugins-base/flow/appendnode.h"
@@ -98,6 +99,7 @@ void BaseLibrary::load(NodeFactory &factory, const char *prefix) const
 
 #ifdef HAVE_SPATOSC
     factory.registerTypeT<SpatoscNode>(concatenate("base.", "spatosc").c_str());
+    factory.registerTypeT<Angle3dNode>(concatenate("3d.", "angle").c_str());
 #endif // HAVE_SPATOSC
 
     factory.registerTypeT<AddNode>(concatenate("math.", "+").c_str());
