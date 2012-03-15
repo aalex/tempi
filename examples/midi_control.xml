@@ -13,22 +13,25 @@
     </node>
     <node id="any0" class="base.any">
       <attribute name="value">
-	<i>64</i><i>127</i><i>5</i>
+	<i>62</i><i>127</i><i>5</i>
       </attribute>
     </node>
     <node id="any1" class="base.any">
       <attribute name="value">
-	<i>64</i>
+	<i>63</i>
       </attribute>
     </node>
     <node id="any2" class="base.any">
       <attribute name="value">
-	<i>64</i><i>127</i>
+	<i>60</i><i>107</i>
       </attribute>
     </node>
     <node id="midictl0" class="midi.control">
       <attribute name="channel">
         <i>1</i>
+      </attribute>
+      <attribute name="controller">
+        <i>2</i>
       </attribute>
     </node>
     <node id="print_midi" class="base.print">

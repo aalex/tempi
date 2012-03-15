@@ -51,9 +51,10 @@ class ControlBuilderNode : public AbstractMidiEventBuilderNode
     public:
         ControlBuilderNode();
     private:
-        int controller_;
         int value_;
         virtual bool buildMidiEvent(const std::vector<int>& ints, Message &result);
+    protected:
+        static const char * const CTL_ATTR; // set controller number attribute
 };
 
 /**

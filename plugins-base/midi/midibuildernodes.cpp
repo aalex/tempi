@@ -19,10 +19,13 @@
  */
 
 #include "plugins-base/midi/midibuildernodes.h"
+#include "tempi/log.h"
 
 namespace tempi{
 namespace plugins_base {
 
+
+const char * const ControlBuilderNode::CTL_ATTR = "controller"; // set controller number attribute
 static int clip(int value, int from, int to);
 
 NoteBuilderNode::NoteBuilderNode() :
@@ -72,34 +75,60 @@ bool NoteBuilderNode::buildMidiEvent(const std::vector<int>& ints, Message &resu
 ControlBuilderNode::ControlBuilderNode() :
     AbstractMidiEventBuilderNode()
 {
+    addAttribute(Attribute::ptr(new Attribute(CTL_ATTR, Message("i", 0), "Controller number (from 0 to 127)")));
     setShortDocumentation("Build controller message out of a list of integers");
-    controller_ = 0;
     value_ = 0;
 }
 
 bool ControlBuilderNode::buildMidiEvent(const std::vector<int>& ints, Message &result)
 {
+    Message controller;
     
     switch(ints.size())
     {
         case 0:
+        {
             break;
+        }
         case 1:
-            controller_ = ints[0];
+        {
+            value_ = ints[0];
             break;
+        }
         case 2:
-            controller_ = ints[0];
-            value_ = ints[1];
+        {
+            value_ = ints[0];
+            controller.appendInt(clip(ints[1], 0 , 127));
+            this->setAttributeValue(CTL_ATTR, controller);
+            break;
+        }
         case 3:
-            controller_ = ints[0];
-            value_ = ints[1];
+        {
+            value_ = ints[0];
+            controller.appendInt(clip(ints[1], 0 , 127));
+            this->setAttributeValue(CTL_ATTR, controller);
             Message channel;
             channel.appendInt(ints[2]);
             this->setAttributeValue(CHANNEL_ATTR, channel);
+            break;
+        }
+        default:
+        {
+            return false; // wrong number of args
+            break;
+        }
+    }
+    {
+        std::ostringstream os;
+        os << "ControlBuilderNode." << __FUNCTION__ <<
+            ": channel=" << this->getAttributeValue(CHANNEL_ATTR) <<
+            " controller=" << this->getAttributeValue(CTL_ATTR) <<
+            " value=" << value_;
+        Logger::log(DEBUG, os);
     }
 
     result.appendUnsignedChar((unsigned char) this->getAttributeValue(CHANNEL_ATTR).getInt(0) - 1 + 0xB0);
-    result.appendUnsignedChar((unsigned char) clip(controller_, 0, 127));
+    result.appendUnsignedChar((unsigned char) this->getAttributeValue(CTL_ATTR).getInt(0));
     result.appendUnsignedChar((unsigned char) clip(value_, 0, 127));
     return true;
 }
