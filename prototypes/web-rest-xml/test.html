@@ -8,16 +8,19 @@
     //<![CDATA[
     $(document).ready(function()
     {
-        alert("welcome");
+        // alert("welcome");
         $("#foo").click(function()
         {
-            alert("#foo clicked.");
-            $.get("http://localhost:9980", function(data)
+            alert("#foo clicked. Calling $.get()");
+            $.get("http://127.0.0.1:9980", "hello", function(data)
             {
                 $("#result").html(data);
-                alert("Load was performed.");
+                alert("Load was performed. Result is " + data);
             });
-        });
+        })
+        .success(function() { alert("second success"); })
+        .error(function() { alert("error"); })
+        .complete(function() { alert("complete"); });
     });
     //]]>
 </script> 

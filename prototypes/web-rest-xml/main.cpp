@@ -56,13 +56,15 @@ public:
         response.setContentType("text/html");
 
         std::ostream& ostr = response.send();
-        ostr << "<html><head><title>HTTPTimeServer powered by "
-                "POCO C++ Libraries</title>";
-        ostr << "<meta http-equiv=\"refresh\" content=\"1\"></head>";
-        ostr << "<body><p style=\"text-align: center; "
-                "font-size: 48px;\">";
+        // ostr << "<html><head><title>HTTPTimeServer powered by "
+        //         "POCO C++ Libraries</title>";
+        // ostr << "<meta http-equiv=\"refresh\" content=\"1\"></head>";
+        // ostr << "<body><p style=\"text-align: center; "
+        //         "font-size: 48px;\">";
+        // ostr << dt;
+        // ostr << "</p></body></html>";
+        //
         ostr << dt;
-        ostr << "</p></body></html>";
     }
 
 private:
