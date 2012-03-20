@@ -4,11 +4,12 @@
 *.la
 *.lo
 *.o
+*.patch
 *.pc
+*.pdf
 *.so
 *.swp
 *~
-*.patch
 .deps/
 .dirstamp
 .libs/
@@ -52,6 +53,7 @@ plugins-base/tests/check_math
 plugins-base/tests/check_slide
 plugins-base/tests/test
 prototypes/any
+prototypes/atom-factory/run
 prototypes/fusion/vec
 prototypes/kinect/freedraw
 prototypes/matrix_type/blobreceiver
@@ -75,6 +77,9 @@ src/osc-forward/osc-forward
 src/tempi-draw/tempi-draw
 src/tempi-inspect/tempi-inspect
 src/tempi-launch/tempi-launch
+src/tempi-midi-looper/tempi-midi-looper
+src/tempi-midi-looper/threadedscheduler
+src/tempi-osc-forward/tempi-osc-forward
 src/tempi-osc-looper/tempi-osc-looper
 tempi-*.tar.gz
 tempi/config.h
@@ -102,6 +107,7 @@ tempi/tests/check_table
 tempi/tests/check_timer
 tempi/tests/check_track
 tempi/tests/check_version
+tempi/tests/check_wrapper
 tempi/tests/test
 
 
@@ -132,3 +138,4 @@ tempi/tests/test
 # tests/check_timer
 # tests/check_track
 # tests/check_version
+
