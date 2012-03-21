@@ -60,7 +60,20 @@ class App
         int num_senders_;
         int num_receivers_;;
         tempi::Graph::ptr graph_;
+        static const char * const NOP_NODE;
+        static const char * const OSC_RECV_NODE;
+        static const char * const OSC_RECV_OUTLET;
+        static const char * const OSC_SEND_NODE;
+        static const char * const OSC_SEND_HOST_PORT_ATTR;
+        static const char * const OSC_RECV_PORT_ATTR;
 };
+
+const char * const App::NOP_NODE = "base.nop";
+const char * const App::OSC_RECV_NODE = "osc.receive";
+const char * const App::OSC_RECV_OUTLET = "incoming";
+const char * const App::OSC_SEND_NODE = "osc.send";
+const char * const App::OSC_SEND_HOST_PORT_ATTR = "host_port";
+const char * const App::OSC_RECV_PORT_ATTR = "port";
 
 App::App() :
     verbose_(false),
@@ -121,7 +134,7 @@ void App::setupGraph()
 
     graph_.reset(new tempi::Graph(factory));
     
-    graph_->addNode("base.nop", "nop0");
+    graph_->addNode(NOP_NODE, "nop0");
     graph_->tick(); // calls Node::init()
 }
 
@@ -149,11 +162,11 @@ bool App::addSender(const char *host, unsigned int port)
     ++num_senders_;
     std::string name = os.str();
 
-    graph_->addNode("osc.send", name.c_str());
+    graph_->addNode(OSC_SEND_NODE, name.c_str());
     graph_->tick(); // calls Node::init()
     Node::ptr node = graph_->getNode(name.c_str());
     Message mess = Message("si", host, port);
-    node->setAttributeValue("host_port", mess);
+    node->setAttributeValue(OSC_SEND_HOST_PORT_ATTR, mess);
 
     graph_->connect("nop0", "0", name.c_str(), "0");
     return true;
@@ -167,13 +180,13 @@ bool App::addReceiver(unsigned int port)
     ++num_receivers_;
     std::string name = os.str();
 
-    graph_->addNode("osc.receive", name.c_str());
-    graph_->tick(); // calls Node::init()
+    graph_->addNode(OSC_RECV_NODE, name.c_str());
     Node::ptr node = graph_->getNode(name.c_str());
     Message mess = Message("i", port);
-    node->setAttributeValue("port", mess);
+    node->setAttributeValue(OSC_RECV_PORT_ATTR, mess);
+    graph_->tick(); // calls Node::init()
 
-    graph_->connect(name.c_str(), "0", "nop0", "0");
+    graph_->connect(name.c_str(), OSC_RECV_OUTLET, "nop0", "0");
     return true;
 }
 

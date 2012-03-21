@@ -48,6 +48,7 @@ m4/lt~obsolete.m4
 missing
 plugins-base/tests/check_average
 plugins-base/tests/check_base
+plugins-base/tests/check_line
 plugins-base/tests/check_math
 plugins-base/tests/check_slide
 plugins-base/tests/test

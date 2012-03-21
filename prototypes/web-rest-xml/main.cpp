@@ -56,13 +56,15 @@ public:
         response.setContentType("text/html");
 
         std::ostream& ostr = response.send();
-        ostr << "<html><head><title>HTTPTimeServer powered by "
-                "POCO C++ Libraries</title>";
-        ostr << "<meta http-equiv=\"refresh\" content=\"1\"></head>";
-        ostr << "<body><p style=\"text-align: center; "
-                "font-size: 48px;\">";
+        // ostr << "<html><head><title>HTTPTimeServer powered by "
+        //         "POCO C++ Libraries</title>";
+        // ostr << "<meta http-equiv=\"refresh\" content=\"1\"></head>";
+        // ostr << "<body><p style=\"text-align: center; "
+        //         "font-size: 48px;\">";
+        // ostr << dt;
+        // ostr << "</p></body></html>";
+        //
         ostr << dt;
-        ostr << "</p></body></html>";
     }
 
 private:
@@ -143,15 +145,19 @@ protected:
         if (!_helpRequested)
         {
             unsigned short port = (unsigned short)
-                config().getInt("HTTPTimeServer.port", 9980);
+                9980;
+                // config().getInt("HTTPTimeServer.port", 9980);
             std::cout << "Listening on http://localhost:9980" << std::endl;
             std::string format(
-                config().getString("HTTPTimeServer.format", 
-                                   DateTimeFormat::SORTABLE_FORMAT));
+                 config().getString("HTTPTimeServer.format", 
+                 DateTimeFormat::SORTABLE_FORMAT));
+            std::cout << "creating ServerSocket" << std::endl;
 
             ServerSocket svs(port);
+            std::cout << "creating HTTPServer" << std::endl;
             HTTPServer srv(new TimeRequestHandlerFactory(format), 
                 svs, new HTTPServerParams);
+            std::cout << "starting HTTPServer" << std::endl;
             srv.start();
             waitForTerminationRequest();
             srv.stop();
@@ -165,6 +171,7 @@ private:
 
 int main(int argc, char** argv)
 {
+    std::cout << "Running HTTPTimeServer" << std::endl;
     HTTPTimeServer app;
     return app.run(argc, argv);
 }

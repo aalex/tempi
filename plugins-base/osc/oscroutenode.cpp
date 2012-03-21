@@ -71,6 +71,7 @@ void OscRouteNode::processMessage(const char *inlet, const Message &message)
         }
         else if (utils::stringBeginsWith(path.c_str(), (*iter).c_str()))
         {
+            // Remove prefix from path if it matches its beginning, or remove the whole atom if matches it completely.
             ret.prependString(stripBeginningOfString(path, (*iter).size()).c_str());
             {
                 std::ostringstream os;
