@@ -4,6 +4,7 @@ import tempy
 def run():
     g = tempy.Graph()
     # RECEIVE OSC
+    g.set_log_level("INFO")
     g.node("osc.receive", "oscreceive0")
     g.attr("oscreceive0", "port", tempy.mess(7770))
 
