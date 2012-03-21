@@ -43,8 +43,15 @@ class MidiSenderNode : public Node
         virtual bool onNodeAttributeChanged(const char *name, const Message &value);
         virtual void doTick()
         {}
+        virtual void onInit();
     private:
         midi::MidiOutput::ptr midi_output_;
+        /**
+         * Opens the given port. Return success.
+         */
+        bool open(unsigned int port);
+        static const char * const EVENTS_INLET;
+        static const char * const PORT_ATTR;
 };
 
 } // end of namespace
