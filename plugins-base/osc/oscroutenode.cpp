@@ -63,23 +63,10 @@ void OscRouteNode::processMessage(const char *inlet, const Message &message)
     Message ret = message.cloneRange(1, message.getSize() - 1);
     bool got_one = false;
     std::vector<std::string>::const_iterator iter;
-    int ii = 0;
     for (iter = paths_.begin(); iter != paths_.end(); ++iter)
     {
-        {
-            std::ostringstream os;
-            os << "[osc.route] ";
-            os << " ====== At iteration: " << ++ii ;
-            Logger::log(INFO, os.str().c_str());
-        }
         if (utils::stringsMatch(path.c_str(), (*iter).c_str()))
         {
-            {
-                std::ostringstream os;
-                os << "[osc.route] ";
-                os << " We got a full match so we set \"got_one\" to true and shoot: " << ret << " through outlet: " << (*iter);
-                Logger::log(INFO, os.str().c_str());
-            }
             got_one = true;
         }
         else if (utils::stringBeginsWith(path.c_str(), (*iter).c_str()))
