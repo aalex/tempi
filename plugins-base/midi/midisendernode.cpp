@@ -32,7 +32,6 @@ const char * const MidiSenderNode::PORT_ATTR = "port";
 MidiSenderNode::MidiSenderNode() :
     Node()
 {
-    //addOutlet("0");
     this->setShortDocumentation("Sends MIDI messages to a single device.");
     this->addInlet(EVENTS_INLET, "Send MIDI received from this inlet. (list of unsigned characters)");
     this->addAttribute(Attribute::ptr(new Attribute(PORT_ATTR, Message("i", 0), "STK MIDI device index.")));
@@ -49,7 +48,7 @@ bool MidiSenderNode::onNodeAttributeChanged(const char *name, const Message &val
     if (utils::stringsMatch(name, PORT_ATTR))
     {
         bool success = open((unsigned int) value.getInt(0));
-        // TODO: if (! success) return this->open(0);
+        // TODO: if (! success) { this->setAttribute(PORT_ATTR, Message("i", 0))); return false; }
         return success;
     }
     else

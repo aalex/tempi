@@ -43,8 +43,15 @@ class MidiReceiverNode : public Node
         virtual void processMessage(const char *inlet, const Message &message)
         {}
         virtual bool onNodeAttributeChanged(const char *name, const Message &value);
+        virtual void onInit();
     private:
         midi::MidiInput::ptr midi_input_;
+        /**
+         * Opens the given port. Return success.
+         */
+        bool open(unsigned int port);
+        static const char * const EVENTS_OUTLET;
+        static const char * const PORT_ATTR;
 };
 
 } // end of namespace
