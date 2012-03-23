@@ -1,4 +1,5 @@
 SUBDIRS = \
+    miller \
     tempi-midi-looper \
     tempi-osc-forward \
     tempi-draw \

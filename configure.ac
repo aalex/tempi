@@ -226,6 +226,7 @@ AC_CONFIG_FILES([
         plugins-base/Makefile
         plugins-base/tests/Makefile
         src/Makefile
+        src/miller/Makefile
         src/tempi-midi-looper/Makefile
         src/tempi-osc-forward/Makefile
         src/tempi-draw/Makefile
