@@ -19,7 +19,9 @@ EXTRA_DIST = \
     README
 
 # pkg-config file:
-DISTCLEANFILES = tempi.pc
+DISTCLEANFILES = \
+    doxymain.h \
+    tempi.pc
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = tempi-@TEMPI_API_VERSION@.pc
 
@@ -31,6 +33,11 @@ htmldoc:
 if HAVE_DOXYGEN
 
 doxyfile.stamp:
+	echo "/*! \mainpage Tempi" > doxymain.h
+	echo " * \verbatim" >> doxymain.h
+	cat $(srcdir)/README >> doxymain.h
+	echo " \endverbatim" >> doxymain.h
+	echo " */" >> doxymain.h
 	$(DOXYGEN) doxyfile
 	echo `date -R` > doxyfile.stamp
 
