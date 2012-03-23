@@ -192,6 +192,39 @@ if test "x${ax_cv_boost_regex}" = "xno" ; then
     AC_MSG_ERROR([missing package: libboost-regex-dev])
 fi
 
+AM_PYTHON_PATH
+PYTHON_CPPFLAGS="`python-config --cflags`"
+PYTHON_CPPFLAGS=${PYTHON_CPPFLAGS//"-Wstrict-prototypes"/}
+PYTHON_LDFLAGS="`python-config --ldflags`"
+AC_SUBST(PYTHON_CPPFLAGS)
+AC_SUBST(PYTHON_LDFLAGS)
+
+
+BOOST_REQUIRE([1.35])
+BOOST_REGEX
+BOOST_SYSTEM
+BOOST_FILESYSTEM
+#BOOST_THREAD
+BOOST_PROGRAM_OPTIONS
+BOOST_PYTHON
+
+#AC_MSG_NOTICE([BOOST_LDFLAGS:        ${BOOST_LDFLAGS}])
+AC_MSG_NOTICE([BOOST_CPPFLAGS:             ${BOOST_CPPFLAGS}])
+AC_MSG_NOTICE([BOOST_SYSTEM_LIBS:          ${BOOST_SYSTEM_LIBS}])
+AC_MSG_NOTICE([BOOST_FILESYSTEM_LIBS:      ${BOOST_FILESYSTEM_LIBS}])
+AC_MSG_NOTICE([BOOST_PROGRAM_OPTIONS_LIBS: ${BOOST_PROGRAM_OPTIONS_LIBS}])
+AC_MSG_NOTICE([BOOST_PYTHON_LIBS:          ${BOOST_PYTHON_LIBS}])
+AC_MSG_NOTICE([BOOST_PYTHON_LDFLAGS:       ${BOOST_PYTHON_LDFLAGS}])
+
+
+
+
+
+AX_BOOST_PYTHON
+if test "x${ax_cv_boost_python}" = "xno" ; then
+    AC_MSG_ERROR([missing package: libboost-python-dev])
+fi
+
 dnl AX_BOOST_DATE_TIME
 dnl if test "x${ax_cv_boost_date_time}" = "xno" ; then
 dnl 	AC_MSG_ERROR([missing package: libboost-date-time-dev])
@@ -225,6 +258,7 @@ AC_CONFIG_FILES([
         tempi/tests/Makefile
         plugins-base/Makefile
         plugins-base/tests/Makefile
+        python_module/Makefile
         src/Makefile
         src/tempi-midi-looper/Makefile
         src/tempi-osc-forward/Makefile
