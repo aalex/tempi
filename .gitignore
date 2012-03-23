@@ -28,6 +28,7 @@ doc/html/*.html
 doc/html/doxygen/
 doxyfile
 doxyfile.stamp
+doxymain.h
 examples/particules/COPYING
 examples/particules/INSTALL
 examples/particules/Makefile
