@@ -73,14 +73,11 @@ prototypes/phoenix/findif
 prototypes/tuples
 prototypes/va_list/var_types
 prototypes/variant
+src/miller/miller
 src/tempi-draw/tempi-draw
 src/tempi-inspect/tempi-inspect
 src/tempi-launch/tempi-launch
 src/tempi-midi-looper/tempi-midi-looper
-<<<<<<< HEAD
-src/tempi-midi-looper/threadedscheduler
-=======
->>>>>>> a21c0a2a823e5c574557db69d9e8ea5252c0e218
 src/tempi-osc-forward/tempi-osc-forward
 src/tempi-osc-looper/tempi-osc-looper
 tempi-*.tar.gz
