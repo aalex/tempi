@@ -33,6 +33,11 @@ int main(int argc, char *argv[])
 
 #include "tempi/message.h"
 #include "tempi/scheduler.h"
+#include "tempi/message.h"
+#include "tempi/scheduler.h"
+#include "tempi/threadedscheduler.h"
+#include "tempi/serializer.h"
+#include "tempi/log.h"
 #include "tempi/wrapper.h"
 #include "tempi/log.h"
 #include <boost/algorithm/string.hpp>
@@ -44,6 +49,8 @@ int main(int argc, char *argv[])
 
 // namespaces:
 namespace po = boost::program_options;
+using tempi::INFO;
+using tempi::DEBUG;
 
 // Clutter legacy macro aliases:
 #if CLUTTER_CHECK_VERSION(1,4,0)
@@ -103,16 +110,20 @@ class App
     private:
         bool verbose_;
         bool debug_;
+        bool graph_ok_;
         std::string file_name_;
-        tempi::Wrapper engine_;
+        tempi::ThreadedScheduler::ptr engine_;
+        tempi::serializer::Serializer::ptr saver_;
+        tempi::Graph::ptr graph_;
         ClutterActor *stage_;
         bool createGUI();
-        void setupGraph();
+        bool setupGraph();
 };
 
 App::App() :
     verbose_(false),
-    debug_(false)
+    debug_(false),
+    graph_ok_(false)
 {
     file_name_ = "";
     stage_ = NULL;
@@ -121,6 +132,15 @@ App::App() :
 App::~App()
 {
     // pass
+    if (this->engine_.get() != 0)
+    {
+        {
+            std::ostringstream os;
+            os << __FUNCTION__ << "(): Waiting for Scheduler's thread to join.";
+            tempi::Logger::log(DEBUG, os);
+        }
+        this->engine_->stop();
+    }
 }
 
 static void key_event_cb(ClutterActor *actor, ClutterKeyEvent *event, gpointer user_data)
@@ -153,10 +173,15 @@ bool App::poll()
 
 bool App::launch()
 {
+    if (verbose_)
+        tempi::Logger::getInstance().setLevel(INFO);
+    if (debug_)
+        tempi::Logger::getInstance().setLevel(DEBUG);
     if (stage_ == 0)
     {
         createGUI();
-        setupGraph();
+        if (! setupGraph())
+            return false;
         if (verbose_)
             std::cout << "Running... Press ctrl-C in the terminal to quit. (or ctrl-Q in the GUI)" << std::endl;
         return true;
@@ -168,23 +193,69 @@ bool App::launch()
     }
 }
 
-void App::setupGraph()
+bool App::setupGraph()
 {
-    if (verbose_)
-        this->engine_.setLogLevel("INFO");
-    if (debug_)
-        this->engine_.setLogLevel("DEBUG");
+    using tempi::Message;
+    if (graph_ok_)
+    {
+        std::cerr << "miller: TempiLauncher::" << __FUNCTION__ << ": already called.\n";
+        return false;
+    }
+    // Create Scheduler
+    {
+        std::ostringstream os;
+        os << "miller: Create ThreadedScheduler\n";
+        tempi::Logger::log(DEBUG, os);
+    }
+    engine_.reset(new tempi::ThreadedScheduler);
+    // TODO: make time precision configurable
+    engine_->start(5); // time precision in ms
+    tempi::ScopedLock::ptr lock = engine_->acquireLock();
+    {
+        std::ostringstream os;
+        os << "miller: Create Graph\n";
+        tempi::Logger::log(DEBUG, os);
+    }
+    engine_->createGraph(GRAPH_NAME);
+
     if (this->file_name_ == "")
     {
         tempi::Logger::log(tempi::WARNING, "No file name provided.");
+        return true;
+    }
+    // Check for XML file
+    if (! this->saver_->fileExists(this->file_name_.c_str()))
+    {
+        std::cerr << "miller: ERROR: File \"" << this->file_name_ << "\" not found!\n";
+        return false;
     }
     else
     {
         std::ostringstream os;
-        os << "Loading file " << this->file_name_;
-        tempi::Logger::log(tempi::INFO, os);
-        this->engine_.loadGraph(GRAPH_NAME, this->file_name_);
+        os << "miller: Found " << this->file_name_;
+        tempi::Logger::log(DEBUG, os);
     }
+    //if (verbose_)
+    //    std::cout << (*engine_.get()) << std::endl;
+    
+    graph_ = engine_->getGraph(GRAPH_NAME);
+
+    // load graph
+    saver_->load(*graph_.get(), this->file_name_.c_str());
+    graph_->tick(); // FIXME
+
+    graph_ok_ = true;
+    if (debug_)
+    {
+        //engine_->sleepThisThread(6.0f);
+        std::cout << (*engine_.get()) << std::endl;
+    }
+    {
+        std::ostringstream os;
+        os << "miller: Loaded " << this->file_name_;
+        tempi::Logger::log(DEBUG, os);
+    }
+    return true;
 }
 
 static void on_frame_cb(ClutterTimeline * /*timeline*/, guint * /*ms*/, gpointer user_data)
@@ -295,8 +366,10 @@ int main(int argc, char *argv[])
     if (clutter_init(&argc, &argv) != CLUTTER_INIT_SUCCESS)
         return 1;
 
-    app.launch();
-    clutter_main();
+    if (app.launch())
+        clutter_main();
+    else
+        return 1;
     return 0;
 }
 
