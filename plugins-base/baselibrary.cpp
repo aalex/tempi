@@ -18,6 +18,7 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "plugins-base/3d/3dcomparenode.h"
 #include "plugins-base/baselibrary.h"
 #include "plugins-base/flow/anynode.h"
 #include "plugins-base/flow/appendnode.h"
@@ -98,6 +99,7 @@ void BaseLibrary::load(NodeFactory &factory, const char *prefix) const
 
 #ifdef HAVE_SPATOSC
     factory.registerTypeT<SpatoscNode>(concatenate("base.", "spatosc").c_str());
+    factory.registerTypeT<Angle3dNode>(concatenate("3d.", "angle").c_str());
 #endif // HAVE_SPATOSC
 
     factory.registerTypeT<AddNode>(concatenate("math.", "+").c_str());
@@ -116,10 +118,12 @@ void BaseLibrary::load(NodeFactory &factory, const char *prefix) const
 #endif // HAVE_CLUTTER
 
 // TODO: #ifdef HAVE_STK
+    factory.registerTypeT<ControlBuilderNode>(concatenate("midi.", "control").c_str());
     factory.registerTypeT<NoteBuilderNode>(concatenate("midi.", "note").c_str());
     factory.registerTypeT<MidiReceiverNode>(concatenate("midi.", "input").c_str());
     factory.registerTypeT<MidiSenderNode>(concatenate("midi.", "output").c_str());
     factory.registerTypeT<MidiRouteNode>(concatenate("midi.", "route").c_str());
+    factory.registerTypeT<ProgramChangeBuilderNode>(concatenate("midi.", "program").c_str());
 // TODO: #endif // HAVE_STK
 
     factory.registerTypeT<NearestNoteNode>(concatenate("music.", "nearest.note").c_str());

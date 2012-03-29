@@ -33,8 +33,10 @@ bool stringBeginsWith(const char *text, const char *pattern)
     size_t length = strlen(pattern);
     if (strlen(text) < length)
         return false;
-    if (strncmp(text, pattern, length))
+    if (strncmp(text, pattern, length) == 0)
         return true;
+    else
+        return false;
 }
 
 bool stringsMatch(const char *a, const char *b)

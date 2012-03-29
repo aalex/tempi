@@ -19,32 +19,52 @@
  */
 
 #include "plugins-base/midi/midireceivernode.h"
+#include "tempi/utils.h"
+#include "tempi/log.h"
 #include <iostream>
 
 namespace tempi {
 namespace plugins_base {
 
+const char * const MidiReceiverNode::EVENTS_OUTLET = "0";
+const char * const MidiReceiverNode::PORT_ATTR = "port";
+
 MidiReceiverNode::MidiReceiverNode() :
     Node()
 {
-    setShortDocumentation("Receives MIDI messages from a single device.");
-    addOutlet("0", "MIDI messages (unsigned characters) flow through this outlet.");
-    Message port = Message("i", 0);
-    addAttribute(Attribute::ptr(new Attribute("port", port, "STK MIDI device index.")));
+    this->setShortDocumentation("Receives MIDI messages from a single device.");
+    this->addOutlet(EVENTS_OUTLET, "MIDI messages (unsigned characters) flow through this outlet.");
+    this->addAttribute(Attribute::ptr(new Attribute(PORT_ATTR, Message("i", 0), "STK MIDI device index.")));
     midi_input_.reset(new midi::MidiInput);
 }
 
 bool MidiReceiverNode::onNodeAttributeChanged(const char *name, const Message &value)
 {
     //std::cout << "MidiReceiverNode::" << __FUNCTION__ << "(" << name << ", " << value << ")" << std::endl;
-    static std::string key("port");
-    if (key == name)
+    if (utils::stringsMatch(name, PORT_ATTR))
     {
-        //std::cout << "MidiInput::" << __FUNCTION__ << " open port " << value.getInt(0) << std::endl;
-        // FIXME
-        midi_input_->open((unsigned int) value.getInt(0));
+        bool success = open((unsigned int) value.getInt(0));
+        // TODO: if (! success) { this->setAttribute(PORT_ATTR, Message("i", 0))); return false; }
+        return success;
     }
-    return true;
+    else
+        return true;
+}
+
+bool MidiReceiverNode::open(unsigned int port)
+{
+    {
+        std::ostringstream os;
+        os << "MidiReceiverNode: open port " << port;
+        Logger::log(INFO, os);
+    }
+    midi_input_.reset(new midi::MidiInput);
+    return midi_input_->open(port);
+}
+
+void MidiReceiverNode::onInit()
+{
+    this->open(0);
 }
 
 void MidiReceiverNode::doTick()
@@ -58,7 +78,7 @@ void MidiReceiverNode::doTick()
     std::vector<Message>::iterator iter;
     for (iter = messages.begin(); iter != messages.end(); ++iter)
     {
-        output("0", *iter);
+        output(EVENTS_OUTLET, *iter);
     }
 }
 

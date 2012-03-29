@@ -7,12 +7,20 @@ This release is a developer snapshot in the 0.1 series.
 
 New features:
 
-* Supprt abstractions: [abs.abstraction], [abs.inlet], [abs.outlet]
-* New node types: [sampler.read], [sample.write], [sampler.sample]
+* Support abstractions: [abs.abstraction], [abs.inlet], [abs.outlet]
+* New sampler node types: [sampler.read], [sample.write], [sampler.sample]
+* New string node types: [string.join], [string.characters], [string.split]
+* Rename [midi.send] to [midi.output] and [midi.receive] to [midi.input]
+* New MIDI nodes: [midi.{note,program}]
+* New OSC nodes: [osc.{prepend,route}]
+* New 3D node: [3d.angle]
+* New math node: [math.map]
 * Nodes can access the regions owned by their scheduler.
 * Add NameAllocator (not used yet)
 * New node types: [music.nearest.note], [music.monodic], [base.dict], [random.int], [random.drunk]
 * Base plugins are now dynamically loaded with Loader, a singleton.
+* New pads: __call__ and __return__
+* Can get/set/list attributes via __attr__ inlet/outlet
 
 
 Bugs fixed:
@@ -20,8 +28,13 @@ Bugs fixed:
 * Move plugins-base's tests and core's tests to their directory
 * Fix rst format output by utilities
 * Refactor math nodes using inheritance
-* New examples: oscreceive.xml, toonloop-music.xml, abs.xml
+* New examples: oscreceive.xml, toonloop-music.xml, abs.xml, strings.xml
 * Dependencies not mandatory anymore: Clutter, liblo, GLib, spatosc
+
+
+Known bugs:
+
+* Favours libraries from /usr/local/lib/, rather than ./ if present.
 
 
 Tempi 0.1.10 (2012-02-19)

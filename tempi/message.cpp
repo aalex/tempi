@@ -603,7 +603,7 @@ void Message::prependMessage(const Message &message)
     {
         std::ostringstream os;
         os << "Message." << __FUNCTION__ << ": " << message << " to " << (*this);
-        Logger::log(INFO, os);
+        Logger::log(DEBUG, os);
     }
     if (message.getSize() == 0)
     {

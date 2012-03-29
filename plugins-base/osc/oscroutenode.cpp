@@ -36,6 +36,16 @@ OscRouteNode::OscRouteNode() :
     addInlet("incoming", "incoming messages");
 }
 
+static std::string stripBeginningOfString(const std::string &text, unsigned int position);
+
+std::string stripBeginningOfString(const std::string &text, unsigned int position)
+{
+    if (position > text.size())
+        return text;
+    else
+        return std::string(text.begin() + position, text.end());
+}
+
 void OscRouteNode::processMessage(const char *inlet, const Message &message)
 {
     if (! utils::stringsMatch(inlet, "incoming"))
@@ -45,7 +55,7 @@ void OscRouteNode::processMessage(const char *inlet, const Message &message)
     if (! message.indexMatchesType(0, 's'))
     {
         std::ostringstream os;
-        os << "[route] processMessage: First atom is not a string: " << message;
+        os << "[osc.route] processMessage: First atom is not a string: " << message;
         Logger::log(DEBUG, os.str().c_str());
         return;
     }
@@ -55,20 +65,41 @@ void OscRouteNode::processMessage(const char *inlet, const Message &message)
     std::vector<std::string>::const_iterator iter;
     for (iter = paths_.begin(); iter != paths_.end(); ++iter)
     {
-        if (utils::stringBeginsWith(path.c_str(), (*iter).c_str()))
+        if (utils::stringsMatch(path.c_str(), (*iter).c_str()))
         {
-            std::string result(path.begin() + (*iter).size(), path.end());
-            ret.prependString(result.c_str());
+            got_one = true;
         }
-        output((*iter).c_str(), ret);
-        got_one = true;
-    }
-    if (! got_one)
-    {
+        else if (utils::stringBeginsWith(path.c_str(), (*iter).c_str()))
         {
-            std::ostringstream os;
-            os << "[osc.route] processMessage: Could not find match for message:  " << message;
-            Logger::log(DEBUG, os.str().c_str());
+            // Remove prefix from path if it matches its beginning, or remove the whole atom if matches it completely.
+            ret.prependString(stripBeginningOfString((*iter), (*iter).size()).c_str());
+            {
+                std::ostringstream os;
+                os << "[osc.route] ";
+                os << "Incoming path \"" << path << "\" begins with " << (*iter);
+                os << " so we strip it from " << (*iter) << " hence resulting message is " << ret;
+                Logger::log(INFO, os.str().c_str());
+            }
+            got_one = true;
+        }
+        if (got_one)
+        {
+            {
+                std::ostringstream os;
+                os << "[osc.route] ";
+                os << " We got a match so we output result: " << ret << " through outlet: " << (*iter);
+                Logger::log(INFO, os.str().c_str());
+            }
+            output((*iter).c_str(), ret);
+            got_one = false;
+        }
+        else
+        {
+            {
+                std::ostringstream os;
+                os << "[osc.route] processMessage: Could not find match for message:  " << message;
+                Logger::log(DEBUG, os.str().c_str());
+            }
         }
     }
 }

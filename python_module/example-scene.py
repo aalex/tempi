@@ -10,6 +10,7 @@ def run():
     g.connect("count0", "0", "print0", "0")
     g.attr("metro0", "running", tempy.mess(True))
     g.runUntilControlC()
+    g.save("example_scene.xml")
 
 if __name__ == "__main__":
     run()

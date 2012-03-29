@@ -84,6 +84,11 @@ void LineNode::computeTargets(const Message &message)
         }
         return;
     }
+    else
+    {
+        // IMPORTANT!!!
+        this->doTick();
+    }
 
     // else
     // size >= 2
@@ -171,7 +176,7 @@ bool LineNode::isTimeToOutput()
     TimePosition rate = timeposition::from_ms(
         (unsigned long long) getAttributeValue(ATTR_RATE).getInt(0));
 
-    if (rate_timer_.elapsed() < rate)
+    if (rate_timer_.elapsed() > rate)
     {
         Logger::Output os;
         os << "[line]: Not yet time to output a new value.";
@@ -201,6 +206,7 @@ void LineNode::doTick()
         if (has_new_target)
         {
             output_something = true;
+            line_.start(target.get<0>(), target.get<1>());
         }
         else
             output_something = false;
@@ -261,6 +267,13 @@ void Line::start(float target, float duration_ms)
     target_ = target;
     duration_ = floatToTimePosition(duration_ms);
     timer_.reset();
+    {
+        Logger::Output os;
+        os << "Line.start(" << target_ << ", " << duration_ms <<
+            " ... duration_=" << duration_ <<
+            " origin_=" << origin_;
+        Logger::log(NOTICE, os);
+    }
 }
 
 float Line::calculateCurrent()
@@ -271,11 +284,11 @@ float Line::calculateCurrent()
 
     if (duration_ == 0L)
         return target_; // avoid division by zero
-    float progress = (float) elapsed / (float) duration_;
+    float progress = (float) elapsed / (float) duration_; // both in ns
     float current = utils::map_float(
         progress,
-        0.0f, (float) duration_,
-        origin_, target_);
+        0.0f, (float) duration_, // map from [0, duration in ns]
+        origin_, target_);       // to [origin, target] (whatever value)
     if (true)
     {
         Logger::Output os;

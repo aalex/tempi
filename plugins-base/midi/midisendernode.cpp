@@ -19,46 +19,75 @@
  */
 
 #include "plugins-base/midi/midisendernode.h"
+#include "tempi/log.h"
+#include "tempi/utils.h"
 #include <iostream>
 
 namespace tempi {
 namespace plugins_base {
 
+const char * const MidiSenderNode::EVENTS_INLET = "0"; // TODO: rename to events?
+const char * const MidiSenderNode::PORT_ATTR = "port";
+
 MidiSenderNode::MidiSenderNode() :
     Node()
 {
-    //addOutlet("0");
-    setShortDocumentation("Sends MIDI messages to a single device.");
-    addInlet("0", "Send MIDI received from this inlet. (list of unsigned characters)");
-    Message port = Message("i", 0);
-    addAttribute(Attribute::ptr(new Attribute("port", port, "STK MIDI device index.")));
+    this->setShortDocumentation("Sends MIDI messages to a single device.");
+    this->addInlet(EVENTS_INLET, "Send MIDI received from this inlet. (list of unsigned characters)");
+    this->addAttribute(Attribute::ptr(new Attribute(PORT_ATTR, Message("i", 0), "STK MIDI device index.")));
     midi_output_.reset(new midi::MidiOutput);
+}
+
+void MidiSenderNode::onInit()
+{
+    this->open(0);
 }
 
 bool MidiSenderNode::onNodeAttributeChanged(const char *name, const Message &value)
 {
-    //std::cout << "MidiSenderNode::" << __FUNCTION__ << "(" << name << ", " << value << ")" << std::endl;
-    static std::string key("port");
-    if (key == name)
+    if (utils::stringsMatch(name, PORT_ATTR))
     {
-        //std::cout << "MidiSenderNode::" << __FUNCTION__ << " open port " << value.getInt(0) << std::endl;
-        midi_output_->open((unsigned int) value.getInt(0));
+        bool success = open((unsigned int) value.getInt(0));
+        // TODO: if (! success) { this->setAttribute(PORT_ATTR, Message("i", 0))); return false; }
+        return success;
     }
-    return true;
+    else
+        return true;
+}
+
+bool MidiSenderNode::open(unsigned int port)
+{
+    {
+        std::ostringstream os;
+        os << "MidiSenderNode: open port " << port;
+        Logger::log(INFO, os);
+    }
+    midi_output_.reset(new midi::MidiOutput);
+    return midi_output_->open(port);
 }
 
 // TODO: output the list of devices upon query
 
 void MidiSenderNode::processMessage(const char *inlet, const Message &message)
 {
+    if (! utils::stringsMatch(inlet, EVENTS_INLET))
+        return;
     if (midi_output_->isOpen())
     {
         bool ok = midi_output_->sendMessage(message);
         if (! ok)
-            std::cout << "MidiSenderNode::" << __FUNCTION__ << ": Error sending " << message << std::endl;
+        {
+            std::ostringstream os;
+            os << "MidiSenderNode::" << __FUNCTION__ << ": Error sending " << message;
+            Logger::log(WARNING, os);
+        }
     }
     else
-        std::cout << "MidiSenderNode::" << __FUNCTION__ << ": MIDI output is not open. Cannot send " << message << std::endl;
+    {
+        std::ostringstream os;
+        os << "MidiSenderNode::" << __FUNCTION__ << ": MIDI output is not open. Cannot send " << message;
+        Logger::log(WARNING, os);
+    }
 }
 
 } // end of namespace

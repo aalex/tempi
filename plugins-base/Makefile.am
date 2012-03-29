@@ -45,6 +45,7 @@ libtempi_plugins_base_la_includedir = $(includedir)/tempi-$(TEMPI_API_VERSION)
 ## and the variable name derived from that.
 ## PLEASE KEEP THEM IN ALPHABETICAL ORDER
 libtempi_plugins_base_la_SOURCES = \
+    3d/3dcomparenode.cpp \
 	abstraction/abstractionnode.cpp \
 	abstraction/inletnode.cpp \
 	abstraction/outletnode.cpp \
@@ -93,6 +94,7 @@ libtempi_plugins_base_la_SOURCES = \
     string/stringsplitnode.cpp
 
 EXTRA_DIST = \
+    3d/3dcomparenode.h \
 	abstraction/abstractionnode.h \
 	abstraction/inletnode.h \
 	abstraction/outletnode.h \
