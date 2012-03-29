@@ -34,6 +34,7 @@ int main(int argc, char *argv[])
 #include "tempi/message.h"
 #include "tempi/scheduler.h"
 #include "tempi/wrapper.h"
+#include "tempi/log.h"
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/program_options.hpp>
@@ -65,6 +66,7 @@ namespace miller {
 
 // String constants:
 static const char *PROGRAM_NAME = "miller";
+static const char *GRAPH_NAME = "graph0";
 
 // Color constants:
 static ClutterColor black = { 0x00, 0x00, 0x00, 0xff };
@@ -169,9 +171,20 @@ bool App::launch()
 void App::setupGraph()
 {
     if (verbose_)
-        engine_.setLogLevel("INFO");
+        this->engine_.setLogLevel("INFO");
     if (debug_)
-        engine_.setLogLevel("DEBUG");
+        this->engine_.setLogLevel("DEBUG");
+    if (this->file_name_ == "")
+    {
+        tempi::Logger::log(tempi::WARNING, "No file name provided.");
+    }
+    else
+    {
+        std::ostringstream os;
+        os << "Loading file " << this->file_name_;
+        tempi::Logger::log(tempi::INFO, os);
+        this->engine_.loadGraph(GRAPH_NAME, this->file_name_);
+    }
 }
 
 static void on_frame_cb(ClutterTimeline * /*timeline*/, guint * /*ms*/, gpointer user_data)
