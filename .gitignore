@@ -6,6 +6,7 @@
 *.o
 *.patch
 *.pc
+*.pdf
 *.so
 *.swp
 *~
@@ -54,6 +55,7 @@ plugins-base/tests/check_math
 plugins-base/tests/check_slide
 plugins-base/tests/test
 prototypes/any
+prototypes/atom-factory/run
 prototypes/fusion/vec
 prototypes/kinect/freedraw
 prototypes/matrix_type/blobreceiver
@@ -75,6 +77,10 @@ src/tempi-draw/tempi-draw
 src/tempi-inspect/tempi-inspect
 src/tempi-launch/tempi-launch
 src/tempi-midi-looper/tempi-midi-looper
+<<<<<<< HEAD
+src/tempi-midi-looper/threadedscheduler
+=======
+>>>>>>> a21c0a2a823e5c574557db69d9e8ea5252c0e218
 src/tempi-osc-forward/tempi-osc-forward
 src/tempi-osc-looper/tempi-osc-looper
 tempi-*.tar.gz
