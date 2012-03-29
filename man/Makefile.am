@@ -7,8 +7,8 @@ man_MANS = \
 	tempi-inspect.1
 
 EXTRA_DIST = $(man_MANS) \
-   man-midilooper.txt \
-   man-osc-forward.txt \
+   man-tempi-midi-looper.txt \
+   man-tempi-osc-forward.txt \
    man-tempi-draw.txt \
    man-tempi-launch.txt \
    man-tempi-osc-looper.txt \
