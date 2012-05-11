@@ -5,7 +5,7 @@
 *.lo
 *.o
 *.patch
-*.pc
+tempi*.pc
 *.pdf
 *.so
 *.swp
