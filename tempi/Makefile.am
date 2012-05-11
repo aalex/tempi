@@ -5,7 +5,7 @@ AM_CXXFLAGS = \
     $(BOOST_CPPFLAGS) \
     $(LIBXML_CFLAGS) \
     $(LIBLO_CFLAGS) \
-    $(STK_CXXFLAGS) \
+    $(STK_CFLAGS) \
     -I$(top_srcdir) \
     -I$(top_srcdir)/plugins-base \
     -I$(top_srcdir)/tempi

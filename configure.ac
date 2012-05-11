@@ -109,7 +109,14 @@ AC_CHECK_FUNCS([gettimeofday memmove mkdir setenv sqrt strchr strpbrk uname])
 
 AX_PTHREAD
 
-AC_STK
+# check for the Synthesis Toolkit
+export PKG_CONFIG_PATH=$PWD
+PKG_CHECK_MODULES([STK], [stk], have_stk=true, have_stk=false)
+if test "x${have_stk}" = "xfalse" ; then
+    AC_MSG_WARN([missing package: libstk0-dev])
+else
+    AC_DEFINE(HAVE_STK,[1],[STK headers successfully detected])
+fi
 
 # Glib
 PKG_CHECK_MODULES([GLIB], [glib-2.0 gthread-2.0], have_glib=true, have_glib=false)

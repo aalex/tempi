@@ -29,7 +29,9 @@
 #include "tempi/concurrentqueue.h"
 #include "tempi/sharedptr.h"
 #include "tempi/message.h"
+//#ifdef HAVE_STK
 #include <stk/RtMidi.h>
+//#endif // HAVE_STK
 
 namespace tempi {
 namespace midi {
@@ -62,7 +64,9 @@ class MidiInput
         unsigned int ports_count_;
         std::string client_name_;
         ConcurrentQueue<Message> messaging_queue_;
+//#ifdef HAVE_STK
         RtMidiIn *midi_in_;
+//#endif // HAVE_STK
         // methods:
         void pushMessage(const Message &message);
         static void input_message_cb(double delta_time,
