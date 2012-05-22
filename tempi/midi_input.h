@@ -30,7 +30,7 @@
 #include "tempi/sharedptr.h"
 #include "tempi/message.h"
 //#ifdef HAVE_STK
-#include <stk/RtMidi.h>
+#include <RtMidi.h>
 //#endif // HAVE_STK
 
 namespace tempi {

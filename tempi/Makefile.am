@@ -5,7 +5,7 @@ AM_CXXFLAGS = \
     $(BOOST_CPPFLAGS) \
     $(LIBXML_CFLAGS) \
     $(LIBLO_CFLAGS) \
-    $(STK_CFLAGS) \
+    $(RTMIDI_CFLAGS) \
     -I$(top_srcdir) \
     -I$(top_srcdir)/plugins-base \
     -I$(top_srcdir)/tempi
@@ -19,7 +19,7 @@ AM_LIBS = \
     $(LIBLO_LIBS) \
     $(LIBXML_LIBS) \
     $(LOG4CPP_LIBS) \
-    $(STK_LIBS)
+    $(RTMIDI_LIBS)
 
 # this file is not installed, just included by .cpp files at compile time.
 EXTRA_DIST = config.h

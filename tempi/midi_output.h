@@ -29,7 +29,7 @@
 #include "tempi/concurrentqueue.h"
 #include "tempi/sharedptr.h"
 #include "tempi/message.h"
-#include <stk/RtMidi.h>
+#include <RtMidi.h>
 
 namespace tempi {
 namespace midi {

@@ -109,13 +109,12 @@ AC_CHECK_FUNCS([gettimeofday memmove mkdir setenv sqrt strchr strpbrk uname])
 
 AX_PTHREAD
 
-# check for the Synthesis Toolkit
-export PKG_CONFIG_PATH=$PWD
-PKG_CHECK_MODULES([STK], [stk], have_stk=true, have_stk=false)
-if test "x${have_stk}" = "xfalse" ; then
-    AC_MSG_WARN([missing package: libstk0-dev])
+# check for the RTMIDI
+PKG_CHECK_MODULES([RTMIDI], [rtmidi], have_rtmidi=true, have_rtmidi=false)
+if test "x${have_rtmidi}" = "xfalse" ; then
+    AC_MSG_WARN([missing package: librtmidi-dev])
 else
-    AC_DEFINE(HAVE_STK,[1],[STK headers successfully detected])
+    AC_DEFINE(HAVE_RTMIDI,[1],[RTMIDI headers successfully detected])
 fi
 
 # Glib
