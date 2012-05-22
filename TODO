@@ -63,7 +63,6 @@ To do for 0.2
 * FIXME: removeTrailingPathSep crashes if has a trailing slash...
 * FIXME: onAttributeChanged is called sometime twice. If the attribute has not been changed, it should not be called again
 * tempi-launch should fail with error in case some node type could not be created
-* STK MIDI: fix cflags for PPC 
 * __attr__ inlet: Support "list" and "get" messages.
 * tempi-looper: multitrack GUI configured with an XML Graph
 * Rename Filter to AbstractFilterNode.
