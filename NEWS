@@ -11,11 +11,11 @@ New features:
 
 Bugs fixed:
 
-* (fill me)
+* Fix STK CFLAGS. Depend on RTMIDI now that it's split.
 
 Known bugs:
 
-* Favours libraries from /usr/local/lib/, rather than ./ if present.
+* Favours Tempi plugins from /usr/local/lib/, rather than ./ if present.
 
 
 Tempi 0.1.12 (2012-03-29)
@@ -49,7 +49,7 @@ Bugs fixed:
 
 Known bugs:
 
-* Favours libraries from /usr/local/lib/, rather than ./ if present.
+* Favours Tempi plugins from /usr/local/lib/, rather than ./ if present.
 
 
 Tempi 0.1.10 (2012-02-19)
