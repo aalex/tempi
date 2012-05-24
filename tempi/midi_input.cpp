@@ -20,7 +20,7 @@
 #include "tempi/midi_input.h"
 #include <cstdlib>
 #include <iostream>
-#include <stk/RtMidi.h>
+#include <RtMidi.h>
 
 namespace tempi {
 namespace midi {

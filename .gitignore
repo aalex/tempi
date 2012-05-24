@@ -5,7 +5,8 @@
 *.lo
 *.o
 *.patch
-*.pc
+tempi*.pc
+*.pdf
 *.so
 *.swp
 *~
@@ -28,6 +29,7 @@ doc/html/*.html
 doc/html/doxygen/
 doxyfile
 doxyfile.stamp
+doxymain.h
 examples/particules/COPYING
 examples/particules/INSTALL
 examples/particules/Makefile
@@ -53,6 +55,7 @@ plugins-base/tests/check_math
 plugins-base/tests/check_slide
 plugins-base/tests/test
 prototypes/any
+prototypes/atom-factory/run
 prototypes/fusion/vec
 prototypes/kinect/freedraw
 prototypes/matrix_type/blobreceiver
@@ -70,6 +73,7 @@ prototypes/phoenix/findif
 prototypes/tuples
 prototypes/va_list/var_types
 prototypes/variant
+src/miller/miller
 src/tempi-draw/tempi-draw
 src/tempi-inspect/tempi-inspect
 src/tempi-launch/tempi-launch
