@@ -13,7 +13,6 @@ TODO ASAP
 
 To do for 0.2
 -------------
-* FIXME: prevent from stack overflows
 * Should all attributes and pad names use underscores?
 * Delete unused node types: [base.appsink]
 * Rename:
@@ -79,6 +78,8 @@ To do for 0.2
 
 To do for 0.4
 -------------
+* FIXME: prevent from stack overflows
+* Get done with the behaviour tree library - separate? Inspired from libbehaviour and others
 * Add homogenous list type for attributes/messages/atoms
 * Add symbol data type. (map of strings "globally" accessible and passed around as an index.
 * loadBang: Find a better name. Node::loadBang only once? When to Graph::loadBang?
