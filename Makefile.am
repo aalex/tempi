@@ -7,6 +7,7 @@ AUTOMAKE_OPTIONS = foreign
 SUBDIRS = \
     tempi \
 	plugins-base \
+    python_module \
     src \
     data \
     man \
