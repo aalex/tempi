@@ -1,6 +1,50 @@
 Tempi release notes
 ===================
 
+Tempi 0.1.14 (2012-05-28)
+-------------------------
+This release is a developer snapshot in the 0.1 series.
+
+Bugs fixed:
+
+* Fix STK CFLAGS. Depend on RTMIDI now that it's split. (in Ubuntu 12.04 and up)
+* Use boost.m4 macros
+
+
+Tempi 0.1.12 (2012-03-29)
+-------------------------
+This release is a developer snapshot in the 0.1 series.
+
+New features:
+
+* Support abstractions: [abs.abstraction], [abs.inlet], [abs.outlet]
+* New sampler node types: [sampler.read], [sample.write], [sampler.sample]
+* New string node types: [string.join], [string.characters], [string.split]
+* Rename [midi.send] to [midi.output] and [midi.receive] to [midi.input]
+* New MIDI nodes: [midi.{note,program}]
+* New OSC nodes: [osc.{prepend,route}]
+* New 3D node: [3d.angle]
+* New math node: [math.map]
+* Nodes can access the regions owned by their scheduler.
+* Add NameAllocator (not used yet)
+* New node types: [music.nearest.note], [music.monodic], [base.dict], [random.int], [random.drunk]
+* Base plugins are now dynamically loaded with Loader, a singleton.
+* New pads: __call__ and __return__
+* Can get/set/list attributes via __attr__ inlet/outlet
+
+Bugs fixed:
+
+* Move plugins-base's tests and core's tests to their directory
+* Fix rst format output by utilities
+* Refactor math nodes using inheritance
+* New examples: oscreceive.xml, toonloop-music.xml, abs.xml, strings.xml
+* Dependencies not mandatory anymore: Clutter, liblo, GLib, spatosc
+
+Known bugs:
+
+* Favours Tempi plugins from /usr/local/lib/, rather than ./ if present.
+
+
 Tempi 0.1.10 (2012-02-19)
 -------------------------
 This release is a developer snapshot in the 0.1 series.
@@ -32,6 +76,7 @@ Tempi 0.1.8 (2012-01-12)
 This release is a developer snapshot in the 0.1 series.
 
 New features:
+
 * New node types: [math.+], [math.-], [math.<], [math.>], [math./], [math.*], [math.==], [math.!=]
 * New node types: [midi.route]
 * Allow non type-strict attributes
@@ -47,10 +92,12 @@ Tempi 0.1.6 (2011-12-19)
 This release is a developer snapshot in the 0.1 series.
 
 New features:
+
 * Read multiple events at once from a Region
 * Add Node::init() to move node initialization routines out of the constructor.
 
 Bugs fixed:
+
 * Fix timing issue with first event recorded in a Region
 
 
@@ -59,6 +106,7 @@ Tempi 0.1.4 (2011-12-14)
 This release is a developer snapshot in the 0.1 series.
 
 New features:
+
 * New atom types: pointer, unsigned char
 * New command-line utilities: midilooper
 * New namespaces: base, osc, midi, sampler, mapping, table
@@ -76,6 +124,7 @@ New features:
 * Rename utility "tempi" to "tempi-draw"
 
 Bugs fixed:
+
 * Move executables' source code to subdirectories
 * Remove deprecated property.{h,cpp} files
 * midilooper: do not list our own ports
@@ -88,6 +137,7 @@ Tempi 0.1.2 (2011-10-14)
 This release is a developer snapshot in the 0.1 series.
 
 New features:
+
 * The osc-forward command-lineutility.
 * OscReceiverNode and OscSenderNode
 * can instanciate Message with va_list
@@ -103,6 +153,7 @@ New features:
 * Add more version macros
 
 Bugs fixed:
+
 * Tests are silent
 * Moved specific nodes to subdirectories
 * Fix bad exception type

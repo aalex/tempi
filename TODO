@@ -1,39 +1,97 @@
 To do in Tempi
 ==============
 
+TODO ASAP
+---------
+* [flow.line]
+* [flow.map]
+* [3d.speed]
+* [3d.orientation]
+* [3d.smooth]
+* [midi.eventtype]
+* [flow.select] 
+
 To do for 0.2
 -------------
-* FIXME: clutter.stage segfaults
-* FIXME: base.spatosc seems not to work after the initial OSC messages sent
+* Should all attributes and pad names use underscores?
+* Delete unused node types: [base.appsink]
+* Rename:
+  * sampler.sampler -> sampler.simple
+  * midi.send -> midi.output
+  * midi.receive -> midi.input
+  * base.any -> flow.any
+  * base.append -> flow.append
+  * base.cast -> flow.cast
+  * base.counter -> utils.counter
+  * base.delay -> time.delay
+  * base.dict -> utils.dict
+  * base.loadmess -> flow.loadmess
+  * base.metro -> time.metro
+  * base.nop -> flow.nop
+  * base.prepend -> flow.prepend
+  * base.print -> utils.print
+  * base.route -> flow.route
+  * base.spatosc -> spatosc.send
+  * base.spigot -> flow.spigot
+* libmapper nodes: libmapper.{in,out}put device="tempi", name="default", type=f
+* 3d.angle: should not depend on spatosc
+* validate names with echo example | grep -P -e "^([A-Za-z0-9\.\-_])+$"
+* Scheduler: support OSC messages in the form /graph0/node0/__attr__ s:foo i:2 f:3.14159
+* Node: add this->send("path", ...) and this->addReceiver("path")
+* XML: rename "id" to "name"
+* package python module with autotools
+* implement message.appendMessage()
+* [3d.line]
+* Scheduler: contain Tables
+* Inlet/Outlet must be a child of Pad. give pads some signals
+* Abstraction: share the same scheduler. (use a NameGenerator to manage their names)
+* Abstraction: provide unique id, via a [abs.uuid]
+* Abstraction: support an arguments attribute. Read it from the abstraction via [abs.argument]
+* Abstraction: deg2rad should be one in /usr/share/tempi/math.deg2rad.xml
+* Abstraction: provide [abs.doc] and doc for inlets/outlets
+* Scheduler should provide a map of config options. (messages) Default path for externals should be in /etc/tempi
+* send / receive! (provide "global" receive symbols as signals) /send <symbol> ...
+* on closed/killed signal (message sent)
+* rename all tools so that their name start with tempi-*
+* abstractions: support a list of paths to be looked for files.
+* abstractions: reuse same scheduler for abstractions than their parent so that everything is "global"
+* FIXME: When we create a second Scheduler, the Loader refuses to load again base lib
+* FIXME: OscReceiver segfaults if port is busy
 * FIXME: Serializer::load sets node attributes twice?
-* serializer: write class before node name
-* World: containing Regions, BehaviourTrees, Tables and Graphs
-* STK MIDI: fix cflags for PPC 
-* __attr__ inlet: remove "set" prefix. Support "__list__" method.
-* loadBang: Find a better name. Node::loadBang only once? When to Graph::loadBang?
-* move tests to tempi/tests and plugins-base/tests
-* Move nodes to plugins-base // FIXME: header files are not installed in subdirectories, but flat
-* tempi-osc-looper: multitrack GUI configured with an XML Graph
-* [math.***]: create base classes FloatMathNode and BoolMathNode
-* Rename Filter to FilterNode.
-* FilterNode.filter should return a const&
-* Node::addMethod (i18n doc)
-* Scheduler::deleteGraph()
-* Score::load(fileName)
-* Score::save(fileName)
+* FIXME: fix path to libs
+* FIXME: removeTrailingPathSep crashes if has a trailing slash...
+* FIXME: onAttributeChanged is called sometime twice. If the attribute has not been changed, it should not be called again
+* tempi-launch should fail with error in case some node type could not be created
+* __attr__ inlet: Support "list" and "get" messages.
+* tempi-looper: multitrack GUI configured with an XML Graph
+* Rename Filter to AbstractFilterNode.
+* AbstractFilterNode.filter should return a const&
 * Fix segfault in, or disable, [clutter.stage]
-* Fix segfault in [base.route] when using tempi-launch
-* [base.line]
-* [base.receive]
-* [base.send]
-* [base.timer]
-* [sampler.reader]
-* [sampler.score]
-* [sampler.writer]
-* [base.metro]: fix unit tests
+* [flow.receive]
+* [flow.send]
+* [time.timer]
+* [flow.smooth]
+* ? rename connection to connect in XML schema
+* Scheduler: contain BehaviourTrees
+* FIXME: split utils.h so that compilation gets faster
+* FIXME: clutter.stage segfaults
 
 To do for 0.4
 -------------
+* FIXME: prevent from stack overflows
+* Get done with the behaviour tree library - separate? Inspired from libbehaviour and others
+* Add homogenous list type for attributes/messages/atoms
+* Add symbol data type. (map of strings "globally" accessible and passed around as an index.
+* loadBang: Find a better name. Node::loadBang only once? When to Graph::loadBang?
+* Atom types: replace switch/case by a hierarchy of classes
+* Allow range for int attributes?
+* abstractions and tempi-launch: watch for changes in files with GFileMonitor
+* serializer: write class before node name
+* create a validator for XML schemas
+* make documentation strings common to all objects of a same type to save memory use
+* allow pads to have types
+* [base.metro]: fix unit tests
+* Support lists of messages?
 * (WONTFIX) list/configure MIDI ports by their ALSA ID, not an index
 * Bugfix: Message.*(...): avoid segfault if length does not match
 * Bugfix: Message.*(...): avoid segfault if types do not match
@@ -50,10 +108,8 @@ To do for 0.4
 * tempi::LIST
 * [mapping.*] should be provided a typetag argument. (and support types fdi)
 * [mapping.curve]
-* [base.converttype]
-* [base.trigger]
 * [base.typematches]
-* [base.python]
+* [script.python]
 * [math.clip]
 * [math.rsqrt]
 * [math.sqrt]
@@ -64,8 +120,6 @@ To do for 0.4
 * [midi.route.controls]
 * [midi.route.note]
 * [midi.route.notes]
-* [osc.prepend]
-* [osc.route]
 * [osc.pop]
 * [table.read]
 * [table.write]
@@ -73,7 +127,7 @@ To do for 0.4
 
 To do for 0.6
 -------------
-* [base.textfile]
+* [file.textfile]
 * [freenect.pointscloud]
 * [math.abs]
 * [math.dbtopow]
@@ -89,12 +143,9 @@ To do for 0.6
 * [base.regex]
 * [rtp.rtpreceive]
 * [rtp.rtpsend]
-* [spatosc.scene]
 * [spin.receive]
 * [spin.send]
 * Support loading extensions and finding files from a list of paths
-* All nodes should have an enabled attribute
-* All nodes should have a verbose attribute
 * Implement Node::error, which triggers a signal that the Graph catches.
 * Feature: Many OSC sender/receiver with the same host+port should share the same OSC sender. Use a map of tuple<ip,port> to shared_ptr<OscSender>.
 * Bugfix: Prevent from recursion by throwing a RecursionException upon output triggered twice.

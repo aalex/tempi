@@ -35,7 +35,17 @@ void Logger::setLevel(LogLevel level)
     category.setPriority(level);
 }
 
-log4cpp::Category& Logger::log(LogLevel level, const char *message)
+void Logger::log(LogLevel level, const std::ostringstream &os)
+{
+    Logger::log(level, os.str().c_str());
+}
+
+void Logger::log(LogLevel level, const std::string &text)
+{
+    Logger::log(level, text.c_str());
+}
+
+void Logger::log(LogLevel level, const char *message)
 {
     Logger &self = Logger::getInstance();
     log4cpp::Category& category = log4cpp::Category::getInstance(self.category_name_);
@@ -68,7 +78,7 @@ Logger::Logger()
 {
     appender_ = new log4cpp::OstreamAppender("console", &std::cout);
     layout_ = new log4cpp::PatternLayout();
-    layout_->setConversionPattern("%d: %8p - %m %n");
+    layout_->setConversionPattern("%d{%H:%M:%S,%l} %8p - %m %n"); // %d: 
     appender_->setLayout(layout_);
     log4cpp::Category& category = log4cpp::Category::getInstance(category_name_);
     category.setAppender(appender_);

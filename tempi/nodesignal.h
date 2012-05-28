@@ -30,8 +30,7 @@
 #include "tempi/documented.h"
 #include "tempi/sharedptr.h"
 
-namespace tempi
-{
+namespace tempi {
 
 class NodeSignal : public Documented
 {

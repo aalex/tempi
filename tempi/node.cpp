@@ -19,6 +19,7 @@
  */
 
 #include "tempi/node.h"
+#include "tempi/log.h"
 #include <boost/bind.hpp>
 #include <iostream>
 #include <sstream>
@@ -26,14 +27,26 @@
 namespace tempi
 {
 
+const char * const Node::ATTRIBUTES_GET_METHOD_SELECTOR = "get";
+const char * const Node::ATTRIBUTES_GET_OUTPUT_PREFIX = "get";
+const char * const Node::ATTRIBUTES_INLET = "__attr__";
+const char * const Node::ATTRIBUTES_LIST_METHOD_SELECTOR = "list";
+const char * const Node::ATTRIBUTES_LIST_OUTPUT_PREFIX = "list";
+const char * const Node::ATTRIBUTES_OUTLET = "__attr__";
+const char * const Node::ATTRIBUTES_SET_METHOD_SELECTOR = "set";
+const char * const Node::ATTRIBUTES_SET_OUTPUT_PREFIX = "set";
+const char * const Node::ATTRIBUTE_LOG = "__log__";
+const char * const Node::INLET_CREATED_SIGNAL = "__create_inlet__";
+const char * const Node::INLET_DELETED_SIGNAL = "__delete_inlet__";
+const char * const Node::OUTLET_CREATED_SIGNAL = "__create_outlet__";
+const char * const Node::OUTLET_DELETED_SIGNAL = "__delete_outlet__";
+const char * const Node::INLET_CALL = "__call__";
+const char * const Node::OUTLET_RETURN = "__return__";
+
 Node::Node()
 {
+    load_banged_ = false;
     // XXX: Add Signals BEFORE adding inlets/outlets!
-    // TODO: intercept ATTRIBUTE_LOG when set to make sure it's in the right range.
-    //addAttribute(ATTRIBUTE_LOG, Message("i", 1), "How much [1-5] to print debug info in the console. 1=ERROR, 2=CRITICAL, 3=WARNING, 4=INFO, 5=DEBUG");
-    //TODO: __attr__ and __log__ ?
-    //std::cout << __FUNCTION__ << "()" << std::endl;
-
     addSignal(NodeSignal::ptr(new NodeSignal(OUTLET_DELETED_SIGNAL,
         "Triggered when an outlet is deleted. Arguments are: the name of this node, the name of the outlet.", "TODO", "ss")));
     addSignal(NodeSignal::ptr(new NodeSignal(INLET_DELETED_SIGNAL,
@@ -42,9 +55,10 @@ Node::Node()
         "Triggered when an outlet is created. Arguments are: the name of this node, the name of the outlet.", "TODO", "ss")));
     addSignal(NodeSignal::ptr(new NodeSignal(INLET_CREATED_SIGNAL,
         "Triggered when an inlet is created. Arguments are: the name of this node, the name of the inlet.", "TODO", "ss")));
-
-    addInlet(ATTRIBUTES_INLET, "Set attribute value with (s:\"set\", s:name, ...)"); // all nodes have at least one inlet for attributes
-    //addAttribute("log-level", Message("i", 1), "How much [1-5] to print debug info in the console. 1=ERROR, 2=CRITICAL, 3=WARNING, 4=INFO, 5=DEBUG");
+    addInlet(ATTRIBUTES_INLET, "Set attribute value with (s:\"set\", s:<name>, ...) and list them via the __attr__ outlet with the (s:\"list\") message. Get attribute value with (s:\"get\", s:<name>)"); // all nodes have at least one inlet for attributes
+    addOutlet(ATTRIBUTES_OUTLET, "Outputs value of each attribute, prefixed by their respective name, and also the list of all attributes name, prefixed with s:\"__list__\"."); // all nodes have at least one outlet for attributes
+    addOutlet(OUTLET_RETURN, "Outputs return value for every method called, prefixed by the name of the method called.");
+    addInlet(INLET_CALL, "Inlet to call methods of this node. Their return value should be output by the __return__ outlet, prefixed by the name of the method called.");
 }
 
 bool Node::isInitiated() const
@@ -54,32 +68,38 @@ bool Node::isInitiated() const
 
 bool Node::init()
 {
+    {
+        std::ostringstream os;
+        os << "Node.init(): " << getName();
+        Logger::log(DEBUG, os.str().c_str());
+    }
     if (isInitiated())
         return false;
     else
     {
         initiated_ = true; // very important!
         onInit();
-        std::vector<std::string> attributes = listAttributes();
-        std::vector<std::string>::const_iterator iter;
-        for (iter = attributes.begin(); iter != attributes.end(); ++iter)
-        {
-            // Updates properties, etc.
-            Attribute* attribute = getAttribute((*iter).c_str());
-            onAttributeChanged((*iter).c_str(), attribute->getValue());
-            // add an inlet for each attribute
-            addInlet((*iter).c_str(), attribute->getShortDocumentation().c_str());
-        }
         return true;
     }
 }
 
 void Node::loadBang()
 {
+    {
+        std::ostringstream os;
+        os << "Node.loadBang: " << getName();
+        Logger::log(DEBUG, os.str().c_str());
+    }
     if (! load_banged_)
     {
         onLoadBang();
         load_banged_ = true;
+    }
+    else
+    {
+        std::ostringstream os;
+        os << "Node.loadBang: had already been loadBanged: " << getName();
+        Logger::log(DEBUG, os.str().c_str());
     }
 }
 
@@ -98,74 +118,139 @@ std::map<std::string, Outlet::ptr> Node::getOutlets()
     return outlets_;
 }
 
+bool Node::onAttributeChanged(const char *name, const Message &value)
+{
+    bool ok = this->onNodeAttributeChanged(name, value);
+    if (ok)
+    {
+        Message mess = value;
+        mess.prependString(name);
+        mess.prependString(ATTRIBUTES_SET_OUTPUT_PREFIX);
+        output(ATTRIBUTES_OUTLET, mess);
+    }
+    return ok;
+}
+
 void Node::onInletTriggered(Inlet *inlet, const Message &message)
 {
-    //std::cout << __FUNCTION__ << std::endl;
-    bool is_a_attribute = false;
-    if (inlet->getName() == ATTRIBUTES_INLET && message.getSize() >= 3)
+    if (inlet->getName() == ATTRIBUTES_INLET)
     {
-        // ArgumentType type0;
-        // ArgumentType type1;
-        // if (! message.getArgumentType(0, type0))
-        // {
-        //     std::cout << "could not get arg type for index " << 0 << std::endl;
-        //     // TODO: abort
-        // }
-        // if (! message.getArgumentType(1, type1))
-        // {
-        //     std::cout << "could not get arg type for index " << 1 << std::endl;
-        //     // TODO: abort
-        // }
-        //if (type0 == STRING && type1 == STRING && 
-        if (message.getTypes().compare(0, 2, "ss") == 0)
+        if (message.indexMatchesType(0, STRING))
         {
-            if (message.getString(0).compare("set") == 0)
+            if (message.getString(0) == ATTRIBUTES_GET_METHOD_SELECTOR)
             {
-                try
+                if ((message.getSize() == 2) &&
+                    (message.indexMatchesType(1, STRING)))
                 {
-                    Message attribute = message.cloneRange(2, message.getSize() - 1);
-                    std::string name = message.getString(1);
-                    setAttribute(name.c_str(), attribute);
-                    // std::cout << "Node::" << __FUNCTION__ << ": set attribute " << name << ": " << attribute << std::endl;
-                    is_a_attribute = true;
+                    std::string attr_name = message.getString(1);
+                    Message result = this->getAttribute(attr_name.c_str())->getValue();
+                    result.prependString(attr_name.c_str());
+                    result.prependString(ATTRIBUTES_GET_OUTPUT_PREFIX);
+                    this->output(ATTRIBUTES_OUTLET, result);
+                    return;
                 }
-                catch (const BadIndexException &e)
+                else
                 {
-                    std::cerr << "Node(" << getTypeName() << ":" << getName() << ")::" << __FUNCTION__ << ": " << e.what();
+                    std::ostringstream os;
+                    os << "Node." << __FUNCTION__ <<
+                        ": Wrong arguments for message " <<
+                        message << " in inlet " << ATTRIBUTES_INLET;
+                    Logger::log(ERROR, os);
                 }
-                catch (const BadArgumentTypeException &e)
+            } // end get
+            // set:
+            else if (message.getString(0) == ATTRIBUTES_SET_METHOD_SELECTOR)
+            {
+                if ((message.getSize() >= 3) &&
+                    (message.indexMatchesType(1, STRING)))
                 {
-                    std::cerr << "Node(" << getTypeName() << ":" << getName() << ")::" << __FUNCTION__ << ": " << e.what();
+                    std::string attr_name = message.getString(1);
+                    try
+                    {
+                        Message attribute = message.cloneRange(2,
+                            message.getSize() - 1);
+                        std::string attr_name = message.getString(1);
+                        if (this->getAttribute(attr_name.c_str())->getMutable())
+                        {
+                            setAttributeValue(attr_name.c_str(), attribute);
+                            return;
+                        }
+                        else
+                        {
+                            std::ostringstream os;
+                            os << "Node." << __FUNCTION__ << ": " <<
+                                attr_name <<
+                                " is not mutable! Cannot change it via messages.";
+                            Logger::log(ERROR, os);
+                            return;
+                        }
+                    }
+                    catch (const BadIndexException &e)
+                    {
+                        std::cerr << "Node " << getTypeName() << " \"" <<
+                            getName() << "\":" << __FUNCTION__ << ": " <<
+                            message << " " << e.what();
+                        return;
+                    }
+                    catch (const BadAtomTypeException &e)
+                    {
+                        std::cerr << "Node " << getTypeName() << " \"" <<
+                            getName() << "\":" << __FUNCTION__ << ": " <<
+                            message << " " << e.what();
+                        return;
+                    }
                 }
+                else
+                {
+                    std::ostringstream os;
+                    os << "Node." << __FUNCTION__ <<
+                        ": Wrong arguments for message " << message <<
+                        " in inlet " << ATTRIBUTES_INLET;
+                    Logger::log(ERROR, os);
+                    return;
+                }
+            } // end set
+            // ---------- list:
+            else if (message.getString(0) == ATTRIBUTES_LIST_METHOD_SELECTOR)
+            {
+                std::vector<std::string> attributes = this->listAttributes();
+                Message attributes_message("s", ATTRIBUTES_LIST_OUTPUT_PREFIX);
+                std::vector<std::string>::const_iterator iter;
+                for (iter = attributes.begin(); iter != attributes.end(); ++iter)
+                {
+                    attributes_message.appendString((*iter).c_str());
+                }
+                this->output(ATTRIBUTES_OUTLET, attributes_message);
+            } // end list
+            else
+            {
+                std::ostringstream os;
+                os << "Node." << __FUNCTION__ << ": Cannot handle message " << message << " in inlet " << ATTRIBUTES_INLET;
+                Logger::log(ERROR, os);
             }
+        } // first atom is a string
+        else
+        {
+            std::ostringstream os;
+            os << "Node." << __FUNCTION__ << ": Cannot handle message " << message << " in inlet " << ATTRIBUTES_INLET;
+            Logger::log(ERROR, os);
         }
-    }
-
-    if (is_a_attribute)
         return;
-    
-    // Attribute inlet:
-    std::vector<std::string> attributes = listAttributes();
-    std::vector<std::string>::const_iterator iter;
-    for (iter = attributes.begin(); iter != attributes.end(); ++iter)
+    } // ATTRIBUTES_INLET
+    // CALL INLET:
+    else if (inlet->getName() == INLET_CALL)
     {
-        if (inlet->getName() == (*iter))
+        if (message.indexMatchesType(0, STRING))
         {
-            try
+            if (this->hasMethod(message.getString(0).c_str()))
             {
-                setAttribute(inlet->getName().c_str(), message);
+                this->getMethod(message.getString(0).c_str())->
+                    trigger(message.cloneRange(1, message.getSize()));
+                return;
             }
-            catch (const BadArgumentTypeException &e)
-            {
-                std::cerr << "Node(" << getTypeName() << ":" << getName() << ")::" << __FUNCTION__ << ": " << e.what();
-            }
-            is_a_attribute = true;
         }
     }
-    if (! is_a_attribute)
-    {
-        processMessage(inlet->getName().c_str(), message);
-    }
+    processMessage(inlet->getName().c_str(), message);
 }
 
 std::map<std::string, Inlet::ptr> Node::getInlets()
@@ -195,6 +280,11 @@ bool Node::addOutlet(Outlet::ptr outlet)
 {
     if (! hasOutlet(outlet.get()))
     {
+        {
+            std::ostringstream os;
+            os << "Node.addOutlet: (" << getName() << "): " << outlet->getName();
+            Logger::log(DEBUG, os.str().c_str());
+        }
         outlets_[outlet->getName()] = outlet;
         try
         {
@@ -216,6 +306,11 @@ bool Node::addInlet(Inlet::ptr inlet)
     if (! hasInlet(inlet.get()))
     {
         inlets_[inlet->getName()] = inlet;
+        {
+            std::ostringstream os;
+            os << "Node.addInlet: (" << getName() << "): " << inlet->getName();
+            Logger::log(DEBUG, os.str().c_str());
+        }
         inlet.get()->getOnTriggeredSignal().connect(boost::bind(&Node::onInletTriggered, this, _1, _2));
         try
         {
@@ -344,7 +439,6 @@ bool Node::message(const char *inlet, const Message &message)
         if (inletPtr == 0)
         {
             std::cerr << "Error: Node::message(): Node of type " << getTypeName() << " has no inlet named " << inlet << "!!" << std::endl;
-            // : Called " << __FUNCTION__ << "() on Node of type " << getTypeName() << " via inlet " << inlet << " but could not find such an inlet. Message is: " << message << std::endl;
             return false;
         }
         inletPtr->trigger(message);
@@ -357,7 +451,8 @@ bool Node::message(const char *inlet, const Message &message)
     }
 }
 
-void Node::output(const char *outlet, const Message &message) const throw(BadIndexException)
+void Node::output(const char *outlet, const Message &message) const
+    throw(BadIndexException)
 {
     Outlet::ptr outlet_ptr = getOutletSharedPtr(outlet);
     outlet_ptr->trigger(message);
@@ -394,9 +489,34 @@ bool Node::removeOutlet(const char *name)
     if (hasOutlet(name))
     {
         outlets_.erase(outlets_.find(nameStr));
+        Message message("ss", this->getName().c_str(), name); // node, inlet
+        getSignal(OUTLET_DELETED_SIGNAL)->trigger(message);
         return true;
     }
     return false;
+}
+
+bool Node::removeInlet(const char *name)
+{
+    std::string nameStr(name);
+    if (hasInlet(name))
+    {
+        inlets_.erase(inlets_.find(nameStr));
+        Message message("ss", this->getName().c_str(), name); // node, inlet
+        getSignal(INLET_DELETED_SIGNAL)->trigger(message);
+        return true;
+    }
+    return false;
+}
+
+void Node::setGraph(Graph *graph)
+{
+    graph_ = graph;
+}
+
+Graph* Node::getGraph() const
+{
+    return graph_;
 }
 
 } // end of namespace

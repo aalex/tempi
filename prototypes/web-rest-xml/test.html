@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Title of the document</title>
+<meta charset="utf-8" />
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript">
+    //<![CDATA[
+    $(document).ready(function()
+    {
+        // alert("welcome");
+        $("#foo").click(function()
+        {
+            alert("#foo clicked. Calling $.get()");
+            $.get("http://127.0.0.1:9980", "hello", function(data)
+            {
+                $("#result").html(data);
+                alert("Load was performed. Result is " + data);
+            });
+        })
+        .success(function() { alert("second success"); })
+        .error(function() { alert("error"); })
+        .complete(function() { alert("complete"); });
+    });
+    //]]>
+</script> 
+</head>
+<body>
+<p>
+    Hello.
+</p>
+<p>
+    <a href="#" id="foo">Click me</a>
+</p>
+<p>
+    <div id="result">Result</div>
+</p>
+</body>
+</html> 
+

@@ -14,7 +14,7 @@
 # - increase tempi_interface_version to the next odd number
 m4_define([tempi_major_version], [0])
 m4_define([tempi_minor_version], [1])
-m4_define([tempi_micro_version], [10])
+m4_define([tempi_micro_version], [14])
 
 m4_define([tempi_release_status],
           [m4_if(m4_eval(tempi_micro_version % 2), [1], [git],
@@ -53,6 +53,8 @@ AC_INIT([tempi],
         [http://github.com/aalex/tempi/issues],
         [tempi],
         [http://tempi.toonloop.com])
+AC_RUN_IFELSE([AC_LANG_PROGRAM([[ ]], [[ ]])],
+    [AC_MSG_RESULT(yes)], [AC_MSG_RESULT(no)], [AC_MSG_RESULT(can not test)])
 AC_CONFIG_MACRO_DIR([m4])
 AC_MSG_NOTICE([Configuring tempi])
 AM_INIT_AUTOMAKE([subdir-objects -Wno-portability])
@@ -76,6 +78,8 @@ TEMPI_LT_AGE=lt_age
 TEMPI_LT_VERSION="$TEMPI_LT_CURRENT:$TEMPI_LT_REV:$TEMPI_LT_AGE"
 AC_SUBST([TEMPI_LT_VERSION], "$TEMPI_LT_VERSION")
 TEMPI_LT_LDFLAGS="-version-info $TEMPI_LT_VERSION"
+
+AC_DEFINE_UNQUOTED(TEMPI_PLUGINS_DIR,["tempi-$TEMPI_API_VERSION"],[Path to Tempi plugins])
 
 # Checks for programs.
 AC_PROG_CC
@@ -107,20 +111,13 @@ AC_CHECK_FUNCS([gettimeofday memmove mkdir setenv sqrt strchr strpbrk uname])
 
 AX_PTHREAD
 
-# STK
-# TODO: print some message when configuring STK is OK
-AC_LANG_PUSH(C++)
-# save original flags
-SAVED_LIBS=$LIBS
-LIBS="$LIBS -lstk"
-AC_LINK_IFELSE(
-        [AC_LANG_PROGRAM([ #include <stk/RtMidi.h> ],
-        [RtMidiIn input])],
-        [AC_SUBST(STK_LIBS," -lstk -lrt -lm")],
-        [AC_MSG_ERROR([libstk is not installed: alsa])])
-LIBS=$SAVED_LIBS # restore them
-AC_SUBST(STK_CXXFLAGS, "-D__LINUX_ALSA__ -D__UNIX_JACK__ -D__LITTLE_ENDIAN__")
-AC_LANG_POP(C++)
+# check for the RTMIDI
+PKG_CHECK_MODULES([RTMIDI], [rtmidi], have_rtmidi=true, have_rtmidi=false)
+if test "x${have_rtmidi}" = "xfalse" ; then
+    AC_MSG_WARN([missing package: librtmidi-dev])
+else
+    AC_DEFINE(HAVE_RTMIDI,[1],[RTMIDI headers successfully detected])
+fi
 
 # Glib
 PKG_CHECK_MODULES([GLIB], [glib-2.0 gthread-2.0], have_glib=true, have_glib=false)
@@ -147,7 +144,7 @@ fi
 # log4cpp
 PKG_CHECK_MODULES([LOG4CPP], [log4cpp], have_log4cpp=true, have_log4cpp=false)
 if test "x${have_log4cpp}" = "xfalse" ; then
-    AC_MSG_ERROR([missing package: libilog4cpp5-dev])
+    AC_MSG_ERROR([missing package: liblog4cpp5-dev])
 fi
 
 PKG_CHECK_MODULES([SPATOSC], [spatosc-0.3], have_spatosc=true, have_spatosc=false)
@@ -157,46 +154,49 @@ else
     AC_DEFINE(HAVE_SPATOSC,[1],[SpatOSC headers successfully detected])
 fi
 
-# BOOST
-AX_BOOST_BASE([1.35])
-
-AX_BOOST_SIGNALS
-if test "x${ax_cv_boost_signals}" = "xno" ; then
-	AC_MSG_ERROR([missing package: libboost-signals-dev])
-fi
+dnl # BOOST
+dnl AX_BOOST_BASE([1.35])
+dnl 
+dnl AX_BOOST_SIGNALS
+dnl if test "x${ax_cv_boost_signals}" = "xno" ; then
+dnl 	AC_MSG_ERROR([missing package: libboost-signals-dev])
+dnl fi
 
 PKG_CHECK_MODULES(LIBLO, liblo, have_liblo=true, have_liblo=false)
 if test "x${have_liblo}" = "xfalse" ; then
     AC_MSG_ERROR([Missing liblo])
 fi
 
-AX_BOOST_PROGRAM_OPTIONS
-if test "x${ax_cv_boost_program_options}" = "xno" ; then
-	AC_MSG_ERROR([missing package: libboost-program-options-dev])
-fi
+dnl AX_PYTHON
+dnl dnl AM_PYTHON_PATH
+dnl PYTHON_CPPFLAGS="`python-config --cflags`"
+dnl PYTHON_CPPFLAGS=${PYTHON_CPPFLAGS//"-Wstrict-prototypes"/}
+dnl PYTHON_LDFLAGS="`python-config --ldflags`"
+dnl AC_SUBST(PYTHON_CPPFLAGS)
+dnl AC_SUBST(PYTHON_LDFLAGS)
 
-AX_BOOST_FILESYSTEM
-if test "x${ax_cv_boost_filesystem}" = "xno" ; then
-	AC_MSG_ERROR([missing package: libboost-filesystem-dev])
-fi
+BOOST_REQUIRE([1.35])
+BOOST_DATE_TIME
+BOOST_FILESYSTEM
+BOOST_PROGRAM_OPTIONS
+dnl BOOST_PYTHON
+BOOST_REGEX
+BOOST_SIGNALS
+BOOST_SYSTEM
+BOOST_THREADS
 
-AX_BOOST_THREAD
-if test "x${ax_cv_boost_thread}" = "xno" ; then
-    AC_MSG_ERROR([missing package: libboost-thread-dev])
-fi
+dnl AC_MSG_NOTICE([BOOST_LDFLAGS:              ${BOOST_LDFLAGS}])
+AC_MSG_NOTICE([BOOST_CPPFLAGS:             ${BOOST_CPPFLAGS}])
+AC_MSG_NOTICE([BOOST_DATE_TIME_LIBS:       ${BOOST_DATE_TIME_LIBS}])
+AC_MSG_NOTICE([BOOST_FILESYSTEM_LIBS:      ${BOOST_FILESYSTEM_LIBS}])
+AC_MSG_NOTICE([BOOST_PROGRAM_OPTIONS_LIBS: ${BOOST_PROGRAM_OPTIONS_LIBS}])
+dnl AC_MSG_NOTICE([BOOST_PYTHON_LDFLAGS:       ${BOOST_PYTHON_LDFLAGS}])
+dnl AC_MSG_NOTICE([BOOST_PYTHON_LIBS:          ${BOOST_PYTHON_LIBS}])
+AC_MSG_NOTICE([BOOST_SIGNALS_LIBS:         ${BOOST_SIGNALS_LIBS}])
+AC_MSG_NOTICE([BOOST_SYSTEM_LIBS:          ${BOOST_SYSTEM_LIBS}])
+AC_MSG_NOTICE([BOOST_THREAD_LIBS:         ${BOOST_THREAD_LIBS}])
 
-dnl AX_BOOST_DATE_TIME
-dnl if test "x${ax_cv_boost_date_time}" = "xno" ; then
-dnl 	AC_MSG_ERROR([missing package: libboost-date-time-dev])
-dnl fi
-dnl 
-
-AX_BOOST_SYSTEM
-if test "x${ax_cv_boost_system}" = "xno" ; then
-	AC_MSG_ERROR([missing package: libboost-system-dev])
-fi
-
-CFLAGS+=" -Wall -Wextra -Wfatal-errors -Werror "
+CFLAGS+=" -Wall -g -Wextra -Wfatal-errors -Werror "
 
 # GNU help2man creates man pages from --help output; in many cases, this
 # is sufficient, and obviates the need to maintain man pages separately.
@@ -215,18 +215,23 @@ AC_CONFIG_FILES([
         Makefile 
         tempi/tempi-version.h
         tempi/Makefile 
+        tempi/tests/Makefile
+        plugins-base/Makefile
+        plugins-base/tests/Makefile
+        python_module/Makefile
         src/Makefile
-        src/midilooper/Makefile
-        src/osc-forward/Makefile
+        src/miller/Makefile
+        src/tempi-midi-looper/Makefile
+        src/tempi-osc-forward/Makefile
         src/tempi-draw/Makefile
         src/tempi-inspect/Makefile
         src/tempi-launch/Makefile
         src/tempi-osc-looper/Makefile
-        tests/Makefile
         doxyfile 
         data/Makefile
         doc/Makefile
         man/Makefile
+        abstractions/Makefile
         tempi-${TEMPI_API_VERSION}.pc:tempi.pc.in
         ])
 

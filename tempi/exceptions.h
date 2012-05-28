@@ -67,10 +67,10 @@ class BadNodeTypeException : public BaseException
         {}
 };
 
-class BadArgumentTypeException : public BaseException
+class BadAtomTypeException : public BaseException
 {
     public:
-        BadArgumentTypeException(const char *error_message) :
+        BadAtomTypeException(const char *error_message) :
             BaseException(error_message)
         {}
 };

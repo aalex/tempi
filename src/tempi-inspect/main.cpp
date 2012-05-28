@@ -75,6 +75,7 @@ class TempiInspect
         bool printClass(const std::string &name);
     private:
         bool verbose_;
+        bool debug_;
         bool all_;
         std::vector<std::string> keywords_;
         tempi::NodeFactory factory_;
@@ -126,9 +127,9 @@ static void print_bullet_line_if_not_empty(const std::string &text)
 }
 
 TempiInspect::TempiInspect() :
-    verbose_(false)
+    verbose_(false),
+    debug_(false)
 {
-    internals::loadInternals(factory_);
 }
 
 bool TempiInspect::getVerbose() const
@@ -154,8 +155,8 @@ bool TempiInspect::printClass(const std::string &name)
     {
         Node::ptr node = factory_.create(name.c_str());
         node->init();
-        cout << "Node Type [" << name << "]" << endl;
-        cout << "===========";
+        cout << "[" << name << "]" << endl;
+        cout << "=";
         print_n_times(node->getTypeName().size(), "=");
         cout << "=";
         cout << endl;
@@ -175,7 +176,7 @@ bool TempiInspect::printClass(const std::string &name)
         cout << endl;
         {
             if (node->listAttributes().size() == 0)
-                cout << "(No attributes)" << endl << endl;
+                cout << "* (No attributes)" << endl; // << endl;
             else
             {
                 vector<string> attributes = node->listAttributes();
@@ -199,8 +200,33 @@ bool TempiInspect::printClass(const std::string &name)
                 }
             }
         }
+        {
+            if (node->listMethods().size() == 0)
+                cout << "* (No methods)" << endl;
+            else
+            {
+                vector<string> methods = node->listMethods();
+                vector<string>::const_iterator iter;
+                for (iter = methods.begin(); iter != methods.end(); ++iter)
+                {
+                    NodeSignal* method = node->getMethod((*iter).c_str());
+                    cout << "* Method \"" << method->getName() << "\" : ";
+                    if (method->isTypeStrict())
+                        cout << "(Arguments types: " << method->getType() << ")";
+                    else
+                        cout << "(argument of variable type)";
+                    cout << " ";
+                    if (method->getShortDocumentation() != "")
+                        cout << method->getShortDocumentation();
+                    else
+                        cout << "(method not documented)";
+                    cout << " ";
+                    cout << endl;
+                }
+            }
+        }
         if (node->getInlets().size() == 0)
-            cout << "(No inlet)" << endl;
+            cout << "* (No inlet)" << endl;
         else
         {
             map<string, Inlet::ptr> inlets = node->getInlets();
@@ -215,7 +241,7 @@ bool TempiInspect::printClass(const std::string &name)
             }
         }
         if (node->getOutlets().size() == 0)
-            cout << "(No outlet)" << endl;
+            cout << "* (No outlet)" << endl;
         else
         {
             map<string, Outlet::ptr> outlets = node->getOutlets();
@@ -248,7 +274,8 @@ void TempiInspect::printListOfTypes()
 
 void TempiInspect::printAll()
 {
-    print_title(std::string("Tempi types:"), FIRST);
+    // print_title(std::string("Tempi types:"), FIRST);
+    std::cout << "Tempi base plugins version " << PACKAGE_VERSION << std::endl << std::endl;
     std::map<std::string, AbstractNodeType::ptr>::const_iterator iter;
     std::map<std::string, AbstractNodeType::ptr> entries = factory_.getEntries();
     for (iter = entries.begin(); iter != entries.end(); ++iter)
@@ -259,6 +286,7 @@ void TempiInspect::printAll()
 
 bool TempiInspect::run()
 {
+    internals::loadInternals(factory_);
     if (all_)
         printAll();
     else
@@ -285,6 +313,7 @@ int TempiInspect::parse_options(int argc, char **argv)
         ("version", "Show program's version number and exit")
         ("keywords,k", po::value<std::vector<std::string> >(&keywords_)->multitoken(), "Sets the node type names to look for in Tempi's documentation. There can be many.")
         ("verbose,v", po::bool_switch(), "Enables a verbose output")
+        ("debug,d", po::bool_switch(), "Enables a very verbose output")
         ("all,a", po::bool_switch(), "Prints detailed info for all node types")
         ;
     po::variables_map options;
@@ -305,6 +334,17 @@ int TempiInspect::parse_options(int argc, char **argv)
     }
 
     verbose_ = options["verbose"].as<bool>();
+    debug_ = options["debug"].as<bool>();
+    if (verbose_)
+    {
+        tempi::Logger::getInstance().setLevel(tempi::INFO);
+        tempi::Logger::log(INFO, "Set logging level to INFO");
+    }
+    if (debug_)
+    {
+        tempi::Logger::getInstance().setLevel(tempi::DEBUG);
+        tempi::Logger::log(INFO, "Set logging level to DEBUG");
+    }
     all_ = options["all"].as<bool>();
     // Options that makes the program exit:
     if (options.count("help"))

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tempi version="0.1.9">
+  <graph>
+    <node id="metro0" class="base.metro">
+      <attribute name="interval"><i>100</i></attribute>
+      <attribute name="running"><b>1</b></attribute>
+    </node>
+    <node id="random0" class="random.int">
+      <attribute name="range"><i>0</i><i>100</i></attribute>
+    </node>
+    <node id="print0" class="base.print">
+      <attribute name="prefix"><s>random: </s></attribute>
+      <attribute name="enabled"><b>1</b></attribute>
+    </node>
+    <connection from="metro0" outlet="0" to="random0" inlet="0"/>
+    <connection from="random0" outlet="0" to="print0" inlet="0"/>
+  </graph>
+</tempi>

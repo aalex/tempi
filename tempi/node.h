@@ -39,12 +39,8 @@
 namespace tempi
 {
 
-const char * const ATTRIBUTES_INLET = "__attr__";
-const char * const ATTRIBUTE_LOG = "__log__";
-const char * const INLET_CREATED_SIGNAL = "__create_inlet__";
-const char * const INLET_DELETED_SIGNAL = "__delete_inlet__";
-const char * const OUTLET_CREATED_SIGNAL = "__create_outlet__";
-const char * const OUTLET_DELETED_SIGNAL = "__delete_outlet__";
+
+class Graph; // forward declaration
 
 /**
  * A Node is something that element that can be connected to and from other elements.
@@ -53,6 +49,22 @@ const char * const OUTLET_DELETED_SIGNAL = "__delete_outlet__";
 class Node : public Entity
 {
     public:
+        static const char * const ATTRIBUTES_GET_METHOD_SELECTOR;
+        static const char * const ATTRIBUTES_GET_OUTPUT_PREFIX;
+        static const char * const ATTRIBUTES_INLET;
+        static const char * const ATTRIBUTES_LIST_METHOD_SELECTOR;
+        static const char * const ATTRIBUTES_LIST_OUTPUT_PREFIX;
+        static const char * const ATTRIBUTES_OUTLET;
+        static const char * const ATTRIBUTES_SET_METHOD_SELECTOR;
+        static const char * const ATTRIBUTES_SET_OUTPUT_PREFIX;
+        static const char * const ATTRIBUTE_LOG;
+        static const char * const INLET_CREATED_SIGNAL;
+        static const char * const INLET_DELETED_SIGNAL;
+        static const char * const OUTLET_CREATED_SIGNAL;
+        static const char * const OUTLET_DELETED_SIGNAL;
+        static const char * const OUTLET_RETURN;
+        static const char * const INLET_CALL;
+
         typedef std::tr1::shared_ptr<Node> ptr;
         Node();
         virtual ~Node() {}
@@ -62,6 +74,8 @@ class Node : public Entity
          */
         bool init();
         void loadBang();
+        void setGraph(Graph *graph);
+        Graph *getGraph() const;
         /**
          * Returns whether or not this node's init() has been called.
          */
@@ -144,6 +158,17 @@ class Node : public Entity
          */
         bool hasOutlet(const char *name) const;
         bool isLoadBanged() const;
+        /**
+         * Children of Node should not override this method.
+         */
+        virtual bool onAttributeChanged(const char *name, const Message &value);
+        /**
+         * Return ok if it is fine to change it to that new value.
+         */
+        virtual bool onNodeAttributeChanged(const char *name, const Message &value)
+        {
+            return true;
+        }
     protected:
         void enableHandlingReceiveSymbol(const char *selector);
         virtual void onHandleReceive(const char *selector, const Message &message)
@@ -164,6 +189,7 @@ class Node : public Entity
          * Removes an outlet.
          */
         bool removeOutlet(const char *name);
+        bool removeInlet(const char *name);
         /**
          * Adds an inlet.
          */
@@ -208,6 +234,7 @@ class Node : public Entity
         std::string handledReceiveSymbol_;
         // TODO: return success
         // TODO: add unsigned int inlet_number
+        Graph *graph_;
 };
 
 } // end of namespace

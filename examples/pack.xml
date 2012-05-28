@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tempi version="0.1.9">
+  <graph>
+    <node id="loadmess_last" class="base.loadmess">
+      <attribute name="value"><s>hello</s></attribute>
+    </node>
+    <node id="loadmess1" class="base.loadmess">
+      <attribute name="value"><i>2</i></attribute>
+    </node>
+    <node id="loadmess2" class="base.loadmess">
+      <attribute name="value"><f>3.14159</f><f>1.618</f></attribute>
+    </node>
+
+    <node id="pack0" class="flow.pack">
+      <attribute name="number"><u>3</u></attribute>
+      <attribute name="all-hot"><b>false</b></attribute>
+    </node>
+    <node id="pack1" class="flow.pack">
+      <attribute name="number"><u>4</u></attribute>
+      <attribute name="all-hot"><b>true</b></attribute>
+    </node>
+
+    <node id="print_cold" class="base.print">
+      <attribute name="prefix"><s>only 0th hot: </s></attribute>
+    </node>
+    <node id="print_hot" class="base.print">
+      <attribute name="prefix"><s>all hot: </s></attribute>
+    </node>
+
+    <connection from="loadmess_last" outlet="0" to="pack0" inlet="0"/>
+    <connection from="loadmess1" outlet="0" to="pack0" inlet="1"/>
+    <connection from="loadmess2" outlet="0" to="pack0" inlet="2"/>
+
+    <connection from="loadmess_last" outlet="0" to="pack1" inlet="0"/>
+    <connection from="loadmess1" outlet="0" to="pack1" inlet="1"/>
+    <connection from="loadmess2" outlet="0" to="pack1" inlet="2"/>
+
+    <connection from="pack0" outlet="result" to="print_cold" inlet="0"/>
+    <connection from="pack1" outlet="result" to="print_hot" inlet="0"/>
+  </graph>
+</tempi>
