@@ -1,21 +1,14 @@
 Tempi release notes
 ===================
 
-Tempi 0.1.14 (2012-0?-??)
+Tempi 0.1.14 (2012-05-28)
 -------------------------
 This release is a developer snapshot in the 0.1 series.
 
-New features:
-
-* (fill me)
-
 Bugs fixed:
 
-* Fix STK CFLAGS. Depend on RTMIDI now that it's split.
-
-Known bugs:
-
-* Favours Tempi plugins from /usr/local/lib/, rather than ./ if present.
+* Fix STK CFLAGS. Depend on RTMIDI now that it's split. (in Ubuntu 12.04 and up)
+* Use boost.m4 macros
 
 
 Tempi 0.1.12 (2012-03-29)
