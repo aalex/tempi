@@ -1,0 +1,24 @@
+Tempi looper sequence description
+=================================
+
+The first loop (primary) one records defines the duration of the overall loop.
+
+Every other loop's (secondary) duration is shorter or equal in duration to it.
+
+When one starts recording a secondary track
+-------------------------------------------
+
+If the primary track's playhead is before 50% of its duration, it will make this
+secondary track start at that point of the primary track. (hence will be played 
+back 
+
+If the primary track's playhead is after 50% of its duration
+  
+  
+When one stops recording a secondary track
+------------------------------------------
+
+
+
+When one starts recording again the primary track
+-------------------------------------------------
