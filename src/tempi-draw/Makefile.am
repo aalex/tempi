@@ -9,7 +9,7 @@ AM_CXXFLAGS = \
     -I$(top_srcdir)
 
 LDADD = \
-    $(BOOST_PROGRAM_OPTIONS_LIB) \
+    $(BOOST_PROGRAM_OPTIONS_LIBS) \
     $(BOOST_LIBS) \
     $(CLUTTER_LIBS) \
     $(GLIB_LIBS) \
