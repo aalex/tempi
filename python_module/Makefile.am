@@ -4,7 +4,6 @@
 # 
 # AM_LIBS = \
 #     $(BOOST_PYTHON_LIBS) \
-#     $(BOOST_LDFLAGS) \
 #     $(BOOST_LIBS)  \
 #     $(BOOST_SYSTEM_LIBS) \
 #     $(BOOST_THREAD_LIBS)

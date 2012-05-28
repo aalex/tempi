@@ -154,13 +154,13 @@ else
     AC_DEFINE(HAVE_SPATOSC,[1],[SpatOSC headers successfully detected])
 fi
 
-# BOOST
-AX_BOOST_BASE([1.35])
-
-AX_BOOST_SIGNALS
-if test "x${ax_cv_boost_signals}" = "xno" ; then
-	AC_MSG_ERROR([missing package: libboost-signals-dev])
-fi
+dnl # BOOST
+dnl AX_BOOST_BASE([1.35])
+dnl 
+dnl AX_BOOST_SIGNALS
+dnl if test "x${ax_cv_boost_signals}" = "xno" ; then
+dnl 	AC_MSG_ERROR([missing package: libboost-signals-dev])
+dnl fi
 
 PKG_CHECK_MODULES(LIBLO, liblo, have_liblo=true, have_liblo=false)
 if test "x${have_liblo}" = "xfalse" ; then
@@ -185,7 +185,7 @@ BOOST_SIGNALS
 BOOST_SYSTEM
 BOOST_THREADS
 
-AC_MSG_NOTICE([BOOST_LDFLAGS:              ${BOOST_LDFLAGS}])
+dnl AC_MSG_NOTICE([BOOST_LDFLAGS:              ${BOOST_LDFLAGS}])
 AC_MSG_NOTICE([BOOST_CPPFLAGS:             ${BOOST_CPPFLAGS}])
 AC_MSG_NOTICE([BOOST_DATE_TIME_LIBS:       ${BOOST_DATE_TIME_LIBS}])
 AC_MSG_NOTICE([BOOST_FILESYSTEM_LIBS:      ${BOOST_FILESYSTEM_LIBS}])

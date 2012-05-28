@@ -13,7 +13,6 @@ AM_CXXFLAGS = \
 
 AM_LIBS = \
     $(BOOST_FILESYSTEM_LIBS) \
-    $(BOOST_LDFLAGS) \
     $(BOOST_LIBS)  \
     $(BOOST_REGEX_LIBS)  \
     $(BOOST_SYSTEM_LIBS) \
