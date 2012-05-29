@@ -1,0 +1,4 @@
+gst-launch videotestsrc ! video/x-raw-yuv,width=640,height=480 ! ffmpegcolorspace ! jpegenc ! queue ! avimux name=mux ! filesink location=video.avi pulsesrc ! audioconvert ! 'audio/x-raw-int,rate=44100,channels=2' ! mux.
+
+gst-launch pulsesrc ! audioconvert ! autoaudiosink
+
