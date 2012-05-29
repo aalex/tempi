@@ -1,2 +1,3 @@
 #!/bin/bash
-g++ `pkg-config --libs --cflags libserial` -o run main.cpp
+g++ -o run main.cpp `pkg-config --libs --cflags libserial`
+
