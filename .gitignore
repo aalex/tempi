@@ -111,10 +111,12 @@ tempi/tests/test
 
 # NEGATIONS:
 !doc/html
+!prototypes/gsoap/Makefile
 !prototypes/kinect/Makefile
 !prototypes/mapofsharedobjects/Makefile
 !prototypes/matrix_type/Makefile
 !prototypes/midi/Makefile
 !prototypes/midilooper-gui/Makefile
 !prototypes/modules/Makefile
+
 
