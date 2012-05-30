@@ -6,8 +6,22 @@ Tempi 0.1.16 (2012-0?-??)
 This release is a developer snapshot in the 0.1 series.
 
 New features:
-
-* (todo)
+* add "base." prefix to all node types
+* delete base.appsink
+* rename base.any       -> base.flow.any
+* rename base.append    -> base.flow.append
+* rename base.cast      -> base.flow.cast
+* rename base.counter   -> base.flow.counter
+* rename base.delay     -> base.flow.delay
+* rename base.dict      -> base.data.dict
+* rename base.loadmess  -> base.flow.loadmess
+* rename base.metro     -> base.time.metro
+* rename base.nop       -> base.flow.nop
+* rename base.prepend   -> base.flow.prepend
+* rename base.print     -> base.flow.print
+* rename base.route     -> base.flow.route
+* rename base.spatosc   -> base.osc.spatosc
+* rename base.spigot    -> base.flow.spigot
 
 Bugs fixed:
 
