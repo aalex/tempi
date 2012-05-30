@@ -12,8 +12,8 @@ bool check_wrapper()
         engine.setLogLevel("ERROR");
     // engine.setSynchronous(false);
     engine.createGraph("graph0");
-    engine.createNode("graph0", "base.metro", "metro0");
-    engine.createNode("graph0", "base.print", "print0");
+    engine.createNode("graph0", "base.time.metro", "metro0");
+    engine.createNode("graph0", "base.flow.print", "print0");
     engine.setNodeAttributeValue("graph0", "metro0", "interval", Message("i", 100));
     engine.setNodeAttributeValue("graph0", "metro0", "running", Message("b", true));
     if (! VERBOSE)

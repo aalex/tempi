@@ -14,8 +14,8 @@ static bool check_save_graph()
     NodeFactory::ptr factory = NodeFactory::ptr(new NodeFactory);
     internals::loadInternals(factory);
     Graph::ptr graph(new Graph(factory));
-    graph->addNode("base.metro", "metro0");
-    graph->addNode("base.print", "print0");
+    graph->addNode("base.time.metro", "metro0");
+    graph->addNode("base.flow.print", "print0");
     graph->tick();
 
     graph->connect("metro0", "0", "print0", "0");

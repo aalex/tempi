@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tempi version="0.1.9">
   <graph>
-    <node id="metro0" class="base.metro">
+    <node id="metro0" class="base.time.metro">
       <attribute name="interval"><i>100</i></attribute>
       <attribute name="running"><b>1</b></attribute>
     </node>
-    <node id="counter0" class="base.counter">
+    <node id="counter0" class="base.flow.counter">
       <attribute name="increment"><i>1</i></attribute>
     </node>
     <node id="cast0" class="base.cast">
       <attribute name="type"><s>f</s></attribute>
     </node>
-    <node id="nearest0" class="music.nearest.note">
+    <node id="nearest0" class="base.music.nearest.note">
       <attribute name="scale">
         <f>0.0</f>
         <f>2.0</f>
@@ -22,9 +22,9 @@
         <f>11.0</f>
       </attribute>
     </node>
-    <node id="monodic0" class="music.monodic">
+    <node id="monodic0" class="base.base.music.monodic">
     </node>
-    <node id="print0" class="base.print">
+    <node id="print0" class="base.flow.print">
       <attribute name="prefix"><s>note: </s></attribute>
       <attribute name="enabled"><b>1</b></attribute>
     </node>

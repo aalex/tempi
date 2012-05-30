@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tempi version="0.1.9">
   <graph>
-    <node id="metro0" class="base.metro">
+    <node id="metro0" class="base.time.metro">
       <attribute name="interval"><i>1000</i></attribute>
       <attribute name="running"><b>true</b></attribute>
     </node>
-    <node id="counter0" class="base.counter">
+    <node id="counter0" class="base.flow.counter">
     </node>
     <node id="cast0" class="base.cast">
       <attribute name="type"><s>f</s></attribute>
     </node>
-    <node id="map0" class="math.map">
+    <node id="map0" class="base.math.map">
       <attribute name="input_range"><f>1</f><f>10</f></attribute>
       <attribute name="output_range"><f>0</f><f>1</f></attribute>
     </node>
-    <node id="print0" class="base.print">
+    <node id="print0" class="base.flow.print">
       <attribute name="prefix"><s>map: </s></attribute>
       <attribute name="enabled"><b>1</b></attribute>
     </node>
-    <node id="print1" class="base.print">
+    <node id="print1" class="base.flow.print">
       <attribute name="prefix"><s>count: </s></attribute>
       <attribute name="enabled"><b>1</b></attribute>
     </node>

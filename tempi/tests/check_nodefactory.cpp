@@ -91,7 +91,7 @@ bool check_many_instances()
     }
     Node::ptr foo0 = factory->create("blah");
     Node::ptr foo1 = factory->create("blah");
-    Node::ptr foo2 = factory->create("base.nop");
+    Node::ptr foo2 = factory->create("base.flow.nop");
     if (foo0.get() == 0 || foo1.get() == 0 || foo2.get() == 0)
     {
         std::cout << __FUNCTION__ << ": invalid pointer" << std::endl;
@@ -104,11 +104,11 @@ bool check_print()
 {
     if (VERBOSE)
         std::cout << __FUNCTION__ << std::endl;
-    Node::ptr nop0 = factory->create("base.nop");
-    Node::ptr nop1 = factory->create("base.nop");
-    Node::ptr print0 = factory->create("base.print");
-    Node::ptr sampler0 = factory->create("sampler.sampler");
-    Node::ptr print1 = factory->create("base.print");
+    Node::ptr nop0 = factory->create("base.flow.nop");
+    Node::ptr nop1 = factory->create("base.flow.nop");
+    Node::ptr print0 = factory->create("base.flow.print");
+    Node::ptr sampler0 = factory->create("base.sampler.sampler");
+    Node::ptr print1 = factory->create("base.flow.print");
 
     if (nop0.get() == 0 || print0.get() == 0 || sampler0.get() == 0)
     {
@@ -116,11 +116,11 @@ bool check_print()
         return false;
     }
     Graph graph(factory);
-    graph.addNode("base.nop", "nop0");
-    graph.addNode("base.nop", "nop1");
-    graph.addNode("base.print", "print0");
-    graph.addNode("sampler.sampler", "sampler0");
-    graph.addNode("base.print", "print1");
+    graph.addNode("base.flow.nop", "nop0");
+    graph.addNode("base.flow.nop", "nop1");
+    graph.addNode("base.flow.print", "print0");
+    graph.addNode("base.sampler.sampler", "sampler0");
+    graph.addNode("base.flow.print", "print1");
 
     graph.tick(); // call init() on each node
 

@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tempi version="0.1.9">
   <graph>
-    <node id="loadmess0" class="base.loadmess">
+    <node id="loadmess0" class="base.flow.loadmess">
       <attribute name="value">
         <s>pi</s>
         <f>3.14159</f>
       </attribute>
     </node>
-    <node id="loadmess1" class="base.loadmess">
+    <node id="loadmess1" class="base.flow.loadmess">
       <attribute name="value">
         <s>planet</s>
         <s>Earth</s>
       </attribute>
     </node>
-    <node id="loadmess2" class="base.loadmess">
+    <node id="loadmess2" class="base.flow.loadmess">
     </node>
-    <node id="loadmess3" class="base.loadmess">
+    <node id="loadmess3" class="base.flow.loadmess">
       <attribute name="value">
         <s>planet</s>
       </attribute>
     </node>
-    <node id="loadmess4" class="base.loadmess">
+    <node id="loadmess4" class="base.flow.loadmess">
     </node>
-    <node id="dict0" class="base.dict">
+    <node id="dict0" class="base.data.dict">
     </node>
-    <node id="print_list" class="base.print">
+    <node id="print_list" class="base.flow.print">
       <attribute name="prefix"><s>list: </s></attribute>
       <attribute name="enabled"><b>1</b></attribute>
     </node>
-    <node id="print_values" class="base.print">
+    <node id="print_values" class="base.flow.print">
       <attribute name="prefix"><s>value: </s></attribute>
       <attribute name="enabled"><b>1</b></attribute>
     </node>

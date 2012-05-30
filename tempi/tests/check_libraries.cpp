@@ -18,13 +18,13 @@ bool check_internals()
 {
     NodeFactory factory;
     internals::loadInternals(factory);
-    if (! didRegister(factory, "base.metro")) return false;
-    if (! didRegister(factory, "base.nop")) return false;
-    if (! didRegister(factory, "base.print")) return false;
-    if (! didRegister(factory, "midi.input")) return false;
-    if (! didRegister(factory, "osc.receive")) return false;
-    if (! didRegister(factory, "osc.send")) return false;
-    if (! didRegister(factory, "sampler.sampler")) return false;
+    if (! didRegister(factory, "base.time.metro")) return false;
+    if (! didRegister(factory, "base.flow.nop")) return false;
+    if (! didRegister(factory, "base.flow.print")) return false;
+    if (! didRegister(factory, "base.midi.input")) return false;
+    if (! didRegister(factory, "base.osc.receive")) return false;
+    if (! didRegister(factory, "base.osc.send")) return false;
+    if (! didRegister(factory, "base.sampler.sampler")) return false;
     return true;
 }
 

@@ -11,9 +11,9 @@ static NodeFactory::ptr factory;
 
 static bool check_create()
 {
-    Node::ptr metro0 = factory->create("base.metro");
-    Node::ptr print0 = factory->create("base.print");
-    Node::ptr counter0 = factory->create("base.counter");
+    Node::ptr metro0 = factory->create("base.time.metro");
+    Node::ptr print0 = factory->create("base.flow.print");
+    Node::ptr counter0 = factory->create("base.flow.counter");
     if (metro0.get() == 0)
     {
         std::cout << "Metro ptr is null" << std::endl;
@@ -35,7 +35,7 @@ static bool checkPrepend()
     Graph graph(factory);
     if (VERBOSE)
         std::cout << "add nodes:" << std::endl;
-    graph.addNode("base.print", "print0");
+    graph.addNode("base.flow.print", "print0");
     // TODO: setNodeArguments
     return true;
 }
@@ -49,14 +49,14 @@ static bool checkMetro()
     Graph graph(factory);
     if (VERBOSE)
         std::cout << "add nodes:" << std::endl;
-    graph.addNode("base.metro", "metro0");
-    graph.addNode("base.print", "print0");
-    if (! graph.addNode("base.counter", "counter0"))
+    graph.addNode("base.time.metro", "metro0");
+    graph.addNode("base.flow.print", "print0");
+    if (! graph.addNode("base.flow.counter", "counter0"))
     {
         std::cout << "Could not create a base.counter node." << std::endl;
         return false;
     }
-    graph.addNode("base.any", "any0");
+    graph.addNode("base.flow.any", "any0");
 
     if (VERBOSE)
         std::cout << "connect nodes:" << std::endl;
@@ -138,12 +138,12 @@ static bool checkMetro()
 static bool check_all_loaded()
 {
     std::vector<std::string> names;
-    names.push_back(std::string("base.print"));
-    names.push_back(std::string("base.nop"));
-    names.push_back(std::string("base.metro"));
-    names.push_back(std::string("base.any"));
-    names.push_back(std::string("base.counter"));
-    names.push_back(std::string("base.appsink"));
+    names.push_back(std::string("base.flow.print"));
+    names.push_back(std::string("base.flow.nop"));
+    names.push_back(std::string("base.time.metro"));
+    names.push_back(std::string("base.flow.any"));
+    names.push_back(std::string("base.flow.counter"));
+    //names.push_back(std::string("base.appsink"));
 
     std::vector<std::string>::const_iterator iter;
     for (iter = names.begin(); iter != names.end(); ++iter)
@@ -158,12 +158,12 @@ static bool check_all_loaded()
 }
 
 /**
- * checks base.any
+ * checks flow.any
  */
 static bool check_any()
 {
     Graph graph(factory);
-    graph.addNode("base.any", "any0");
+    graph.addNode("base.flow.any", "any0");
     Node::ptr any0 = graph.getNode("any0");
     any0->setAttributeValue("value", Message("f", 3.14159f));
     return true;
