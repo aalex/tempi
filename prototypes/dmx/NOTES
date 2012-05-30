@@ -1,0 +1,7 @@
+First trials successful.
+Used osc2dmx.enttec.py with the oscexample.pd patch from the wtf2osc project.
+
+Now, we need a serial external for tempi, and a enttec abstraction.
+
+See http://sourceforge.net/projects/wtf2osc
+

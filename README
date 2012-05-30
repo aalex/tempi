@@ -1,6 +1,5 @@
 ::
-
-   _                       _ 
+_                       _ 
   | |_ ___ _ __ ___  _ __ (_)
   | __/ _ \ '_ ` _ \| '_ \| |
   | ||  __/ | | | | | |_) | |
@@ -35,13 +34,14 @@ Authors
 -------
 * Alexandre Quessy <alexandre@quessy.net>
 * Michal Seta <mis@artengine.ca>
+* Nicolas Bouillot <nicolas.bouillot@gmail.com>
 
 
 Project URL
 -----------
 http://tempi.toonloop.com/
 
-The source code is currently managed at http://github.com/aalex/tempi and/or http://codered.sat.qc.ca/redmine/projects/tempi
+The source code is currently managed at http://code.sat.qc.ca/redmine/projects/tempi
 
 git clone https://github.com/aalex/tempi.git
 
@@ -57,7 +57,7 @@ Installation
 Here is how to build and install it on Debian GNU/Linux or Ubuntu::
 
   $ sudo apt-get install help2man gettext automake bison build-essential flex libtool 
-  $ sudo apt-get install libxml2-dev libclutter-1.0-dev libglib2.0-dev libboost-all-dev libstk0-dev liblo0-dev liblog4cpp5-dev
+  $ sudo apt-get install libxml2-dev libclutter-1.0-dev libglib2.0-dev libboost-all-dev librtmidi-dev liblo0-dev liblog4cpp5-dev
   $ ./autogen.sh
   $ ./configure
   $ make
@@ -104,4 +104,9 @@ Utilities
 * tempi-osc-looper: Loops OSC messages.
 * tempi-midi-looper: Loops MIDI events.
 * tempi-osc-forward: Forwards OSC messages.
+
+Known bugs
+----------
+
+* Favours Tempi plugins from /usr/local/lib/, rather than ./ if present.
 

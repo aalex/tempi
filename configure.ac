@@ -14,7 +14,7 @@
 # - increase tempi_interface_version to the next odd number
 m4_define([tempi_major_version], [0])
 m4_define([tempi_minor_version], [1])
-m4_define([tempi_micro_version], [13])
+m4_define([tempi_micro_version], [15])
 
 m4_define([tempi_release_status],
           [m4_if(m4_eval(tempi_micro_version % 2), [1], [git],
@@ -53,6 +53,8 @@ AC_INIT([tempi],
         [http://github.com/aalex/tempi/issues],
         [tempi],
         [http://tempi.toonloop.com])
+AC_RUN_IFELSE([AC_LANG_PROGRAM([[ ]], [[ ]])],
+    [AC_MSG_RESULT(yes)], [AC_MSG_RESULT(no)], [AC_MSG_RESULT(can not test)])
 AC_CONFIG_MACRO_DIR([m4])
 AC_MSG_NOTICE([Configuring tempi])
 AM_INIT_AUTOMAKE([subdir-objects -Wno-portability])
@@ -152,49 +154,47 @@ else
     AC_DEFINE(HAVE_SPATOSC,[1],[SpatOSC headers successfully detected])
 fi
 
-# BOOST
-AX_BOOST_BASE([1.35])
-
-AX_BOOST_SIGNALS
-if test "x${ax_cv_boost_signals}" = "xno" ; then
-	AC_MSG_ERROR([missing package: libboost-signals-dev])
-fi
+dnl # BOOST
+dnl AX_BOOST_BASE([1.35])
+dnl 
+dnl AX_BOOST_SIGNALS
+dnl if test "x${ax_cv_boost_signals}" = "xno" ; then
+dnl 	AC_MSG_ERROR([missing package: libboost-signals-dev])
+dnl fi
 
 PKG_CHECK_MODULES(LIBLO, liblo, have_liblo=true, have_liblo=false)
 if test "x${have_liblo}" = "xfalse" ; then
     AC_MSG_ERROR([Missing liblo])
 fi
 
-AX_BOOST_PROGRAM_OPTIONS
-if test "x${ax_cv_boost_program_options}" = "xno" ; then
-	AC_MSG_ERROR([missing package: libboost-program-options-dev])
-fi
+dnl AX_PYTHON
+dnl dnl AM_PYTHON_PATH
+dnl PYTHON_CPPFLAGS="`python-config --cflags`"
+dnl PYTHON_CPPFLAGS=${PYTHON_CPPFLAGS//"-Wstrict-prototypes"/}
+dnl PYTHON_LDFLAGS="`python-config --ldflags`"
+dnl AC_SUBST(PYTHON_CPPFLAGS)
+dnl AC_SUBST(PYTHON_LDFLAGS)
 
-AX_BOOST_FILESYSTEM
-if test "x${ax_cv_boost_filesystem}" = "xno" ; then
-	AC_MSG_ERROR([missing package: libboost-filesystem-dev])
-fi
+BOOST_REQUIRE([1.35])
+BOOST_DATE_TIME
+BOOST_FILESYSTEM
+BOOST_PROGRAM_OPTIONS
+dnl BOOST_PYTHON
+BOOST_REGEX
+BOOST_SIGNALS
+BOOST_SYSTEM
+BOOST_THREADS
 
-AX_BOOST_THREAD
-if test "x${ax_cv_boost_thread}" = "xno" ; then
-    AC_MSG_ERROR([missing package: libboost-thread-dev])
-fi
-
-AX_BOOST_REGEX
-if test "x${ax_cv_boost_regex}" = "xno" ; then
-    AC_MSG_ERROR([missing package: libboost-regex-dev])
-fi
-
-dnl AX_BOOST_DATE_TIME
-dnl if test "x${ax_cv_boost_date_time}" = "xno" ; then
-dnl 	AC_MSG_ERROR([missing package: libboost-date-time-dev])
-dnl fi
-dnl 
-
-AX_BOOST_SYSTEM
-if test "x${ax_cv_boost_system}" = "xno" ; then
-	AC_MSG_ERROR([missing package: libboost-system-dev])
-fi
+dnl AC_MSG_NOTICE([BOOST_LDFLAGS:              ${BOOST_LDFLAGS}])
+AC_MSG_NOTICE([BOOST_CPPFLAGS:             ${BOOST_CPPFLAGS}])
+AC_MSG_NOTICE([BOOST_DATE_TIME_LIBS:       ${BOOST_DATE_TIME_LIBS}])
+AC_MSG_NOTICE([BOOST_FILESYSTEM_LIBS:      ${BOOST_FILESYSTEM_LIBS}])
+AC_MSG_NOTICE([BOOST_PROGRAM_OPTIONS_LIBS: ${BOOST_PROGRAM_OPTIONS_LIBS}])
+dnl AC_MSG_NOTICE([BOOST_PYTHON_LDFLAGS:       ${BOOST_PYTHON_LDFLAGS}])
+dnl AC_MSG_NOTICE([BOOST_PYTHON_LIBS:          ${BOOST_PYTHON_LIBS}])
+AC_MSG_NOTICE([BOOST_SIGNALS_LIBS:         ${BOOST_SIGNALS_LIBS}])
+AC_MSG_NOTICE([BOOST_SYSTEM_LIBS:          ${BOOST_SYSTEM_LIBS}])
+AC_MSG_NOTICE([BOOST_THREAD_LIBS:         ${BOOST_THREAD_LIBS}])
 
 CFLAGS+=" -Wall -g -Wextra -Wfatal-errors -Werror "
 
@@ -218,6 +218,7 @@ AC_CONFIG_FILES([
         tempi/tests/Makefile
         plugins-base/Makefile
         plugins-base/tests/Makefile
+        python_module/Makefile
         src/Makefile
         src/miller/Makefile
         src/tempi-midi-looper/Makefile

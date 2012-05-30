@@ -13,7 +13,6 @@ TODO ASAP
 
 To do for 0.2
 -------------
-* FIXME: prevent from stack overflows
 * Should all attributes and pad names use underscores?
 * Delete unused node types: [base.appsink]
 * Rename:
@@ -63,7 +62,6 @@ To do for 0.2
 * FIXME: removeTrailingPathSep crashes if has a trailing slash...
 * FIXME: onAttributeChanged is called sometime twice. If the attribute has not been changed, it should not be called again
 * tempi-launch should fail with error in case some node type could not be created
-* STK MIDI: fix cflags for PPC 
 * __attr__ inlet: Support "list" and "get" messages.
 * tempi-looper: multitrack GUI configured with an XML Graph
 * Rename Filter to AbstractFilterNode.
@@ -80,6 +78,8 @@ To do for 0.2
 
 To do for 0.4
 -------------
+* FIXME: prevent from stack overflows
+* Get done with the behaviour tree library - separate? Inspired from libbehaviour and others
 * Add homogenous list type for attributes/messages/atoms
 * Add symbol data type. (map of strings "globally" accessible and passed around as an index.
 * loadBang: Find a better name. Node::loadBang only once? When to Graph::loadBang?

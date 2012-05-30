@@ -118,4 +118,5 @@ tempi/tests/test
 !prototypes/midi/Makefile
 !prototypes/midilooper-gui/Makefile
 !prototypes/modules/Makefile
-!python_module/Makefile
+
+

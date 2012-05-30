@@ -10,12 +10,13 @@ AM_CXXFLAGS = \
     -I$(top_srcdir)/plugins-base \
     -I$(top_srcdir)/tempi
 
+# XXX BOOST_FILESYSTEM_LIBS must be after BOOST_SYSTEM_LIBS
+
 AM_LIBS = \
-    $(BOOST_FILESYSTEM_LIB) \
-    $(BOOST_LDFLAGS) \
     $(BOOST_LIBS)  \
-    $(BOOST_SYSTEM_LIB) \
-    $(BOOST_THREAD_LIB) \
+    $(BOOST_SYSTEM_LIBS) \
+    $(BOOST_FILESYSTEM_LIBS) \
+    $(BOOST_THREAD_LIBS) \
     $(LIBLO_LIBS) \
     $(LIBXML_LIBS) \
     $(LOG4CPP_LIBS) \

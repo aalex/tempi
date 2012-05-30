@@ -12,12 +12,11 @@ AM_CXXFLAGS = \
     -I$(top_srcdir)
 
 AM_LIBS = \
-    $(BOOST_FILESYSTEM_LIB) \
-    $(BOOST_LDFLAGS) \
+    $(BOOST_FILESYSTEM_LIBS) \
     $(BOOST_LIBS)  \
-    $(BOOST_REGEX_LIB)  \
-    $(BOOST_SYSTEM_LIB) \
-    $(BOOST_THREAD_LIB) \
+    $(BOOST_REGEX_LIBS)  \
+    $(BOOST_SYSTEM_LIBS) \
+    $(BOOST_THREAD_LIBS) \
     $(CLUTTER_LIBS) \
     $(GLIB_LIBS) \
     $(LIBLO_LIBS) \
