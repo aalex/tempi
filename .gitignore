@@ -111,6 +111,7 @@ tempi/tests/test
 
 # NEGATIONS:
 !doc/html
+!prototypes/gsoap/Makefile
 !prototypes/kinect/Makefile
 !prototypes/mapofsharedobjects/Makefile
 !prototypes/matrix_type/Makefile
@@ -118,4 +119,3 @@ tempi/tests/test
 !prototypes/midilooper-gui/Makefile
 !prototypes/modules/Makefile
 !python_module/Makefile
-
