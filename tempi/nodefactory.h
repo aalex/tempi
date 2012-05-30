@@ -25,6 +25,7 @@
 #ifndef __TEMPI_NODEFACTORY_H__
 #define __TEMPI_NODEFACTORY_H__
 
+#include <cassert>
 #include <map>
 #include <string>
 #include <sstream>
@@ -56,6 +57,7 @@ class NodeFactory
             if (! registerType(name, ret))
             {
                 std::cerr << "Could not register type FooNode" << std::endl;
+                assert(0);
                 // FIXME: throw exception?
                 // return false;
             }

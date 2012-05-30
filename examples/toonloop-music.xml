@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tempi version="0.1.9">
   <graph>
-    <node id="oscreceive0" class="osc.receive">
+    <node id="oscreceive0" class="base.osc.receive">
       <attribute name="port">
         <i>10000</i>
       </attribute>
     </node>
-    <node id="route0" class="base.route">
+    <node id="route0" class="base.flow.route">
       <attribute name="selectors">
         <s>/toon/clip/select</s> <!-- int -->
       </attribute>
     </node>
-    <node id="dict0" class="base.dict">
+    <node id="dict0" class="base.data.dict">
     </node>
-    <node id="print_select_clip" class="base.print">
+    <node id="print_select_clip" class="base.flow.print">
       <attribute name="prefix">
         <s>print: </s>
       </attribute>
@@ -23,17 +23,17 @@
         <s>s</s>
       </attribute>
     </node>
-    <node id="prepend_set_scale" class="base.prepend">
+    <node id="prepend_set_scale" class="base.flow.prepend">
       <attribute name="value">
         <s>set</s>
         <s>scale</s>
       </attribute>
     </node>
-    <node id="metro0" class="base.metro">
+    <node id="metro0" class="base.time.metro">
       <attribute name="interval"><i>100</i></attribute>
       <attribute name="running"><b>1</b></attribute>
     </node>
-    <node id="nearest0" class="music.nearest.note"> </node>
+    <node id="nearest0" class="base.music.nearest.note"> </node>
     <connection from="oscreceive0" outlet="incoming" to="route0" inlet="0" />
     <connection from="route0" outlet="/toon/clip/select" to="print0" inlet="0" />
     <connection from="route0" outlet="/toon/clip/select" to="cast0" inlet="0" />
@@ -41,7 +41,7 @@
     <connection from="chords_dict" outlet="0" to="prepend_set_scale" inlet="0" />
 
     <!-- DRUNK -->
-    <node id="drunk0" class="random.drunk">
+    <node id="drunk0" class="base.random.drunk">
       <attribute name="range"><i>24</i><i>84</i></attribute>
       <attribute name="current"><i>50</i></attribute>
       <attribute name="step"><i>0</i><i>10</i></attribute>
@@ -53,8 +53,8 @@
     <connection from="drunk0" outlet="0" to="cast_f" inlet="0"/>
     <connection from="cast_f" outlet="0" to="nearest0" inlet="0"/>
     <connection from="nearest0" outlet="0" to="close0" inlet="0"/>
-    <node id="close0" class="music.monodic"></node>
-    <node id="prepend_channel" class="base.prepend">
+    <node id="close0" class="base.base.music.monodic"></node>
+    <node id="prepend_channel" class="base.flow.prepend">
       <attribute name="value"><i>144</i></attribute>
     </node>
 
@@ -64,34 +64,34 @@
     <connection from="close0" outlet="0" to="prepend_channel" inlet="0"/>
     <connection from="prepend_channel" outlet="0" to="cast_CCC" inlet="0"/>
 
-    <node id="midi_out" class="midi.output">
+    <node id="midi_out" class="base.midi.output">
       <attribute name="port"><i>0</i></attribute>
     </node>
     <connection from="cast_CCC" outlet="0" to="midi_out" inlet="0"/>
 
     <!-- CHORDS -->
-    <node id="chords_dict" class="base.dict"></node>
-    <node id="chords_loadmess_0" class="base.loadmess">
+    <node id="chords_dict" class="base.data.dict"></node>
+    <node id="chords_loadmess_0" class="base.flow.loadmess">
       <attribute name="value"> <!-- C6/9 -->
 	<s>0</s> <f>0.0</f> <f>2.0</f> <f>4.0</f> <f>7.0</f> <f>9.0</f>
       </attribute>
     </node>
     <connection from="chords_loadmess_0" outlet="0" to="chords_dict" inlet="set"/>
-    <node id="chords_loadmess_1" class="base.loadmess">
+    <node id="chords_loadmess_1" class="base.flow.loadmess">
       <attribute name="value"> <!-- Ab -->
 	<s>1</s> <f>0.0</f> <f>3.0</f> <f>5.0</f> <f>8.0</f> <f>10.0</f>
       </attribute>
     </node>
     <connection from="chords_loadmess_1" outlet="0" to="chords_dict" inlet="set"/>
 
-    <node id="chords_loadmess_2" class="base.loadmess">
+    <node id="chords_loadmess_2" class="base.flow.loadmess">
       <attribute name="value"> <!-- G b9 #9 #11 -->
 	<s>2</s> <f>7.0</f> <f>8.0</f> <f>10.0</f> <f>11.0</f> <f>1.0</f> <f>2.0</f> <f>5.0</f>
       </attribute>
     </node>
     <connection from="chords_loadmess_2" outlet="0" to="chords_dict" inlet="set"/>
     
-    <node id="chords_loadmess_3" class="base.loadmess">
+    <node id="chords_loadmess_3" class="base.flow.loadmess">
       <attribute name="value"> <!-- Am 11 -->
 	<s>3</s> <f>9.0</f> <f>11.0</f> <f>0.0</f> <f>4.0</f> <f>5.0</f>
       </attribute>
@@ -99,7 +99,7 @@
     <connection from="chords_loadmess_3" outlet="0" to="chords_dict" inlet="set"/>
 
 
-    <node id="chords_loadmess_4" class="base.loadmess">
+    <node id="chords_loadmess_4" class="base.flow.loadmess">
       <attribute name="value"> <!-- F -->
 	<s>4</s> <f>5.0</f> <f>7.0</f> <f>9.0</f> <f>0.0</f> <f>2.0</f>
       </attribute>
@@ -107,7 +107,7 @@
     <connection from="chords_loadmess_4" outlet="0" to="chords_dict" inlet="set"/>
 
 
-    <node id="chords_loadmess_5" class="base.loadmess">
+    <node id="chords_loadmess_5" class="base.flow.loadmess">
       <attribute name="value"> <!-- B diminished -->
         <s>5</s> 
 	<f>11.0</f> <f>0.0</f> <f>2.0</f> <f>3.0</f>
@@ -117,7 +117,7 @@
     <connection from="chords_loadmess_5" outlet="0" to="chords_dict" inlet="set"/>
 
 
-    <node id="chords_loadmess_6" class="base.loadmess">
+    <node id="chords_loadmess_6" class="base.flow.loadmess">
       <attribute name="value"> <!-- C -->
         <s>6</s> 
 	<f>0.0</f> <f>4.0</f> <f>7.0</f> <f>11.0</f>
@@ -126,7 +126,7 @@
     <connection from="chords_loadmess_6" outlet="0" to="chords_dict" inlet="set"/>
 
 
-    <node id="chords_loadmess_7" class="base.loadmess">
+    <node id="chords_loadmess_7" class="base.flow.loadmess">
       <attribute name="value"> <!-- Db7 -->
         <s>7</s> 
 	<f>1.0</f> <f>5.0</f> <f>8.0</f> <f>11.0</f>
@@ -136,7 +136,7 @@
 
 
 
-    <node id="chords_loadmess_8" class="base.loadmess">
+    <node id="chords_loadmess_8" class="base.flow.loadmess">
       <attribute name="value"> <!-- chromatic -->
         <s>8</s> 
 	<f>0.0</f> <f>1.0</f> <f>2.0</f> <f>3.0</f>
@@ -147,7 +147,7 @@
     <connection from="chords_loadmess_8" outlet="0" to="chords_dict" inlet="set"/>
 
 
-    <node id="chords_loadmess_9" class="base.loadmess">
+    <node id="chords_loadmess_9" class="base.flow.loadmess">
       <attribute name="value"> <!-- C -->
         <s>9</s> 
 	<f>0.0</f> <f>4.0</f> <f>7.0</f>
@@ -165,7 +165,7 @@
 
 
 <!--
-    <node id="print_osc" class="base.print">
+    <node id="print_osc" class="base.flow.print">
       <attribute name="prefix">
         <s>osc: </s>
       </attribute>
@@ -175,53 +175,53 @@
     <connection from="route0" outlet="/toon/clip/select" to="print_select_clip" inlet="0" />
 
     <!-- TEMPI -->
-    <node id="tempi_dict" class="base.dict"></node>
-    <node id="tempo_0" class="base.loadmess">
+    <node id="tempi_dict" class="base.data.dict"></node>
+    <node id="tempo_0" class="base.flow.loadmess">
       <attribute name="value"><s>0</s><i>500</i></attribute>
     </node>
     <connection from="tempo_0" outlet="0" to="tempi_dict" inlet="set"/>
 
-    <node id="tempo_1" class="base.loadmess">
+    <node id="tempo_1" class="base.flow.loadmess">
       <attribute name="value"><s>1</s><i>250</i></attribute>
     </node>
     <connection from="tempo_1" outlet="0" to="tempi_dict" inlet="set"/>
 
-    <node id="tempo_2" class="base.loadmess">
+    <node id="tempo_2" class="base.flow.loadmess">
       <attribute name="value"><s>2</s><i>125</i></attribute>
     </node>
     <connection from="tempo_2" outlet="0" to="tempi_dict" inlet="set"/>
 
-    <node id="tempo_3" class="base.loadmess">
+    <node id="tempo_3" class="base.flow.loadmess">
       <attribute name="value"><s>3</s><i>1000</i></attribute>
     </node>
     <connection from="tempo_3" outlet="0" to="tempi_dict" inlet="set"/>
 
-    <node id="tempo_4" class="base.loadmess">
+    <node id="tempo_4" class="base.flow.loadmess">
       <attribute name="value"><s>4</s><i>75</i></attribute>
     </node>
     <connection from="tempo_4" outlet="0" to="tempi_dict" inlet="set"/>
 
-    <node id="tempo_5" class="base.loadmess">
+    <node id="tempo_5" class="base.flow.loadmess">
       <attribute name="value"><s>5</s><i>50</i></attribute>
     </node>
     <connection from="tempo_5" outlet="0" to="tempi_dict" inlet="set"/>
 
-    <node id="tempo_6" class="base.loadmess">
+    <node id="tempo_6" class="base.flow.loadmess">
       <attribute name="value"><s>6</s><i>25</i></attribute>
     </node>
     <connection from="tempo_6" outlet="0" to="tempi_dict" inlet="set"/>
 
-    <node id="tempo_7" class="base.loadmess">
+    <node id="tempo_7" class="base.flow.loadmess">
       <attribute name="value"><s>7</s><i>500</i></attribute>
     </node>
     <connection from="tempo_7" outlet="0" to="tempi_dict" inlet="set"/>
 
-    <node id="tempo_8" class="base.loadmess">
+    <node id="tempo_8" class="base.flow.loadmess">
       <attribute name="value"><s>8</s><i>75</i></attribute>
     </node>
     <connection from="tempo_8" outlet="0" to="tempi_dict" inlet="set"/>
 
-    <node id="tempo_9" class="base.loadmess">
+    <node id="tempo_9" class="base.flow.loadmess">
       <attribute name="value"><s>9</s><i>100</i></attribute>
     </node>
     <connection from="tempo_9" outlet="0" to="tempi_dict" inlet="set"/>
@@ -229,7 +229,7 @@
 
     <connection from="cast0" outlet="0" to="tempi_dict" inlet="get" />
     <connection from="tempi_dict" outlet="0" to="prepend_set_interval" inlet="0" />
-    <node id="prepend_set_interval" class="base.prepend">
+    <node id="prepend_set_interval" class="base.flow.prepend">
       <attribute name="value">
         <s>set</s>
         <s>interval</s>
@@ -240,7 +240,7 @@
 
     <connection from="prepend_set_scale" outlet="0" to="print0" inlet="0" />
     <connection from="prepend_set_interval" outlet="0" to="print0" inlet="0" />
-    <node id="print0" class="base.print">
+    <node id="print0" class="base.flow.print">
       <attribute name="prefix">
         <s>print: </s>
       </attribute>

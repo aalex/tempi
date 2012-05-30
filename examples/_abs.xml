@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tempi version="0.1.9">
   <graph>
-    <node id="inlet0" class="abs.inlet">
+    <node id="inlet0" class="base.abs.inlet">
     </node>
-    <node id="plus0" class="math.+">
+    <node id="plus0" class="base.math.+">
       <attribute name="operand"><f>2.0</f></attribute>
     </node>
-    <node id="outlet0" class="abs.outlet">
+    <node id="outlet0" class="base.abs.outlet">
     </node>
     <connection from="inlet0" outlet="incoming" to="plus0" inlet="0"/>
     <connection from="plus0" outlet="0" to="outlet0" inlet="outgoing"/>

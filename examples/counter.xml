@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tempi version="0.1.9">
   <graph>
-    <node id="metro0" class="base.metro">
+    <node id="metro0" class="base.time.metro">
       <attribute name="interval"><i>1000</i></attribute>
       <attribute name="running"><b>true</b></attribute>
     </node>
-    <node id="counter0" class="base.counter">
+    <node id="counter0" class="base.flow.counter">
     </node>
-    <node id="print0" class="base.print">
+    <node id="print0" class="base.flow.print">
       <attribute name="prefix"><s>count: </s></attribute>
       <attribute name="enabled"><b>1</b></attribute>
     </node>
