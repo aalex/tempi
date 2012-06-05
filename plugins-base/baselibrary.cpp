@@ -41,6 +41,7 @@
 #include "plugins-base/spatosc/spatoscnode.h"
 #include "plugins-base/flow/spigotnode.h"
 #include "plugins-base/clutter/clutterstagenode.h"
+#include "plugins-base/mapper/mapperinputnode.h"
 #include "plugins-base/math/onefloatmathnode.h"
 #include "plugins-base/math/twofloatmathnode.h"
 #include "plugins-base/math/booleanoperatornode.h"
@@ -154,6 +155,10 @@ void BaseLibrary::load(NodeFactory &factory, const char * /*prefix*/) const
     factory.registerTypeT<AbstractionNode>(concatenate(prefix, "abs.abstraction").c_str());
     factory.registerTypeT<OutletNode>(concatenate(prefix, "abs.outlet").c_str());
     factory.registerTypeT<InletNode>(concatenate(prefix, "abs.inlet").c_str());
+
+#ifdef HAVE_LIBMAPPER
+    factory.registerTypeT<MapperInputNode>(concatenate(prefix, "osc.libmapper.input").c_str());
+#endif // HAVE_LIBMAPPER
 }
 
 } // end of namespace
