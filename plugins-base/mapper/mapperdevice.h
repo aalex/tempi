@@ -55,7 +55,7 @@ class MapperDevice
         }
         bool poll(std::vector<Message> &result)
         {
-            if (! is_running())
+            if (! isRunning())
                 start();
             mdev_poll(dev_, 0);
             while (! queue_.empty())
@@ -68,7 +68,7 @@ class MapperDevice
         }
         bool isRunning()
         {
-            return (dev != 0);
+            return (dev_ != 0);
         }
         ~MapperDevice()
         {
@@ -76,21 +76,25 @@ class MapperDevice
         }
         bool addFloatInput(const char *name, int length=1, const char *unit="", float minimum=0, float maximum=0)
         {
-            mdev_add_input(name, length, 'f', unit,
-                minimum, maximum,
-                MapperDevice::inputHandler,
-                (void *) this);
+            mdev_add_input(dev_, name, length, 'f', unit,
+                reinterpret_cast<void *>(& minimum),
+                reinterpret_cast<void *>(& maximum),
+                &MapperDevice::inputHandler,
+                reinterpret_cast<void *>(this));
         }
         bool addIntInput(const char *name, int length=1, const char *unit="", int minimum=0, int maximum=0)
         {
-            mdev_add_input(name, length, 'i', unit,
-                minimum, maximum,
-                MapperDevice::inputHandler,
-                (void *) this);
+            mdev_add_input(dev_, name, length, 'i', unit,
+                reinterpret_cast<void *>(& minimum),
+                reinterpret_cast<void *>(& maximum),
+                &MapperDevice::inputHandler,
+                reinterpret_cast<void *>(this));
         }
     private:
+        std::string name_;
+        int port_;
         mapper_device dev_;
-        ConcurrentQueue<Message> queue_
+        ConcurrentQueue<Message> queue_;
 
         static void inputHandler(
             mapper_signal msig,
@@ -99,6 +103,7 @@ class MapperDevice
             void *value)
         {
             Message message;
+
             // get name
             // see https://github.com/radarsat1/mapperRec/blob/master/backend_oscstreamdb.c
             char str[1024], *path = str;
@@ -112,21 +117,23 @@ class MapperDevice
             message.appendString(name.c_str());
             // value:
             mapper_db_signal mprop = msig_properties(msig);
+
             if (mprop->type == 'i')
             {
-                for (i = 0; i < mprop->length; i++)
+                for (int i = 0; i < mprop->length; i++)
                 {
                     message.appendInt(((int*) value)[i]);
                 }
             }
             else if (mprop->type == 'f')
             {
-                for (i = 0; i < mprop->length; i++)
+                for (int i = 0; i < mprop->length; i++)
                 {
                     message.appendFloat(((float*) value)[i]);
                 }
             }
-            queue_.push(message);
+            MapperDevice *_this = reinterpret_cast<MapperDevice*>(mprop->user_data);
+            _this->queue_.push(message);
         }
 };
 

@@ -31,6 +31,7 @@ namespace plugins_base {
 
 MapperInputNode::MapperInputNode() :
     Node(),
+    device_("tempi", 9000)
 {
     setShortDocumentation("Receives libmapper messages.");
     setLongDocumentation("");
@@ -53,11 +54,11 @@ void MapperInputNode::processMessage(const char *inlet, const Message &message)
         {
             if (message.getChar(1) == 'f')
             {
-                device_.addFloatInput(message.getString(0), message.getInt(2));
+                device_.addFloatInput(message.getString(0).c_str(), message.getInt(2));
             }
             else if (message.getChar(1) == 'i')
             {
-                device_.addIntInput(message.getString(0), message.getInt(2));
+                device_.addIntInput(message.getString(0).c_str(), message.getInt(2));
             }
             else
             {
@@ -74,7 +75,7 @@ void MapperInputNode::processMessage(const char *inlet, const Message &message)
 void MapperInputNode::doTick()
 {
     std::vector<Message> messages;
-    if (device_->poll(messages))
+    if (device_.poll(messages))
     {
         std::vector<Message>::iterator iter;
         for (iter = messages.begin(); iter != messages.end(); ++iter)

@@ -48,6 +48,7 @@ class MapperInputNode : public Node
         virtual void processMessage(const char *inlet, const Message &message);
         virtual bool onNodeAttributeChanged(const char *name, const Message &value);
     private:
+        MapperDevice device_;
         //unsigned int port_number_;
         //std::string input_name;
 };
