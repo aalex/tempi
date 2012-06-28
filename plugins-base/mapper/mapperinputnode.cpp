@@ -29,9 +29,12 @@
 namespace tempi {
 namespace plugins_base {
 
+static const char * const DEVICE_NAME = "tempi";
+static const unsigned int PORT = 19999;
+
 MapperInputNode::MapperInputNode() :
     Node(),
-    device_("tempi", 9000)
+    device_(DEVICE_NAME, PORT)
 {
     setShortDocumentation("Receives libmapper messages.");
     setLongDocumentation("");
