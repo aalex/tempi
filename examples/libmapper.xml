@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tempi version="0.1.14">
+  <graph>
+    <node id="loadmess0" class="base.flow.loadmess">
+      <attribute name="value">
+        <s>/f</s> <!-- name -->
+        <c>f</c> <!-- type -->
+        <i>1</i> <!-- length -->
+      </attribute>
+    </node>
+    <node id="input0" class="base.osc.libmapper.input">
+    </node>
+    <node id="print0" class="base.flow.print">
+      <attribute name="prefix"><s>receive: </s></attribute>
+      <attribute name="enabled"><b>1</b></attribute>
+    </node>
+    <node id="print1" class="base.flow.print">
+      <attribute name="prefix"><s>to input: </s></attribute>
+      <attribute name="enabled"><b>1</b></attribute>
+    </node>
+    <connection from="loadmess0" outlet="0" to="input0" inlet="add_input"/>
+    <connection from="input0" outlet="incoming" to="print0" inlet="0"/>
+    <connection from="loadmess0" outlet="0" to="print1" inlet="0"/>
+  </graph>
+</tempi>
