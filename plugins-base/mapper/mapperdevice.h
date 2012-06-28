@@ -29,6 +29,7 @@
 #ifdef HAVE_LIBMAPPER
 
 #include "tempi/message.h"
+#include "tempi/log.h"
 #include "tempi/concurrentqueue.h"
 #include <mapper/mapper.h>
 
@@ -45,16 +46,19 @@ class MapperDevice
         {
             name_ = std::string(name);
             port_ = port;
+            dev_ = 0;
             start();
         }
         bool start()
         {
+            Logger::log(DEBUG, "MapperDevice::start()");
             if (! isRunning())
                 dev_ = mdev_new(name_.c_str(), port_, 0);
             return true;
         }
         bool poll(std::vector<Message> &result)
         {
+            //Logger::log(DEBUG, "MapperDevice::poll()");
             if (! isRunning())
                 start();
             mdev_poll(dev_, 0);
@@ -76,6 +80,7 @@ class MapperDevice
         }
         bool addFloatInput(const char *name, int length=1, const char *unit="", float minimum=0, float maximum=0)
         {
+            Logger::log(DEBUG, "MapperDevice::addFloatInput()");
             mdev_add_input(dev_, name, length, 'f', unit,
                 reinterpret_cast<void *>(& minimum),
                 reinterpret_cast<void *>(& maximum),
@@ -84,6 +89,7 @@ class MapperDevice
         }
         bool addIntInput(const char *name, int length=1, const char *unit="", int minimum=0, int maximum=0)
         {
+            Logger::log(DEBUG, "MapperDevice::addIntInput()");
             mdev_add_input(dev_, name, length, 'i', unit,
                 reinterpret_cast<void *>(& minimum),
                 reinterpret_cast<void *>(& maximum),

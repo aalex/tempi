@@ -36,7 +36,7 @@ MapperInputNode::MapperInputNode() :
     setShortDocumentation("Receives libmapper messages.");
     setLongDocumentation("");
     addOutlet("incoming");
-    addOutlet("add_input");
+    addInlet("add_input");
     // TODO: allow to specify port and name
 }
 
@@ -48,6 +48,7 @@ bool MapperInputNode::onNodeAttributeChanged(const char *name, const Message &va
 
 void MapperInputNode::processMessage(const char *inlet, const Message &message)
 {
+    Logger::log(DEBUG, "MapperInputNode::processMessage()");
     if (utils::stringsMatch(inlet, "add_input"))
     {
         if (message.getTypes() == "sci") // name, type, length
@@ -75,6 +76,7 @@ void MapperInputNode::processMessage(const char *inlet, const Message &message)
 void MapperInputNode::doTick()
 {
     std::vector<Message> messages;
+    //Logger::log(DEBUG, "MapperInputNode::doTick()");
     if (device_.poll(messages))
     {
         std::vector<Message>::iterator iter;
