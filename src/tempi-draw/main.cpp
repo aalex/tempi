@@ -611,12 +611,13 @@ bool App::parse_options(int argc, char **argv)
 
 int main(int argc, char *argv[])
 {
-    if (clutter_init(&argc, &argv) != CLUTTER_INIT_SUCCESS)
-        return 1;
-
     App app;
     if (app.parse_options(argc, argv))
         return 0;
+
+    if (clutter_init(&argc, &argv) != CLUTTER_INIT_SUCCESS)
+        return 1;
+
     app.launch();
 
     clutter_main();
