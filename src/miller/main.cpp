@@ -166,6 +166,7 @@ class App
         ClutterActor* createNodeActor(tempi::Node &node);
         static gboolean on_idle(gpointer data);
         void pushCommand(Command::ptr command);
+        static gboolean on_group0_scrolled(ClutterActor *actor, ClutterEvent *event, gpointer user_data);
 };
 
 bool SaveCommand::apply(App &app)
@@ -503,6 +504,38 @@ void on_frame_cb(ClutterTimeline * /*timeline*/, guint * /*ms*/, gpointer user_d
     context->poll();
 }
 
+gboolean App::on_group0_scrolled(ClutterActor *actor, ClutterEvent *event, gpointer user_data)
+{
+    ClutterScrollDirection direction;
+    direction = clutter_event_get_scroll_direction(event);
+    gdouble current_x_factor;
+    gdouble current_y_factor;
+    clutter_actor_get_scale(actor, &current_x_factor, &current_y_factor);
+    static const gdouble SCALE_UP = 5.0 / 4.0;
+    static const gdouble SCALE_DOWN = 3.0 / 4.0;
+
+    std::ostringstream os;
+    os << "scale is " << current_x_factor << " x " << current_y_factor;
+    tempi::Logger::log(tempi::WARNING, os.str().c_str());
+
+    switch (direction)
+    {
+        case CLUTTER_SCROLL_UP:
+            clutter_actor_set_scale(actor,
+              current_x_factor * SCALE_UP,
+              current_y_factor * SCALE_UP);
+            break;
+        case CLUTTER_SCROLL_DOWN:
+            clutter_actor_set_scale(actor,
+              current_x_factor * SCALE_DOWN,
+              current_y_factor * SCALE_DOWN);
+            break;
+      }
+
+    return CLUTTER_EVENT_STOP; /* event has been handled */
+}
+
+
 bool App::createGUI()
 {
     if (stage_ == 0)
@@ -534,6 +567,8 @@ bool App::createGUI()
     // create misc actors in the stage:
     ClutterActor *group0 = clutter_group_new();
     clutter_actor_set_name(group0, NODES_GROUP);
+    clutter_actor_set_reactive(group0, TRUE);
+    g_signal_connect(group0, "scroll-event", G_CALLBACK(App::on_group0_scrolled), this);
     clutter_container_add_actor(CLUTTER_CONTAINER(stage_), group0);
 
     clutter_actor_show(stage_);
