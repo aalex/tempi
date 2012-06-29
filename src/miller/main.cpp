@@ -82,7 +82,7 @@ namespace miller {
 static const char * const PROGRAM_NAME = "miller";
 static const char * const GRAPH_NAME = "graph0";
 static const char * const NODES_GROUP = "group0";
-static const char * const FONT_NAME = "Serif 16px"; // Sans 16px
+static const char * const FONT_NAME = "Monospace 10px"; // Serif Sans
 
 // Color constants:
 static const ClutterColor BLACK = { 0x00, 0x00, 0x00, 0xff };
@@ -277,6 +277,8 @@ void App::drawGraph()
         tempi::Node::ptr node = graph_->getNode(node_name.c_str());
         ClutterActor *actor = createNodeActor(*node.get());
         clutter_actor_set_position(actor, x, y);
+        clutter_actor_add_action(actor, clutter_drag_action_new());
+        clutter_actor_set_reactive(actor, TRUE);
         clutter_container_add_actor(CLUTTER_CONTAINER(clutter_container_find_child_by_name(CLUTTER_CONTAINER(stage_), NODES_GROUP)), actor);
     }
 }
