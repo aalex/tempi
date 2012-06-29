@@ -1,0 +1,36 @@
+Miller
+======
+Miller is an OSC sampler and router. It allows one to connect data sources to data sinks, to filter and change the scale of the flow of data, to record the changes over time and to play them back once recorded.
+
+Operations
+----------
+The user starts by configuring the sources and sinks to use. This is done using a graphical user interface relying heavily on keyboard shortcuts. Here they are:
+
+* F1: Help
+* F2: Edit object
+* F3: Find object
+* F11: Toggle fullscreen
+* Tab: Select next object
+* Escape: Undo changes to object
+* Backspace/Delete: Delete object
+* Enter: Done editing object
+* Space: Toggle playback
+* Ctrl-S: Save project
+* Ctrl-Q: Quit
+* Ctrl-N: New project
+* Ctrl-W: Close project
+* Ctrl-O: Open project
+* Ctrl-Q: Quit
+* Ctrl-Plus: Zoom in
+* Ctrl-Minux: Zoom out
+* Ctrl-Equal: Reset zoom
+* Home: Go to beginning of timeline
+* End: Go to end of timeline
+* Spacebar: Play forward
+* Shift-Space: Play backward
+* Up/Down/Left/Right: Move object
+* Ctrl-Up/Down: Accelerate/decelerate
+* Ctrl-Left/Right: Move playhead forward/Backward
+
+One can also select and move around objects with the mouse.
+
