@@ -39,6 +39,7 @@ int main(int argc, char *argv[])
 #include "tempi/log.h"
 #include "tempi/wrapper.h"
 #include "tempi/log.h"
+#include "tempi/concurrentqueue.h"
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/program_options.hpp>
@@ -103,6 +104,23 @@ static void on_frame_cb(ClutterTimeline *timeline, guint *ms, gpointer user_data
 static void on_fullscreen(ClutterStage* stage, gpointer user_data);
 static void on_unfullscreen(ClutterStage* stage, gpointer user_data);
 
+class App;
+
+class Command
+{
+    public:
+        typedef std::tr1::shared_ptr<Command> ptr;
+        Command() {}
+        virtual bool apply(App &app) = 0;
+};
+
+class SaveCommand : public Command
+{
+    public:
+        SaveCommand() : Command() {}
+        virtual bool apply(App &app);
+};
+
 /**
  * The App class manages the tempi::Graph and the Clutter GUI.
  */
@@ -132,12 +150,13 @@ class App
         bool graph_ok_;
 
         //GRand *random_generator_;
-        std::string file_name_;
-        tempi::ThreadedScheduler::ptr engine_;
-        tempi::serializer::Serializer::ptr saver_;
+        tempi::ConcurrentQueue<Command::ptr> commands_queue_;
     public:
-        tempi::Graph::ptr graph_;
-        bool saveGraph();
+        std::string file_name_;
+        tempi::ThreadedScheduler::ptr engine_; // FIXME
+        tempi::Graph::ptr graph_; // FIXME
+        tempi::serializer::Serializer::ptr saver_; // FIXME
+        bool saveGraph(); // FIXME
     private:
         ClutterActor *stage_;
         bool createGUI();
@@ -145,7 +164,28 @@ class App
         // called by setupGraph() to create the clutter actors
         void drawGraph();
         ClutterActor* createNodeActor(tempi::Node &node);
+        static gboolean on_idle(gpointer data);
+        void pushCommand(Command::ptr command);
 };
+
+bool SaveCommand::apply(App &app)
+{
+    tempi::Logger::log(tempi::WARNING, "will save the graph.");
+    tempi::ScopedLock::ptr lock = app.engine_->acquireLock();
+    tempi::Graph::ptr graph = app.graph_;
+    bool ok = app.saver_->save(*graph.get(), app.file_name_.c_str());
+    if (ok)
+        tempi::Logger::log(tempi::INFO, "Successfully saved the graph..");
+    else
+        tempi::Logger::log(tempi::ERROR, "Could not save the graph.");
+    return ok;
+}
+
+void App::pushCommand(Command::ptr command)
+{
+    tempi::Logger::log(tempi::WARNING, "pushing a command.");
+    commands_queue_.push(command);
+}
 
 App::App() :
     verbose_(false),
@@ -230,6 +270,22 @@ bool App::poll()
     }
 }
 
+gboolean App::on_idle(gpointer data)
+{
+    //clutter_threads_enter();
+    App *app = static_cast<App *>(data);
+    while (! app->commands_queue_.empty())
+    {
+        tempi::Logger::log(tempi::WARNING, "popping a command.");
+        Command::ptr command;
+        app->commands_queue_.try_pop(command);
+        command->apply(*app);
+    }
+    // FIXME: seems to crash
+    //clutter_threads_leave();
+    return TRUE;
+}
+
 bool App::launch()
 {
     if (verbose_)
@@ -243,6 +299,8 @@ bool App::launch()
             return false;
         if (verbose_)
             std::cout << "Running... Press ctrl-C in the terminal to quit. (or ctrl-Q in the GUI)" << std::endl;
+        //g_idle_add(App::on_idle, this);
+        clutter_threads_add_idle(App::on_idle, this);
         return true;
     }
     else
@@ -334,6 +392,8 @@ void on_node_dragged(ClutterDragAction *action, ClutterActor *actor, gfloat even
 {
     UNUSED(action);
     App *app = static_cast<App *>(user_data);
+
+    tempi::ScopedLock::ptr lock = app->engine_->acquireLock();
     const gchar *name = clutter_actor_get_name(actor);
     tempi::Node::ptr node = app->graph_->getNode(name);
     node->setAttributeValue(tempi::Node::ATTRIBUTE_POSITION, tempi::Message("fff", event_x, event_y, 0.0f));
@@ -341,6 +401,7 @@ void on_node_dragged(ClutterDragAction *action, ClutterActor *actor, gfloat even
 
 void App::drawGraph()
 {
+    // the tempi scoped lock is already acquired be the caller
     // assumes that graph_ is a valid tempi::Graph.
     std::vector<std::string> names = graph_->getNodeNames();
     std::vector<std::string>::const_iterator iter;
@@ -365,15 +426,8 @@ void App::drawGraph()
 
 bool App::saveGraph()
 {
-
-    tempi::ScopedLock::ptr lock = engine_->acquireLock();
-    bool ok = saver_->save(*graph_.get(), this->file_name_.c_str());
-    if (ok)
-        tempi::Logger::log(tempi::INFO, "Successfully saved the graph..");
-    else
-        tempi::Logger::log(tempi::ERROR, "Could not save the graph.");
-
-    return ok;
+    pushCommand(Command::ptr(new SaveCommand));
+    return true; // ???
 }
 
 bool App::setupGraph()
@@ -555,6 +609,10 @@ int main(int argc, char *argv[])
     }
     if (ret != -1)
         return ret;
+
+    // Important, since we use threads:
+    g_thread_init(NULL);
+    clutter_threads_init();
 
     if (clutter_init(&argc, &argv) != CLUTTER_INIT_SUCCESS)
         return 1;

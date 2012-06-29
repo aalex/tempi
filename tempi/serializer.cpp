@@ -203,7 +203,7 @@ bool Serializer::save(Graph &graph, const char *filename)
     xmlSaveFormatFileEnc(filename, doc, "UTF-8", 1);
     {
         std::ostringstream os;
-        os << "Saved the graph to " << filename;
+        os << "Serializer::save(): Saved the graph to " << filename;
         Logger::log(INFO, os.str().c_str());
     }
     // Free the document + global variables that may have been
