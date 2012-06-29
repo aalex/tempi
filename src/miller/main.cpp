@@ -365,6 +365,8 @@ void App::drawGraph()
 
 bool App::saveGraph()
 {
+
+    tempi::ScopedLock::ptr lock = engine_->acquireLock();
     bool ok = saver_->save(*graph_.get(), this->file_name_.c_str());
     if (ok)
         tempi::Logger::log(tempi::INFO, "Successfully saved the graph..");
