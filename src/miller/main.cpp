@@ -82,7 +82,7 @@ namespace miller {
 static const char * const PROGRAM_NAME = "miller";
 static const char * const GRAPH_NAME = "graph0";
 static const char * const NODES_GROUP = "group0";
-static const char * const FONT_NAME = "Monospace 10px"; // Serif Sans
+static const char * const FONT_NAME = "Monospace Bold 12px";
 
 // Color constants:
 static const ClutterColor BLACK = { 0x00, 0x00, 0x00, 0xff };
@@ -252,16 +252,73 @@ ClutterActor* App::createNodeActor(tempi::Node &node)
     std::ostringstream os;
     os << node_name << " (" << node_type << ")";
 
+    ClutterLayoutManager *bin_layout = clutter_bin_layout_new(
+        CLUTTER_BIN_ALIGNMENT_CENTER,
+        CLUTTER_BIN_ALIGNMENT_CENTER);
+    ClutterActor *bin_box = clutter_box_new(bin_layout);
+
     // FIXME: ClutterRectangle is deprecated!
-    // TODO: use a bin layout
-    ClutterActor *group = clutter_group_new();
-    ClutterActor *rect = clutter_rectangle_new_with_color(&GREEN);
-    clutter_container_add_actor(CLUTTER_CONTAINER(group), rect);
-    clutter_actor_set_size(rect, 200.0f, 50.0f);
+    ClutterActor *background = clutter_rectangle_new_with_color(&GRAY_LIGHT);
+    clutter_actor_set_size(background, 10.0f, 10.0f);
+    clutter_bin_layout_add(CLUTTER_BIN_LAYOUT(bin_layout),
+        background,
+        CLUTTER_BIN_ALIGNMENT_FILL,
+        CLUTTER_BIN_ALIGNMENT_FILL);
+
+    ClutterLayoutManager *table_layout = clutter_table_layout_new();
+    ClutterActor *table_box = clutter_box_new(table_layout);
+    clutter_bin_layout_add(CLUTTER_BIN_LAYOUT(bin_layout),
+        table_box,
+        CLUTTER_BIN_ALIGNMENT_CENTER,
+        CLUTTER_BIN_ALIGNMENT_START);
+    guint SPACING = 2;
+    clutter_table_layout_set_row_spacing(CLUTTER_TABLE_LAYOUT(table_layout), SPACING);
+    clutter_table_layout_set_column_spacing(CLUTTER_TABLE_LAYOUT(table_layout), SPACING);
     
-    ClutterActor *label = clutter_text_new_full(FONT_NAME, os.str().c_str(), &WHITE);
-    clutter_container_add_actor(CLUTTER_CONTAINER(group), label);
-    return group;
+    ClutterActor *label = clutter_text_new_full(FONT_NAME, os.str().c_str(), &BLUE);
+    clutter_table_layout_pack(CLUTTER_TABLE_LAYOUT(table_layout), label,
+        0, 0); // col, row
+    clutter_table_layout_set_alignment(CLUTTER_TABLE_LAYOUT(table_layout), label,
+        CLUTTER_TABLE_ALIGNMENT_START,
+        CLUTTER_TABLE_ALIGNMENT_START);
+    clutter_table_layout_set_span(CLUTTER_TABLE_LAYOUT(table_layout), label,
+        2, 1); // col span, row span
+
+    gint inlet_row = 1;
+    gint outlet_row = 1;
+    const gint inlet_col = 0;
+    const gint outlet_col = 1;
+    // inlets:
+    std::map<std::string, tempi::Inlet::ptr> inlets = node.getInlets();
+    std::map<std::string, tempi::Inlet::ptr>::const_iterator iter_inlet;
+    for (iter_inlet = inlets.begin(); iter_inlet != inlets.end(); ++iter_inlet)
+    {
+        std::string inlet_name =  (*iter_inlet).first;
+        ClutterActor *inlet_label = clutter_text_new_full(FONT_NAME, inlet_name.c_str(), &RED);
+        clutter_table_layout_pack(CLUTTER_TABLE_LAYOUT(table_layout), inlet_label,
+            inlet_col,
+            inlet_row); // col, row
+        clutter_table_layout_set_alignment(CLUTTER_TABLE_LAYOUT(table_layout), inlet_label,
+            CLUTTER_TABLE_ALIGNMENT_START, // x_align
+            CLUTTER_TABLE_ALIGNMENT_START); // y_align
+        inlet_row++;
+    }
+    // outlets:
+    std::map<std::string, tempi::Outlet::ptr> outlets = node.getOutlets();
+    std::map<std::string, tempi::Outlet::ptr>::const_iterator iter_outlet;
+    for (iter_outlet = outlets.begin(); iter_outlet != outlets.end(); ++iter_outlet)
+    {
+        std::string outlet_name =  (*iter_outlet).first;
+        ClutterActor *outlet_label = clutter_text_new_full(FONT_NAME, outlet_name.c_str(), &MAGENTA);
+        clutter_table_layout_pack(CLUTTER_TABLE_LAYOUT(table_layout), outlet_label,
+            outlet_col,
+            outlet_row); // col, row
+        clutter_table_layout_set_alignment(CLUTTER_TABLE_LAYOUT(table_layout), outlet_label,
+            CLUTTER_TABLE_ALIGNMENT_END, // x_align
+            CLUTTER_TABLE_ALIGNMENT_START); // y_align
+        outlet_row++;
+    }
+    return bin_box;
 }
 
 void App::drawGraph()
