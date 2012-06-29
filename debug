@@ -1,9 +1,0 @@
-#!/bin/bash
-# This file is not included in the distributed package, nor installed
-# It is only useful for developers to simplify launching spinic.
-cd $(dirname $0)
-
-# FIXME:Tue Nov  2 13:22:13 EDT 2010: tmatth
-# This is a hack to workaround a Clutter bug with certain video drivers.
-# Confirmed on Intel, reported on NVidia and ATI as well.
-CLUTTER_VBLANK=none libtool --mode=execute gdb ./src/tempi $@

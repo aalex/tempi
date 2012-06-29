@@ -154,6 +154,13 @@ else
     AC_DEFINE(HAVE_SPATOSC,[1],[SpatOSC headers successfully detected])
 fi
 
+PKG_CHECK_MODULES([LIBMAPPER], [libmapper-0], have_libmapper=true, have_libmapper=false)
+if test "x${have_libmapper}" = "xfalse" ; then
+    AC_MSG_WARN([missing package: libmapper-dev])
+else
+    AC_DEFINE(HAVE_LIBMAPPER,[1],[Libmapper headers successfully detected])
+fi
+
 dnl # BOOST
 dnl AX_BOOST_BASE([1.35])
 dnl 
