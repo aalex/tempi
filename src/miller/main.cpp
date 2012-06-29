@@ -33,7 +33,6 @@ int main(int argc, char *argv[])
 
 #include "tempi/message.h"
 #include "tempi/scheduler.h"
-#include "tempi/message.h"
 #include "tempi/scheduler.h"
 #include "tempi/threadedscheduler.h"
 #include "tempi/serializer.h"
@@ -58,6 +57,10 @@ using tempi::DEBUG;
 #define CLUTTER_KEY_Down CLUTTER_Down
 #define CLUTTER_KEY_Escape CLUTTER_Escape
 #define CLUTTER_KEY_F1 CLUTTER_F1
+#define CLUTTER_KEY_F2 CLUTTER_F2
+#define CLUTTER_KEY_F3 CLUTTER_F3
+#define CLUTTER_KEY_F4 CLUTTER_F4
+#define CLUTTER_KEY_F11 CLUTTER_F11
 #define CLUTTER_KEY_Left CLUTTER_Left
 #define CLUTTER_KEY_Return CLUTTER_Return
 #define CLUTTER_KEY_Right CLUTTER_Right
@@ -72,15 +75,20 @@ using tempi::DEBUG;
 namespace miller {
 
 // String constants:
-static const char *PROGRAM_NAME = "miller";
-static const char *GRAPH_NAME = "graph0";
+static const char * const PROGRAM_NAME = "miller";
+static const char * const GRAPH_NAME = "graph0";
 
 // Color constants:
-static ClutterColor black = { 0x00, 0x00, 0x00, 0xff };
-static ClutterColor red = { 0xcc, 0x33, 0x33, 0xff };
-static ClutterColor green = { 0x33, 0xcc, 0x33, 0xff };
-static ClutterColor gray = { 0x99, 0x99, 0x99, 0xff };
-static ClutterColor white = { 0xcc, 0xcc, 0xcc, 0xff };
+static const ClutterColor BLACK = { 0x00, 0x00, 0x00, 0xff };
+static const ClutterColor BLUE = { 0x33, 0x33, 0xcc, 0xff };
+static const ClutterColor CYAN = { 0x33, 0xcc, 0xcc, 0xff };
+static const ClutterColor GRAY_LIGHT = { 0xcc, 0xcc, 0xcc, 0xff };
+static const ClutterColor GRAY_MEDIUM = { 0x99, 0x99, 0x99, 0xff };
+static const ClutterColor GREEN = { 0x33, 0xcc, 0x33, 0xff };
+static const ClutterColor MAGENTA = { 0xcc, 0x33, 0xcc, 0xff };
+static const ClutterColor RED = { 0xcc, 0x33, 0x33, 0xff };
+static const ClutterColor WHITE = { 0xff, 0xff, 0xff, 0xff };
+static const ClutterColor YELLOW = { 0xcc, 0xcc, 0x33, 0xff };
 
 // Static functions:
 static void key_event_cb(ClutterActor *actor, ClutterKeyEvent *event, gpointer user_data);
@@ -107,6 +115,7 @@ class App
          * Polls the tempi::Graph.
          */
         bool poll();
+        void toggle_fullscreen();
     private:
         bool verbose_;
         bool debug_;
@@ -143,6 +152,16 @@ App::~App()
     }
 }
 
+void App::toggle_fullscreen()
+{
+    if (verbose_)
+        std::cout << "App::" << __FUNCTION__ << std::endl;
+    if (clutter_stage_get_fullscreen(CLUTTER_STAGE(stage_)))
+        clutter_stage_set_fullscreen(CLUTTER_STAGE(stage_), FALSE);
+    else
+        clutter_stage_set_fullscreen(CLUTTER_STAGE(stage_), TRUE);
+}
+
 static void key_event_cb(ClutterActor *actor, ClutterKeyEvent *event, gpointer user_data)
 {
     App *app = (App *) user_data;
@@ -150,6 +169,9 @@ static void key_event_cb(ClutterActor *actor, ClutterKeyEvent *event, gpointer u
     bool ctrl_pressed = (state & CLUTTER_CONTROL_MASK ? true : false);
     switch (event->keyval)
     {
+        case CLUTTER_KEY_F11:
+            app->toggle_fullscreen();
+            break;
         case CLUTTER_KEY_q:
             if (ctrl_pressed)
                 clutter_main_quit();
@@ -169,7 +191,6 @@ bool App::poll()
         return true;
     }
 }
-
 
 bool App::launch()
 {
@@ -277,7 +298,8 @@ bool App::createGUI()
     }
     stage_ = clutter_stage_get_default();
     clutter_actor_set_size(stage_, 800, 600);
-    clutter_stage_set_color(CLUTTER_STAGE(stage_), &black);
+    clutter_stage_set_user_resizable(CLUTTER_STAGE(stage_), TRUE);
+    clutter_stage_set_color(CLUTTER_STAGE(stage_), &BLACK);
     g_signal_connect(stage_, "destroy", G_CALLBACK(clutter_main_quit), NULL);
     
     // timeline to attach a callback for each frame that is rendered

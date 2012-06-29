@@ -20,6 +20,7 @@ The user starts by configuring the sources and sinks to use. This is done using 
 * Ctrl-N: New project
 * Ctrl-W: Close project
 * Ctrl-O: Open project
+* Ctrl-Q: Quit
 * Ctrl-Plus: Zoom in
 * Ctrl-Minux: Zoom out
 * Ctrl-Equal: Reset zoom
