@@ -67,6 +67,7 @@ using tempi::DEBUG;
 #define CLUTTER_KEY_Tab CLUTTER_Tab
 #define CLUTTER_KEY_Up CLUTTER_Up
 #define CLUTTER_KEY_q CLUTTER_q
+#define CLUTTER_KEY_s CLUTTER_s
 #define CLUTTER_KEY_space CLUTTER_space
 #define CLUTTER_KEY_Delete CLUTTER_Delete
 #define CLUTTER_KEY_BackSpace CLUTTER_BackSpace
@@ -130,11 +131,14 @@ class App
         bool debug_;
         bool graph_ok_;
 
-        GRand *random_generator_;
+        //GRand *random_generator_;
         std::string file_name_;
         tempi::ThreadedScheduler::ptr engine_;
         tempi::serializer::Serializer::ptr saver_;
+    public:
         tempi::Graph::ptr graph_;
+        bool saveGraph();
+    private:
         ClutterActor *stage_;
         bool createGUI();
         bool setupGraph();
@@ -148,7 +152,7 @@ App::App() :
     debug_(false),
     graph_ok_(false)
 {
-    random_generator_ = g_rand_new();
+    //random_generator_ = g_rand_new();
     file_name_ = "";
     stage_ = NULL;
 }
@@ -193,6 +197,10 @@ void key_event_cb(ClutterActor *actor, ClutterKeyEvent *event, gpointer user_dat
         case CLUTTER_KEY_q:
             if (ctrl_pressed)
                 clutter_main_quit();
+            break;
+        case CLUTTER_KEY_s:
+            if (ctrl_pressed)
+                app->saveGraph();
             break;
     }
 }
@@ -318,7 +326,17 @@ ClutterActor* App::createNodeActor(tempi::Node &node)
             CLUTTER_TABLE_ALIGNMENT_START); // y_align
         outlet_row++;
     }
+    clutter_actor_set_name(bin_box, node_name.c_str());
     return bin_box;
+}
+
+void on_node_dragged(ClutterDragAction *action, ClutterActor *actor, gfloat event_x, gfloat event_y, ClutterModifierType modifiers, gpointer user_data)
+{
+    UNUSED(action);
+    App *app = static_cast<App *>(user_data);
+    const gchar *name = clutter_actor_get_name(actor);
+    tempi::Node::ptr node = app->graph_->getNode(name);
+    node->setAttributeValue(tempi::Node::ATTRIBUTE_POSITION, tempi::Message("fff", event_x, event_y, 0.0f));
 }
 
 void App::drawGraph()
@@ -328,16 +346,32 @@ void App::drawGraph()
     std::vector<std::string>::const_iterator iter;
     for (iter = names.begin(); iter != names.end(); ++iter)
     {
-        float x = (float) g_rand_double_range(random_generator_, 0.0, clutter_actor_get_width(stage_));
-        float y = (float) g_rand_double_range(random_generator_, 0.0, clutter_actor_get_height(stage_));
+        //float x = (float) g_rand_double_range(random_generator_, 0.0, clutter_actor_get_width(stage_));
+        //float y = (float) g_rand_double_range(random_generator_, 0.0, clutter_actor_get_height(stage_));
         std::string node_name = (*iter);
         tempi::Node::ptr node = graph_->getNode(node_name.c_str());
+        tempi::Message pos = node->getAttributeValue(tempi::Node::ATTRIBUTE_POSITION);
+        float x = pos.getFloat(0);
+        float y = pos.getFloat(1);
         ClutterActor *actor = createNodeActor(*node.get());
         clutter_actor_set_position(actor, x, y);
-        clutter_actor_add_action(actor, clutter_drag_action_new());
+        ClutterAction *action = clutter_drag_action_new();
+        clutter_actor_add_action(actor, action);
+        g_signal_connect(action, "drag-end", G_CALLBACK(on_node_dragged), this);
         clutter_actor_set_reactive(actor, TRUE);
         clutter_container_add_actor(CLUTTER_CONTAINER(clutter_container_find_child_by_name(CLUTTER_CONTAINER(stage_), NODES_GROUP)), actor);
     }
+}
+
+bool App::saveGraph()
+{
+    bool ok = saver_->save(*graph_.get(), this->file_name_.c_str());
+    if (ok)
+        tempi::Logger::log(tempi::INFO, "Successfully saved the graph..");
+    else
+        tempi::Logger::log(tempi::ERROR, "Could not save the graph.");
+
+    return ok;
 }
 
 bool App::setupGraph()
