@@ -72,11 +72,17 @@ using tempi::DEBUG;
 #define CLUTTER_KEY_BackSpace CLUTTER_BackSpace
 #endif
 
+#ifndef UNUSED
+#define UNUSED(x) ((void)(x))
+#endif
+
 namespace miller {
 
 // String constants:
 static const char * const PROGRAM_NAME = "miller";
 static const char * const GRAPH_NAME = "graph0";
+static const char * const NODES_GROUP = "group0";
+static const char * const FONT_NAME = "Serif 16px"; // Sans 16px
 
 // Color constants:
 static const ClutterColor BLACK = { 0x00, 0x00, 0x00, 0xff };
@@ -93,6 +99,8 @@ static const ClutterColor YELLOW = { 0xcc, 0xcc, 0x33, 0xff };
 // Static functions:
 static void key_event_cb(ClutterActor *actor, ClutterKeyEvent *event, gpointer user_data);
 static void on_frame_cb(ClutterTimeline *timeline, guint *ms, gpointer user_data);
+static void on_fullscreen(ClutterStage* stage, gpointer user_data);
+static void on_unfullscreen(ClutterStage* stage, gpointer user_data);
 
 /**
  * The App class manages the tempi::Graph and the Clutter GUI.
@@ -116,10 +124,13 @@ class App
          */
         bool poll();
         void toggle_fullscreen();
+        void toggle_help() {}
     private:
         bool verbose_;
         bool debug_;
         bool graph_ok_;
+
+        GRand *random_generator_;
         std::string file_name_;
         tempi::ThreadedScheduler::ptr engine_;
         tempi::serializer::Serializer::ptr saver_;
@@ -127,6 +138,9 @@ class App
         ClutterActor *stage_;
         bool createGUI();
         bool setupGraph();
+        // called by setupGraph() to create the clutter actors
+        void drawGraph();
+        ClutterActor* createNodeActor(tempi::Node &node);
 };
 
 App::App() :
@@ -134,6 +148,7 @@ App::App() :
     debug_(false),
     graph_ok_(false)
 {
+    random_generator_ = g_rand_new();
     file_name_ = "";
     stage_ = NULL;
 }
@@ -162,13 +177,16 @@ void App::toggle_fullscreen()
         clutter_stage_set_fullscreen(CLUTTER_STAGE(stage_), TRUE);
 }
 
-static void key_event_cb(ClutterActor *actor, ClutterKeyEvent *event, gpointer user_data)
+void key_event_cb(ClutterActor *actor, ClutterKeyEvent *event, gpointer user_data)
 {
     App *app = (App *) user_data;
     ClutterModifierType state = clutter_event_get_state((ClutterEvent*) event);
     bool ctrl_pressed = (state & CLUTTER_CONTROL_MASK ? true : false);
     switch (event->keyval)
     {
+        case CLUTTER_KEY_F1:
+            app->toggle_help();
+            break;
         case CLUTTER_KEY_F11:
             app->toggle_fullscreen();
             break;
@@ -177,6 +195,18 @@ static void key_event_cb(ClutterActor *actor, ClutterKeyEvent *event, gpointer u
                 clutter_main_quit();
             break;
     }
+}
+
+void on_fullscreen(ClutterStage* stage, gpointer user_data)
+{
+    UNUSED(stage);
+    UNUSED(user_data);
+}
+
+void on_unfullscreen(ClutterStage* stage, gpointer user_data)
+{
+    UNUSED(stage);
+    UNUSED(user_data);
 }
 
 bool App::poll()
@@ -211,6 +241,43 @@ bool App::launch()
     {
         std::cerr << "App::" << __FUNCTION__ << "(): Already called\n";
         return false;
+    }
+}
+
+ClutterActor* App::createNodeActor(tempi::Node &node)
+{
+    const std::string& node_type = node.getTypeName();
+    std::string node_name = node.getName();
+
+    std::ostringstream os;
+    os << node_name << " (" << node_type << ")";
+
+    // FIXME: ClutterRectangle is deprecated!
+    // TODO: use a bin layout
+    ClutterActor *group = clutter_group_new();
+    ClutterActor *rect = clutter_rectangle_new_with_color(&GREEN);
+    clutter_container_add_actor(CLUTTER_CONTAINER(group), rect);
+    clutter_actor_set_size(rect, 200.0f, 50.0f);
+    
+    ClutterActor *label = clutter_text_new_full(FONT_NAME, os.str().c_str(), &WHITE);
+    clutter_container_add_actor(CLUTTER_CONTAINER(group), label);
+    return group;
+}
+
+void App::drawGraph()
+{
+    // assumes that graph_ is a valid tempi::Graph.
+    std::vector<std::string> names = graph_->getNodeNames();
+    std::vector<std::string>::const_iterator iter;
+    for (iter = names.begin(); iter != names.end(); ++iter)
+    {
+        float x = (float) g_rand_double_range(random_generator_, 0.0, clutter_actor_get_width(stage_));
+        float y = (float) g_rand_double_range(random_generator_, 0.0, clutter_actor_get_height(stage_));
+        std::string node_name = (*iter);
+        tempi::Node::ptr node = graph_->getNode(node_name.c_str());
+        ClutterActor *actor = createNodeActor(*node.get());
+        clutter_actor_set_position(actor, x, y);
+        clutter_container_add_actor(CLUTTER_CONTAINER(clutter_container_find_child_by_name(CLUTTER_CONTAINER(stage_), NODES_GROUP)), actor);
     }
 }
 
@@ -265,6 +332,8 @@ bool App::setupGraph()
     saver_->load(*graph_.get(), this->file_name_.c_str());
     graph_->tick(); // FIXME
 
+    this->drawGraph();
+
     graph_ok_ = true;
     if (debug_)
     {
@@ -279,7 +348,7 @@ bool App::setupGraph()
     return true;
 }
 
-static void on_frame_cb(ClutterTimeline * /*timeline*/, guint * /*ms*/, gpointer user_data)
+void on_frame_cb(ClutterTimeline * /*timeline*/, guint * /*ms*/, gpointer user_data)
 {
     App *context = static_cast<App*>(user_data);
     context->poll();
@@ -301,6 +370,8 @@ bool App::createGUI()
     clutter_stage_set_user_resizable(CLUTTER_STAGE(stage_), TRUE);
     clutter_stage_set_color(CLUTTER_STAGE(stage_), &BLACK);
     g_signal_connect(stage_, "destroy", G_CALLBACK(clutter_main_quit), NULL);
+    g_signal_connect(G_OBJECT(stage_), "fullscreen", G_CALLBACK(on_fullscreen), this);
+    g_signal_connect(G_OBJECT(stage_), "unfullscreen", G_CALLBACK(on_unfullscreen), this);
     
     // timeline to attach a callback for each frame that is rendered
     ClutterTimeline *timeline;
@@ -310,6 +381,11 @@ bool App::createGUI()
 
     g_signal_connect(timeline, "new-frame", G_CALLBACK(on_frame_cb), this);
     g_signal_connect(stage_, "key-press-event", G_CALLBACK(key_event_cb), this);
+
+    // create misc actors in the stage:
+    ClutterActor *group0 = clutter_group_new();
+    clutter_actor_set_name(group0, NODES_GROUP);
+    clutter_container_add_actor(CLUTTER_CONTAINER(stage_), group0);
 
     clutter_actor_show(stage_);
     return true;
