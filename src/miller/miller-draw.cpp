@@ -28,6 +28,7 @@
 #include "miller-draw.h"
 #include "miller-macros.h"
 #include "tempi/log.h"
+#include <iostream>
 
 namespace miller {
 
@@ -166,11 +167,21 @@ void on_paint_connection(ClutterActor *actor, gpointer user_data)
     clutter_rectangle_get_color(CLUTTER_RECTANGLE(actor), &color);
 
     cogl_push_matrix();
-    cogl_set_source_color4ub(255, 255, 255, 255);   // color.red, color.green, color.blue, tmp_alpha);
+    cogl_set_source_color4ub(color.red, color.green, color.blue, tmp_alpha);
+    gint x1 = geom.x;
+    gint y1 = geom.y;
+    gint x2 = geom.x + geom.width;
+    gint y2 = geom.y + geom.height;
+    std::cout << __FUNCTION__ << ": draw line from " <<
+        x1 << "," << y1 << " to " << x2 << "," << y2 <<
+        // " with color " << color.red << "," << color.green << "," << color.blue << "," << tmp_alpha <<
+        std::endl;
+    cogl_path_line(x1, y2, x2, y2);
     cogl_path_stroke();
-    cogl_path_line(geom.x, geom.y, 320.0f, 240.0f); //geom.width, geom.height);
-    cogl_path_fill();
     cogl_pop_matrix();
+
+    // prevent default paint method to be called.
+    g_signal_stop_emission_by_name(actor, "paint");
 }
 
 // a single connection
