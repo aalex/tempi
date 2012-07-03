@@ -20,6 +20,10 @@ LDADD = \
 miller_CXXFLAGS = $(AM_CXXFLAGS)
 miller_LDADD = $(LDADD)
 
+EXTRA_DIST = \
+    miller-macros.h \
+    miller-command.h
+
 miller_SOURCES = \
     main.cpp
 

@@ -31,6 +31,8 @@ int main(int argc, char *argv[])
 }
 #else //HAVE_CLUTTER
 
+#include "miller-macros.h"
+#include "miller-command.h"
 #include "tempi/message.h"
 #include "tempi/scheduler.h"
 #include "tempi/scheduler.h"
@@ -47,37 +49,6 @@ int main(int argc, char *argv[])
 #include <glib.h>
 #include <sstream>
 
-// namespaces:
-namespace po = boost::program_options;
-using tempi::INFO;
-using tempi::DEBUG;
-
-// Clutter legacy macro aliases:
-#if CLUTTER_CHECK_VERSION(1,4,0)
-#else
-#define CLUTTER_KEY_Down CLUTTER_Down
-#define CLUTTER_KEY_Escape CLUTTER_Escape
-#define CLUTTER_KEY_F1 CLUTTER_F1
-#define CLUTTER_KEY_F2 CLUTTER_F2
-#define CLUTTER_KEY_F3 CLUTTER_F3
-#define CLUTTER_KEY_F4 CLUTTER_F4
-#define CLUTTER_KEY_F11 CLUTTER_F11
-#define CLUTTER_KEY_Left CLUTTER_Left
-#define CLUTTER_KEY_Return CLUTTER_Return
-#define CLUTTER_KEY_Right CLUTTER_Right
-#define CLUTTER_KEY_Tab CLUTTER_Tab
-#define CLUTTER_KEY_Up CLUTTER_Up
-#define CLUTTER_KEY_q CLUTTER_q
-#define CLUTTER_KEY_s CLUTTER_s
-#define CLUTTER_KEY_space CLUTTER_space
-#define CLUTTER_KEY_Delete CLUTTER_Delete
-#define CLUTTER_KEY_BackSpace CLUTTER_BackSpace
-#endif
-
-#ifndef UNUSED
-#define UNUSED(x) ((void)(x))
-#endif
-
 namespace miller {
 
 // String constants:
@@ -86,40 +57,11 @@ static const char * const GRAPH_NAME = "graph0";
 static const char * const NODES_GROUP = "group0";
 static const char * const FONT_NAME = "Monospace Bold 12px";
 
-// Color constants:
-static const ClutterColor BLACK = { 0x00, 0x00, 0x00, 0xff };
-static const ClutterColor BLUE = { 0x33, 0x33, 0xcc, 0xff };
-static const ClutterColor CYAN = { 0x33, 0xcc, 0xcc, 0xff };
-static const ClutterColor GRAY_LIGHT = { 0xcc, 0xcc, 0xcc, 0xff };
-static const ClutterColor GRAY_MEDIUM = { 0x99, 0x99, 0x99, 0xff };
-static const ClutterColor GREEN = { 0x33, 0xcc, 0x33, 0xff };
-static const ClutterColor MAGENTA = { 0xcc, 0x33, 0xcc, 0xff };
-static const ClutterColor RED = { 0xcc, 0x33, 0x33, 0xff };
-static const ClutterColor WHITE = { 0xff, 0xff, 0xff, 0xff };
-static const ClutterColor YELLOW = { 0xcc, 0xcc, 0x33, 0xff };
-
 // Static functions:
 static void key_event_cb(ClutterActor *actor, ClutterKeyEvent *event, gpointer user_data);
 static void on_frame_cb(ClutterTimeline *timeline, guint *ms, gpointer user_data);
 static void on_fullscreen(ClutterStage* stage, gpointer user_data);
 static void on_unfullscreen(ClutterStage* stage, gpointer user_data);
-
-class App;
-
-class Command
-{
-    public:
-        typedef std::tr1::shared_ptr<Command> ptr;
-        Command() {}
-        virtual bool apply(App &app) = 0;
-};
-
-class SaveCommand : public Command
-{
-    public:
-        SaveCommand() : Command() {}
-        virtual bool apply(App &app);
-};
 
 /**
  * The App class manages the tempi::Graph and the Clutter GUI.
@@ -206,7 +148,7 @@ App::~App()
         {
             std::ostringstream os;
             os << __FUNCTION__ << "(): Waiting for Scheduler's thread to join.";
-            tempi::Logger::log(DEBUG, os);
+            tempi::Logger::log(tempi::DEBUG, os);
         }
         this->engine_->stop();
     }
@@ -290,9 +232,9 @@ gboolean App::on_idle(gpointer data)
 bool App::launch()
 {
     if (verbose_)
-        tempi::Logger::getInstance().setLevel(INFO);
+        tempi::Logger::getInstance().setLevel(tempi::INFO);
     if (debug_)
-        tempi::Logger::getInstance().setLevel(DEBUG);
+        tempi::Logger::getInstance().setLevel(tempi::DEBUG);
     if (stage_ == 0)
     {
         createGUI();
@@ -427,7 +369,15 @@ void App::drawGraph()
 
 bool App::saveGraph()
 {
-    pushCommand(Command::ptr(new SaveCommand));
+    if (file_name_.c_str() == 0)
+    {
+        std::ostringstream os;
+        os << "Cannot save graph to a file, since no file name has been provided.";
+        tempi::Logger::log(tempi::WARNING, os);
+        return false;
+    }
+    else
+        pushCommand(Command::ptr(new SaveCommand));
     return true; // ???
 }
 
@@ -443,7 +393,7 @@ bool App::setupGraph()
     {
         std::ostringstream os;
         os << "miller: Create ThreadedScheduler\n";
-        tempi::Logger::log(DEBUG, os);
+        tempi::Logger::log(tempi::DEBUG, os);
     }
     engine_.reset(new tempi::ThreadedScheduler);
     // TODO: make time precision configurable
@@ -452,7 +402,7 @@ bool App::setupGraph()
     {
         std::ostringstream os;
         os << "miller: Create Graph\n";
-        tempi::Logger::log(DEBUG, os);
+        tempi::Logger::log(tempi::DEBUG, os);
     }
     engine_->createGraph(GRAPH_NAME);
 
@@ -471,7 +421,7 @@ bool App::setupGraph()
     {
         std::ostringstream os;
         os << "miller: Found " << this->file_name_;
-        tempi::Logger::log(DEBUG, os);
+        tempi::Logger::log(tempi::DEBUG, os);
     }
     //if (verbose_)
     //    std::cout << (*engine_.get()) << std::endl;
@@ -493,7 +443,7 @@ bool App::setupGraph()
     {
         std::ostringstream os;
         os << "miller: Loaded " << this->file_name_;
-        tempi::Logger::log(DEBUG, os);
+        tempi::Logger::log(tempi::DEBUG, os);
     }
     return true;
 }
@@ -577,6 +527,8 @@ bool App::createGUI()
 
 int App::parse_options(int argc, char **argv)
 {
+    namespace po = boost::program_options;
+
     po::options_description desc("Options");
     desc.add_options()
         ("help,h", "Show this help message and exit")
