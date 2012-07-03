@@ -21,9 +21,11 @@ miller_CXXFLAGS = $(AM_CXXFLAGS)
 miller_LDADD = $(LDADD)
 
 EXTRA_DIST = \
-    miller-macros.h \
-    miller-command.h
+    miller-command.h \
+    miller-draw.h \
+    miller-macros.h
 
 miller_SOURCES = \
+    miller-draw.cpp \
     main.cpp
 

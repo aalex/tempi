@@ -67,6 +67,9 @@ static const ClutterColor RED = { 0xcc, 0x33, 0x33, 0xff };
 static const ClutterColor WHITE = { 0xff, 0xff, 0xff, 0xff };
 static const ClutterColor YELLOW = { 0xcc, 0xcc, 0x33, 0xff };
 
+// string constants:
+static const char * const FONT_NAME = "Monospace Bold 12px";
+
 } // end of namespace
 
 #endif // ifndef
