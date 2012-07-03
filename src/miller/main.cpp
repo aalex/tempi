@@ -253,6 +253,39 @@ bool App::launch()
     }
 }
 
+std::string make_pad_name(const char *node_name, const char *pad_name, bool is_inlet)
+{
+    std::ostringstream os;
+    os << node_name;
+    if (is_inlet)
+        os << ":inlet:";
+    else
+        os << ":outlet:";
+    os << pad_name;
+    return os.str();
+}
+
+ClutterActor* createPadActor(const char *node_name, const char *pad_name, bool is_inlet)
+{
+    ClutterLayoutManager *layout = clutter_bin_layout_new(
+        CLUTTER_BIN_ALIGNMENT_CENTER,
+        CLUTTER_BIN_ALIGNMENT_CENTER);
+    ClutterActor *background = clutter_rectangle_new_with_color(&WHITE);
+    clutter_actor_set_size(background, 1.0f, 1.0f);
+    ClutterActor *box = clutter_box_new(layout);
+    clutter_bin_layout_add(CLUTTER_BIN_LAYOUT(layout),
+        background,
+        CLUTTER_BIN_ALIGNMENT_FILL,
+        CLUTTER_BIN_ALIGNMENT_FILL);
+    ClutterActor *label = clutter_text_new_full(FONT_NAME, pad_name, &RED);
+    clutter_bin_layout_add(CLUTTER_BIN_LAYOUT(layout),
+        label,
+        CLUTTER_BIN_ALIGNMENT_CENTER,
+        is_inlet ? CLUTTER_BIN_ALIGNMENT_START : CLUTTER_BIN_ALIGNMENT_END);
+    clutter_actor_set_name(box, make_pad_name(node_name, pad_name, is_inlet).c_str());
+    return box;
+}
+
 ClutterActor* createNodeActor(tempi::Node &node)
 {
     const std::string& node_type = node.getTypeName();
@@ -268,7 +301,7 @@ ClutterActor* createNodeActor(tempi::Node &node)
 
     // FIXME: ClutterRectangle is deprecated!
     ClutterActor *background = clutter_rectangle_new_with_color(&GRAY_LIGHT);
-    clutter_actor_set_size(background, 10.0f, 10.0f);
+    clutter_actor_set_size(background, 1.0f, 1.0f);
     clutter_bin_layout_add(CLUTTER_BIN_LAYOUT(bin_layout),
         background,
         CLUTTER_BIN_ALIGNMENT_FILL,
@@ -302,12 +335,12 @@ ClutterActor* createNodeActor(tempi::Node &node)
     std::map<std::string, tempi::Inlet::ptr>::const_iterator iter_inlet;
     for (iter_inlet = inlets.begin(); iter_inlet != inlets.end(); ++iter_inlet)
     {
-        std::string inlet_name =  (*iter_inlet).first;
-        ClutterActor *inlet_label = clutter_text_new_full(FONT_NAME, inlet_name.c_str(), &RED);
-        clutter_table_layout_pack(CLUTTER_TABLE_LAYOUT(table_layout), inlet_label,
+        std::string pad_name = (*iter_inlet).first;
+        ClutterActor *pad_actor = createPadActor(node_name.c_str(), pad_name.c_str(), true); // is an inlet
+        clutter_table_layout_pack(CLUTTER_TABLE_LAYOUT(table_layout), pad_actor,
             inlet_col,
             inlet_row); // col, row
-        clutter_table_layout_set_alignment(CLUTTER_TABLE_LAYOUT(table_layout), inlet_label,
+        clutter_table_layout_set_alignment(CLUTTER_TABLE_LAYOUT(table_layout), pad_actor,
             CLUTTER_TABLE_ALIGNMENT_START, // x_align
             CLUTTER_TABLE_ALIGNMENT_START); // y_align
         inlet_row++;
@@ -317,12 +350,12 @@ ClutterActor* createNodeActor(tempi::Node &node)
     std::map<std::string, tempi::Outlet::ptr>::const_iterator iter_outlet;
     for (iter_outlet = outlets.begin(); iter_outlet != outlets.end(); ++iter_outlet)
     {
-        std::string outlet_name =  (*iter_outlet).first;
-        ClutterActor *outlet_label = clutter_text_new_full(FONT_NAME, outlet_name.c_str(), &MAGENTA);
-        clutter_table_layout_pack(CLUTTER_TABLE_LAYOUT(table_layout), outlet_label,
+        std::string pad_name =  (*iter_outlet).first;
+        ClutterActor *pad_actor = createPadActor(node_name.c_str(), pad_name.c_str(), false); // is not an inlet
+        clutter_table_layout_pack(CLUTTER_TABLE_LAYOUT(table_layout), pad_actor,
             outlet_col,
             outlet_row); // col, row
-        clutter_table_layout_set_alignment(CLUTTER_TABLE_LAYOUT(table_layout), outlet_label,
+        clutter_table_layout_set_alignment(CLUTTER_TABLE_LAYOUT(table_layout), pad_actor,
             CLUTTER_TABLE_ALIGNMENT_END, // x_align
             CLUTTER_TABLE_ALIGNMENT_START); // y_align
         outlet_row++;

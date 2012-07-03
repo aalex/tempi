@@ -53,6 +53,8 @@
 #define UNUSED(x) ((void)(x))
 #endif
 
+namespace miller {
+
 // Color constants:
 static const ClutterColor BLACK = { 0x00, 0x00, 0x00, 0xff };
 static const ClutterColor BLUE = { 0x33, 0x33, 0xcc, 0xff };
@@ -64,6 +66,8 @@ static const ClutterColor MAGENTA = { 0xcc, 0x33, 0xcc, 0xff };
 static const ClutterColor RED = { 0xcc, 0x33, 0x33, 0xff };
 static const ClutterColor WHITE = { 0xff, 0xff, 0xff, 0xff };
 static const ClutterColor YELLOW = { 0xcc, 0xcc, 0x33, 0xff };
+
+} // end of namespace
 
 #endif // ifndef
 
