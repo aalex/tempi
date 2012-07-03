@@ -411,17 +411,17 @@ void App::drawGraph()
         clutter_container_add_actor(CLUTTER_CONTAINER(clutter_container_find_child_by_name(CLUTTER_CONTAINER(stage_), NODES_GROUP)), actor);
     }
 
-    ClutterActor *connections_actor = createConnectionsActor(*(graph_.get()));
-
-    updateAllConnectionsGeometry(connections_actor, clutter_container_find_child_by_name(CLUTTER_CONTAINER(stage_), NODES_GROUP), *graph_.get());
+    ClutterActor *connections_actor = createConnectionsActor(*graph_.get());
     clutter_actor_set_name(connections_actor, CONNECTIONS_ACTOR);
     clutter_container_add_actor(CLUTTER_CONTAINER(stage_), connections_actor);
+    
+    updateAllConnectionsGeometry(connections_actor, clutter_container_find_child_by_name(CLUTTER_CONTAINER(stage_), NODES_GROUP), *graph_.get());
 }
 
 std::string makeConnectionName(const char *from_node, const char *outlet, const char *to_node, const char *inlet)
 {
     std::ostringstream os;
-    os << from_node << "." << outlet << "->" << to_node << inlet;
+    os << from_node << "." << outlet << "->" << to_node << "." << inlet;
     return os.str();
 }
 
@@ -462,23 +462,31 @@ void updateConnectionGeometry(ClutterActor *connectionsGroup, ClutterActor *node
     ClutterActor *connection_actor = clutter_container_find_child_by_name(
         CLUTTER_CONTAINER(connectionsGroup), connection_name.c_str());
 
-    gfloat x = 0.0f;
-    gfloat y = 0.0f;
-    gfloat w = 0.0f;
-    gfloat h = 0.0f;
-    clutter_actor_get_position(outlet_actor, &x, &y);
-    clutter_actor_get_position(inlet_actor, &w, &h);
+    gfloat x;
+    gfloat y;
+    gfloat w;
+    gfloat h;
+    clutter_actor_get_transformed_position(outlet_actor, &x, &y);
+    clutter_actor_get_transformed_position(inlet_actor, &w, &h);
     w = w - x;
     h = h - y;
 
     clutter_actor_set_position(connection_actor, x, y);
     clutter_actor_set_size(connection_actor, w, h);
+
+    {
+        std::ostringstream os;
+        os << "set connection " << connection_name << " go from (" << x << ", " << y << ") to (" << x + w << ", " << y + h << ")";
+        tempi::Logger::log(tempi::INFO, os);
+    }
 }
 
 void updateAllConnectionsGeometry(ClutterActor *connectionsGroup, ClutterActor *nodesGroup, tempi::Graph &graph)
 {
     std::vector<tempi::Graph::Connection> connections = graph.getAllConnections();
     std::vector<tempi::Graph::Connection>::const_iterator iter;
+
+    std::cout << __FUNCTION__ << std::endl;
 
     for (iter = connections.begin(); iter != connections.end(); ++iter)
     {
