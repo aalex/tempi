@@ -62,6 +62,7 @@ static void key_event_cb(ClutterActor *actor, ClutterKeyEvent *event, gpointer u
 static void on_frame_cb(ClutterTimeline *timeline, guint *ms, gpointer user_data);
 static void on_fullscreen(ClutterStage* stage, gpointer user_data);
 static void on_unfullscreen(ClutterStage* stage, gpointer user_data);
+static ClutterActor* createNodeActor(tempi::Node &node);
 
 /**
  * The App class manages the tempi::Graph and the Clutter GUI.
@@ -105,7 +106,6 @@ class App
         bool setupGraph();
         // called by setupGraph() to create the clutter actors
         void drawGraph();
-        ClutterActor* createNodeActor(tempi::Node &node);
         static gboolean on_idle(gpointer data);
         void pushCommand(Command::ptr command);
         static gboolean on_group0_scrolled(ClutterActor *actor, ClutterEvent *event, gpointer user_data);
@@ -253,7 +253,7 @@ bool App::launch()
     }
 }
 
-ClutterActor* App::createNodeActor(tempi::Node &node)
+ClutterActor* createNodeActor(tempi::Node &node)
 {
     const std::string& node_type = node.getTypeName();
     std::string node_name = node.getName();
