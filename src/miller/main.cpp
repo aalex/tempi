@@ -55,6 +55,7 @@ namespace miller {
 static const char * const PROGRAM_NAME = "miller";
 static const char * const GRAPH_NAME = "graph0";
 static const char * const NODES_GROUP = "group0";
+static const char * const CONNECTIONS_ACTOR = "connections0";
 static const char * const FONT_NAME = "Monospace Bold 12px";
 
 // Static functions:
@@ -63,6 +64,11 @@ static void on_frame_cb(ClutterTimeline *timeline, guint *ms, gpointer user_data
 static void on_fullscreen(ClutterStage* stage, gpointer user_data);
 static void on_unfullscreen(ClutterStage* stage, gpointer user_data);
 static ClutterActor* createNodeActor(tempi::Node &node);
+static std::string makePadName(const char *node_name, const char *pad_name, bool is_inlet);
+static std::string makeNodeName(const char *node_name);
+static std::string makeConnectionName(const char *from_node, const char *outlet, const char *to_node, const char *inlet);
+static ClutterActor* createConnectionsActor(tempi::Graph &graph);
+static void updateAllConnectionsGeometry(ClutterActor *connectionsGroup, ClutterActor *nodesGroup, tempi::Graph &graph);
 
 /**
  * The App class manages the tempi::Graph and the Clutter GUI.
@@ -253,7 +259,7 @@ bool App::launch()
     }
 }
 
-std::string make_pad_name(const char *node_name, const char *pad_name, bool is_inlet)
+std::string makePadName(const char *node_name, const char *pad_name, bool is_inlet)
 {
     std::ostringstream os;
     os << node_name;
@@ -263,6 +269,12 @@ std::string make_pad_name(const char *node_name, const char *pad_name, bool is_i
         os << ":outlet:";
     os << pad_name;
     return os.str();
+}
+
+std::string makeNodeName(const char *node_name)
+{
+    // just to make sure we are consistent
+    return std::string(node_name);
 }
 
 ClutterActor* createPadActor(const char *node_name, const char *pad_name, bool is_inlet)
@@ -282,7 +294,7 @@ ClutterActor* createPadActor(const char *node_name, const char *pad_name, bool i
         label,
         CLUTTER_BIN_ALIGNMENT_CENTER,
         is_inlet ? CLUTTER_BIN_ALIGNMENT_START : CLUTTER_BIN_ALIGNMENT_END);
-    clutter_actor_set_name(box, make_pad_name(node_name, pad_name, is_inlet).c_str());
+    clutter_actor_set_name(box, makePadName(node_name, pad_name, is_inlet).c_str());
     return box;
 }
 
@@ -294,22 +306,22 @@ ClutterActor* createNodeActor(tempi::Node &node)
     std::ostringstream os;
     os << node_name << " (" << node_type << ")";
 
-    ClutterLayoutManager *bin_layout = clutter_bin_layout_new(
+    ClutterLayoutManager *node_layout = clutter_bin_layout_new(
         CLUTTER_BIN_ALIGNMENT_CENTER,
         CLUTTER_BIN_ALIGNMENT_CENTER);
-    ClutterActor *bin_box = clutter_box_new(bin_layout);
+    ClutterActor *node_box = clutter_box_new(node_layout);
 
     // FIXME: ClutterRectangle is deprecated!
     ClutterActor *background = clutter_rectangle_new_with_color(&GRAY_LIGHT);
     clutter_actor_set_size(background, 1.0f, 1.0f);
-    clutter_bin_layout_add(CLUTTER_BIN_LAYOUT(bin_layout),
+    clutter_bin_layout_add(CLUTTER_BIN_LAYOUT(node_layout),
         background,
         CLUTTER_BIN_ALIGNMENT_FILL,
         CLUTTER_BIN_ALIGNMENT_FILL);
 
     ClutterLayoutManager *table_layout = clutter_table_layout_new();
     ClutterActor *table_box = clutter_box_new(table_layout);
-    clutter_bin_layout_add(CLUTTER_BIN_LAYOUT(bin_layout),
+    clutter_bin_layout_add(CLUTTER_BIN_LAYOUT(node_layout),
         table_box,
         CLUTTER_BIN_ALIGNMENT_CENTER,
         CLUTTER_BIN_ALIGNMENT_START);
@@ -360,8 +372,8 @@ ClutterActor* createNodeActor(tempi::Node &node)
             CLUTTER_TABLE_ALIGNMENT_START); // y_align
         outlet_row++;
     }
-    clutter_actor_set_name(bin_box, node_name.c_str());
-    return bin_box;
+    clutter_actor_set_name(node_box, makeNodeName(node_name.c_str()).c_str());
+    return node_box;
 }
 
 void on_node_dragged(ClutterDragAction *action, ClutterActor *actor, gfloat event_x, gfloat event_y, ClutterModifierType modifiers, gpointer user_data)
@@ -398,6 +410,107 @@ void App::drawGraph()
         clutter_actor_set_reactive(actor, TRUE);
         clutter_container_add_actor(CLUTTER_CONTAINER(clutter_container_find_child_by_name(CLUTTER_CONTAINER(stage_), NODES_GROUP)), actor);
     }
+
+    ClutterActor *connections_actor = createConnectionsActor(*(graph_.get()));
+
+    updateAllConnectionsGeometry(connections_actor, clutter_container_find_child_by_name(CLUTTER_CONTAINER(stage_), NODES_GROUP), *graph_.get());
+    clutter_actor_set_name(connections_actor, CONNECTIONS_ACTOR);
+    clutter_container_add_actor(CLUTTER_CONTAINER(stage_), connections_actor);
+}
+
+std::string makeConnectionName(const char *from_node, const char *outlet, const char *to_node, const char *inlet)
+{
+    std::ostringstream os;
+    os << from_node << "." << outlet << "->" << to_node << inlet;
+    return os.str();
+}
+
+void on_paint_connection(ClutterActor *actor, gpointer user_data)
+{
+    ClutterGeometry geom;
+    clutter_actor_get_allocation_geometry(actor, &geom);
+    ClutterColor color;
+    guint8 tmp_alpha = clutter_actor_get_paint_opacity(actor) * color.alpha / 255;
+    clutter_rectangle_get_color(CLUTTER_RECTANGLE(actor), &color);
+    cogl_set_source_color4ub(color.red, color.green, color.blue, tmp_alpha);
+    cogl_path_line(geom.x, geom.y, geom.width, geom.height);
+}
+
+// a single connection
+ClutterActor* createConnectionActor(const char *source_node, const char *outlet, const char *sink_node, const char *inlet)
+{
+    // assumes that the node actors are already created
+    std::string outlet_name = makePadName(source_node, outlet, false);
+    std::string inlet_name = makePadName(sink_node, inlet, true);
+    std::string connection_name = makeConnectionName(source_node, outlet, sink_node, inlet);
+
+    ClutterActor *actor = clutter_rectangle_new_with_color(&MAGENTA);
+    g_signal_connect(actor, "paint", G_CALLBACK(on_paint_connection), NULL);
+    clutter_actor_set_name(actor, connection_name.c_str());
+    return actor;
+}
+
+void updateConnectionGeometry(ClutterActor *connectionsGroup, ClutterActor *nodesGroup, const char *source_node, const char *outlet, const char *sink_node, const char *inlet)
+{
+    std::string outlet_name = makePadName(source_node, outlet, false);
+    std::string inlet_name = makePadName(sink_node, inlet, true);
+    std::string connection_name = makeConnectionName(source_node, outlet, sink_node, inlet);
+    ClutterActor *outlet_actor = clutter_container_find_child_by_name(
+        CLUTTER_CONTAINER(nodesGroup), outlet_name.c_str());
+    ClutterActor *inlet_actor = clutter_container_find_child_by_name(
+        CLUTTER_CONTAINER(nodesGroup), inlet_name.c_str());
+    ClutterActor *connection_actor = clutter_container_find_child_by_name(
+        CLUTTER_CONTAINER(connectionsGroup), connection_name.c_str());
+
+    gfloat x = 0.0f;
+    gfloat y = 0.0f;
+    gfloat w = 0.0f;
+    gfloat h = 0.0f;
+    clutter_actor_get_position(outlet_actor, &x, &y);
+    clutter_actor_get_position(inlet_actor, &w, &h);
+    w = w - x;
+    h = h - y;
+
+    clutter_actor_set_position(connection_actor, x, y);
+    clutter_actor_set_size(connection_actor, w, h);
+}
+
+void updateAllConnectionsGeometry(ClutterActor *connectionsGroup, ClutterActor *nodesGroup, tempi::Graph &graph)
+{
+    std::vector<tempi::Graph::Connection> connections = graph.getAllConnections();
+    std::vector<tempi::Graph::Connection>::const_iterator iter;
+
+    for (iter = connections.begin(); iter != connections.end(); ++iter)
+    {
+        std::string source_node = (*iter).get<0>();
+        std::string outlet = (*iter).get<1>();
+        std::string sink_node = (*iter).get<2>();
+        std::string inlet = (*iter).get<3>();
+        updateConnectionGeometry(connectionsGroup, nodesGroup, source_node.c_str(), outlet.c_str(), sink_node.c_str(), inlet.c_str());
+    }
+}
+
+// all the connections
+ClutterActor* createConnectionsActor(tempi::Graph &graph)
+{
+    ClutterActor *group = clutter_group_new();
+    // connections are a tuple of string, string, string, string
+    // Tuple containing the name of the source node, outlet name, name of sink node, inlet name.
+    std::vector<tempi::Graph::Connection> connections = graph.getAllConnections();
+    std::vector<tempi::Graph::Connection>::const_iterator iter;
+
+    for (iter = connections.begin(); iter != connections.end(); ++iter)
+    {
+        std::string source_node = (*iter).get<0>();
+        std::string outlet = (*iter).get<1>();
+        std::string sink_node = (*iter).get<2>();
+        std::string inlet = (*iter).get<3>();
+
+        ClutterActor * connection_actor = createConnectionActor(
+            source_node.c_str(), outlet.c_str(), sink_node.c_str(), inlet.c_str());
+        clutter_container_add_actor(CLUTTER_CONTAINER(group), connection_actor);
+    }
+    return group;
 }
 
 bool App::saveGraph()
