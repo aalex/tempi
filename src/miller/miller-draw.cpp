@@ -201,14 +201,28 @@ void updateConnectionGeometry(ClutterActor *connectionsGroup, ClutterActor *node
 
     gfloat x;
     gfloat y;
+    gfloat x2;
+    gfloat y2;
     gfloat w;
     gfloat h;
     clutter_actor_get_transformed_position(outlet_actor, &x, &y);
-    clutter_actor_get_transformed_position(inlet_actor, &w, &h);
-    w = w - x;
-    h = h - y;
+    clutter_actor_get_transformed_position(inlet_actor, &x2, &y2);
+
+    // x = 100;
+    // y = 100;
+    // w = 200;
+    // h = 200;
+
+    clutter_actor_get_position(clutter_container_find_child_by_name(
+        CLUTTER_CONTAINER(nodesGroup), source_node),
+        &x, &y);
+    clutter_actor_get_position(clutter_container_find_child_by_name(
+        CLUTTER_CONTAINER(nodesGroup), sink_node),
+        &x2, &y2);
 
     clutter_actor_set_position(connection_actor, x, y);
+    w = x2 - x;// FIXME: what if x2 is at the left from x
+    h = y2 - y;
     clutter_actor_set_size(connection_actor, w, h);
 
     {
