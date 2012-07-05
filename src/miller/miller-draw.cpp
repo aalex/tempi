@@ -29,7 +29,6 @@
 #include "miller-macros.h"
 #include "tempi/log.h"
 #include <iostream>
-// extern C:
 #include "miller-connection.h"
 
 namespace miller {
@@ -172,7 +171,24 @@ ClutterActor* createConnectionActor(const char *source_node, const char *outlet,
     return actor;
 }
 
-void getPadPosition(ClutterActor *nodesGroup, const char *node, const char *pad, bool is_inlet, gfloat *result_x, gfloat *result_y)
+int findStringIndexInVector(const std::vector<std::string> vec, const char *value)
+{
+    if (vec.size() == 0)
+        return -1; // not found
+    else
+    {
+        unsigned int i;
+        for (i = 0; i < vec.size() - 1; i++)
+        {
+            if (vec[i] == value)
+                return i; // found
+        }
+        // not found
+        return -1;
+    }
+}
+
+void getPadPosition(tempi::Graph &graph, ClutterActor *nodesGroup, const char *node, const char *pad, bool is_inlet, gfloat *result_x, gfloat *result_y)
 {
     std::string node_name = makeNodeName(node);
     std::string pad_name = makePadName(node, pad, is_inlet);
@@ -185,18 +201,45 @@ void getPadPosition(ClutterActor *nodesGroup, const char *node, const char *pad,
     // clutter_actor_get_transformed_position(pad_actor, result_x, result_y);
     // so we do the following:
 
-    clutter_actor_get_position(node_actor, result_x, result_y);
+    gfloat node_x;
+    gfloat node_y;
+    clutter_actor_get_position(node_actor, &node_x, &node_y);
+
+    tempi::Node::ptr nodePtr = graph.getNode(node_name.c_str());
+    std::vector<std::string> pads;
+    if (is_inlet)
+        pads = nodePtr->listInlets();
+    else
+        pads = nodePtr->listOutlets();
+    int index = findStringIndexInVector(pads, pad_name.c_str());
+    if (index == -1)
+    {
+        (*result_x) = node_x;
+        (*result_y) = node_y;
+    }
+    else
+    {
+        // FIXME: this is a ugly hack
+        static const int ARBITRARY_Y_FACTOR_PER_ROW = 12;
+        static const int ARBITRARY_Y_OFFSET = 12;
+        gfloat node_width = clutter_actor_get_width(node_actor);
+        (*result_y) = node_y + ARBITRARY_Y_OFFSET + index * ARBITRARY_Y_FACTOR_PER_ROW;
+        if (is_inlet)
+            (*result_x) = node_x;
+        else
+            (*result_x) = node_x + node_width;
+    }
 }
 
-void updateConnectionGeometry(ClutterActor *connectionsGroup, ClutterActor *nodesGroup, const char *source_node, const char *outlet, const char *sink_node, const char *inlet)
+void updateConnectionGeometry(tempi::Graph &graph, ClutterActor *connectionsGroup, ClutterActor *nodesGroup, const char *source_node, const char *outlet, const char *sink_node, const char *inlet)
 {
     gfloat x1;
     gfloat y1;
     gfloat x2;
     gfloat y2;
 
-    getPadPosition(nodesGroup, source_node, outlet, false, &x1, &y1);
-    getPadPosition(nodesGroup, sink_node, inlet, true, &x2, &y2);
+    getPadPosition(graph, nodesGroup, source_node, outlet, false, &x1, &y1);
+    getPadPosition(graph, nodesGroup, sink_node, inlet, true, &x2, &y2);
 
     std::string connection_name = makeConnectionName(source_node, outlet, sink_node, inlet);
     ClutterActor *connection_actor = clutter_container_find_child_by_name(
@@ -225,7 +268,7 @@ void updateAllConnectionsGeometry(ClutterActor *connectionsGroup, ClutterActor *
         std::string outlet = (*iter).get<1>();
         std::string sink_node = (*iter).get<2>();
         std::string inlet = (*iter).get<3>();
-        updateConnectionGeometry(connectionsGroup, nodesGroup, source_node.c_str(), outlet.c_str(), sink_node.c_str(), inlet.c_str());
+        updateConnectionGeometry(graph, connectionsGroup, nodesGroup, source_node.c_str(), outlet.c_str(), sink_node.c_str(), inlet.c_str());
     }
 }
 
