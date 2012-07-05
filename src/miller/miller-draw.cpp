@@ -193,6 +193,7 @@ ClutterActor* createConnectionActor(const char *source_node, const char *outlet,
     std::string connection_name = makeConnectionName(source_node, outlet, sink_node, inlet);
 
     ClutterActor *actor = clutter_rectangle_new_with_color(&MAGENTA);
+    // we call clutter_actor_set_size and clutter_actor_set_position in updateConnectionGeometry
     g_signal_connect(actor, "paint", G_CALLBACK(on_paint_connection), NULL);
     clutter_actor_set_name(actor, connection_name.c_str());
     return actor;
