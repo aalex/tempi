@@ -324,6 +324,11 @@ bool load_node_attributes(xmlNodePtr node_node, Node &node)
             xmlChar *attr_name = xmlGetProp(attribute_node,
                 XMLSTR ATTRIBUTE_NAME_PROPERTY);
             //std::cout << "   * attr " << attr_name << std::endl;
+            {
+                std::ostringstream os;
+                os << "   * attr \"" << attr_name << "\":";
+                Logger::log(INFO, os.str().c_str());
+            }
             Message attr_value;
             load_message(attribute_node, attr_value);
             node.setAttributeValue((char *) attr_name, attr_value);
