@@ -20,6 +20,10 @@
 #include "miller-connection.h" 
 #include "cogl/cogl.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // We need to define some stuff that we can get from clutter-private.h:
 #ifndef CLUTTER_PARAM_READWRITE 
 #define CLUTTER_PARAM_READWRITE \
@@ -370,4 +374,7 @@ miller_connection_new_full (const ClutterColor *color,
 		       NULL);
 }
 
+#ifdef __cplusplus
+}
+#endif
 

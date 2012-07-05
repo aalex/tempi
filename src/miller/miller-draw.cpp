@@ -27,12 +27,11 @@
 
 #include "miller-draw.h"
 #include "miller-macros.h"
+#include "miller-connection.h"
 #include "tempi/log.h"
 #include <iostream>
 
 namespace miller {
-
-static void on_paint_connection(ClutterActor *actor, gpointer user_data);
 
 std::string makePadName(const char *node_name, const char *pad_name, bool is_inlet)
 {
@@ -158,32 +157,6 @@ std::string makeConnectionName(const char *from_node, const char *outlet, const 
     return os.str();
 }
 
-void on_paint_connection(ClutterActor *actor, gpointer user_data)
-{
-    ClutterGeometry geom;
-    clutter_actor_get_allocation_geometry(actor, &geom);
-    ClutterColor color;
-    guint8 tmp_alpha = clutter_actor_get_paint_opacity(actor) * color.alpha / 255;
-    clutter_rectangle_get_color(CLUTTER_RECTANGLE(actor), &color);
-
-    cogl_push_matrix();
-    cogl_set_source_color4ub(color.red, color.green, color.blue, tmp_alpha);
-    gint x1 = geom.x;
-    gint y1 = geom.y;
-    gint x2 = geom.x + geom.width;
-    gint y2 = geom.y + geom.height;
-    std::cout << __FUNCTION__ << ": draw line from " <<
-        x1 << "," << y1 << " to " << x2 << "," << y2 <<
-        // " with color " << color.red << "," << color.green << "," << color.blue << "," << tmp_alpha <<
-        std::endl;
-    cogl_path_line(x1, y2, x2, y2);
-    cogl_path_stroke();
-    cogl_pop_matrix();
-
-    // prevent default paint method to be called.
-    g_signal_stop_emission_by_name(actor, "paint");
-}
-
 // a single connection
 ClutterActor* createConnectionActor(const char *source_node, const char *outlet, const char *sink_node, const char *inlet)
 {
@@ -192,9 +165,8 @@ ClutterActor* createConnectionActor(const char *source_node, const char *outlet,
     std::string inlet_name = makePadName(sink_node, inlet, true);
     std::string connection_name = makeConnectionName(source_node, outlet, sink_node, inlet);
 
-    ClutterActor *actor = clutter_rectangle_new_with_color(&MAGENTA);
+    ClutterActor *actor = miller_connection_new_full(&MAGENTA, 2, 0.0f, 0.0f, 100.0f, 100.0f);
     // we call clutter_actor_set_size and clutter_actor_set_position in updateConnectionGeometry
-    g_signal_connect(actor, "paint", G_CALLBACK(on_paint_connection), NULL);
     clutter_actor_set_name(actor, connection_name.c_str());
     return actor;
 }
@@ -211,35 +183,21 @@ void updateConnectionGeometry(ClutterActor *connectionsGroup, ClutterActor *node
     ClutterActor *connection_actor = clutter_container_find_child_by_name(
         CLUTTER_CONTAINER(connectionsGroup), connection_name.c_str());
 
-    gfloat x;
-    gfloat y;
+    gfloat x1;
+    gfloat y1;
     gfloat x2;
     gfloat y2;
-    gfloat w;
-    gfloat h;
-    clutter_actor_get_transformed_position(outlet_actor, &x, &y);
+    clutter_actor_get_transformed_position(outlet_actor, &x1, &y1);
     clutter_actor_get_transformed_position(inlet_actor, &x2, &y2);
 
-    // x = 100;
-    // y = 100;
-    // w = 200;
-    // h = 200;
-
-    clutter_actor_get_position(clutter_container_find_child_by_name(
-        CLUTTER_CONTAINER(nodesGroup), source_node),
-        &x, &y);
-    clutter_actor_get_position(clutter_container_find_child_by_name(
-        CLUTTER_CONTAINER(nodesGroup), sink_node),
-        &x2, &y2);
-
-    clutter_actor_set_position(connection_actor, x, y);
-    w = x2 - x;// FIXME: what if x2 is at the left from x
-    h = y2 - y;
-    clutter_actor_set_size(connection_actor, w, h);
+    miller_connection_set_x1(MILLER_CONNECTION(connection_actor), x1);
+    miller_connection_set_y1(MILLER_CONNECTION(connection_actor), y1);
+    miller_connection_set_x2(MILLER_CONNECTION(connection_actor), x2);
+    miller_connection_set_y2(MILLER_CONNECTION(connection_actor), y2);
 
     {
         std::ostringstream os;
-        os << "set connection " << connection_name << " go from (" << x << ", " << y << ") to (" << x + w << ", " << y + h << ")";
+        os << "set connection " << connection_name << " go from (" << x1 << ", " << y1 << ") to (" << x2 << ", " << y2 << ")";
         tempi::Logger::log(tempi::INFO, os);
     }
 }
