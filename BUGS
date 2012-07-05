@@ -1,4 +1,5 @@
 Tempi known bugs
 ================
-* [base.metro] : does not start right away when created with running = true
+* [base.time.metro] : does not start right away when created with running = true
+* [base.flow.counter] : saves its count in the XML file. Maybe not desired?
 
