@@ -18,14 +18,20 @@ LDADD = \
     $(top_builddir)/tempi/libtempi-@TEMPI_API_VERSION@.la
 
 miller_CXXFLAGS = $(AM_CXXFLAGS)
+miller_CFLAGS = \
+    $(CLUTTER_CFLAGS) \
+    $(GLIB_CFLAGS)
+
 miller_LDADD = $(LDADD)
 
 EXTRA_DIST = \
     miller-command.h \
     miller-draw.h \
-    miller-macros.h
+    miller-macros.h \
+	miller-connection.h
 
 miller_SOURCES = \
     miller-draw.cpp \
+	miller-connection.c \
     main.cpp
 
