@@ -345,7 +345,7 @@ miller_connection_class_init (MillerConnectionClass *klass)
 }
 
 static void
-miller_connection_init (MillerConnection *actor)
+miller_connection_init (MillerConnection *self)
 {
   MillerConnectionPrivate *priv;
 
@@ -358,7 +358,7 @@ miller_connection_init (MillerConnection *actor)
 ClutterActor *
 miller_connection_new_full (const ClutterColor *color,
                           guint stroke_width,
-                          gfloat x1, gfloat y1, gfloat x2, gfloat y2);
+                          gfloat x1, gfloat y1, gfloat x2, gfloat y2)
 {
   return g_object_new (MILLER_TYPE_CONNECTION,
 		       "color", color,
