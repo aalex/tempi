@@ -100,8 +100,8 @@ class App
         tempi::Graph::ptr graph_; // FIXME
         tempi::serializer::Serializer::ptr saver_; // FIXME
         bool saveGraph(); // FIXME
-    private:
         ClutterActor *stage_;
+    private:
         bool createGUI();
         bool setupGraph();
         // called by setupGraph() to create the clutter actors
@@ -253,15 +253,25 @@ bool App::launch()
     }
 }
 
-void on_node_dragged(ClutterDragAction *action, ClutterActor *actor, gfloat event_x, gfloat event_y, ClutterModifierType modifiers, gpointer user_data)
+void on_node_dragged(ClutterDragAction *action, ClutterActor *actor, gfloat delta_x, gfloat delta_y, gpointer user_data)
 {
     UNUSED(action);
     App *app = static_cast<App *>(user_data);
 
+    gfloat motion_x;
+    gfloat motion_y;
+    clutter_drag_action_get_motion_coords(action, &motion_x, &motion_y);
+
     tempi::ScopedLock::ptr lock = app->engine_->acquireLock();
     const gchar *name = clutter_actor_get_name(actor);
     tempi::Node::ptr node = app->graph_->getNode(name);
-    node->setAttributeValue(tempi::Node::ATTRIBUTE_POSITION, tempi::Message("fff", event_x, event_y, 0.0f));
+    node->setAttributeValue(tempi::Node::ATTRIBUTE_POSITION, tempi::Message("fff", motion_x, motion_y, 0.0f));
+
+    // TODO: update only the connections we need to update
+    updateAllConnectionsGeometry(
+       clutter_container_find_child_by_name(CLUTTER_CONTAINER(app->stage_), CONNECTIONS_ACTOR),
+       clutter_container_find_child_by_name(CLUTTER_CONTAINER(app->stage_), NODES_GROUP),
+       *(app->graph_.get()));
 }
 
 void App::drawGraph()
@@ -283,7 +293,7 @@ void App::drawGraph()
         clutter_actor_set_position(actor, x, y);
         ClutterAction *action = clutter_drag_action_new();
         clutter_actor_add_action(actor, action);
-        g_signal_connect(action, "drag-end", G_CALLBACK(on_node_dragged), this);
+        g_signal_connect(action, "drag-motion", G_CALLBACK(on_node_dragged), this);
         clutter_actor_set_reactive(actor, TRUE);
         clutter_container_add_actor(CLUTTER_CONTAINER(clutter_container_find_child_by_name(CLUTTER_CONTAINER(stage_), NODES_GROUP)), actor);
     }

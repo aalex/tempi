@@ -210,7 +210,7 @@ void updateConnectionGeometry(ClutterActor *connectionsGroup, ClutterActor *node
         std::ostringstream os;
         os << __FUNCTION__ << "(): ";
         os << "Set connection coords " << connection_name << " go from (" << x1 << ", " << y1 << ") to (" << x2 << ", " << y2 << ")";
-        tempi::Logger::log(tempi::INFO, os);
+        tempi::Logger::log(tempi::DEBUG, os);
     }
 }
 
