@@ -20,9 +20,9 @@
 #include "miller-connection.h" 
 #include "cogl/cogl.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+// #ifdef __cplusplus
+// extern "C" {
+// #endif
 
 // We need to define some stuff that we can get from clutter-private.h:
 #ifndef CLUTTER_PARAM_READWRITE 
@@ -364,17 +364,19 @@ miller_connection_new_full (const ClutterColor *color,
                           guint stroke_width,
                           gfloat x1, gfloat y1, gfloat x2, gfloat y2)
 {
-  return g_object_new (MILLER_TYPE_CONNECTION,
+  GObject *self = g_object_new (MILLER_TYPE_CONNECTION,
 		       "color", color,
-               "stroke_width", stroke_width,
-               "x1", x1,
-               "y1", y1,
-               "x2", x2,
-               "y2", y2,
 		       NULL);
+  miller_connection_set_stroke_width(MILLER_CONNECTION(self), stroke_width);
+
+  miller_connection_set_x1(MILLER_CONNECTION(self), x1);
+  miller_connection_set_y1(MILLER_CONNECTION(self), y1);
+  miller_connection_set_x2(MILLER_CONNECTION(self), x2);
+  miller_connection_set_y2(MILLER_CONNECTION(self), y2);
+  return self;
 }
 
-#ifdef __cplusplus
-}
-#endif
+// #ifdef __cplusplus
+// }
+// #endif
 

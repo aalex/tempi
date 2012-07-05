@@ -26,10 +26,6 @@
 #include <glib-object.h>
 #include <clutter/clutter.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 G_BEGIN_DECLS
 
 #define MILLER_TYPE_CONNECTION            (miller_connection_get_type ())
@@ -76,9 +72,7 @@ void        miller_connection_set_y1(MillerConnection *actor, gfloat value);
 void        miller_connection_set_x2(MillerConnection *actor, gfloat value);
 void        miller_connection_set_y2(MillerConnection *actor, gfloat value);
 
-#ifdef __cplusplus
-}
-#endif
+G_END_DECLS
 
 #endif // ifndef
 

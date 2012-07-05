@@ -27,9 +27,10 @@
 
 #include "miller-draw.h"
 #include "miller-macros.h"
-#include "miller-connection.h"
 #include "tempi/log.h"
 #include <iostream>
+// extern C:
+#include "miller-connection.h"
 
 namespace miller {
 
@@ -171,33 +172,44 @@ ClutterActor* createConnectionActor(const char *source_node, const char *outlet,
     return actor;
 }
 
+void getPadPosition(ClutterActor *nodesGroup, const char *node, const char *pad, bool is_inlet, gfloat *result_x, gfloat *result_y)
+{
+    std::string node_name = makeNodeName(node);
+    std::string pad_name = makePadName(node, pad, is_inlet);
+    ClutterActor *node_actor = clutter_container_find_child_by_name(
+        CLUTTER_CONTAINER(nodesGroup), node_name.c_str());
+    ClutterActor *pad_actor = clutter_container_find_child_by_name(
+        CLUTTER_CONTAINER(nodesGroup), pad_name.c_str());
+
+    // XXX: what is below doesn't work!
+    // clutter_actor_get_transformed_position(pad_actor, result_x, result_y);
+    // so we do the following:
+
+    clutter_actor_get_position(node_actor, result_x, result_y);
+}
+
 void updateConnectionGeometry(ClutterActor *connectionsGroup, ClutterActor *nodesGroup, const char *source_node, const char *outlet, const char *sink_node, const char *inlet)
 {
-    std::string outlet_name = makePadName(source_node, outlet, false);
-    std::string inlet_name = makePadName(sink_node, inlet, true);
-    std::string connection_name = makeConnectionName(source_node, outlet, sink_node, inlet);
-    ClutterActor *outlet_actor = clutter_container_find_child_by_name(
-        CLUTTER_CONTAINER(nodesGroup), outlet_name.c_str());
-    ClutterActor *inlet_actor = clutter_container_find_child_by_name(
-        CLUTTER_CONTAINER(nodesGroup), inlet_name.c_str());
-    ClutterActor *connection_actor = clutter_container_find_child_by_name(
-        CLUTTER_CONTAINER(connectionsGroup), connection_name.c_str());
-
     gfloat x1;
     gfloat y1;
     gfloat x2;
     gfloat y2;
-    clutter_actor_get_transformed_position(outlet_actor, &x1, &y1);
-    clutter_actor_get_transformed_position(inlet_actor, &x2, &y2);
+
+    getPadPosition(nodesGroup, source_node, outlet, false, &x1, &y1);
+    getPadPosition(nodesGroup, sink_node, inlet, true, &x2, &y2);
+
+    std::string connection_name = makeConnectionName(source_node, outlet, sink_node, inlet);
+    ClutterActor *connection_actor = clutter_container_find_child_by_name(
+        CLUTTER_CONTAINER(connectionsGroup), connection_name.c_str());
 
     miller_connection_set_x1(MILLER_CONNECTION(connection_actor), x1);
     miller_connection_set_y1(MILLER_CONNECTION(connection_actor), y1);
     miller_connection_set_x2(MILLER_CONNECTION(connection_actor), x2);
     miller_connection_set_y2(MILLER_CONNECTION(connection_actor), y2);
-
     {
         std::ostringstream os;
-        os << "set connection " << connection_name << " go from (" << x1 << ", " << y1 << ") to (" << x2 << ", " << y2 << ")";
+        os << __FUNCTION__ << "(): ";
+        os << "Set connection coords " << connection_name << " go from (" << x1 << ", " << y1 << ") to (" << x2 << ", " << y2 << ")";
         tempi::Logger::log(tempi::INFO, os);
     }
 }
