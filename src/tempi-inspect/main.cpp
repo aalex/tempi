@@ -229,7 +229,9 @@ bool TempiInspect::printClass(const std::string &name)
         // METHODS:
         {
             if (node->listMethods().size() == 0)
-                cout << "* (No methods)" << endl;
+            {
+                // cout << "* (No methods)" << endl;
+            }
             else
             {
                 vector<string> methods = node->listMethods();
