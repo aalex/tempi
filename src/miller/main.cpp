@@ -18,7 +18,7 @@
  */
 
 /**
- * @file An OSC looper.
+ * @file A graphical patcher.
  */
 
 #include <iostream>
