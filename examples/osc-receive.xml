@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tempi version="0.1.9">
   <graph>
-    <node id="oscreceive0" class="base.osc.receive">
+    <node name="oscreceive0" class="base.osc.receive">
       <attribute name="port">
         <i>10000</i>
       </attribute>
     </node>
-    <node id="print_osc" class="base.flow.print">
+    <node name="print_osc" class="base.flow.print">
       <attribute name="prefix">
         <s>osc: </s>
       </attribute>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tempi version="0.1.9">
   <graph>
-    <node id="stage0" class="base.clutter.stage">
+    <node name="stage0" class="base.clutter.stage">
       <attribute name="script"><s>examples/stage.json</s></attribute>
       <attribute name="visible"><b>1</b></attribute>
     </node>

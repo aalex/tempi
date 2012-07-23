@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tempi version="0.1.11">
   <graph>
-    <node id="loadmess0" class="base.flow.loadmess">
+    <node name="loadmess0" class="base.flow.loadmess">
       <attribute name="value"><f>2</f></attribute>
     </node>
-    <node id="abs0" class="base.abs.abstraction">
+    <node name="abs0" class="base.abs.abstraction">
       <attribute name="file_path"><s>examples/_abs.xml</s></attribute>
     </node>
-    <node id="print0" class="base.flow.print">
+    <node name="print0" class="base.flow.print">
       <attribute name="prefix"><s>loaded message:  </s></attribute>
       <attribute name="enabled"><b>1</b></attribute>
     </node>

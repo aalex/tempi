@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tempi version="0.1.15">
   <graph>
-    <node class="base.flow.counter" id="counter0">
+    <node class="base.flow.counter" name="counter0">
       <attribute name="__position__">
         <f>334</f>
         <f>318</f>
@@ -14,7 +14,7 @@
         <i>1</i>
       </attribute>
     </node>
-    <node class="base.time.metro" id="metro0">
+    <node class="base.time.metro" name="metro0">
       <attribute name="__position__">
         <f>305</f>
         <f>230</f>
@@ -27,7 +27,7 @@
         <b>true</b>
       </attribute>
     </node>
-    <node class="base.flow.print" id="print0">
+    <node class="base.flow.print" name="print0">
       <attribute name="__position__">
         <f>270</f>
         <f>397</f>

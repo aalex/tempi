@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tempi version="0.1.9">
   <graph>
-    <node id="metro0" class="base.time.metro">
+    <node name="metro0" class="base.time.metro">
       <attribute name="interval"><i>1000</i></attribute>
       <attribute name="running"><b>1</b></attribute>
     </node>
-    <node id="counter0" class="base.flow.counter">
+    <node name="counter0" class="base.flow.counter">
     </node>
-    <node id="prepend_foo" class="base.flow.prepend">
+    <node name="prepend_foo" class="base.flow.prepend">
       <attribute name="value"><s>foo</s></attribute>
     </node>
-    <node id="prepend_bar" class="base.flow.prepend">
+    <node name="prepend_bar" class="base.flow.prepend">
       <attribute name="value"><s>bar</s></attribute>
     </node>
-    <node id="route0" class="base.flow.route">
+    <node name="route0" class="base.flow.route">
       <attribute name="selectors">
         <s>foo</s>
         <s>bar</s>
       </attribute>
     </node>
-    <node id="print_foo" class="base.flow.print">
+    <node name="print_foo" class="base.flow.print">
       <attribute name="prefix"><s>foo: </s></attribute>
       <attribute name="enabled"><b>1</b></attribute>
     </node>
-    <node id="print_bar" class="base.flow.print">
+    <node name="print_bar" class="base.flow.print">
       <attribute name="prefix"><s>bar: </s></attribute>
       <attribute name="enabled"><b>1</b></attribute>
     </node>

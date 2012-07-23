@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tempi version="0.1.9">
   <graph>
-    <node id="loadmess0" class="base.flow.loadmess">
+    <node name="loadmess0" class="base.flow.loadmess">
       <attribute name="value">
 	<s>bang</s>
       </attribute>
     </node>
-    <node id="trigger0" class="base.flow.trigger">
+    <node name="trigger0" class="base.flow.trigger">
       <attribute name="types">
 	<s>bbbb</s>
       </attribute>
     </node>
-    <node id="any0" class="base.flow.any">
+    <node name="any0" class="base.flow.any">
       <attribute name="value">
 	<i>64</i><i>127</i><i>5</i>
       </attribute>
     </node>
-    <node id="any1" class="base.flow.any">
+    <node name="any1" class="base.flow.any">
       <attribute name="value">
 	<i>64</i>
       </attribute>
     </node>
-    <node id="any2" class="base.flow.any">
+    <node name="any2" class="base.flow.any">
       <attribute name="value">
 	<i>64</i><i>127</i>
       </attribute>
     </node>
-    <node id="midinote0" class="base.midi.note">
+    <node name="midinote0" class="base.midi.note">
       <attribute name="channel">
         <i>1</i>
       </attribute>
     </node>
-    <node id="print_midi" class="base.flow.print">
+    <node name="print_midi" class="base.flow.print">
       <attribute name="prefix">
         <s>MIDI: </s>
       </attribute>

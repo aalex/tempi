@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tempi version="0.1.9">
   <graph>
-    <node id="midireceive0" class="base.midi.input">
+    <node name="midireceive0" class="base.midi.input">
       <attribute name="port">
         <i>0</i>
       </attribute>
     </node>
-    <node id="print_midi" class="base.flow.print">
+    <node name="print_midi" class="base.flow.print">
       <attribute name="prefix">
         <s>MIDI: </s>
       </attribute>

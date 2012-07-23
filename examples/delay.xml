@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tempi version="0.1.9">
   <graph>
-    <node id="metro0" class="base.time.metro">
+    <node name="metro0" class="base.time.metro">
       <attribute name="interval"><i>1000</i></attribute>
       <attribute name="running"><b>1</b></attribute>
     </node>
-    <node id="delay0" class="base.time.delay">
+    <node name="delay0" class="base.time.delay">
       <attribute name="delay"><l>500</l></attribute>
     </node>
-    <node id="print0" class="base.flow.print">
+    <node name="print0" class="base.flow.print">
       <attribute name="prefix"><s>normal:  </s></attribute>
       <attribute name="enabled"><b>1</b></attribute>
     </node>
-    <node id="print1" class="base.flow.print">
+    <node name="print1" class="base.flow.print">
       <attribute name="prefix"><s>delayed: </s></attribute>
       <attribute name="enabled"><b>1</b></attribute>
     </node>

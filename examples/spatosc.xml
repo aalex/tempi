@@ -2,56 +2,56 @@
 <tempi version="0.1.9">
   <graph>
     <!-- COUNTER -->
-    <node id="metro0" class="base.time.metro">
+    <node name="metro0" class="base.time.metro">
       <attribute name="interval"><i>1000</i></attribute>
       <attribute name="running"><b>1</b></attribute>
     </node>
-    <node id="counter0" class="base.flow.counter">
+    <node name="counter0" class="base.flow.counter">
       <attribute name="increment"><i>10</i></attribute>
     </node>
-    <node id="cast0" class="base.cast">
+    <node name="cast0" class="base.cast">
       <attribute name="type"><s>f</s></attribute>
     </node>
-    <node id="deg2rad0" class="base.math.deg2rad">
+    <node name="deg2rad0" class="base.math.deg2rad">
     </node>
-    <node id="print_to_spatosc" class="base.flow.print">
+    <node name="print_to_spatosc" class="base.flow.print">
       <attribute name="prefix"><s>To   [spatosc]: </s></attribute>
       <attribute name="enabled"><b>1</b></attribute>
     </node>
-    <node id="print_from_spatosc" class="base.flow.print">
+    <node name="print_from_spatosc" class="base.flow.print">
       <attribute name="prefix"><s>From [spatosc]: success=</s></attribute>
       <attribute name="enabled"><b>1</b></attribute>
     </node>
-    <node id="prepend0" class="base.flow.prepend">
+    <node name="prepend0" class="base.flow.prepend">
       <attribute name="value"><s>setPositionAED</s><s>source0</s></attribute>
     </node>
-    <node id="append0" class="base.flow.append">
+    <node name="append0" class="base.flow.append">
       <attribute name="value"><f>0.0</f><f>10.0</f></attribute>
     </node>
-    <node id="nop0" class="base.flow.nop">
+    <node name="nop0" class="base.flow.nop">
     </node>
 
     <!-- FIXME: oscreceive segfaults.
-    <node id="oscreceive0" class="base.osc.receive">
+    <node name="oscreceive0" class="base.osc.receive">
       <attribute name="port"><i>10000</i></attribute>
     </node>
-    <node id="print_from_oscreceive" class="base.flow.print">
+    <node name="print_from_oscreceive" class="base.flow.print">
       <attribute name="prefix"><s>receive OSC: </s></attribute>
       <attribute name="enabled"><b>1</b></attribute>
     </node>
     <connection from="oscreceive0" outlet="0" to="print_from_oscreceive" inlet="0"/>
     -->
 
-    <node id="metro1" class="base.time.metro">
+    <node name="metro1" class="base.time.metro">
       <attribute name="interval"><i>10000</i></attribute>
       <attribute name="running"><b>1</b></attribute>
     </node>
-    <node id="any0" class="base.flow.any">
+    <node name="any0" class="base.flow.any">
       <attribute name="value"><s>debugPrint</s></attribute>
     </node>
 
     <!-- SPATOSC AND ITS LOADMESS'S -->
-    <node id="loadmess0" class="base.flow.loadmess">
+    <node name="loadmess0" class="base.flow.loadmess">
       <attribute name="value">
         <s>addTranslatorWithAddress</s>
         <s>default</s>
@@ -59,21 +59,21 @@
         <s>osc.udp://127.0.0.1:10000</s>
       </attribute>
     </node>
-    <node id="loadmess4" class="base.flow.loadmess">
+    <node name="loadmess4" class="base.flow.loadmess">
       <attribute name="value"><s>setVerbose</s><b>1</b></attribute>
     </node>
-    <node id="loadmess1" class="base.flow.loadmess">
+    <node name="loadmess1" class="base.flow.loadmess">
       <attribute name="value"><s>createListener</s><s>listener0</s></attribute>
     </node>
-    <node id="loadmess2" class="base.flow.loadmess">
+    <node name="loadmess2" class="base.flow.loadmess">
       <attribute name="value"><s>createSource</s><s>source0</s></attribute>
     </node>
-    <node id="loadmess3" class="base.flow.loadmess">
+    <node name="loadmess3" class="base.flow.loadmess">
       <attribute name="value"><s>debugPrint</s></attribute>
     </node>
-    <node id="spatosc0" class="base.osc.spatosc">
+    <node name="spatosc0" class="base.osc.spatosc">
     </node>
-    <node id="print1" class="base.flow.print">
+    <node name="print1" class="base.flow.print">
       <attribute name="prefix"><s>loadmess: </s></attribute>
       <attribute name="enabled"><b>1</b></attribute>
     </node>
