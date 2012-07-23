@@ -8,24 +8,35 @@ This release is a developer snapshot in the 0.1 series.
 New features:
 * add "base." prefix to all node types
 * delete base.appsink
-* rename base.any       -> base.flow.any
-* rename base.append    -> base.flow.append
-* rename base.cast      -> base.flow.cast
-* rename base.counter   -> base.flow.counter
-* rename base.delay     -> base.flow.delay
-* rename base.dict      -> base.data.dict
-* rename base.loadmess  -> base.flow.loadmess
-* rename base.metro     -> base.time.metro
-* rename base.nop       -> base.flow.nop
-* rename base.prepend   -> base.flow.prepend
-* rename base.print     -> base.flow.print
-* rename base.route     -> base.flow.route
-* rename base.spatosc   -> base.osc.spatosc
-* rename base.spigot    -> base.flow.spigot
+* rename many node type names:
+  * rename base.any       -> base.flow.any
+  * rename base.append    -> base.flow.append
+  * rename base.cast      -> base.flow.cast
+  * rename base.counter   -> base.flow.counter
+  * rename base.delay     -> base.flow.delay
+  * rename base.dict      -> base.data.dict
+  * rename base.loadmess  -> base.flow.loadmess
+  * rename base.metro     -> base.time.metro
+  * rename base.nop       -> base.flow.nop
+  * rename base.prepend   -> base.flow.prepend
+  * rename base.print     -> base.flow.print
+  * rename base.route     -> base.flow.route
+  * rename base.spatosc   -> base.osc.spatosc
+  * rename base.spigot    -> base.flow.spigot
+  * etc.
+* more verbose attr loading from XML
 
 Bugs fixed:
+* less strict gcc flags
+* Fix a bug when generating man pages without a X11 display.  (tempi-draw: clutter_init after parsing options)
 
-* (todo)
+New prototypes and documentation:
+* add MillerConnection actor type
+  * show nodes with inlets and outlets, can drag nodes, zoom canvas, toggle fullscreen.
+  * node position is saved as ,fff
+* add a non-working serial prototype
+* add a gsoap prototype
+* mapperinputnode now at least compiles
 
 
 Tempi 0.1.14 (2012-05-28)

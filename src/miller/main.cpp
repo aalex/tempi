@@ -18,7 +18,7 @@
  */
 
 /**
- * @file An OSC looper.
+ * @file A graphical patcher.
  */
 
 #include <iostream>
@@ -31,6 +31,9 @@ int main(int argc, char *argv[])
 }
 #else //HAVE_CLUTTER
 
+#include "miller-macros.h"
+#include "miller-command.h"
+#include "miller-draw.h"
 #include "tempi/message.h"
 #include "tempi/scheduler.h"
 #include "tempi/scheduler.h"
@@ -47,79 +50,19 @@ int main(int argc, char *argv[])
 #include <glib.h>
 #include <sstream>
 
-// namespaces:
-namespace po = boost::program_options;
-using tempi::INFO;
-using tempi::DEBUG;
-
-// Clutter legacy macro aliases:
-#if CLUTTER_CHECK_VERSION(1,4,0)
-#else
-#define CLUTTER_KEY_Down CLUTTER_Down
-#define CLUTTER_KEY_Escape CLUTTER_Escape
-#define CLUTTER_KEY_F1 CLUTTER_F1
-#define CLUTTER_KEY_F2 CLUTTER_F2
-#define CLUTTER_KEY_F3 CLUTTER_F3
-#define CLUTTER_KEY_F4 CLUTTER_F4
-#define CLUTTER_KEY_F11 CLUTTER_F11
-#define CLUTTER_KEY_Left CLUTTER_Left
-#define CLUTTER_KEY_Return CLUTTER_Return
-#define CLUTTER_KEY_Right CLUTTER_Right
-#define CLUTTER_KEY_Tab CLUTTER_Tab
-#define CLUTTER_KEY_Up CLUTTER_Up
-#define CLUTTER_KEY_q CLUTTER_q
-#define CLUTTER_KEY_s CLUTTER_s
-#define CLUTTER_KEY_space CLUTTER_space
-#define CLUTTER_KEY_Delete CLUTTER_Delete
-#define CLUTTER_KEY_BackSpace CLUTTER_BackSpace
-#endif
-
-#ifndef UNUSED
-#define UNUSED(x) ((void)(x))
-#endif
-
 namespace miller {
 
 // String constants:
 static const char * const PROGRAM_NAME = "miller";
 static const char * const GRAPH_NAME = "graph0";
 static const char * const NODES_GROUP = "group0";
-static const char * const FONT_NAME = "Monospace Bold 12px";
-
-// Color constants:
-static const ClutterColor BLACK = { 0x00, 0x00, 0x00, 0xff };
-static const ClutterColor BLUE = { 0x33, 0x33, 0xcc, 0xff };
-static const ClutterColor CYAN = { 0x33, 0xcc, 0xcc, 0xff };
-static const ClutterColor GRAY_LIGHT = { 0xcc, 0xcc, 0xcc, 0xff };
-static const ClutterColor GRAY_MEDIUM = { 0x99, 0x99, 0x99, 0xff };
-static const ClutterColor GREEN = { 0x33, 0xcc, 0x33, 0xff };
-static const ClutterColor MAGENTA = { 0xcc, 0x33, 0xcc, 0xff };
-static const ClutterColor RED = { 0xcc, 0x33, 0x33, 0xff };
-static const ClutterColor WHITE = { 0xff, 0xff, 0xff, 0xff };
-static const ClutterColor YELLOW = { 0xcc, 0xcc, 0x33, 0xff };
+static const char * const CONNECTIONS_ACTOR = "connections0";
 
 // Static functions:
 static void key_event_cb(ClutterActor *actor, ClutterKeyEvent *event, gpointer user_data);
 static void on_frame_cb(ClutterTimeline *timeline, guint *ms, gpointer user_data);
 static void on_fullscreen(ClutterStage* stage, gpointer user_data);
 static void on_unfullscreen(ClutterStage* stage, gpointer user_data);
-
-class App;
-
-class Command
-{
-    public:
-        typedef std::tr1::shared_ptr<Command> ptr;
-        Command() {}
-        virtual bool apply(App &app) = 0;
-};
-
-class SaveCommand : public Command
-{
-    public:
-        SaveCommand() : Command() {}
-        virtual bool apply(App &app);
-};
 
 /**
  * The App class manages the tempi::Graph and the Clutter GUI.
@@ -157,15 +100,15 @@ class App
         tempi::Graph::ptr graph_; // FIXME
         tempi::serializer::Serializer::ptr saver_; // FIXME
         bool saveGraph(); // FIXME
-    private:
         ClutterActor *stage_;
+    private:
         bool createGUI();
         bool setupGraph();
         // called by setupGraph() to create the clutter actors
         void drawGraph();
-        ClutterActor* createNodeActor(tempi::Node &node);
         static gboolean on_idle(gpointer data);
         void pushCommand(Command::ptr command);
+        static gboolean on_group0_scrolled(ClutterActor *actor, ClutterEvent *event, gpointer user_data);
 };
 
 bool SaveCommand::apply(App &app)
@@ -205,7 +148,7 @@ App::~App()
         {
             std::ostringstream os;
             os << __FUNCTION__ << "(): Waiting for Scheduler's thread to join.";
-            tempi::Logger::log(DEBUG, os);
+            tempi::Logger::log(tempi::DEBUG, os);
         }
         this->engine_->stop();
     }
@@ -289,9 +232,9 @@ gboolean App::on_idle(gpointer data)
 bool App::launch()
 {
     if (verbose_)
-        tempi::Logger::getInstance().setLevel(INFO);
+        tempi::Logger::getInstance().setLevel(tempi::INFO);
     if (debug_)
-        tempi::Logger::getInstance().setLevel(DEBUG);
+        tempi::Logger::getInstance().setLevel(tempi::DEBUG);
     if (stage_ == 0)
     {
         createGUI();
@@ -310,93 +253,25 @@ bool App::launch()
     }
 }
 
-ClutterActor* App::createNodeActor(tempi::Node &node)
-{
-    const std::string& node_type = node.getTypeName();
-    std::string node_name = node.getName();
-
-    std::ostringstream os;
-    os << node_name << " (" << node_type << ")";
-
-    ClutterLayoutManager *bin_layout = clutter_bin_layout_new(
-        CLUTTER_BIN_ALIGNMENT_CENTER,
-        CLUTTER_BIN_ALIGNMENT_CENTER);
-    ClutterActor *bin_box = clutter_box_new(bin_layout);
-
-    // FIXME: ClutterRectangle is deprecated!
-    ClutterActor *background = clutter_rectangle_new_with_color(&GRAY_LIGHT);
-    clutter_actor_set_size(background, 10.0f, 10.0f);
-    clutter_bin_layout_add(CLUTTER_BIN_LAYOUT(bin_layout),
-        background,
-        CLUTTER_BIN_ALIGNMENT_FILL,
-        CLUTTER_BIN_ALIGNMENT_FILL);
-
-    ClutterLayoutManager *table_layout = clutter_table_layout_new();
-    ClutterActor *table_box = clutter_box_new(table_layout);
-    clutter_bin_layout_add(CLUTTER_BIN_LAYOUT(bin_layout),
-        table_box,
-        CLUTTER_BIN_ALIGNMENT_CENTER,
-        CLUTTER_BIN_ALIGNMENT_START);
-    guint SPACING = 2;
-    clutter_table_layout_set_row_spacing(CLUTTER_TABLE_LAYOUT(table_layout), SPACING);
-    clutter_table_layout_set_column_spacing(CLUTTER_TABLE_LAYOUT(table_layout), SPACING);
-    
-    ClutterActor *label = clutter_text_new_full(FONT_NAME, os.str().c_str(), &BLUE);
-    clutter_table_layout_pack(CLUTTER_TABLE_LAYOUT(table_layout), label,
-        0, 0); // col, row
-    clutter_table_layout_set_alignment(CLUTTER_TABLE_LAYOUT(table_layout), label,
-        CLUTTER_TABLE_ALIGNMENT_START,
-        CLUTTER_TABLE_ALIGNMENT_START);
-    clutter_table_layout_set_span(CLUTTER_TABLE_LAYOUT(table_layout), label,
-        2, 1); // col span, row span
-
-    gint inlet_row = 1;
-    gint outlet_row = 1;
-    const gint inlet_col = 0;
-    const gint outlet_col = 1;
-    // inlets:
-    std::map<std::string, tempi::Inlet::ptr> inlets = node.getInlets();
-    std::map<std::string, tempi::Inlet::ptr>::const_iterator iter_inlet;
-    for (iter_inlet = inlets.begin(); iter_inlet != inlets.end(); ++iter_inlet)
-    {
-        std::string inlet_name =  (*iter_inlet).first;
-        ClutterActor *inlet_label = clutter_text_new_full(FONT_NAME, inlet_name.c_str(), &RED);
-        clutter_table_layout_pack(CLUTTER_TABLE_LAYOUT(table_layout), inlet_label,
-            inlet_col,
-            inlet_row); // col, row
-        clutter_table_layout_set_alignment(CLUTTER_TABLE_LAYOUT(table_layout), inlet_label,
-            CLUTTER_TABLE_ALIGNMENT_START, // x_align
-            CLUTTER_TABLE_ALIGNMENT_START); // y_align
-        inlet_row++;
-    }
-    // outlets:
-    std::map<std::string, tempi::Outlet::ptr> outlets = node.getOutlets();
-    std::map<std::string, tempi::Outlet::ptr>::const_iterator iter_outlet;
-    for (iter_outlet = outlets.begin(); iter_outlet != outlets.end(); ++iter_outlet)
-    {
-        std::string outlet_name =  (*iter_outlet).first;
-        ClutterActor *outlet_label = clutter_text_new_full(FONT_NAME, outlet_name.c_str(), &MAGENTA);
-        clutter_table_layout_pack(CLUTTER_TABLE_LAYOUT(table_layout), outlet_label,
-            outlet_col,
-            outlet_row); // col, row
-        clutter_table_layout_set_alignment(CLUTTER_TABLE_LAYOUT(table_layout), outlet_label,
-            CLUTTER_TABLE_ALIGNMENT_END, // x_align
-            CLUTTER_TABLE_ALIGNMENT_START); // y_align
-        outlet_row++;
-    }
-    clutter_actor_set_name(bin_box, node_name.c_str());
-    return bin_box;
-}
-
-void on_node_dragged(ClutterDragAction *action, ClutterActor *actor, gfloat event_x, gfloat event_y, ClutterModifierType modifiers, gpointer user_data)
+void on_node_dragged(ClutterDragAction *action, ClutterActor *actor, gfloat delta_x, gfloat delta_y, gpointer user_data)
 {
     UNUSED(action);
     App *app = static_cast<App *>(user_data);
 
+    gfloat motion_x;
+    gfloat motion_y;
+    clutter_drag_action_get_motion_coords(action, &motion_x, &motion_y);
+
     tempi::ScopedLock::ptr lock = app->engine_->acquireLock();
     const gchar *name = clutter_actor_get_name(actor);
     tempi::Node::ptr node = app->graph_->getNode(name);
-    node->setAttributeValue(tempi::Node::ATTRIBUTE_POSITION, tempi::Message("fff", event_x, event_y, 0.0f));
+    node->setAttributeValue(tempi::Node::ATTRIBUTE_POSITION, tempi::Message("fff", motion_x, motion_y, 0.0f));
+
+    // TODO: update only the connections we need to update
+    updateAllConnectionsGeometry(
+       clutter_container_find_child_by_name(CLUTTER_CONTAINER(app->stage_), CONNECTIONS_ACTOR),
+       clutter_container_find_child_by_name(CLUTTER_CONTAINER(app->stage_), NODES_GROUP),
+       *(app->graph_.get()));
 }
 
 void App::drawGraph()
@@ -418,15 +293,30 @@ void App::drawGraph()
         clutter_actor_set_position(actor, x, y);
         ClutterAction *action = clutter_drag_action_new();
         clutter_actor_add_action(actor, action);
-        g_signal_connect(action, "drag-end", G_CALLBACK(on_node_dragged), this);
+        g_signal_connect(action, "drag-motion", G_CALLBACK(on_node_dragged), this);
         clutter_actor_set_reactive(actor, TRUE);
         clutter_container_add_actor(CLUTTER_CONTAINER(clutter_container_find_child_by_name(CLUTTER_CONTAINER(stage_), NODES_GROUP)), actor);
     }
+
+    ClutterActor *connections_actor = createConnectionsActor(*graph_.get());
+    clutter_actor_set_name(connections_actor, CONNECTIONS_ACTOR);
+    clutter_container_add_actor(CLUTTER_CONTAINER(stage_), connections_actor);
+    clutter_actor_show(connections_actor);
+    
+    updateAllConnectionsGeometry(connections_actor, clutter_container_find_child_by_name(CLUTTER_CONTAINER(stage_), NODES_GROUP), *graph_.get());
 }
 
 bool App::saveGraph()
 {
-    pushCommand(Command::ptr(new SaveCommand));
+    if (file_name_.c_str() == 0)
+    {
+        std::ostringstream os;
+        os << "Cannot save graph to a file, since no file name has been provided.";
+        tempi::Logger::log(tempi::WARNING, os);
+        return false;
+    }
+    else
+        pushCommand(Command::ptr(new SaveCommand));
     return true; // ???
 }
 
@@ -442,7 +332,7 @@ bool App::setupGraph()
     {
         std::ostringstream os;
         os << "miller: Create ThreadedScheduler\n";
-        tempi::Logger::log(DEBUG, os);
+        tempi::Logger::log(tempi::DEBUG, os);
     }
     engine_.reset(new tempi::ThreadedScheduler);
     // TODO: make time precision configurable
@@ -451,7 +341,7 @@ bool App::setupGraph()
     {
         std::ostringstream os;
         os << "miller: Create Graph\n";
-        tempi::Logger::log(DEBUG, os);
+        tempi::Logger::log(tempi::DEBUG, os);
     }
     engine_->createGraph(GRAPH_NAME);
 
@@ -470,7 +360,7 @@ bool App::setupGraph()
     {
         std::ostringstream os;
         os << "miller: Found " << this->file_name_;
-        tempi::Logger::log(DEBUG, os);
+        tempi::Logger::log(tempi::DEBUG, os);
     }
     //if (verbose_)
     //    std::cout << (*engine_.get()) << std::endl;
@@ -492,7 +382,7 @@ bool App::setupGraph()
     {
         std::ostringstream os;
         os << "miller: Loaded " << this->file_name_;
-        tempi::Logger::log(DEBUG, os);
+        tempi::Logger::log(tempi::DEBUG, os);
     }
     return true;
 }
@@ -502,6 +392,38 @@ void on_frame_cb(ClutterTimeline * /*timeline*/, guint * /*ms*/, gpointer user_d
     App *context = static_cast<App*>(user_data);
     context->poll();
 }
+
+gboolean App::on_group0_scrolled(ClutterActor *actor, ClutterEvent *event, gpointer user_data)
+{
+    ClutterScrollDirection direction;
+    direction = clutter_event_get_scroll_direction(event);
+    gdouble current_x_factor;
+    gdouble current_y_factor;
+    clutter_actor_get_scale(actor, &current_x_factor, &current_y_factor);
+    static const gdouble SCALE_UP = 5.0 / 4.0;
+    static const gdouble SCALE_DOWN = 3.0 / 4.0;
+
+    std::ostringstream os;
+    os << "scale is " << current_x_factor << " x " << current_y_factor;
+    tempi::Logger::log(tempi::WARNING, os.str().c_str());
+
+    switch (direction)
+    {
+        case CLUTTER_SCROLL_UP:
+            clutter_actor_set_scale(actor,
+              current_x_factor * SCALE_UP,
+              current_y_factor * SCALE_UP);
+            break;
+        case CLUTTER_SCROLL_DOWN:
+            clutter_actor_set_scale(actor,
+              current_x_factor * SCALE_DOWN,
+              current_y_factor * SCALE_DOWN);
+            break;
+      }
+
+    return CLUTTER_EVENT_STOP; /* event has been handled */
+}
+
 
 bool App::createGUI()
 {
@@ -534,6 +456,8 @@ bool App::createGUI()
     // create misc actors in the stage:
     ClutterActor *group0 = clutter_group_new();
     clutter_actor_set_name(group0, NODES_GROUP);
+    clutter_actor_set_reactive(group0, TRUE);
+    g_signal_connect(group0, "scroll-event", G_CALLBACK(App::on_group0_scrolled), this);
     clutter_container_add_actor(CLUTTER_CONTAINER(stage_), group0);
 
     clutter_actor_show(stage_);
@@ -542,6 +466,8 @@ bool App::createGUI()
 
 int App::parse_options(int argc, char **argv)
 {
+    namespace po = boost::program_options;
+
     po::options_description desc("Options");
     desc.add_options()
         ("help,h", "Show this help message and exit")
