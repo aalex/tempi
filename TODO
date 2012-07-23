@@ -5,44 +5,24 @@ Packaging
 ---------
 * Check for glib
 
-TODO ASAP
----------
-* [flow.line]
+
+To do for 0.2
+-------------
 * [flow.map]
 * [3d.speed]
 * [3d.orientation]
 * [3d.smooth]
 * [midi.eventtype]
 * [flow.select] 
-
-To do for 0.2
--------------
 * Should all attributes and pad names use underscores?
 * Delete unused node types: [base.appsink]
 * Rename:
   * sampler.sampler -> sampler.simple
-  * midi.send -> midi.output
-  * midi.receive -> midi.input
-  * base.any -> flow.any
-  * base.append -> flow.append
-  * base.cast -> flow.cast
-  * base.counter -> utils.counter
-  * base.delay -> time.delay
-  * base.dict -> utils.dict
-  * base.loadmess -> flow.loadmess
-  * base.metro -> time.metro
-  * base.nop -> flow.nop
-  * base.prepend -> flow.prepend
-  * base.print -> utils.print
-  * base.route -> flow.route
-  * base.spatosc -> spatosc.send
-  * base.spigot -> flow.spigot
 * libmapper nodes: libmapper.{in,out}put device="tempi", name="default", type=f
 * 3d.angle: should not depend on spatosc
 * validate names with echo example | grep -P -e "^([A-Za-z0-9\.\-_])+$"
 * Scheduler: support OSC messages in the form /graph0/node0/__attr__ s:foo i:2 f:3.14159
 * Node: add this->send("path", ...) and this->addReceiver("path")
-* XML: rename "id" to "name"
 * package python module with autotools
 * implement message.appendMessage()
 * [3d.line]
@@ -56,7 +36,6 @@ To do for 0.2
 * Scheduler should provide a map of config options. (messages) Default path for externals should be in /etc/tempi
 * send / receive! (provide "global" receive symbols as signals) /send <symbol> ...
 * on closed/killed signal (message sent)
-* rename all tools so that their name start with tempi-*
 * abstractions: support a list of paths to be looked for files.
 * abstractions: reuse same scheduler for abstractions than their parent so that everything is "global"
 * FIXME: When we create a second Scheduler, the Loader refuses to load again base lib

@@ -25,10 +25,13 @@ New features:
   * rename base.spigot    -> base.flow.spigot
   * etc.
 * more verbose attr loading from XML
+* Do not print common inlets/outlets/attributes in tempi-inspect, nor when there is no method
+
 
 Bugs fixed:
 * less strict gcc flags
 * Fix a bug when generating man pages without a X11 display.  (tempi-draw: clutter_init after parsing options)
+* XML: rename node "id" attribute to "name"
 
 New prototypes and documentation:
 * add MillerConnection actor type
@@ -77,10 +80,6 @@ Bugs fixed:
 * Refactor math nodes using inheritance
 * New examples: oscreceive.xml, toonloop-music.xml, abs.xml, strings.xml
 * Dependencies not mandatory anymore: Clutter, liblo, GLib, spatosc
-
-Known bugs:
-
-* Favours Tempi plugins from /usr/local/lib/, rather than ./ if present.
 
 
 Tempi 0.1.10 (2012-02-19)
