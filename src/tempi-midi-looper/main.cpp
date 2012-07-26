@@ -18,7 +18,7 @@
  */
 
 /**
- * @file A MIDI printer.
+ * @file A MIDI looper.
  */
 
 #include <iostream>
@@ -79,6 +79,16 @@ static void list_output_midi_devices();
 #define CLUTTER_KEY_space CLUTTER_space
 #define CLUTTER_KEY_Delete CLUTTER_Delete
 #define CLUTTER_KEY_BackSpace CLUTTER_BackSpace
+#define CLUTTER_KEY_0 CLUTTER_0
+#define CLUTTER_KEY_1 CLUTTER_1
+#define CLUTTER_KEY_2 CLUTTER_2
+#define CLUTTER_KEY_3 CLUTTER_3
+#define CLUTTER_KEY_4 CLUTTER_4
+#define CLUTTER_KEY_5 CLUTTER_5
+#define CLUTTER_KEY_6 CLUTTER_6
+#define CLUTTER_KEY_7 CLUTTER_7
+#define CLUTTER_KEY_8 CLUTTER_8
+#define CLUTTER_KEY_9 CLUTTER_9
 #endif
 
 /**
@@ -114,6 +124,7 @@ class App
          * Toggles recording and returns its new state.
          */
         bool toggleRecord();
+        bool chooseRecordingTrack(unsigned int number);
         //void clearScore();
     protected:
         bool setupGraph();
@@ -125,10 +136,12 @@ class App
         unsigned int midi_input_port_;
         unsigned int midi_output_port_;
         bool graph_ok_;
+        unsigned int recording_track_;
         tempi::ThreadedScheduler::ptr engine_;
         ClutterActor *playback_button_;
         ClutterActor *record_button_;
         ClutterActor *stage_;
+        ClutterActor *track_number_text_;
 };
 
 App::App() :
@@ -137,7 +150,8 @@ App::App() :
     playing_(false),
     midi_input_port_(0),
     midi_output_port_(0),
-    graph_ok_(false)
+    graph_ok_(false),
+    recording_track_(0)
 {
     stage_ = NULL;
 }
@@ -199,7 +213,41 @@ static void key_event_cb(ClutterActor *actor, ClutterKeyEvent *event, gpointer u
         case CLUTTER_KEY_space:
             app->toggleRecord();
             break;
+        case CLUTTER_KEY_0:
+        case CLUTTER_KEY_1:
+        case CLUTTER_KEY_2:
+        case CLUTTER_KEY_3:
+        case CLUTTER_KEY_4:
+        case CLUTTER_KEY_5:
+        case CLUTTER_KEY_6:
+        case CLUTTER_KEY_7:
+        case CLUTTER_KEY_8:
+        case CLUTTER_KEY_9:
+            {
+                guint keyval = event->keyval; // clutter_event_get_key_symbol(event);
+                unsigned int number_pressed = (keyval & 0x0F);
+                app->chooseRecordingTrack(number_pressed);
+            }
+            break;
     }
+}
+
+bool App::chooseRecordingTrack(unsigned int number)
+{
+    if (number > 9)
+    {
+    if (verbose_)
+        std::cout << __FUNCTION__ << ": Wrong track number: " << number << "\n";
+        return false;
+    }
+    if (isRecording())
+        toggleRecord();
+    recording_track_ = number;
+
+    std::ostringstream os;
+    os << "Track number: " << number;
+    clutter_text_set_text(CLUTTER_TEXT(track_number_text_), os.str().c_str());
+    return true;
 }
 
 bool App::togglePlayback()
@@ -215,6 +263,15 @@ bool App::togglePlayback()
     
     tempi::ScopedLock::ptr lock = engine_->acquireLock();
     engine_->getGraph("graph0")->setNodeAttribute("sampler.sampler0", "playing", tempi::Message("b", isPlaying()));
+    engine_->getGraph("graph0")->setNodeAttribute("sampler.sampler1", "playing", tempi::Message("b", isPlaying()));
+    engine_->getGraph("graph0")->setNodeAttribute("sampler.sampler2", "playing", tempi::Message("b", isPlaying()));
+    engine_->getGraph("graph0")->setNodeAttribute("sampler.sampler3", "playing", tempi::Message("b", isPlaying()));
+    engine_->getGraph("graph0")->setNodeAttribute("sampler.sampler4", "playing", tempi::Message("b", isPlaying()));
+    engine_->getGraph("graph0")->setNodeAttribute("sampler.sampler5", "playing", tempi::Message("b", isPlaying()));
+    engine_->getGraph("graph0")->setNodeAttribute("sampler.sampler6", "playing", tempi::Message("b", isPlaying()));
+    engine_->getGraph("graph0")->setNodeAttribute("sampler.sampler7", "playing", tempi::Message("b", isPlaying()));
+    engine_->getGraph("graph0")->setNodeAttribute("sampler.sampler8", "playing", tempi::Message("b", isPlaying()));
+    engine_->getGraph("graph0")->setNodeAttribute("sampler.sampler9", "playing", tempi::Message("b", isPlaying()));
     return isPlaying();
 }
 
@@ -238,7 +295,11 @@ bool App::toggleRecord()
     }
 
     tempi::ScopedLock::ptr lock = engine_->acquireLock();
-    engine_->getGraph("graph0")->setNodeAttribute("sampler.sampler0", "recording", tempi::Message("b", isRecording()));
+
+    // Build node name
+    std::ostringstream os;
+    os << "sampler.sampler" << recording_track_;
+    engine_->getGraph("graph0")->setNodeAttribute(os.str().c_str(), "recording", tempi::Message("b", isRecording()));
     return isRecording();
 }
 
@@ -284,10 +345,16 @@ bool App::setupGraph()
         std::cout << "Add nodes\n";
     // Create objects:
     graph->addNode("base.midi.input", "midi.recv0");
-    graph->addNode("base.sampler.sampler", "sampler.sampler0");
     graph->addNode("base.midi.output", "midi.send0");
     graph->addNode("base.flow.print", "base.print0");
     graph->addNode("base.flow.print", "base.print1");
+
+    for (int i = 0; i < 10; i++)
+    {
+        std::ostringstream os;
+        os << "sampler.sampler" << i;
+        graph->addNode("base.sampler.sampler", os.str().c_str());
+    }
 
     graph->tick(); // calls Node::init() on each node.
     if (verbose_)
@@ -295,9 +362,15 @@ bool App::setupGraph()
     // Connections:
     //graph->connect("midi.recv0", 0, "midi.send0", 0);
     graph->connect("midi.recv0", "0", "base.print0", "0");
-    graph->connect("midi.recv0", "0", "sampler.sampler0", "0");
-    graph->connect("sampler.sampler0", "0", "midi.send0", "0");
-    graph->connect("sampler.sampler0", "0", "base.print1", "0");
+
+    for (int i = 0; i < 10; i++)
+    {
+        std::ostringstream os;
+        os << "sampler.sampler" << i;
+        graph->connect("midi.recv0", "0", os.str().c_str(), "0");
+        graph->connect(os.str().c_str(), "0", "midi.send0", "0");
+        graph->connect(os.str().c_str(), "0", "base.print1", "0");
+    }
     //TODO graph->connect("sampler.sampler0", 0, "base.prepend0", 0);
     // Set node attributes:
     if (verbose_)
@@ -386,6 +459,10 @@ bool App::createGUI()
     clutter_actor_set_position(playback_label, 200.0f, 150.0f);
     clutter_actor_set_anchor_point_from_gravity(playback_label, CLUTTER_GRAVITY_CENTER);
     clutter_container_add_actor(CLUTTER_CONTAINER(stage_), playback_label);
+
+    track_number_text_ = clutter_text_new_full("Sans semibold 12px", "Track number: 0", &white);
+    clutter_actor_set_position(track_number_text_, 0.0f, 0.0f);
+    clutter_container_add_actor(CLUTTER_CONTAINER(stage_), track_number_text_);
 
     // timeline to attach a callback for each frame that is rendered
     ClutterTimeline *timeline;
