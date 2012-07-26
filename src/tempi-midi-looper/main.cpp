@@ -283,11 +283,11 @@ bool App::setupGraph()
     if (verbose_)
         std::cout << "Add nodes\n";
     // Create objects:
-    graph->addNode("midi.input", "midi.recv0");
-    graph->addNode("sampler.sampler", "sampler.sampler0");
-    graph->addNode("midi.output", "midi.send0");
-    graph->addNode("base.print", "base.print0");
-    graph->addNode("base.print", "base.print1");
+    graph->addNode("base.midi.input", "midi.recv0");
+    graph->addNode("base.sampler.sampler", "sampler.sampler0");
+    graph->addNode("base.midi.output", "midi.send0");
+    graph->addNode("base.flow.print", "base.print0");
+    graph->addNode("base.flow.print", "base.print1");
 
     graph->tick(); // calls Node::init() on each node.
     if (verbose_)
