@@ -19,6 +19,8 @@
 
 /**
  * @file A MIDI looper.
+ *
+ * Note: this files expects the DATADIR macro to be defined (to something like "/usr/local/share")
  */
 
 #include <iostream>
@@ -46,15 +48,15 @@ int main(int argc, char *argv[])
 // namespaces:
 namespace po = boost::program_options;
 
-// String constants:
+// constants:
 static const char *PROGRAM_NAME = "tempi-midi-looper";
-
-// Color constants:
 static ClutterColor black = { 0x00, 0x00, 0x00, 0xff };
 static ClutterColor red = { 0xcc, 0x33, 0x33, 0xff };
 static ClutterColor green = { 0x33, 0xcc, 0x33, 0xff };
 static ClutterColor gray = { 0x99, 0x99, 0x99, 0xff };
-static ClutterColor white = { 0xcc, 0xcc, 0xcc, 0xff };
+static ClutterColor light_gray = { 0xcc, 0xcc, 0xcc, 0xff };
+static const char * const HELP_TEXT = "Press the space bar to toggle recording.\n"
+    "Press numbers from 0 to 9 to choose a track.";
 
 // Static functions:
 static gboolean record_button_press_cb(ClutterActor *actor, ClutterEvent *event, gpointer user_data);
@@ -63,6 +65,25 @@ static void key_event_cb(ClutterActor *actor, ClutterKeyEvent *event, gpointer u
 static void on_frame_cb(ClutterTimeline *timeline, guint *ms, gpointer user_data);
 static void list_input_midi_devices();
 static void list_output_midi_devices();
+static bool findDataPath(std::string &result, const char *file_name);
+
+bool findDataPath(std::string &result, const char *file_name)
+{
+    // try local first:
+    if (g_file_test(file_name, G_FILE_TEST_EXISTS))
+    {
+        result = std::string(file_name);
+        return true;
+    }
+    std::ostringstream os;
+    os << DATADIR << "/tempi/" << file_name;
+    if (g_file_test(os.str().c_str(), G_FILE_TEST_EXISTS))
+    {
+        result = os.str();
+        return true;
+    }
+    return false;
+}
 
 // Clutter legacy macro aliases:
 #if CLUTTER_CHECK_VERSION(1,4,0)
@@ -426,43 +447,75 @@ bool App::createGUI()
     else
         std::cout << "Creating GUI.\n";
     stage_ = clutter_stage_get_default();
-    clutter_actor_set_size(stage_, 300, 200);
-    clutter_stage_set_color(CLUTTER_STAGE(stage_), &black);
+    clutter_actor_set_size(stage_, 544, 408);
+    clutter_stage_set_color(CLUTTER_STAGE(stage_), &light_gray);
     g_signal_connect(stage_, "destroy", G_CALLBACK(clutter_main_quit), NULL);
+
+
+    std::string background_image_file;
+    if (findDataPath(background_image_file, "background.png"))
+    {
+        GError *error = NULL;
+        ClutterActor *bg = clutter_texture_new_from_file(background_image_file.c_str(), &error);
+        if (error)
+        {
+            std::cerr << error->message;
+            g_error_free(error);
+        }
+        else
+            clutter_container_add_actor(CLUTTER_CONTAINER(stage_), bg);
+    }
+    else
+        std::cerr << "Could not find background image.\n";
     
+    // MAIN LABEL:
+    ClutterActor *main_label = clutter_text_new_full("Sans semibold 24px", "Tempi MIDI Looper", &black);
+    clutter_actor_set_position(main_label, 2.0, 2.0);
+    clutter_container_add_actor(CLUTTER_CONTAINER(stage_), main_label);
+
     // Record button:
     record_button_ = clutter_rectangle_new_with_color(&gray);
     clutter_actor_set_size(record_button_, 50.0f, 50.0f);
+    clutter_rectangle_set_border_width(CLUTTER_RECTANGLE(record_button_), 1);
+    clutter_rectangle_set_border_color(CLUTTER_RECTANGLE(record_button_), &black);
     clutter_actor_set_anchor_point_from_gravity(record_button_, CLUTTER_GRAVITY_CENTER);
-    clutter_actor_set_position(record_button_, 100.0f, 100.0f);
+    clutter_actor_set_position(record_button_, 200.0f, 150.0f);
     clutter_container_add_actor(CLUTTER_CONTAINER(stage_), record_button_);
     clutter_actor_set_reactive(record_button_, TRUE);
     g_signal_connect(record_button_, "button-press-event", G_CALLBACK(record_button_press_cb), this);
     // TODO g_signal_connect(stage_, "button-release-event", G_CALLBACK(record_button_released_cb), this);
 
-    ClutterActor *record_label = clutter_text_new_full("Sans semibold 12px", "Record", &white);
-    clutter_actor_set_position(record_label, 100.0f, 150.0f);
+    ClutterActor *record_label = clutter_text_new_full("Sans semibold 12px", "Record", &black);
+    clutter_actor_set_position(record_label, 200.0f, 200.0f);
     clutter_actor_set_anchor_point_from_gravity(record_label, CLUTTER_GRAVITY_CENTER);
     clutter_container_add_actor(CLUTTER_CONTAINER(stage_), record_label);
 
     // Playback button:
     playback_button_ = clutter_rectangle_new_with_color(&gray);
     clutter_actor_set_size(playback_button_, 50.0f, 50.0f);
+    clutter_rectangle_set_border_width(CLUTTER_RECTANGLE(playback_button_), 1);
+    clutter_rectangle_set_border_color(CLUTTER_RECTANGLE(playback_button_), &black);
     clutter_actor_set_anchor_point_from_gravity(playback_button_, CLUTTER_GRAVITY_CENTER);
-    clutter_actor_set_position(playback_button_, 200.0f, 100.0f);
+    clutter_actor_set_position(playback_button_, 300.0f, 150.0f);
     clutter_container_add_actor(CLUTTER_CONTAINER(stage_), playback_button_);
     clutter_actor_set_reactive(playback_button_, TRUE);
     g_signal_connect(playback_button_, "button-press-event", G_CALLBACK(playback_button_press_cb), this);
     // TODO g_signal_connect(stage_, "button-release-event", G_CALLBACK(playback_button_released_cb), this);
 
-    ClutterActor *playback_label = clutter_text_new_full("Sans semibold 12px", "Playback", &white);
-    clutter_actor_set_position(playback_label, 200.0f, 150.0f);
+    ClutterActor *playback_label = clutter_text_new_full("Sans semibold 12px", "Playback", &black);
+    clutter_actor_set_position(playback_label, 300.0f, 200.0f);
     clutter_actor_set_anchor_point_from_gravity(playback_label, CLUTTER_GRAVITY_CENTER);
     clutter_container_add_actor(CLUTTER_CONTAINER(stage_), playback_label);
 
-    track_number_text_ = clutter_text_new_full("Sans semibold 12px", "Track number: 0", &white);
-    clutter_actor_set_position(track_number_text_, 0.0f, 0.0f);
+    track_number_text_ = clutter_text_new_full("Sans semibold 12px", "Track number: 0", &black);
+    clutter_actor_set_anchor_point_from_gravity(track_number_text_, CLUTTER_GRAVITY_CENTER);
+    clutter_actor_set_position(track_number_text_, clutter_actor_get_width(stage_) / 2.0, 50.0f);
     clutter_container_add_actor(CLUTTER_CONTAINER(stage_), track_number_text_);
+
+    ClutterActor *help_text = clutter_text_new_full("Sans 12px", HELP_TEXT, &black);
+    clutter_actor_set_anchor_point_from_gravity(help_text, CLUTTER_GRAVITY_CENTER);
+    clutter_actor_set_position(help_text, clutter_actor_get_width(stage_) / 2.0, 280.0f);
+    clutter_container_add_actor(CLUTTER_CONTAINER(stage_), help_text);
 
     // timeline to attach a callback for each frame that is rendered
     ClutterTimeline *timeline;
