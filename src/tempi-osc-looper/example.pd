@@ -1,37 +1,133 @@
-#N canvas 170 250 666 392 10;
-#X obj 22 254 OSCrx 11000;
-#X obj 291 241 OSCtx;
-#X obj 208 79 vsl 15 50 0 1 0 0 empty empty empty 0 -9 0 10 -258113
--1 -1 1600 1;
-#X msg 210 191 /slider \$1;
-#X obj 271 139 bng 15 250 50 0 empty empty empty 17 7 0 10 -258113
+#N canvas 415 385 740 537 10;
+#X obj 21 234 OSCrx 11000;
+#X obj 447 215 OSCtx;
+#X obj 364 53 vsl 15 50 -1 1 0 0 empty empty empty 0 -9 0 10 -258113
+-1 -1 0 1;
+#X obj 427 113 bng 15 250 50 0 empty empty empty 17 7 0 10 -258113
 -1 -1;
-#X msg 269 161 /bang;
-#X msg 358 97 egg;
-#X msg 393 97 spam;
-#X obj 362 123 symbol;
-#X msg 356 150 /symbol \$1;
-#X obj 21 278 OSCroute /slider /bang /symbol;
-#X obj 23 304 vsl 15 50 0 1 0 0 empty empty empty 0 -9 0 10 -258113
--1 -1 1600 1;
-#X obj 80 305 bng 15 250 50 0 empty empty empty 17 7 0 10 -258113 -1
--1;
-#X symbolatom 139 342 10 0 0 0 - - -;
-#X obj 459 155 loadbang;
-#X msg 347 197 setAddress localhost 10000;
-#X obj 139 307 symbol;
-#X connect 0 0 10 0;
-#X connect 2 0 3 0;
-#X connect 3 0 1 0;
+#X msg 425 135 /bang;
+#X msg 506 75 egg;
+#X msg 541 75 spam;
+#X obj 510 101 symbol;
+#X obj 59 317 vsl 15 50 -1 1 0 0 empty empty empty 0 -9 0 10 -258113
+-1 -1 0 1;
+#X obj 120 308 bng 15 250 50 0 empty empty empty 17 7 0 10 -258113
+-1 -1;
+#X symbolatom 160 339 10 0 0 0 - - -;
+#X obj 525 149 loadbang;
+#X msg 524 170 setAddress localhost 10000;
+#X obj 160 304 symbol;
+#X obj 346 456 r \$0-to-SPIN;
+#X obj 346 502 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 13781
+13781;
+#X obj 346 479 to-spin localhost 54324 /looper;
+#X msg 364 111 /y \$1;
+#X msg 312 107 /x \$1;
+#X obj 315 28 hsl 50 15 -1 1 0 0 empty empty empty -2 -8 0 10 -258113
+-1 -1 0 1;
+#X msg 511 124 /text \$1;
+#X obj 24 380 hsl 50 15 -1 1 0 0 empty empty empty -2 -8 0 10 -258113
+-1 -1 0 1;
+#X obj 12 444 pack 0 0 0;
+#X obj 33 414 t b f;
+#X obj 12 502 s \$0-to-SPIN;
+#N canvas 2 88 450 300 random-color 0;
+#X obj 137 178 random 100;
+#X obj 127 107 inlet;
+#X obj 126 254 outlet;
+#X obj 154 137 t b b;
+#X obj 137 200 / 100;
+#X obj 137 228 pack f f f 1;
+#X obj 208 178 random 100;
+#X obj 208 200 / 100;
+#X obj 279 178 random 100;
+#X obj 279 200 / 100;
+#X connect 0 0 4 0;
+#X connect 1 0 3 0;
+#X connect 3 0 0 0;
+#X connect 3 1 8 0;
+#X connect 3 1 6 0;
 #X connect 4 0 5 0;
-#X connect 5 0 1 0;
-#X connect 6 0 8 0;
-#X connect 7 0 8 0;
+#X connect 5 0 2 0;
+#X connect 6 0 7 0;
+#X connect 7 0 5 1;
 #X connect 8 0 9 0;
-#X connect 9 0 1 0;
-#X connect 10 0 11 0;
-#X connect 10 1 12 0;
-#X connect 10 2 16 0;
-#X connect 14 0 15 0;
-#X connect 15 0 1 0;
-#X connect 16 0 13 0;
+#X connect 9 0 5 2;
+#X restore 123 393 pd random-color;
+#X msg 122 415 /box setColor \$1 \$2 \$3 \$4;
+#X obj 401 179 t a;
+#X obj 21 278 OSCroute /x /y /z /bang /text;
+#X obj 91 317 vsl 15 50 -1 1 0 0 empty empty empty 0 -9 0 10 -258113
+-1 -1 0 1;
+#X obj 74 414 t b f;
+#X obj 392 23 vsl 15 50 -1 1 0 0 empty empty empty 0 -9 0 10 -258113
+-1 -1 0 1;
+#X msg 392 81 /z \$1;
+#X msg 189 371 /text setText \$1;
+#X msg 12 475 /group setTranslation \$1 \$2 \$3;
+#N canvas 2 88 450 300 create-nodes 0;
+#X obj 69 -2318 s \$0-to-SPIN;
+#X obj 162 -2539 loadbang;
+#X msg 100 -2458 createNode grid GridNode;
+#X msg 255 -2459 createNode group GroupNode;
+#X msg 23 -2425 createNode box ShapeNode \, /box setOrientation 45
+0 -45 \, /box setParent group;
+#X msg 69 -2369 createNode text TextNode \, /text setParent group \,
+/text setTranslation -0.5 0 1;
+#X obj 162 -2486 t b b;
+#X obj 162 -2512 del 1200;
+#X connect 1 0 7 0;
+#X connect 2 0 0 0;
+#X connect 3 0 0 0;
+#X connect 4 0 0 0;
+#X connect 5 0 0 0;
+#X connect 6 0 2 0;
+#X connect 6 0 4 0;
+#X connect 6 0 5 0;
+#X connect 6 1 3 0;
+#X connect 7 0 6 0;
+#X restore 346 432 pd create-nodes;
+#X text 502 215 <-- To tempi-osc-looper;
+#X text 110 234 <-- From tempi-osc-looper;
+#X obj 104 252 r \$0-loopback;
+#X obj 394 240 s \$0-loopback;
+#X connect 0 0 28 0;
+#X connect 2 0 17 0;
+#X connect 3 0 4 0;
+#X connect 4 0 27 0;
+#X connect 5 0 7 0;
+#X connect 6 0 7 0;
+#X connect 7 0 20 0;
+#X connect 11 0 12 0;
+#X connect 12 0 1 0;
+#X connect 13 0 10 0;
+#X connect 13 0 33 0;
+#X connect 14 0 16 0;
+#X connect 16 0 15 0;
+#X connect 17 0 27 0;
+#X connect 18 0 27 0;
+#X connect 19 0 18 0;
+#X connect 20 0 27 0;
+#X connect 22 0 34 0;
+#X connect 23 0 22 0;
+#X connect 23 1 22 1;
+#X connect 25 0 26 0;
+#X connect 26 0 24 0;
+#X connect 27 0 1 0;
+#X connect 27 0 39 0;
+#X connect 28 0 21 0;
+#X connect 28 0 22 0;
+#X connect 28 1 8 0;
+#X connect 28 1 23 0;
+#X connect 28 2 29 0;
+#X connect 28 2 30 0;
+#X connect 28 3 9 0;
+#X connect 28 3 25 0;
+#X connect 28 4 13 0;
+#X connect 30 0 22 0;
+#X connect 30 1 22 2;
+#X connect 31 0 32 0;
+#X connect 32 0 27 0;
+#X connect 33 0 24 0;
+#X connect 34 0 24 0;
+#X connect 38 0 28 0;
