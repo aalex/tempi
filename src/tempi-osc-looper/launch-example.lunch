@@ -1,0 +1,5 @@
+#!/usr/bin/env lunch
+add_command("spinserver --scene-id looper", identifier="spinserver", sleep_after=2.0)
+add_command("./tempi-osc-looper -i 10000 -o 11000", identifier="looper", sleep_after=1.0)
+add_command("pd-extended example.pd", identifier="pd")
+add_command("spinviewer --scene-id looper", identifier="spinviewer")

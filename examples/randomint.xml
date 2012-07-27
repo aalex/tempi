@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tempi version="0.1.9">
   <graph>
-    <node id="metro0" class="base.metro">
+    <node name="metro0" class="base.time.metro">
       <attribute name="interval"><i>100</i></attribute>
       <attribute name="running"><b>1</b></attribute>
     </node>
-    <node id="random0" class="random.int">
+    <node name="random0" class="base.random.int">
       <attribute name="range"><i>0</i><i>100</i></attribute>
     </node>
-    <node id="print0" class="base.print">
+    <node name="print0" class="base.flow.print">
       <attribute name="prefix"><s>random: </s></attribute>
       <attribute name="enabled"><b>1</b></attribute>
     </node>

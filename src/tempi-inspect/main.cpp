@@ -55,6 +55,7 @@ static void print_n_times(unsigned int num, const char *text);
 static void print_title(const std::string &text, TitleLevel level);
 static void print_line_if_not_empty(const std::string &text);
 static void print_bullet_line_if_not_empty(const std::string &text);
+static bool stringInVector(const std::string &text, const std::vector<std::string> &vec);
 
 // classes:
 
@@ -83,7 +84,19 @@ class TempiInspect
         void printListOfTypes();
 };
 
-static void print_title(const std::string &text, TitleLevel level)
+bool stringInVector(const std::string &text, const std::vector<std::string> &vec)
+{
+    // FIXME: optimize this
+    std::vector<std::string>::const_iterator iter;
+    for (iter = vec.begin(); iter != vec.end(); ++iter)
+    {
+        if ((*iter) == text)
+            return true;
+    }
+    return false;
+}
+
+void print_title(const std::string &text, TitleLevel level)
 {
     using std::cout;
     using std::endl;
@@ -151,6 +164,15 @@ bool TempiInspect::printClass(const std::string &name)
     using std::map;
     using std::string;
 
+    std::vector<std::string> undesired_inlets;
+    std::vector<std::string> undesired_outlets;
+    std::vector<std::string> undesired_attributes;
+    undesired_inlets.push_back(std::string("__attr__"));
+    undesired_inlets.push_back(std::string("__call__"));
+    undesired_outlets.push_back(std::string("__attr__"));
+    undesired_outlets.push_back(std::string("__return__"));
+    undesired_attributes.push_back(std::string("__position__"));
+
     if (factory_.hasType(name.c_str()))
     {
         Node::ptr node = factory_.create(name.c_str());
@@ -174,6 +196,7 @@ bool TempiInspect::printClass(const std::string &name)
         }
         cout << endl;
         cout << endl;
+        // ATTRIBUTES:
         {
             if (node->listAttributes().size() == 0)
                 cout << "* (No attributes)" << endl; // << endl;
@@ -183,26 +206,32 @@ bool TempiInspect::printClass(const std::string &name)
                 vector<string>::const_iterator iter;
                 for (iter = attributes.begin(); iter != attributes.end(); ++iter)
                 {
-                    Attribute* attr = node->getAttribute((*iter).c_str());
-                    cout << "* Attribute \"" << attr->getName() << "\" : ";
-                    if (attr->isTypeStrict())
-                        cout << "(Type: " << attr->getValue().getTypes() << ")";
-                    else
-                        cout << "(variable type)";
-                    cout << " ";
-                    if (attr->getShortDocumentation() != "")
-                        cout << attr->getShortDocumentation();
-                    else
-                        cout << "(attribute not documented)";
-                    cout << " ";
-                    cout << "Default value: " << attr->getValue();
-                    cout << endl;
+                    if (! stringInVector((*iter), undesired_attributes))
+                    {
+                        Attribute* attr = node->getAttribute((*iter).c_str());
+                        cout << "* Attribute \"" << attr->getName() << "\" : ";
+                        if (attr->isTypeStrict())
+                            cout << "(Type: " << attr->getValue().getTypes() << ")";
+                        else
+                            cout << "(variable type)";
+                        cout << " ";
+                        if (attr->getShortDocumentation() != "")
+                            cout << attr->getShortDocumentation();
+                        else
+                            cout << "(attribute not documented)";
+                        cout << " ";
+                        cout << "Default value: " << attr->getValue();
+                        cout << endl;
+                    }
                 }
             }
         }
+        // METHODS:
         {
             if (node->listMethods().size() == 0)
-                cout << "* (No methods)" << endl;
+            {
+                // cout << "* (No methods)" << endl;
+            }
             else
             {
                 vector<string> methods = node->listMethods();
@@ -225,6 +254,7 @@ bool TempiInspect::printClass(const std::string &name)
                 }
             }
         }
+        // INLETS:
         if (node->getInlets().size() == 0)
             cout << "* (No inlet)" << endl;
         else
@@ -233,13 +263,17 @@ bool TempiInspect::printClass(const std::string &name)
             map<string, Inlet::ptr>::const_iterator iter;
             for (iter = inlets.begin(); iter != inlets.end(); ++iter)
             {
-                cout << "* Inlet \"" << (*iter).first << "\" : ";
-                if (((*iter).second).get()->getDocumentation() != "")
-                    cout << ((*iter).second).get()->getDocumentation() << endl;
-                else
-                    cout << "(Not documented)" << endl;
+                if (! stringInVector((*iter).first, undesired_inlets))
+                {
+                    cout << "* Inlet \"" << (*iter).first << "\" : ";
+                    if (((*iter).second).get()->getDocumentation() != "")
+                        cout << ((*iter).second).get()->getDocumentation() << endl;
+                    else
+                        cout << "(Not documented)" << endl;
+                }
             }
         }
+        // OUTLETS:
         if (node->getOutlets().size() == 0)
             cout << "* (No outlet)" << endl;
         else
@@ -248,11 +282,14 @@ bool TempiInspect::printClass(const std::string &name)
             map<string, Outlet::ptr>::const_iterator iter;
             for (iter = outlets.begin(); iter != outlets.end(); ++iter)
             {
-                cout << "* Outlet \"" << (*iter).first << "\" : ";
-                if (((*iter).second).get()->getDocumentation() != "")
-                    cout << ((*iter).second).get()->getDocumentation() << endl;
-                else
-                    cout << "(Not documented)" << endl;
+                if (! stringInVector((*iter).first, undesired_outlets))
+                {
+                    cout << "* Outlet \"" << (*iter).first << "\" : ";
+                    if (((*iter).second).get()->getDocumentation() != "")
+                        cout << ((*iter).second).get()->getDocumentation() << endl;
+                    else
+                        cout << "(Not documented)" << endl;
+                }
             }
         }
         cout << endl;

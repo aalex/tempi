@@ -2,37 +2,37 @@
 <tempi version="0.1.9">
   <graph>
     <!-- JOIN ATOMS INTO STRINGS: -->
-    <node id="loadmess_join" class="base.loadmess">
+    <node name="loadmess_join" class="base.flow.loadmess">
       <attribute name="value"><s>hello</s><i>2</i><f>3.14159</f></attribute>
     </node>
-    <node id="do_join" class="string.join">
+    <node name="do_join" class="base.string.join">
       <attribute name="separator"><s> - </s></attribute>
     </node>
-    <node id="print_join" class="base.print">
+    <node name="print_join" class="base.flow.print">
       <attribute name="prefix"><s>join:  </s></attribute>
     </node>
     <connection from="loadmess_join" outlet="0" to="do_join" inlet="atoms"/>
     <connection from="do_join" outlet="string" to="print_join" inlet="0"/>
 
     <!-- SPLIT STRINGS: -->
-    <node id="loadmess_split" class="base.loadmess">
+    <node name="loadmess_split" class="base.flow.loadmess">
       <attribute name="value"><s>Hello, my name is Tempi.</s></attribute>
     </node>
-    <node id="do_split" class="string.split">
+    <node name="do_split" class="base.string.split">
       <attribute name="regex"><s> </s></attribute>
     </node>
-    <node id="print_split" class="base.print">
+    <node name="print_split" class="base.flow.print">
       <attribute name="prefix"><s>split: </s></attribute>
     </node>
     <connection from="loadmess_split" outlet="0" to="do_split" inlet="string"/>
     <connection from="do_split" outlet="tokens" to="print_split" inlet="0"/>
 
-    <node id="loadmess_chars" class="base.loadmess">
+    <node name="loadmess_chars" class="base.flow.loadmess">
       <attribute name="value"><s>hello</s></attribute>
     </node>
-    <node id="do_chars" class="string.characters">
+    <node name="do_chars" class="base.string.characters">
     </node>
-    <node id="print_chars" class="base.print">
+    <node name="print_chars" class="base.flow.print">
       <attribute name="prefix"><s>chars: </s></attribute>
     </node>
     <connection from="loadmess_chars" outlet="0" to="do_chars" inlet="string"/>

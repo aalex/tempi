@@ -41,6 +41,7 @@
 #include "plugins-base/spatosc/spatoscnode.h"
 #include "plugins-base/flow/spigotnode.h"
 #include "plugins-base/clutter/clutterstagenode.h"
+#include "plugins-base/mapper/mapperinputnode.h"
 #include "plugins-base/math/onefloatmathnode.h"
 #include "plugins-base/math/twofloatmathnode.h"
 #include "plugins-base/math/booleanoperatornode.h"
@@ -73,86 +74,91 @@
 namespace tempi {
 namespace plugins_base {
 
-void BaseLibrary::load(NodeFactory &factory, const char *prefix) const
+void BaseLibrary::load(NodeFactory &factory, const char * /*prefix*/) const
 {
     using utils::concatenate;
 
-    factory.registerTypeT<PrintNode>(concatenate("base.", "print").c_str());
-    factory.registerTypeT<AppendNode>(concatenate("base.", "append").c_str());
-    factory.registerTypeT<NopNode>(concatenate("base.", "nop").c_str());
-    factory.registerTypeT<PackNode>(concatenate("flow.", "pack").c_str());
-    factory.registerTypeT<MetroNode>(concatenate("base.", "metro").c_str());
-    factory.registerTypeT<AnyNode>(concatenate("base.", "any").c_str());
-    factory.registerTypeT<CounterNode>(concatenate("base.", "counter").c_str());
-    factory.registerTypeT<DelayNode>(concatenate("base.", "delay").c_str());
-    factory.registerTypeT<DictNode>(concatenate("base.", "dict").c_str());
-    factory.registerTypeT<AppSinkNode>(concatenate("base.", "appsink").c_str());
-    factory.registerTypeT<SpigotNode>(concatenate("base.", "spigot").c_str());
-    factory.registerTypeT<PrependNode>(concatenate("base.", "prepend").c_str());
-    factory.registerTypeT<RouteNode>(concatenate("base.", "route").c_str());
-    factory.registerTypeT<TriggerNode>(concatenate("flow.", "trigger").c_str());
-    factory.registerTypeT<TypeNode>(concatenate("flow.", "type").c_str());
-    factory.registerTypeT<UnpackNode>(concatenate("flow.", "unpack").c_str());
-    factory.registerTypeT<LineNode>(concatenate("flow.", "line").c_str());
-    factory.registerTypeT<LoadMessNode>(concatenate("base.", "loadmess").c_str());
-    factory.registerTypeT<CastNode>(concatenate("base.", "cast").c_str());
+    static const char * const prefix = "base.";
+    factory.registerTypeT<PrintNode>(concatenate(prefix, "flow.print").c_str());
+    factory.registerTypeT<AppendNode>(concatenate(prefix, "flow.append").c_str());
+    factory.registerTypeT<NopNode>(concatenate(prefix, "flow.nop").c_str());
+    factory.registerTypeT<PackNode>(concatenate(prefix, "flow.pack").c_str());
+    factory.registerTypeT<MetroNode>(concatenate(prefix, "time.metro").c_str());
+    factory.registerTypeT<AnyNode>(concatenate(prefix, "flow.any").c_str());
+    factory.registerTypeT<CounterNode>(concatenate(prefix, "flow.counter").c_str());
+    factory.registerTypeT<DelayNode>(concatenate(prefix, "time.delay").c_str());
+    factory.registerTypeT<DictNode>(concatenate(prefix, "data.dict").c_str());
+    //factory.registerTypeT<AppSinkNode>(concatenate("base.", "data.appsink").c_str());
+    factory.registerTypeT<SpigotNode>(concatenate(prefix, "flow.spigot").c_str());
+    factory.registerTypeT<PrependNode>(concatenate(prefix, "flow.prepend").c_str());
+    factory.registerTypeT<RouteNode>(concatenate(prefix, "flow.route").c_str());
+    factory.registerTypeT<TriggerNode>(concatenate(prefix, "flow.trigger").c_str());
+    factory.registerTypeT<TypeNode>(concatenate(prefix, "flow.type").c_str());
+    factory.registerTypeT<UnpackNode>(concatenate(prefix, "flow.unpack").c_str());
+    factory.registerTypeT<LineNode>(concatenate(prefix, "flow.line").c_str());
+    factory.registerTypeT<LoadMessNode>(concatenate(prefix, "flow.loadmess").c_str());
+    factory.registerTypeT<CastNode>(concatenate(prefix, "flow.cast").c_str());
 
 #ifdef HAVE_SPATOSC
-    factory.registerTypeT<SpatoscNode>(concatenate("base.", "spatosc").c_str());
-    factory.registerTypeT<Angle3dNode>(concatenate("3d.", "angle").c_str());
+    factory.registerTypeT<SpatoscNode>(concatenate(prefix, "osc.spatosc").c_str());
+    factory.registerTypeT<Angle3dNode>(concatenate(prefix, "3d.angle").c_str());
 #endif // HAVE_SPATOSC
 
-    factory.registerTypeT<AddNode>(concatenate("math.", "+").c_str());
-    factory.registerTypeT<DivNode>(concatenate("math.", "/").c_str());
-    factory.registerTypeT<EqualsNotNode>(concatenate("math.", "!=").c_str());
-    factory.registerTypeT<IsEqualNode>(concatenate("math.", "==").c_str());
-    factory.registerTypeT<IsGreaterNode>(concatenate("math.", ">").c_str());
-    factory.registerTypeT<IsLessNode>(concatenate("math.", "<").c_str());
-    factory.registerTypeT<SubtractNode>(concatenate("math.", "-").c_str());
-    factory.registerTypeT<MapNode>(concatenate("math.", "map").c_str());
-    factory.registerTypeT<MultNode>(concatenate("math.", "*").c_str());
-    factory.registerTypeT<DegToRadNode>(concatenate("math.", "deg2rad").c_str());
+    factory.registerTypeT<AddNode>(concatenate(prefix, "math.+").c_str());
+    factory.registerTypeT<DivNode>(concatenate(prefix, "math./").c_str());
+    factory.registerTypeT<EqualsNotNode>(concatenate(prefix, "math.!=").c_str());
+    factory.registerTypeT<IsEqualNode>(concatenate(prefix, "math.==").c_str());
+    factory.registerTypeT<IsGreaterNode>(concatenate(prefix, "math.>").c_str());
+    factory.registerTypeT<IsLessNode>(concatenate(prefix, "math.<").c_str());
+    factory.registerTypeT<SubtractNode>(concatenate(prefix, "math.-").c_str());
+    factory.registerTypeT<MapNode>(concatenate(prefix, "math.map").c_str());
+    factory.registerTypeT<MultNode>(concatenate(prefix, "math.*").c_str());
+    factory.registerTypeT<DegToRadNode>(concatenate(prefix, "math.deg2rad").c_str());
 
 #ifdef HAVE_CLUTTER
-    factory.registerTypeT<TempiClutterStageNode>(concatenate("clutter.", "stage").c_str());
+    factory.registerTypeT<TempiClutterStageNode>(concatenate(prefix, "clutter.stage").c_str());
 #endif // HAVE_CLUTTER
 
 // TODO: #ifdef HAVE_STK
-    factory.registerTypeT<ControlBuilderNode>(concatenate("midi.", "control").c_str());
-    factory.registerTypeT<NoteBuilderNode>(concatenate("midi.", "note").c_str());
-    factory.registerTypeT<MidiReceiverNode>(concatenate("midi.", "input").c_str());
-    factory.registerTypeT<MidiSenderNode>(concatenate("midi.", "output").c_str());
-    factory.registerTypeT<MidiRouteNode>(concatenate("midi.", "route").c_str());
-    factory.registerTypeT<ProgramChangeBuilderNode>(concatenate("midi.", "program").c_str());
+    factory.registerTypeT<ControlBuilderNode>(concatenate(prefix, "midi.control").c_str());
+    factory.registerTypeT<NoteBuilderNode>(concatenate(prefix, "midi.note").c_str());
+    factory.registerTypeT<MidiReceiverNode>(concatenate(prefix, "midi.input").c_str());
+    factory.registerTypeT<MidiSenderNode>(concatenate(prefix, "midi.output").c_str());
+    factory.registerTypeT<MidiRouteNode>(concatenate(prefix, "midi.route").c_str());
+    factory.registerTypeT<ProgramChangeBuilderNode>(concatenate(prefix, "midi.program").c_str());
 // TODO: #endif // HAVE_STK
 
-    factory.registerTypeT<NearestNoteNode>(concatenate("music.", "nearest.note").c_str());
-    factory.registerTypeT<MonodicNode>(concatenate("music.", "monodic").c_str());
+    factory.registerTypeT<NearestNoteNode>(concatenate(prefix, "music.nearest.note").c_str());
+    factory.registerTypeT<MonodicNode>(concatenate(prefix, "music.monodic").c_str());
 
 // TODO #ifdef HAVE_LIBLO
-    factory.registerTypeT<OscReceiverNode>(concatenate("osc.", "receive").c_str());
-    factory.registerTypeT<OscSenderNode>(concatenate("osc.", "send").c_str());
+    factory.registerTypeT<OscReceiverNode>(concatenate(prefix, "osc.receive").c_str());
+    factory.registerTypeT<OscSenderNode>(concatenate(prefix, "osc.send").c_str());
 // TODO #endif // HAVE_LIBLO
-    factory.registerTypeT<OscPrependNode>(concatenate("osc.", "prepend").c_str());
-    factory.registerTypeT<OscRouteNode>(concatenate("osc.", "route").c_str());
+    factory.registerTypeT<OscPrependNode>(concatenate(prefix, "osc.prepend").c_str());
+    factory.registerTypeT<OscRouteNode>(concatenate(prefix, "osc.route").c_str());
 
-    factory.registerTypeT<SamplerSampleNode>(concatenate("sampler.", "sample").c_str());
-    factory.registerTypeT<SamplerNode>(concatenate("sampler.", "sampler").c_str());
-    factory.registerTypeT<SamplerReadNode>(concatenate("sampler.", "read").c_str());
-    factory.registerTypeT<SamplerWriteNode>(concatenate("sampler.", "write").c_str());
+    factory.registerTypeT<SamplerSampleNode>(concatenate(prefix, "sampler.sample").c_str());
+    factory.registerTypeT<SamplerNode>(concatenate(prefix, "sampler.sampler").c_str());
+    factory.registerTypeT<SamplerReadNode>(concatenate(prefix, "sampler.read").c_str());
+    factory.registerTypeT<SamplerWriteNode>(concatenate(prefix, "sampler.write").c_str());
 
-    factory.registerTypeT<StringCharactersNode>(concatenate("string.","characters").c_str());
-    factory.registerTypeT<StringJoinNode>(concatenate("string.","join").c_str());
-    factory.registerTypeT<StringSplitNode>(concatenate("string.","split").c_str());
+    factory.registerTypeT<StringCharactersNode>(concatenate(prefix,"string.characters").c_str());
+    factory.registerTypeT<StringJoinNode>(concatenate(prefix,"string.join").c_str());
+    factory.registerTypeT<StringSplitNode>(concatenate(prefix,"string.split").c_str());
 
 #ifdef HAVE_GLIB
-    factory.registerTypeT<RandomDrunkNode>(concatenate("random.", "drunk").c_str());
-    factory.registerTypeT<RandomIntNode>(concatenate("random.", "int").c_str());
+    factory.registerTypeT<RandomDrunkNode>(concatenate(prefix, "random.drunk").c_str());
+    factory.registerTypeT<RandomIntNode>(concatenate(prefix, "random.int").c_str());
 #endif // HAVE_GLIB
 
-    factory.registerTypeT<AbstractionNode>(concatenate("abs.", "abstraction").c_str());
-    factory.registerTypeT<OutletNode>(concatenate("abs.", "outlet").c_str());
-    factory.registerTypeT<InletNode>(concatenate("abs.", "inlet").c_str());
+    factory.registerTypeT<AbstractionNode>(concatenate(prefix, "abs.abstraction").c_str());
+    factory.registerTypeT<OutletNode>(concatenate(prefix, "abs.outlet").c_str());
+    factory.registerTypeT<InletNode>(concatenate(prefix, "abs.inlet").c_str());
+
+#ifdef HAVE_LIBMAPPER
+    factory.registerTypeT<MapperInputNode>(concatenate(prefix, "osc.libmapper.input").c_str());
+#endif // HAVE_LIBMAPPER
 }
 
 } // end of namespace

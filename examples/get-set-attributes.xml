@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tempi version="0.1.9">
   <graph>
-    <node id="loadmess0" class="base.loadmess">
+    <node name="loadmess0" class="base.flow.loadmess">
       <attribute name="value"><s>get</s><s>count</s></attribute>
     </node>
-    <node id="loadmess1" class="base.loadmess">
+    <node name="loadmess1" class="base.flow.loadmess">
       <attribute name="value"><s>set</s><s>count</s><i>10</i></attribute>
     </node>
-    <node id="loadmess2" class="base.loadmess">
+    <node name="loadmess2" class="base.flow.loadmess">
       <attribute name="value"><s>list</s></attribute>
     </node>
-    <node id="counter0" class="base.counter">
+    <node name="counter0" class="base.flow.counter">
     </node>
-    <node id="print_attr" class="base.print">
+    <node name="print_attr" class="base.flow.print">
       <attribute name="prefix"><s>__attr__: </s></attribute>
     </node>
-    <node id="print_loadmess" class="base.print">
+    <node name="print_loadmess" class="base.flow.print">
       <attribute name="prefix"><s>loadmess: </s></attribute>
     </node>
     <connection from="loadmess0" outlet="0" to="counter0" inlet="__attr__"/>

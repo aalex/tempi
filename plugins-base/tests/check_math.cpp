@@ -32,12 +32,12 @@ static bool check_op(const char *op, float left, float right, T expected)
         std::cout << "create print node:" << std::endl;
     if (VERBOSE)
     {
-        graph.addNode("base.print", "print0");
+        graph.addNode("base.flow.print", "print0");
         if (VERBOSE)
             std::cout << "connect print node:" << std::endl;
         graph.connect("op0", "0", "print0", "0");
     }
-    graph.addNode("base.any", "any0");
+    graph.addNode("base.flow.any", "any0");
     graph.connect("op0", "0", "any0", "0");
     graph.tick(); // init the nodes
 
@@ -79,14 +79,14 @@ int main(int argc, char **argv)
     factory.reset(new NodeFactory);
     internals::loadInternals(factory);
 
-    std::string add = std::string("math.+");
-    std::string divide= std::string("math./");
-    std::string equal = std::string("math.==");
-    std::string notequal = std::string("math.!=");
-    std::string greater = std::string("math.>");
-    std::string less = std::string("math.<");
-    std::string multiply = std::string("math.*");
-    std::string subtract = std::string("math.-");
+    std::string add = std::string("base.math.+");
+    std::string divide= std::string("base.math./");
+    std::string equal = std::string("base.math.==");
+    std::string notequal = std::string("base.math.!=");
+    std::string greater = std::string("base.math.>");
+    std::string less = std::string("base.math.<");
+    std::string multiply = std::string("base.math.*");
+    std::string subtract = std::string("base.math.-");
 
     if (! check_op(add.c_str(), 2.0f, 2.0f, 4.0f))
         return 1;

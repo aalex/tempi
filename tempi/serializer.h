@@ -46,7 +46,7 @@ const char * const GRAPH_ID_ATTR = "id";
 
 //const char * const NODES_NODE = "nodes";
 const char * const NODE_NODE = "node";
-const char * const NODE_ID_PROPERTY = "id";
+const char * const NODE_ID_PROPERTY = "name";
 const char * const NODE_CLASS_PROPERTY = "class";
 
 //const char * const ATTRIBUTES_NODE = "attributes";

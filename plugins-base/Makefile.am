@@ -5,6 +5,7 @@ AM_CXXFLAGS = \
     $(BOOST_CPPFLAGS) \
     $(CLUTTER_CFLAGS) \
     $(GLIB_CFLAGS) \
+    $(LIBMAPPER_CFLAGS) \
     $(LIBLO_CFLAGS) \
     $(LIBXML_CFLAGS) \
     $(SPATOSC_CFLAGS) \
@@ -19,6 +20,7 @@ AM_LIBS = \
     $(BOOST_THREAD_LIBS) \
     $(CLUTTER_LIBS) \
     $(GLIB_LIBS) \
+    $(LIBMAPPER_LIBS) \
     $(LIBLO_LIBS) \
     $(LIBXML_LIBS) \
     $(LOG4CPP_LIBS) \
@@ -66,6 +68,7 @@ libtempi_plugins_base_la_SOURCES = \
     flow/typenode.cpp \
     flow/triggernode.cpp \
     flow/unpacknode.cpp \
+	mapper/mapperinputnode.cpp \
     mapping/filter.cpp \
     mapping/slide.cpp \
     mapping/slidefilter.cpp \
@@ -118,6 +121,8 @@ EXTRA_DIST = \
     flow/typenode.h \
     flow/triggernode.h \
     flow/unpacknode.h \
+	mapper/mapperdevice.h \
+	mapper/mapperinputnode.h \
     mapping/average.h \
     mapping/filter.h \
     mapping/slide.h \

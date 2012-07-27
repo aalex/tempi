@@ -5,6 +5,7 @@ AM_CXXFLAGS = \
     $(BOOST_CPPFLAGS) \
     $(CLUTTER_CFLAGS) \
     $(GLIB_CFLAGS) \
+    -DDATADIR="\"$(datadir)\"" \
     -I$(top_srcdir)
 
 LDADD = \
@@ -22,4 +23,8 @@ tempi_midi_looper_LDADD = $(LDADD)
 
 tempi_midi_looper_SOURCES = \
     main.cpp
+
+imagesdir = $(datadir)/tempi
+images_DATA = background.png
+EXTRA_DIST = $(images_DATA)
 

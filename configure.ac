@@ -14,7 +14,7 @@
 # - increase tempi_interface_version to the next odd number
 m4_define([tempi_major_version], [0])
 m4_define([tempi_minor_version], [1])
-m4_define([tempi_micro_version], [14])
+m4_define([tempi_micro_version], [16])
 
 m4_define([tempi_release_status],
           [m4_if(m4_eval(tempi_micro_version % 2), [1], [git],
@@ -154,6 +154,13 @@ else
     AC_DEFINE(HAVE_SPATOSC,[1],[SpatOSC headers successfully detected])
 fi
 
+PKG_CHECK_MODULES([LIBMAPPER], [libmapper-0], have_libmapper=true, have_libmapper=false)
+if test "x${have_libmapper}" = "xfalse" ; then
+    AC_MSG_WARN([missing package: libmapper-dev])
+else
+    AC_DEFINE(HAVE_LIBMAPPER,[1],[Libmapper headers successfully detected])
+fi
+
 dnl # BOOST
 dnl AX_BOOST_BASE([1.35])
 dnl 
@@ -196,7 +203,7 @@ AC_MSG_NOTICE([BOOST_SIGNALS_LIBS:         ${BOOST_SIGNALS_LIBS}])
 AC_MSG_NOTICE([BOOST_SYSTEM_LIBS:          ${BOOST_SYSTEM_LIBS}])
 AC_MSG_NOTICE([BOOST_THREAD_LIBS:         ${BOOST_THREAD_LIBS}])
 
-CFLAGS+=" -Wall -g -Wextra -Wfatal-errors -Werror "
+CFLAGS+=" -Wall -g" dnl -Wextra -Wfatal-errors -Werror "
 
 # GNU help2man creates man pages from --help output; in many cases, this
 # is sufficient, and obviates the need to maintain man pages separately.

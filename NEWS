@@ -1,6 +1,54 @@
 Tempi release notes
 ===================
 
+Tempi 0.1.16 (2012-07-27)
+-------------------------
+This release is a developer snapshot in the 0.1 series.
+
+New features:
+* add "base." prefix to all node types
+* delete base.appsink
+* rename many node type names:
+  * rename base.any       -> base.flow.any
+  * rename base.append    -> base.flow.append
+  * rename base.cast      -> base.flow.cast
+  * rename base.counter   -> base.flow.counter
+  * rename base.delay     -> base.flow.delay
+  * rename base.dict      -> base.data.dict
+  * rename base.loadmess  -> base.flow.loadmess
+  * rename base.metro     -> base.time.metro
+  * rename base.nop       -> base.flow.nop
+  * rename base.prepend   -> base.flow.prepend
+  * rename base.print     -> base.flow.print
+  * rename base.route     -> base.flow.route
+  * rename base.spatosc   -> base.osc.spatosc
+  * rename base.spigot    -> base.flow.spigot
+  * etc.
+* more verbose attr loading from XML
+* Do not print common inlets/outlets/attributes in tempi-inspect, nor when there is no method
+* note about RtMidi's bug
+* add a lunch script for the example for tempi-osc-looper
+* osc-looper: add pd example patch
+* tempi-midi-looper: add background image and prettify
+* make midi-looper multi-track
+
+
+Bugs fixed:
+* less strict gcc flags
+* Fix a bug when generating man pages without a X11 display.  (tempi-draw: clutter_init after parsing options)
+* XML: rename node "id" attribute to "name"
+* fix rst markup in README
+* osc-looper: fix short options name clash
+
+New prototypes and documentation:
+* add MillerConnection actor type
+  * show nodes with inlets and outlets, can drag nodes, zoom canvas, toggle fullscreen.
+  * node position is saved as ,fff
+* add a non-working serial prototype
+* add a gsoap prototype
+* mapperinputnode now at least compiles
+
+
 Tempi 0.1.14 (2012-05-28)
 -------------------------
 This release is a developer snapshot in the 0.1 series.
@@ -39,10 +87,6 @@ Bugs fixed:
 * Refactor math nodes using inheritance
 * New examples: oscreceive.xml, toonloop-music.xml, abs.xml, strings.xml
 * Dependencies not mandatory anymore: Clutter, liblo, GLib, spatosc
-
-Known bugs:
-
-* Favours Tempi plugins from /usr/local/lib/, rather than ./ if present.
 
 
 Tempi 0.1.10 (2012-02-19)

@@ -1,15 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tempi version="0.1.9">
+<tempi version="0.1.15">
   <graph>
-    <node id="metro0" class="base.metro">
-      <attribute name="interval"><i>1000</i></attribute>
-      <attribute name="running"><b>true</b></attribute>
+    <node class="base.flow.counter" name="counter0">
+      <attribute name="__position__">
+        <f>334</f>
+        <f>318</f>
+        <f>0</f>
+      </attribute>
+      <attribute name="count">
+        <i>66</i>
+      </attribute>
+      <attribute name="increment">
+        <i>1</i>
+      </attribute>
     </node>
-    <node id="counter0" class="base.counter">
+    <node class="base.time.metro" name="metro0">
+      <attribute name="__position__">
+        <f>305</f>
+        <f>230</f>
+        <f>0</f>
+      </attribute>
+      <attribute name="interval">
+        <i>1000</i>
+      </attribute>
+      <attribute name="running">
+        <b>true</b>
+      </attribute>
     </node>
-    <node id="print0" class="base.print">
-      <attribute name="prefix"><s>count: </s></attribute>
-      <attribute name="enabled"><b>1</b></attribute>
+    <node class="base.flow.print" name="print0">
+      <attribute name="__position__">
+        <f>270</f>
+        <f>397</f>
+        <f>0</f>
+      </attribute>
+      <attribute name="enabled">
+        <b>true</b>
+      </attribute>
+      <attribute name="prefix">
+        <s>count: </s>
+      </attribute>
     </node>
     <connection from="metro0" outlet="0" to="counter0" inlet="0"/>
     <connection from="counter0" outlet="0" to="print0" inlet="0"/>

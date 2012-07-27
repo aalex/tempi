@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tempi version="0.1.9">
   <graph>
-    <node id="loadmess_last" class="base.loadmess">
+    <node name="loadmess_last" class="base.flow.loadmess">
       <attribute name="value"><s>hello</s></attribute>
     </node>
-    <node id="loadmess1" class="base.loadmess">
+    <node name="loadmess1" class="base.flow.loadmess">
       <attribute name="value"><i>2</i></attribute>
     </node>
-    <node id="loadmess2" class="base.loadmess">
+    <node name="loadmess2" class="base.flow.loadmess">
       <attribute name="value"><f>3.14159</f><f>1.618</f></attribute>
     </node>
 
-    <node id="pack0" class="flow.pack">
+    <node name="pack0" class="base.flow.pack">
       <attribute name="number"><u>3</u></attribute>
       <attribute name="all-hot"><b>false</b></attribute>
     </node>
-    <node id="pack1" class="flow.pack">
+    <node name="pack1" class="base.flow.pack">
       <attribute name="number"><u>4</u></attribute>
       <attribute name="all-hot"><b>true</b></attribute>
     </node>
 
-    <node id="print_cold" class="base.print">
+    <node name="print_cold" class="base.flow.print">
       <attribute name="prefix"><s>only 0th hot: </s></attribute>
     </node>
-    <node id="print_hot" class="base.print">
+    <node name="print_hot" class="base.flow.print">
       <attribute name="prefix"><s>all hot: </s></attribute>
     </node>
 

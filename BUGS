@@ -1,4 +1,8 @@
 Tempi known bugs
 ================
-* [base.metro] : does not start right away when created with running = true
+* MIDI node types require JACK to be running.
+* Favours Tempi plugins from /usr/local/lib/, rather than ./ if present. (since 0.1.12)
+* [base.time.metro] : does not start right away when created with running = true
+* [base.flow.counter] : saves its count in the XML file. Maybe not desired?
+* [base.flow.line]: does not output the right numbers at all.
 
