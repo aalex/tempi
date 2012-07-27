@@ -26,12 +26,19 @@ New features:
   * etc.
 * more verbose attr loading from XML
 * Do not print common inlets/outlets/attributes in tempi-inspect, nor when there is no method
+* note about RtMidi's bug
+* add a lunch script for the example for tempi-osc-looper
+* osc-looper: add pd example patch
+* tempi-midi-looper: add background image and prettify
+* make midi-looper multi-track
 
 
 Bugs fixed:
 * less strict gcc flags
 * Fix a bug when generating man pages without a X11 display.  (tempi-draw: clutter_init after parsing options)
 * XML: rename node "id" attribute to "name"
+* fix rst markup in README
+* osc-looper: fix short options name clash
 
 New prototypes and documentation:
 * add MillerConnection actor type
