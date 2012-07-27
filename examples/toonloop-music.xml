@@ -18,7 +18,7 @@
         <s>print: </s>
       </attribute>
     </node>
-    <node name="cast0" class="base.cast">
+    <node name="cast0" class="base.flow.cast">
       <attribute name="type">
         <s>s</s>
       </attribute>
@@ -46,19 +46,19 @@
       <attribute name="current"><i>50</i></attribute>
       <attribute name="step"><i>0</i><i>10</i></attribute>
     </node>
-    <node name="cast_f" class="base.cast">
+    <node name="cast_f" class="base.flow.cast">
       <attribute name="type"><s>f</s></attribute>
     </node>
     <connection from="metro0" outlet="0" to="drunk0" inlet="0"/>
     <connection from="drunk0" outlet="0" to="cast_f" inlet="0"/>
     <connection from="cast_f" outlet="0" to="nearest0" inlet="0"/>
     <connection from="nearest0" outlet="0" to="close0" inlet="0"/>
-    <node name="close0" class="base.base.music.monodic"></node>
+    <node name="close0" class="base.music.monodic"></node>
     <node name="prepend_channel" class="base.flow.prepend">
       <attribute name="value"><i>144</i></attribute>
     </node>
 
-    <node name="cast_CCC" class="base.cast">
+    <node name="cast_CCC" class="base.flow.cast">
       <attribute name="type"><s>CCC</s></attribute>
     </node>
     <connection from="close0" outlet="0" to="prepend_channel" inlet="0"/>
