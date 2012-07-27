@@ -9,8 +9,8 @@ rst2html ${RST2HTML_OPTS} README > ${HTML_DIR}/readme.html
 rst2html ${RST2HTML_OPTS} doc/index.rst > ${HTML_DIR}/index.html
 src/tempi-inspect/tempi-inspect -a | rst2html ${RST2HTML_OPTS} > ${HTML_DIR}/nodes.html
 
-# make html
-# mkdir -p ${HTML_DIR}/doxygen
-# cp html/* ${HTML_DIR}/doxygen/
+make html
+mkdir -p ${HTML_DIR}/doxygen
+cp html/* ${HTML_DIR}/doxygen/
 
 
