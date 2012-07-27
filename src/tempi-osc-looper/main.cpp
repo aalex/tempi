@@ -276,18 +276,18 @@ bool App::setupGraph()
     if (verbose_)
         std::cout << "Add nodes\n";
     // Create objects:
-    graph->addNode("osc.receive", "osc.recv0");
-    graph->addNode("sampler.sampler", "sampler.sampler0");
-    graph->addNode("osc.send", "osc.send0");
-    graph->addNode("base.print", "base.print0");
-    graph->addNode("base.print", "base.print1");
+    graph->addNode("base.osc.receive", "osc.recv0");
+    graph->addNode("base.sampler.sampler", "sampler.sampler0");
+    graph->addNode("base.osc.send", "osc.send0");
+    graph->addNode("base.flow.print", "base.print0");
+    graph->addNode("base.flow.print", "base.print1");
 
     graph->tick(); // calls Node::init() on each node.
     if (verbose_)
         std::cout << "Connect nodes\n";
     // Connections:
-    graph->connect("osc.recv0", "0", "base.print0", "0");
-    graph->connect("osc.recv0", "0", "sampler.sampler0", "0");
+    graph->connect("osc.recv0", "incoming", "base.print0", "0");
+    graph->connect("osc.recv0", "incoming", "sampler.sampler0", "0");
     graph->connect("sampler.sampler0", "0", "osc.send0", "0");
     graph->connect("sampler.sampler0", "0", "base.print1", "0");
     // Set node attributes:
