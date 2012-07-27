@@ -403,7 +403,7 @@ int App::parse_options(int argc, char **argv)
         //  "Sets the OSC control port to listen to")
         ("output,o", po::value<unsigned int>()->default_value(0),
             "Sets the OSC output port to send to")
-        ("host,o", po::value<std::string>()->default_value("127.0.0.1"),
+        ("host,H", po::value<std::string>()->default_value("127.0.0.1"),
             "Sets the OSC output host IP to send to")
         ("verbose,v", po::bool_switch(), "Enables a verbose output")
         ;
