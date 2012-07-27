@@ -1,0 +1,37 @@
+#N canvas 170 250 666 392 10;
+#X obj 22 254 OSCrx 11000;
+#X obj 291 241 OSCtx;
+#X obj 208 79 vsl 15 50 0 1 0 0 empty empty empty 0 -9 0 10 -258113
+-1 -1 1600 1;
+#X msg 210 191 /slider \$1;
+#X obj 271 139 bng 15 250 50 0 empty empty empty 17 7 0 10 -258113
+-1 -1;
+#X msg 269 161 /bang;
+#X msg 358 97 egg;
+#X msg 393 97 spam;
+#X obj 362 123 symbol;
+#X msg 356 150 /symbol \$1;
+#X obj 21 278 OSCroute /slider /bang /symbol;
+#X obj 23 304 vsl 15 50 0 1 0 0 empty empty empty 0 -9 0 10 -258113
+-1 -1 1600 1;
+#X obj 80 305 bng 15 250 50 0 empty empty empty 17 7 0 10 -258113 -1
+-1;
+#X symbolatom 139 342 10 0 0 0 - - -;
+#X obj 459 155 loadbang;
+#X msg 347 197 setAddress localhost 10000;
+#X obj 139 307 symbol;
+#X connect 0 0 10 0;
+#X connect 2 0 3 0;
+#X connect 3 0 1 0;
+#X connect 4 0 5 0;
+#X connect 5 0 1 0;
+#X connect 6 0 8 0;
+#X connect 7 0 8 0;
+#X connect 8 0 9 0;
+#X connect 9 0 1 0;
+#X connect 10 0 11 0;
+#X connect 10 1 12 0;
+#X connect 10 2 16 0;
+#X connect 14 0 15 0;
+#X connect 15 0 1 0;
+#X connect 16 0 13 0;
