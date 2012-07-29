@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tempi version="0.1.17">
+  <graph>
+    <node class="base.flow.counter" name="counter0">
+      <attribute name="__position__">
+        <f>165</f>
+        <f>290</f>
+        <f>0</f>
+      </attribute>
+      <attribute name="count">
+        <i>40</i>
+      </attribute>
+      <attribute name="increment">
+        <i>1</i>
+      </attribute>
+    </node>
+    <node class="base.time.metro" name="metro0">
+      <attribute name="__position__">
+        <f>205</f>
+        <f>44</f>
+        <f>0</f>
+      </attribute>
+      <attribute name="interval">
+        <i>1000</i>
+      </attribute>
+      <attribute name="running">
+        <b>true</b>
+      </attribute>
+    </node>
+    <node class="base.osc.send" name="oscsend0">
+      <attribute name="__position__">
+        <f>438</f>
+        <f>486</f>
+        <f>0</f>
+      </attribute>
+      <attribute name="host_port">
+        <s>127.0.0.1</s>
+        <i>10000</i>
+      </attribute>
+    </node>
+    <node class="base.flow.prepend" name="prepend0">
+      <attribute name="__position__">
+        <f>390</f>
+        <f>375</f>
+        <f>0</f>
+      </attribute>
+      <attribute name="value">
+        <s>/hello</s>
+      </attribute>
+    </node>
+    <node class="base.flow.print" name="print0">
+      <attribute name="__position__">
+        <f>137</f>
+        <f>522</f>
+        <f>0</f>
+      </attribute>
+      <attribute name="enabled">
+        <b>true</b>
+      </attribute>
+      <attribute name="prefix">
+        <s>count: </s>
+      </attribute>
+    </node>
+    <connection from="metro0" outlet="0" to="counter0" inlet="0"/>
+    <connection from="counter0" outlet="0" to="print0" inlet="0"/>
+    <connection from="counter0" outlet="0" to="prepend0" inlet="0"/>
+    <connection from="prepend0" outlet="0" to="oscsend0" inlet="0"/>
+  </graph>
+</tempi>
