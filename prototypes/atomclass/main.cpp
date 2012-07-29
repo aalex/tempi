@@ -120,6 +120,10 @@ class ListAtom: public Atom
         }
 };
 
+/**
+ * Casts a Atom::ptr into a ListAtom*.
+ * TODO: use shared_ptr casters instead.
+ */
 ListAtom *LIST_ATOM(Atom::ptr atom)
 {
     return static_cast<ListAtom*>(atom.get());
@@ -140,6 +144,10 @@ int main(int argc, char *argv[])
     LIST_ATOM(list)->append(Atom::ptr(new IntAtom(1)));
     LIST_ATOM(list)->append(Atom::ptr(new IntAtom(2)));
     LIST_ATOM(list)->append(Atom::ptr(new IntAtom(3)));
+    Atom::ptr list2 = Atom::ptr(new ListAtom());
+    LIST_ATOM(list2)->append(Atom::ptr(new IntAtom(4)));
+    LIST_ATOM(list2)->append(Atom::ptr(new IntAtom(5)));
+    LIST_ATOM(list)->append(list2);
     LIST_ATOM(list)->toJSON(json);
     std::cout << "to json: " << json << std::endl;
     return 0;
