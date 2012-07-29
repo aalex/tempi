@@ -19,10 +19,15 @@
 #include <signal.h>
 #include <unistd.h>		//sleep
 #include <shmdata/any-data-writer.h>
+#include <tempi/message.h>
+#include <tr1/memory>
+#include <string.h>
+
+typedef std::tr1::shared_ptr<tempi::Message> MessagePtr;
 
 shmdata_any_writer_t *writer;
 
-static void data_not_required_anymore (void *priv);
+static void on_done_with_data (void *priv);
 
 //clean up pipeline when ctrl-c
 void
@@ -30,6 +35,19 @@ leave (int sig)
 {
   shmdata_any_writer_close (writer);
   exit (sig);
+}
+
+static std::vector<MessagePtr> messages;
+
+static tempi::Message* addMessage()
+{
+  static int i = 0;
+  static const char *text = "hello";
+  static const float pi = 3.14159f;
+  MessagePtr m(new tempi::Message("sif", text, i, pi));
+  messages.push_back(m);
+  i++;
+  return m.get();
 }
 
 int
@@ -52,22 +70,22 @@ main (int argc, char *argv[])
       exit(0);
     }
   shmdata_any_writer_set_debug (writer, SHMDATA_ENABLE_DEBUG);
-  shmdata_any_writer_set_data_type (writer, "application/helloworld_");
+  shmdata_any_writer_set_data_type (writer, "application/x-tempi");
   shmdata_any_writer_start (writer);
 
   unsigned long long myclock = 0;
   unsigned long long nsecPeriod = 30000000;
 
-  char hello[21] = "helloworldhelloworld";
-
-  while (0 == 0)
+  while (1)
     {
+      tempi::Message *message = addMessage();
+      std::cout << "write " << (*message) << std::endl;
       //data should be serialized if network is involved
       shmdata_any_writer_push_data (writer,
-				    hello,
-				    sizeof (hello),
+				    static_cast<void *>(message),
+				    sizeof (message),
 				    myclock,
-				    &data_not_required_anymore, hello);
+				    &on_done_with_data, NULL);
       usleep (nsecPeriod / 1000);
       myclock += nsecPeriod;
     }
@@ -75,10 +93,26 @@ main (int argc, char *argv[])
   return 0;
 }
 
+static void freeMessage(tempi::Message *message)
+{
+    std::vector<MessagePtr>::iterator iter;
+    for (iter = messages.begin(); iter != messages.end(); iter++)
+    {
+        if ((*iter).get() == message)
+        {
+            std::cout << "free some data\n";
+            messages.erase(iter);
+            return;
+        }
+    }
+}
+
 static void
-data_not_required_anymore (void *priv)
+on_done_with_data (void *priv)
 {
   //printf ("freeing buffer for pointer %p\n", priv);
   //free (priv);
+  tempi::Message *message = static_cast<tempi::Message*>(priv);
+  freeMessage(message);
 }
 
