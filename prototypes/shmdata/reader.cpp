@@ -44,13 +44,12 @@ on_data (shmdata_any_reader_t * reader,
 	 unsigned long long timestamp,
 	 const char *type_description, void *user_data)
 {
+  std::cout << __FUNCTION__ << std::endl;
   tempi::Message *message = static_cast<tempi::Message*>(data);
   printf ("data %p, data size %d, timestamp %llu, type descr %s\n",
 	  data, data_size, timestamp, type_description);
   //printf ("user_data: %s\n", (const char *) user_data);
-
   std::cout << (*message) << std::endl;
-
   //free the data, can also be called later
   shmdata_any_reader_free (shmbuf);
 }
