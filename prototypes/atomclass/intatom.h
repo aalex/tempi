@@ -37,4 +37,12 @@ class IntAtom: public Atom
             value_ = boost::lexical_cast<int>(json);
         }
 };
+/**
+ * Casts a Atom::ptr into an IntAtom*.
+ * TODO: use shared_ptr casters instead.
+ */
+IntAtom *INT_ATOM(Atom::ptr atom)
+{
+    return static_cast<IntAtom*>(atom.get());
+}
 #endif
