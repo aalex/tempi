@@ -180,7 +180,8 @@ int findStringIndexInVector(const std::vector<std::string> vec, const char *valu
         unsigned int i;
         for (i = 0; i < vec.size() - 1; i++)
         {
-            if (vec[i] == value)
+            //std::cout << "check for " << value << " match " << vec[i] << std::endl;
+            if (vec[i] == std::string(value))
                 return i; // found
         }
         // not found
@@ -211,9 +212,18 @@ void getPadPosition(tempi::Graph &graph, ClutterActor *nodesGroup, const char *n
         pads = nodePtr->listInlets();
     else
         pads = nodePtr->listOutlets();
-    int index = findStringIndexInVector(pads, pad_name.c_str());
+
+    // x position is easy:
+    gfloat node_width = clutter_actor_get_width(node_actor);
+    if (is_inlet)
+        (*result_x) = node_x;
+    else
+        (*result_x) = node_x + node_width;
+
+    int index = findStringIndexInVector(pads, pad); // _name.c_str());
     if (index == -1)
     {
+        std::cout << "could not findStringIndexInVector\n";
         (*result_x) = node_x;
         (*result_y) = node_y;
     }
@@ -222,12 +232,7 @@ void getPadPosition(tempi::Graph &graph, ClutterActor *nodesGroup, const char *n
         // FIXME: this is a ugly hack
         static const int ARBITRARY_Y_FACTOR_PER_ROW = 12;
         static const int ARBITRARY_Y_OFFSET = 12;
-        gfloat node_width = clutter_actor_get_width(node_actor);
         (*result_y) = node_y + ARBITRARY_Y_OFFSET + index * ARBITRARY_Y_FACTOR_PER_ROW;
-        if (is_inlet)
-            (*result_x) = node_x;
-        else
-            (*result_x) = node_x + node_width;
     }
 }
 
