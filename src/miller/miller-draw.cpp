@@ -78,7 +78,7 @@ ClutterActor* createNodeActor(tempi::Node &node)
     std::string node_name = node.getName();
 
     std::ostringstream os;
-    os << node_name << " (" << node_type << ")";
+    os << node_type << " (" << node_name << ")";
 
     ClutterLayoutManager *node_layout = clutter_bin_layout_new(
         CLUTTER_BIN_ALIGNMENT_CENTER,
@@ -223,7 +223,7 @@ void getPadPosition(tempi::Graph &graph, ClutterActor *nodesGroup, const char *n
     int index = findStringIndexInVector(pads, pad); // _name.c_str());
     if (index == -1)
     {
-        std::cout << "could not findStringIndexInVector\n";
+        std::cout << "could not findStringIndexInVector " << pad_name << "\n";
         (*result_x) = node_x;
         (*result_y) = node_y;
     }
