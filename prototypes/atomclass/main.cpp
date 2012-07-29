@@ -4,6 +4,24 @@
 #include <vector>
 #include <boost/lexical_cast.hpp>
 
+/**
+ * It would make more sense to refactor the message class so that the
+ * handling of each atom type would be in a hierarchy of classes for
+ * each atom type. This way, we would get rid of switch/case statements
+ * and use pure virtual methods instead. That would help preventing some
+ * mistakes at compile time.
+ *
+ * Also, I think we could simplify the types in tempi so that we keep
+ * only the few types supported in JSON. Here they are:
+ *
+ *  - int
+ *  - float
+ *  - string
+ *  - null
+ *  - list
+ *  - dict
+ */
+
 class Atom
 {
     public:
