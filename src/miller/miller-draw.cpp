@@ -45,6 +45,11 @@ std::string makePadName(const char *node_name, const char *pad_name, bool is_inl
     return os.str();
 }
 
+std::string parseOnlyPadNameFromPadName(const char *pad_name)
+{
+
+}
+
 std::string makeNodeName(const char *node_name)
 {
     // just to make sure we are consistent
@@ -223,7 +228,11 @@ void getPadPosition(tempi::Graph &graph, ClutterActor *nodesGroup, const char *n
     int index = findStringIndexInVector(pads, pad); // _name.c_str());
     if (index == -1)
     {
-        std::cout << "could not findStringIndexInVector " << pad_name << "\n";
+        std::cout << "could not findStringIndexInVector " << node << " : " << (is_inlet ? "inlet : " : "outlet : ") << pad << "\n";
+        std::cout << "vector: ";
+        for (unsigned int i = 0; i < pads.size() - 1; i++)
+            std::cout << pads[i] << " ";
+        std::cout << std::endl;
         (*result_x) = node_x;
         (*result_y) = node_y;
     }
