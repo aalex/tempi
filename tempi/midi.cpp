@@ -1,0 +1,144 @@
+/*
+ * Copyright (C) 2011 Alexandre Quessy
+ * Copyright (C) 2011 Michal Seta
+ * Copyright (C) 2012 Nicolas Bouillot
+ *
+ * This file is part of Tempi.
+ *
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Tempi is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
+ */
+#include "tempi/midi.h"
+#include <cstdlib>
+#include <iostream>
+
+namespace tempi {
+  namespace midi {
+
+    //initlization of the singleton to NULL
+    MidiScheduler * Midi::sched_ = NULL;
+    int Midi::streams = 0;
+
+    Midi::Midi()
+    {
+      if (sched_ != NULL) 
+	return;
+      
+      sched_ = new MidiScheduler();
+    }
+    
+    Midi::~Midi()
+    {
+      if (streams == 0)
+	{
+	  delete sched_;
+	  if (sched_ != NULL) std::cout << "sched not null" << std::endl;
+	}
+    }
+    
+    int Midi::get_default_output_device_id()
+    {
+      return Pm_GetDefaultOutputDeviceID();
+    }
+    
+    int Midi::get_default_input_device_id()
+    {
+      return Pm_GetDefaultInputDeviceID();
+    }
+
+    bool
+    Midi::open_input_device(int id)
+    {
+      std::cout << " open input " << id <<std::endl;
+      
+      PmStream *stream = sched_->add_input_stream (id);
+      
+      if (stream != NULL)
+	{
+	  streams++;
+	  openned_streams_[id] = stream;
+	  return true;
+	}
+      else
+	return false;
+    }
+
+    bool Midi::is_open(int id)
+    {
+      //checking if the current instance has openned the device
+      if (openned_streams_.find(id) == openned_streams_.end())
+	return false;
+      else
+	return true;
+    }
+    
+    void
+    Midi::close_input_device(int id)
+    {
+      std::map<int, PmStream *>::iterator it = openned_streams_.find(id);
+      if ( it == openned_streams_.end())
+	return;
+      
+      if (sched_->remove_input_stream (it->second))
+	streams--;
+    }
+
+    bool Midi::is_queue_empty(int id)
+    {
+      std::map<int, PmStream *>::iterator it = openned_streams_.find(id);
+      if ( it == openned_streams_.end())
+	{
+	  //the queue is actually not empty but the id is not managed by this instance
+	  return false;
+	}
+      return sched_->is_queue_empty (it->second);
+    }
+    
+    // return empty vector if not accessible or <status> <data1> <data2> id success
+    std::vector<unsigned int> 
+    Midi::poll(int id)
+    {
+      std::vector<unsigned int> message;
+      
+      std::map<int, PmStream *>::iterator it = openned_streams_.find(id);
+      if ( it == openned_streams_.end())
+	{
+	  //the queue is not accessible
+	  return message;
+	}
+      PmEvent event = sched_->poll (it->second);
+      message.push_back (Pm_MessageStatus(event.message));
+      message.push_back (Pm_MessageData1(event.message));
+      message.push_back (Pm_MessageData2(event.message));
+      
+      return message;
+    } 
+
+
+
+    void Midi::enumerate_devices() const
+    {
+      /* list device information */
+      int i;
+      for (i = 0; i < Pm_CountDevices(); i++) {
+	const PmDeviceInfo *listinfo = Pm_GetDeviceInfo(i);
+	std::cout << i << ": " << listinfo->interf << ", " << listinfo->name ;
+	if (listinfo->input) std::cout << " (input)" << std::endl;
+	if (listinfo->output) std::cout << " (output)" << std::endl;
+      }
+    }
+
+
+
+  } // end of namespace
+} // end of namespace
+

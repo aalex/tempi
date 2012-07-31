@@ -3,7 +3,7 @@
   <graph>
     <node name="midireceive0" class="base.midi.input">
       <attribute name="port">
-        <i>0</i>
+        <i>3</i>
       </attribute>
     </node>
     <node name="print_midi" class="base.flow.print">

@@ -34,17 +34,24 @@ MidiReceiverNode::MidiReceiverNode() :
 {
     this->setShortDocumentation("Receives MIDI messages from a single device.");
     this->addOutlet(EVENTS_OUTLET, "MIDI messages (unsigned characters) flow through this outlet.");
-    this->addAttribute(Attribute::ptr(new Attribute(PORT_ATTR, Message("i", 0), "STK MIDI device index.")));
-    midi_input_.reset(new midi::MidiInput);
+    this->addAttribute(Attribute::ptr(new Attribute(PORT_ATTR, Message("i", 0), "portmidi device index.")));
+    midi_input_ = new midi::Midi();
 }
+
+  MidiReceiverNode::~MidiReceiverNode()
+  {
+    
+  }
+
 
 bool MidiReceiverNode::onNodeAttributeChanged(const char *name, const Message &value)
 {
     //std::cout << "MidiReceiverNode::" << __FUNCTION__ << "(" << name << ", " << value << ")" << std::endl;
     if (utils::stringsMatch(name, PORT_ATTR))
     {
+      
         bool success = open((unsigned int) value.getInt(0));
-        // TODO: if (! success) { this->setAttribute(PORT_ATTR, Message("i", 0))); return false; }
+  // TODO: if (! success) { this->setAttribute(PORT_ATTR, Message("i", 0))); return false; }
         return success;
     }
     else
@@ -58,28 +65,42 @@ bool MidiReceiverNode::open(unsigned int port)
         os << "MidiReceiverNode: open port " << port;
         Logger::log(INFO, os);
     }
-    midi_input_.reset(new midi::MidiInput);
-    return midi_input_->open(port);
+    port_ = port;
+    midi_input_ = new midi::Midi();
+    return midi_input_->open_input_device(port);
 }
 
 void MidiReceiverNode::onInit()
 {
-    this->open(0);
 }
 
 void MidiReceiverNode::doTick()
 {
-    if (! midi_input_->isOpen())
-    {
-        std::cerr << "MidiReceiverNode::" << __FUNCTION__ << "(): MidiInput is not initialized. Please specifiy a port number." << std::endl;
-        return;
-    }
-    std::vector<Message> messages = midi_input_->poll();
-    std::vector<Message>::iterator iter;
-    for (iter = messages.begin(); iter != messages.end(); ++iter)
-    {
-        output(EVENTS_OUTLET, *iter);
-    }
+     if (! midi_input_->is_open(port_))
+     {
+         std::cerr << "MidiReceiverNode::" << __FUNCTION__ << "(): MidiInput is not initialized. Please specifiy a port number." << std::endl;
+         return;
+     }
+
+     while (!midi_input_->is_queue_empty(port_))
+       {
+	 std::vector<unsigned int> midi_message = midi_input_->poll(port_);
+	 Message to_output_message;
+	 if (midi_message.size() == 3)
+	   {
+	     to_output_message.appendUnsignedChar((unsigned char)midi_message[0]);
+	     to_output_message.appendUnsignedChar((unsigned char)midi_message[1]);
+	     to_output_message.appendUnsignedChar((unsigned char)midi_message[2]);
+	   }
+	 output(EVENTS_OUTLET, to_output_message);
+       }
+
+     // std::vector<Message> messages = midi_input_->poll();
+     // std::vector<Message>::iterator iter;
+     // for (iter = messages.begin(); iter != messages.end(); ++iter)
+     // {
+     //     output(EVENTS_OUTLET, *iter);
+     // }
 }
 
 } // end of namespace

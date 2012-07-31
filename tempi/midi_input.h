@@ -54,6 +54,7 @@ class MidiInput
         /** Opens a MIDI source device. */
         bool open(unsigned int port);
 	bool open(); //default input device
+	unsigned int getDefaultInputDevice();
 	unsigned int getPort() const;
         /** Prints the list of MIDI source devices. */
         void enumerateDevices() const;
@@ -74,7 +75,7 @@ class MidiInput
 	//the midi in
 	PmStream *midi_in_;
 	/* process_midi_exit_flag is set when the timer thread shuts down */
-	int process_midi_exit_flag_;
+	bool process_midi_exit_flag_;
 	bool portmidi_initialized_;
 	bool app_sysex_in_progress_;
 	bool thru_sysex_in_progress_;

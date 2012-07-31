@@ -59,6 +59,7 @@ namespace tempi {
       
       /* do nothing until initialization completes */
       if (!context->portmidi_initialized_) {
+	std::cout << "exit flag" << std::endl; 
 	/* this flag signals that no more midi processing will be done */
 	context->process_midi_exit_flag_ = true;
 	return;
@@ -88,17 +89,17 @@ namespace tempi {
 	    }
 
 	    /* sysex processing */
-	    if (status == MIDI_SYSEX) context->thru_sysex_in_progress_ = TRUE;
+	    if (status == MIDI_SYSEX) context->thru_sysex_in_progress_ = true;
 	    else if ((status & 0xF8) != 0xF8) {
 	      /* not MIDI_SYSEX and not real-time, so */
-	      context->thru_sysex_in_progress_ = FALSE;
+	      context->thru_sysex_in_progress_ = false;
 	    }
 	    if (context->thru_sysex_in_progress_ && /* look for EOX */
 		(((buffer.message & 0xFF) == MIDI_EOX) ||
 		 (((buffer.message >> 8) & 0xFF) == MIDI_EOX) ||
 		 (((buffer.message >> 16) & 0xFF) == MIDI_EOX) ||
 		 (((buffer.message >> 24) & 0xFF) == MIDI_EOX))) {
-	      context->thru_sysex_in_progress_ = FALSE;
+	      context->thru_sysex_in_progress_ = false;
 	    }
 	  }
 	} while (result);
@@ -157,8 +158,10 @@ namespace tempi {
       thru_sysex_in_progress_(false)
     {
   
+      std::cout << " midi in construct" << std::endl;
+      
       /* starting the timer before starting midi */
-      Pt_Start(1000, &process_midi, this); /* start a timer with millisecond accuracy */
+      Pt_Start(100, &process_midi, this); /* start a timer with millisecond accuracy */
       /* the timer will call our function, process_midi() every millisecond */
   
       Pm_Initialize();
@@ -168,17 +171,44 @@ namespace tempi {
 
     MidiInput::~MidiInput()
     {
-      // if (midi_in_)
-      //     delete midi_in_;
+
+      std::cout << "terminate midi input" << std::endl;
+
+      /* the timer thread could be in the middle of accessing PortMidi stuff */
+      /* to detect that it is done, we first clear process_midi_exit_flag and
+	 then wait for the timer thread to set it
+      */
+      process_midi_exit_flag_ = false;
+      portmidi_initialized_ = false;
+      /* busy wait for flag from timer thread that it is done */
+      while (!process_midi_exit_flag_) 
+       	{
+       	  sleep (1);// std::cout << "busy wait" << std::endl;
+       	}
+      /* at this point, midi thread is inactive and we need to shut down
+       * the midi input and output
+       */
+      
+      Pt_Stop(); /* stop the timer */
+      
+      //Pm_Close(midi_in_);
+      
+      //Pm_Terminate();    
     }
 
+    unsigned int MidiInput::getDefaultInputDevice()
+    {
+      return Pm_GetDefaultInputDeviceID();
+    }
+    
     bool MidiInput::open()
     {
       open(Pm_GetDefaultInputDeviceID());
     }
+
     bool MidiInput::open(unsigned int port)
     {
-      //port = 3;
+      port=3;
       ports_count_ = Pm_CountDevices();
 
       const PmDeviceInfo *info = Pm_GetDeviceInfo(port);
@@ -202,6 +232,9 @@ namespace tempi {
 				       is a shared variable without synchronization, but
 				       this simple assignment is safe */
       opened_ = true;
+
+      process_midi (0, this);
+
       return true;
     }
 

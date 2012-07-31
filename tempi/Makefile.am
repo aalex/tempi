@@ -5,7 +5,6 @@ AM_CXXFLAGS = \
     $(BOOST_CPPFLAGS) \
     $(LIBXML_CFLAGS) \
     $(LIBLO_CFLAGS) \
-    $(RTMIDI_CFLAGS) \
     -I$(top_srcdir) \
     -I$(top_srcdir)/plugins-base \
     -I$(top_srcdir)/tempi \
@@ -21,7 +20,6 @@ AM_LIBS = \
     $(LIBLO_LIBS) \
     $(LIBXML_LIBS) \
     $(LOG4CPP_LIBS) \
-    $(RTMIDI_LIBS) \
     -lasound  -lportmidi -lporttime -lpthread -lm
 
 # this file is not installed, just included by .cpp files at compile time.
@@ -57,6 +55,8 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     loader.cpp \
     log.cpp \
     message.cpp \
+    midi.cpp \
+    midi_scheduler.cpp \
     midi_input.cpp \
     midi_output.cpp \
     nameallocator.cpp \
@@ -111,6 +111,8 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     loader.h \
     log.h \
     message.h \
+    midi.h \
+    midi_scheduler.h \
     midi_input.h \
     midi_output.h \
     nameallocator.h \
