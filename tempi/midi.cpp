@@ -71,6 +71,23 @@ namespace tempi {
 	return false;
     }
 
+    bool
+    Midi::open_output_device(int id)
+    {
+      
+      PmStream *stream = sched_->add_output_stream (id);
+      
+      if (stream != NULL)
+	{
+	  streams++;
+	  openned_streams_[id] = stream;
+	  return true;
+	}
+      else
+	return false;
+    }
+
+
     bool Midi::is_open(int id)
     {
       //checking if the current instance has openned the device
@@ -91,7 +108,19 @@ namespace tempi {
 	streams--;
     }
 
-    bool Midi::is_queue_empty(int id)
+    void
+    Midi::close_output_device(int id)
+    {
+      std::map<int, PmStream *>::iterator it = openned_streams_.find(id);
+      if ( it == openned_streams_.end())
+	return;
+      
+      if (sched_->remove_output_stream (it->second))
+	streams--;
+    }
+
+    bool 
+    Midi::is_queue_empty(int id)
     {
       std::map<int, PmStream *>::iterator it = openned_streams_.find(id);
       if ( it == openned_streams_.end())
@@ -102,6 +131,17 @@ namespace tempi {
       return sched_->is_queue_empty (it->second);
     }
     
+    bool
+    Midi::send_message_to_output(int id, unsigned char status, unsigned char data1, unsigned char data2)
+    {
+      std::map<int, PmStream *>::iterator it = openned_streams_.find(id);
+      if ( it == openned_streams_.end())
+	{
+	  return false;
+	}
+      return sched_->push_message(it->second,status,data1,data2);
+    }
+
     // return empty vector if not accessible or <status> <data1> <data2> id success
     std::vector<unsigned char> 
     Midi::poll(int id)

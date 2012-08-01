@@ -58,11 +58,15 @@ class MidiScheduler
   bool remove_input_stream(PmStream *stream);
   PmEvent poll(PmStream *stream);
   bool is_queue_empty(PmStream *stream);
-  
+
+  PmStream *add_output_stream(int id);
+  bool remove_output_stream(PmStream *stream);
+  bool push_message(PmStream *stream, unsigned char status, unsigned char data1, unsigned char data2);
+
  private:
   //vector containing the streams to process 
-  //std::vector<PmStream *> input_streams_;
-  std::map<PmStream *,std::queue<PmEvent> *> queues_;
+  std::map<PmStream *,std::queue<PmEvent> *> input_queues_;
+  std::map<PmStream *,std::queue<PmEvent> *> output_queues_;
 
   /* process_midi_exit_flag is set when the timer thread shuts down */
   bool process_midi_exit_flag_;

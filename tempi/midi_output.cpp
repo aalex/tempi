@@ -46,23 +46,23 @@ void MidiOutput::enumerateDevices()
   // }
  
 
-    // List inputs.
-     std::cout << std::endl << "MIDI output devices: " << ports_count_ << " found." << std::endl;
-     std::string portName;
-     for (unsigned int i = 0; i < ports_count_; i++)
-     {
-         try
-         {
-             portName = midi_out_->getPortName(i);
-         }
-         catch (RtError &name_error)
-         {
-             name_error.printMessage();
-         }
-         std::cout << " * " << i << " : " << portName << '\n';
-     }
+  // List inputs.
+  std::cout << std::endl << "MIDI output devices: " << ports_count_ << " found." << std::endl;
+  std::string portName;
+  for (unsigned int i = 0; i < ports_count_; i++)
+    {
+      try
+	{
+	  portName = midi_out_->getPortName(i);
+	}
+      catch (RtError &name_error)
+	{
+	  name_error.printMessage();
+	}
+      std::cout << " * " << i << " : " << portName << '\n';
+    }
 }
-
+  
 bool MidiOutput::sendMessage(const Message &message) const
 {
     if (verbose_)

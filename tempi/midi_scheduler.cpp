@@ -60,6 +60,7 @@ namespace tempi {
     }
 
 
+
     PmStream *
     MidiScheduler::add_input_stream(int id)
     {
@@ -77,33 +78,69 @@ namespace tempi {
       */
       Pm_SetFilter(midi_in, PM_FILT_ACTIVE | PM_FILT_CLOCK);
 
-      queues_[midi_in] = new std::queue<PmEvent>();      
+      input_queues_[midi_in] = new std::queue<PmEvent>();      
      
       return midi_in;
+    }
+
+    PmStream *
+    MidiScheduler::add_output_stream(int id)
+    {
+      
+      PmStream *midi_out;
+      if (pmNoError != Pm_OpenOutput(&midi_out, 
+				     id, 
+				     NULL /* driver info */,
+				     0 /* use default input size */,
+				     NULL,
+				     NULL, /* time info */
+				     0))
+	return NULL;
+
+      output_queues_[midi_out] = new std::queue<PmEvent>();      
+
+      return midi_out;
     }
 
     PmEvent 
     MidiScheduler::poll(PmStream *stream)
     {
-      PmEvent message = queues_[stream]->front();
-      queues_[stream]->pop();
+      PmEvent message = input_queues_[stream]->front();
+      input_queues_[stream]->pop();
       return message;
     }
 
     bool 
     MidiScheduler::is_queue_empty(PmStream *stream)
     {
-      return queues_[stream]->empty();
+      return input_queues_[stream]->empty();
     }
 
     bool
     MidiScheduler::remove_input_stream(PmStream *stream)
     {
-      queues_.erase(stream);
-      return false;
+      input_queues_.erase(stream);
+      return true;
     }
 
-  
+    bool
+    MidiScheduler::remove_output_stream(PmStream *stream)
+    {
+      output_queues_.erase(stream);
+      return true;
+    }
+
+    bool 
+    MidiScheduler::push_message(PmStream *stream, unsigned char status, unsigned char data1, unsigned char data2)
+    {
+      PmEvent message_to_push;
+      message_to_push.message = Pm_Message(status,data1,data2);
+      message_to_push.timestamp=0; //use urrent time
+      
+      output_queues_[stream]->push (message_to_push);
+      return true;
+    }
+
     /* timer interrupt for processing midi data.
        Incoming data is delivered to main program via in_queue.
        Outgoing data from main program is delivered via out_queue.
@@ -128,7 +165,7 @@ namespace tempi {
       
     std::map<PmStream *,std::queue<PmEvent> *>::iterator itr;
 
-    for(itr = context->queues_.begin(); itr != context->queues_.end(); ++itr)
+    for(itr = context->input_queues_.begin(); itr != context->input_queues_.end(); ++itr)
 	{
 	  /* see if there is any midi input to process */
 	  if (!context->app_sysex_in_progress_) {
@@ -150,7 +187,7 @@ namespace tempi {
 		  continue; /* ignore this data */
 		}
 		
-		// std::cout 
+ 		// std::cout 
 		//   << "midi_scheduler msg: " 
 		//   << " status= "  
 		//   << Pm_MessageStatus(buffer.message) 
@@ -180,8 +217,57 @@ namespace tempi {
 	  }
 	}//end of "for input_streams_"
 
-    }
 
+    for(itr = context->output_queues_.begin(); itr != context->output_queues_.end(); ++itr)
+	{
+	  /* see if there is application midi data to process */
+	  while (!itr->second->empty()) {
+	    /* see if it is time to output the next message */
+	    PmEvent *next = &(itr->second->front());//(PmEvent *) Pm_QueuePeek(out_queue);
+	    //assert(next); /* must be non-null because queue is not empty */
+	    /* time to send a message, first make sure it's not blocked */
+	    int status = Pm_MessageStatus(next->message);
+	    if ((status & 0xF8) == 0xF8) {
+	      ; /* real-time messages are not blocked */
+	    } else if (context->thru_sysex_in_progress_) {
+                /* maybe sysex has timed out (output becomes unblocked) */
+            	  context->thru_sysex_in_progress_ = false;
+	    }
+	    
+	     // std::cout 
+	     //   << "midi_scheduler msg write: " 
+	     //   << " status= "  
+	     //   << Pm_MessageStatus(next->message) 
+	     //   << ", data 1= "
+	     //   << Pm_MessageData1(next->message)
+	     //   << ", data 2= "
+	     //   << Pm_MessageData2(next->message)
+	     //   << std::endl;
+	    
+	    
+	     Pm_Write(itr->first, next, 1);
+
+	    itr->second->pop();
+	    
+	    /* inspect message to update app_sysex_in_progress */
+	    if (status == MIDI_SYSEX) context->app_sysex_in_progress_ = true;
+	    else if ((status & 0xF8) != 0xF8) {
+	      /* not MIDI_SYSEX and not real-time, so */
+	      context->app_sysex_in_progress_ = false;
+	    }
+	    if (context->app_sysex_in_progress_ && /* look for EOX */
+		(((buffer.message & 0xFF) == MIDI_EOX) ||
+		 (((buffer.message >> 8) & 0xFF) == MIDI_EOX) ||
+		 (((buffer.message >> 16) & 0xFF) == MIDI_EOX) ||
+		 (((buffer.message >> 24) & 0xFF) == MIDI_EOX))) {
+	      context->app_sysex_in_progress_ = false;
+	    }
+	    
+	  }
+	}
+    
+    }
+    
   } // end of namespace
 } // end of namespace
 

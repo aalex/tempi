@@ -42,7 +42,8 @@ MidiReceiverNode::MidiReceiverNode() :
 
   MidiReceiverNode::~MidiReceiverNode()
   {
-    
+    midi_input_->close_input_device(port_);
+    delete midi_input_;
   }
 
 
@@ -96,13 +97,6 @@ void MidiReceiverNode::doTick()
 	   }
 	 output(EVENTS_OUTLET, to_output_message);
        }
-
-     // std::vector<Message> messages = midi_input_->poll();
-     // std::vector<Message>::iterator iter;
-     // for (iter = messages.begin(); iter != messages.end(); ++iter)
-     // {
-     //     output(EVENTS_OUTLET, *iter);
-     // }
 }
 
 } // end of namespace
