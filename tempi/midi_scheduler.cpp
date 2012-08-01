@@ -32,12 +32,11 @@ namespace tempi {
       
       portmidi_initialized_ = false;
       /* always start the timer before you start midi */
-      Pt_Start(500, &process_midi, this); /* start a timer with millisecond accuracy */
+      Pt_Start(1, &process_midi, this); /* start a timer with millisecond accuracy */
       /* the timer will call our function, process_midi() every millisecond */
       Pm_Initialize();
       portmidi_initialized_ = true;
 
-      std::cout << " init done " << std::endl;
     }
 
     
@@ -57,8 +56,6 @@ namespace tempi {
        */
       Pt_Stop(); /* stop the timer */
       Pm_Terminate();
-
-      std::cout << " midi sched destructed " << std::endl; 
 
     }
 
@@ -82,8 +79,6 @@ namespace tempi {
 
       queues_[midi_in] = new std::queue<PmEvent>();      
      
-      std::cout << " queue created for " << id << std::endl;
-
       return midi_in;
     }
 
@@ -155,15 +150,15 @@ namespace tempi {
 		  continue; /* ignore this data */
 		}
 		
-		std::cout 
-		  << "midi_scheduler msg: " 
-		  << " status= "  
-		  << Pm_MessageStatus(buffer.message) 
-		  << ", data 1= "
-		  << Pm_MessageData1(buffer.message)
-		  << ", data 2= "
-		  << Pm_MessageData2(buffer.message)
-		  << std::endl;
+		// std::cout 
+		//   << "midi_scheduler msg: " 
+		//   << " status= "  
+		//   << Pm_MessageStatus(buffer.message) 
+		//   << ", data 1= "
+		//   << Pm_MessageData1(buffer.message)
+		//   << ", data 2= "
+		//   << Pm_MessageData2(buffer.message)
+		//   << std::endl;
 		  
 		itr->second->push(buffer);
 

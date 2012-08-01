@@ -32,10 +32,12 @@ const char * const MidiReceiverNode::PORT_ATTR = "port";
 MidiReceiverNode::MidiReceiverNode() :
     Node()
 {
-    this->setShortDocumentation("Receives MIDI messages from a single device.");
-    this->addOutlet(EVENTS_OUTLET, "MIDI messages (unsigned characters) flow through this outlet.");
-    this->addAttribute(Attribute::ptr(new Attribute(PORT_ATTR, Message("i", 0), "portmidi device index.")));
-    midi_input_ = new midi::Midi();
+  midi_input_->enumerate_devices();
+
+  midi_input_ = new midi::Midi();
+  this->setShortDocumentation("Receives MIDI messages from a single device.");
+  this->addOutlet(EVENTS_OUTLET, "MIDI messages (unsigned characters) flow through this outlet.");
+  this->addAttribute(Attribute::ptr(new Attribute(PORT_ATTR, Message("i", midi_input_->get_default_input_device_id()), "portmidi device index.")));
 }
 
   MidiReceiverNode::~MidiReceiverNode()
@@ -84,7 +86,7 @@ void MidiReceiverNode::doTick()
 
      while (!midi_input_->is_queue_empty(port_))
        {
-	 std::vector<unsigned int> midi_message = midi_input_->poll(port_);
+	 std::vector<unsigned char> midi_message = midi_input_->poll(port_);
 	 Message to_output_message;
 	 if (midi_message.size() == 3)
 	   {

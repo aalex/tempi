@@ -20,9 +20,9 @@
 #include "tempi/midi_output.h"
 #include <cstdlib>
 #include <iostream>
-//#include <RtMidi.h>
-#include <portmidi.h>
-#include <porttime.h>
+#include <RtMidi.h>
+// #include <portmidi.h>
+// #include <porttime.h>
 
 namespace tempi {
 namespace midi {
@@ -34,33 +34,33 @@ bool MidiOutput::isOpen() const
 
 void MidiOutput::enumerateDevices()
 {
-  ports_count_ = 0;//midi_out_->getPortCount();
+  ports_count_ = midi_out_->getPortCount();
 
-  /* list device information */
-  int i;
-  for (i = 0; i < Pm_CountDevices(); i++) {
-    const PmDeviceInfo *listinfo = Pm_GetDeviceInfo(i);
-    std::cout << i << ": " << listinfo->interf << ", " << listinfo->name ;
-    if (listinfo->input) std::cout << " (input)" << std::endl;
-    if (listinfo->output) std::cout << " (output)" << std::endl;
-  }
+  //  /* list device information */
+  // int i;
+  // for (i = 0; i < Pm_CountDevices(); i++) {
+  //   const PmDeviceInfo *listinfo = Pm_GetDeviceInfo(i);
+  //   std::cout << i << ": " << listinfo->interf << ", " << listinfo->name ;
+  //   if (listinfo->input) std::cout << " (input)" << std::endl;
+  //   if (listinfo->output) std::cout << " (output)" << std::endl;
+  // }
  
 
-   // // List inputs.
-   //  std::cout << std::endl << "MIDI output devices: " << ports_count_ << " found." << std::endl;
-   //  std::string portName;
-   //  for (unsigned int i = 0; i < ports_count_; i++)
-   //  {
-   //      try
-   //      {
-   //          portName = midi_out_->getPortName(i);
-   //      }
-   //      catch (RtError &name_error)
-   //      {
-   //          name_error.printMessage();
-   //      }
-   //      std::cout << " * " << i << " : " << portName << '\n';
-   //  }
+    // List inputs.
+     std::cout << std::endl << "MIDI output devices: " << ports_count_ << " found." << std::endl;
+     std::string portName;
+     for (unsigned int i = 0; i < ports_count_; i++)
+     {
+         try
+         {
+             portName = midi_out_->getPortName(i);
+         }
+         catch (RtError &name_error)
+         {
+             name_error.printMessage();
+         }
+         std::cout << " * " << i << " : " << portName << '\n';
+     }
 }
 
 bool MidiOutput::sendMessage(const Message &message) const
@@ -78,16 +78,16 @@ bool MidiOutput::sendMessage(const Message &message) const
                 event.push_back(message.getUnsignedChar(i));
         }
 
-        // try
-        // {
-        //     midi_out_->sendMessage(&event);
-        //     return true;
-        // }
-        // catch (RtError &error)
-        // {
-        //     error.printMessage();
-        //     return false;
-        // }
+         try
+         {
+             midi_out_->sendMessage(&event);
+             return true;
+         }
+         catch (RtError &error)
+         {
+             error.printMessage();
+             return false;
+         }
     }
     else
         return false;
@@ -102,17 +102,17 @@ MidiOutput::MidiOutput() :
 {
     // TODO: allow to change the client name using an argument or a attribute
     // RtMidiIn constructor
-    // try
-    // {
-    //     midi_out_ = new RtMidiOut(client_name_);
-    // }
-    // catch (RtError &error)
-    // {
-    //     error.printMessage();
-    //     exit(EXIT_FAILURE); //FIXME: do not exit if it fails
-    // }
-    // Check available ports vs. specified.
-  ports_count_ = 0;//midi_out_->getPortCount();
+     try
+     {
+         midi_out_ = new RtMidiOut(client_name_);
+     }
+     catch (RtError &error)
+     {
+         error.printMessage();
+         exit(EXIT_FAILURE); //FIXME: do not exit if it fails
+     }
+     // Check available ports vs. specified.
+  ports_count_ = midi_out_->getPortCount();
 }
 
 MidiOutput::~MidiOutput()
@@ -134,17 +134,17 @@ bool MidiOutput::open(unsigned int port)
         opened_ = false;
         return false;
     }
-    // try
-    // {
-    //     midi_out_->openPort(port);
-    // }
-    // catch (RtError &error)
-    // {
-    //     std::cout << "Error opening MIDI port " << port << std::endl;
-    //     error.printMessage();
-    //     opened_ = false;
-    //     return false;
-    // }
+     try
+     {
+         midi_out_->openPort(port);
+     }
+     catch (RtError &error)
+     {
+         std::cout << "Error opening MIDI port " << port << std::endl;
+         error.printMessage();
+         opened_ = false;
+         return false;
+     }
  
     opened_ = true;
     return true;

@@ -55,13 +55,18 @@ class Midi
 
   /** Prints the list of MIDI source devices. */
   void enumerate_devices() const;
+  
+  //input
   bool open_input_device(int id);
   void close_input_device(int id);
-  int get_default_output_device_id();
   int get_default_input_device_id();
-  bool is_open(int id);
   bool is_queue_empty(int id);
-  std::vector<unsigned int> poll(int id);
+  std::vector<unsigned char> poll(int id);
+
+  //ouput
+  int get_default_output_device_id();
+
+  bool is_open(int id);
 
  private:
   static MidiScheduler *sched_;

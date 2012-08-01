@@ -58,7 +58,6 @@ namespace tempi {
     bool
     Midi::open_input_device(int id)
     {
-      std::cout << " open input " << id <<std::endl;
       
       PmStream *stream = sched_->add_input_stream (id);
       
@@ -104,10 +103,10 @@ namespace tempi {
     }
     
     // return empty vector if not accessible or <status> <data1> <data2> id success
-    std::vector<unsigned int> 
+    std::vector<unsigned char> 
     Midi::poll(int id)
     {
-      std::vector<unsigned int> message;
+      std::vector<unsigned char> message;
       
       std::map<int, PmStream *>::iterator it = openned_streams_.find(id);
       if ( it == openned_streams_.end())
@@ -116,9 +115,9 @@ namespace tempi {
 	  return message;
 	}
       PmEvent event = sched_->poll (it->second);
-      message.push_back (Pm_MessageStatus(event.message));
-      message.push_back (Pm_MessageData1(event.message));
-      message.push_back (Pm_MessageData2(event.message));
+      message.push_back ((unsigned char)Pm_MessageStatus(event.message));
+      message.push_back ((unsigned char)Pm_MessageData1(event.message));
+      message.push_back ((unsigned char)Pm_MessageData2(event.message));
       
       return message;
     } 
