@@ -8,7 +8,7 @@
     </node>
     <node name="midiout0" class="base.midi.output">
       <attribute name="port">
-        <i>5</i>
+        <i>4</i>
       </attribute>
     </node>
     <connection from="midireceive0" outlet="0" to="midiout0" inlet="0" />

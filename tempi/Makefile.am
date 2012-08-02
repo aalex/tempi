@@ -8,7 +8,7 @@ AM_CXXFLAGS = \
     -I$(top_srcdir) \
     -I$(top_srcdir)/plugins-base \
     -I$(top_srcdir)/tempi \
-    -DPMALSA \
+    $(PORTMIDI_CFLAGS) \
     $(RTMIDI_CFLAGS)
 
 # XXX BOOST_FILESYSTEM_LIBS must be after BOOST_SYSTEM_LIBS
@@ -22,7 +22,7 @@ AM_LIBS = \
     $(LIBXML_LIBS) \
     $(LOG4CPP_LIBS) \
     $(RTMIDI_LIBS) \
-    -lasound  -lportmidi -lporttime -lpthread -lm
+    $(PORTMIDI_LIBS)
 
 # this file is not installed, just included by .cpp files at compile time.
 EXTRA_DIST = config.h

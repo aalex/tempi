@@ -105,6 +105,25 @@ AC_CHECK_LIB([m],[sqrt])
 # Checks for header files.
 AC_CHECK_HEADERS([arpa/inet.h stddef.h stdlib.h string.h sys/time.h])
 
+# portmidi
+AC_CHECK_HEADERS([portmidi.h porttime.h], have_portmidi_headers=true, have_portmidi_headers=false)
+if test "x${have_portmidi_headers}" = "xfalse" ; then
+    AC_MSG_ERROR([missing portmidi headers, install libportmidi-dev])
+fi
+AC_CHECK_LIB([portmidi],[Pm_Initialize], have_portmidi=true, have_portmidi=false)
+if test "x${have_portmidi}" = "xfalse" ; then
+    AC_MSG_ERROR([missing portmidi library, install libportmidi-dev])
+fi
+AC_CHECK_LIB([porttime],[Pt_Time], have_porttime=true, have_porttime=false)
+if test "x${have_porttime}" = "xfalse" ; then
+    AC_MSG_ERROR([missing porttime library, install libportmidi-dev])
+fi
+PORTMIDI_CFLAGS="-DPMALSA"
+AC_SUBST([PORTMIDI_CFLAGS], "$PORTMIDI_CFLAGS")
+PORTMIDI_LIBS="-lportmidi -lporttime -lpthread -lm"
+AC_SUBST([PORTMIDI_LIBS], "$PORTMIDI_LIBS")
+
+
 # Checks for library functions.
 AC_FUNC_ERROR_AT_LINE
 AC_CHECK_FUNCS([gettimeofday memmove mkdir setenv sqrt strchr strpbrk uname])
