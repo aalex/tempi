@@ -30,22 +30,22 @@ AM_LIBS = \
 LDADD = $(top_builddir)/tempi/libtempi-@TEMPI_API_VERSION@.la
 
 # use lib_LTLIBRARIES to build a shared lib:
-lib_LTLIBRARIES = libtempi-plugins-base.la
+lib_LTLIBRARIES = libtempi-@TEMPI_API_VERSION@-plugins-base.la
 
 ## Instruct libtool to include ABI version information in the generated shared
 ## library file (.so).  The library ABI version is defined in configure.ac, so
 ## that all version information is kept in one place.
-libtempi_plugins_base_la_LDFLAGS = -export-dynamic -version-info $(TEMPI_LT_VERSION) $(AM_LIBS) $(LDADD)
-libtempi_plugins_base_la_LIBS = $(AM_LIBS)
-libtempi_plugins_base_la_CXXFLAGS = $(AM_CXXFLAGS)
-libtempi_plugins_base_la_includedir = $(includedir)/tempi-$(TEMPI_API_VERSION)
+libtempi_@TEMPI_API_VERSION@_plugins_base_la_LDFLAGS = -export-dynamic -version-info $(TEMPI_LT_VERSION) $(AM_LIBS) $(LDADD)
+libtempi_@TEMPI_API_VERSION@_plugins_base_la_LIBS = $(AM_LIBS)
+libtempi_@TEMPI_API_VERSION@_plugins_base_la_CXXFLAGS = $(AM_CXXFLAGS)
+libtempi_@TEMPI_API_VERSION@_plugins_base_la_includedir = $(includedir)/tempi-$(TEMPI_API_VERSION)
 
 ## Define the source file list for the "libtempi-@TEMPI_API_VERSION@.la"
 ## target.  Note that @TEMPI_API_VERSION@ is not interpreted by Automake and
 ## will therefore be treated as if it were literally part of the target name,
 ## and the variable name derived from that.
 ## PLEASE KEEP THEM IN ALPHABETICAL ORDER
-libtempi_plugins_base_la_SOURCES = \
+libtempi_@TEMPI_API_VERSION@_plugins_base_la_SOURCES = \
     3d/3dcomparenode.cpp \
 	abstraction/abstractionnode.cpp \
 	abstraction/inletnode.cpp \

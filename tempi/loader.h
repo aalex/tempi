@@ -49,6 +49,7 @@ class Loader
         static const char * const FILE_SUFFIX;
         static const char * const FUNC_PREFIX;
         static const char * const FUNC_SUFFIX;
+        static const char * const PLUGINS_STR;
         // Private constructor
         Loader();
         bool hasPath(const char *path);
