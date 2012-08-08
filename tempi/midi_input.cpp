@@ -52,7 +52,7 @@ void MidiInput::input_message_cb(double /* delta_time */, std::vector<unsigned c
 
 void MidiInput::process_midi(PtTimestamp timestamp, void *user_data)
 {
-    std::cout << "coucou" << std::endl;
+    //std::cout << "coucou" << std::endl;
     MidiInput* context = static_cast<MidiInput*>(user_data);
     
     PmError result;
@@ -61,7 +61,7 @@ void MidiInput::process_midi(PtTimestamp timestamp, void *user_data)
     /* do nothing until initialization completes */
     if (! context->portmidi_initialized_)
     {
-        std::cout << "exit flag" << std::endl; 
+        std::cout << "portmidi is not initialized" << std::endl; 
         /*   this flag signals that no more midi processing will be done */
         context->process_midi_exit_flag_ = true;
         return;
@@ -160,7 +160,7 @@ MidiInput::MidiInput() :
     opened_(false),
     port_(0),
     ports_count_(0),
-    //     client_name_("tempi.midi.in"),
+    // client_name_("tempi.midi.in"),
     messaging_queue_(),
     portmidi_initialized_(false),
     app_sysex_in_progress_(false),
