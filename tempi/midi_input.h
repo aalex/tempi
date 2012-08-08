@@ -42,7 +42,7 @@
 namespace tempi {
 namespace midi {
 
-/** 
+/**
  * MIDI input using RtMidi.
  */
 class MidiInput
@@ -53,9 +53,9 @@ class MidiInput
         ~MidiInput();
         /** Opens a MIDI source device. */
         bool open(unsigned int port);
-	bool open(); //default input device
-	unsigned int getDefaultInputDevice();
-	unsigned int getPort() const;
+        bool open(); //default input device
+        unsigned int getDefaultInputDevice();
+        unsigned int getPort() const;
         /** Prints the list of MIDI source devices. */
         void enumerateDevices() const;
         // TODO: std::vector<boost::tuple<unsigned int, std::string> > enumerateDevices();
@@ -70,21 +70,21 @@ class MidiInput
         bool opened_;
         unsigned int port_;
         unsigned int ports_count_;
-	//        std::string client_name_;
+        //        std::string client_name_;
         ConcurrentQueue<Message> messaging_queue_;
-	//the midi in
-	PmStream *midi_in_;
-	/* process_midi_exit_flag is set when the timer thread shuts down */
-	bool process_midi_exit_flag_;
-	bool portmidi_initialized_;
-	bool app_sysex_in_progress_;
-	bool thru_sysex_in_progress_;
-	// methods:
+        //the midi in
+        PmStream *midi_in_;
+        /* process_midi_exit_flag is set when the timer thread shuts down */
+        bool process_midi_exit_flag_;
+        bool portmidi_initialized_;
+        bool app_sysex_in_progress_;
+        bool thru_sysex_in_progress_;
+        // methods:
         void pushMessage(const Message &message);
-	static void process_midi(PtTimestamp timestamp, void *userData);
+        static void process_midi(PtTimestamp timestamp, void *userData);
         static void input_message_cb(double delta_time,
-				     std::vector<unsigned char> *message, 
-				     void *user_data);
+            std::vector<unsigned char> *message,
+            void *user_data);
 };
 
 } // end of namespace
