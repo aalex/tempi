@@ -207,7 +207,7 @@ bool App::togglePlayback()
         clutter_rectangle_set_color(CLUTTER_RECTANGLE(playback_button_), &gray);
     
     tempi::ScopedLock::ptr lock = engine_->acquireLock();
-    engine_->getGraph("graph0")->setNodeAttribute("sampler.sampler0", "playing", tempi::Message("b", isPlaying()));
+    engine_->getGraph("graph0")->setNodeAttribute("sampler.simple0", "playing", tempi::Message("b", isPlaying()));
     return isPlaying();
 }
 
@@ -231,7 +231,7 @@ bool App::toggleRecord()
     }
 
     tempi::ScopedLock::ptr lock = engine_->acquireLock();
-    engine_->getGraph("graph0")->setNodeAttribute("sampler.sampler0", "recording", tempi::Message("b", isRecording()));
+    engine_->getGraph("graph0")->setNodeAttribute("sampler.simple0", "recording", tempi::Message("b", isRecording()));
     return isRecording();
 }
 
@@ -277,7 +277,7 @@ bool App::setupGraph()
         std::cout << "Add nodes\n";
     // Create objects:
     graph->addNode("base.osc.receive", "osc.recv0");
-    graph->addNode("base.sampler.sampler", "sampler.sampler0");
+    graph->addNode("base.sampler.simple", "sampler.simple0");
     graph->addNode("base.osc.send", "osc.send0");
     graph->addNode("base.flow.print", "base.print0");
     graph->addNode("base.flow.print", "base.print1");
@@ -287,9 +287,9 @@ bool App::setupGraph()
         std::cout << "Connect nodes\n";
     // Connections:
     graph->connect("osc.recv0", "incoming", "base.print0", "0");
-    graph->connect("osc.recv0", "incoming", "sampler.sampler0", "0");
-    graph->connect("sampler.sampler0", "0", "osc.send0", "0");
-    graph->connect("sampler.sampler0", "0", "base.print1", "0");
+    graph->connect("osc.recv0", "incoming", "sampler.simple0", "0");
+    graph->connect("sampler.simple0", "0", "osc.send0", "0");
+    graph->connect("sampler.simple0", "0", "base.print1", "0");
     // Set node attributes:
     if (verbose_)
         std::cout << "Set node attributes\n";
