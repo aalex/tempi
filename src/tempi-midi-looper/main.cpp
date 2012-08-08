@@ -283,16 +283,16 @@ bool App::togglePlayback()
         clutter_rectangle_set_color(CLUTTER_RECTANGLE(playback_button_), &gray);
     
     tempi::ScopedLock::ptr lock = engine_->acquireLock();
-    engine_->getGraph("graph0")->setNodeAttribute("sampler.sampler0", "playing", tempi::Message("b", isPlaying()));
-    engine_->getGraph("graph0")->setNodeAttribute("sampler.sampler1", "playing", tempi::Message("b", isPlaying()));
-    engine_->getGraph("graph0")->setNodeAttribute("sampler.sampler2", "playing", tempi::Message("b", isPlaying()));
-    engine_->getGraph("graph0")->setNodeAttribute("sampler.sampler3", "playing", tempi::Message("b", isPlaying()));
-    engine_->getGraph("graph0")->setNodeAttribute("sampler.sampler4", "playing", tempi::Message("b", isPlaying()));
-    engine_->getGraph("graph0")->setNodeAttribute("sampler.sampler5", "playing", tempi::Message("b", isPlaying()));
-    engine_->getGraph("graph0")->setNodeAttribute("sampler.sampler6", "playing", tempi::Message("b", isPlaying()));
-    engine_->getGraph("graph0")->setNodeAttribute("sampler.sampler7", "playing", tempi::Message("b", isPlaying()));
-    engine_->getGraph("graph0")->setNodeAttribute("sampler.sampler8", "playing", tempi::Message("b", isPlaying()));
-    engine_->getGraph("graph0")->setNodeAttribute("sampler.sampler9", "playing", tempi::Message("b", isPlaying()));
+    engine_->getGraph("graph0")->setNodeAttribute("sampler.simple0", "playing", tempi::Message("b", isPlaying()));
+    engine_->getGraph("graph0")->setNodeAttribute("sampler.simple1", "playing", tempi::Message("b", isPlaying()));
+    engine_->getGraph("graph0")->setNodeAttribute("sampler.simple2", "playing", tempi::Message("b", isPlaying()));
+    engine_->getGraph("graph0")->setNodeAttribute("sampler.simple3", "playing", tempi::Message("b", isPlaying()));
+    engine_->getGraph("graph0")->setNodeAttribute("sampler.simple4", "playing", tempi::Message("b", isPlaying()));
+    engine_->getGraph("graph0")->setNodeAttribute("sampler.simple5", "playing", tempi::Message("b", isPlaying()));
+    engine_->getGraph("graph0")->setNodeAttribute("sampler.simple6", "playing", tempi::Message("b", isPlaying()));
+    engine_->getGraph("graph0")->setNodeAttribute("sampler.simple7", "playing", tempi::Message("b", isPlaying()));
+    engine_->getGraph("graph0")->setNodeAttribute("sampler.simple8", "playing", tempi::Message("b", isPlaying()));
+    engine_->getGraph("graph0")->setNodeAttribute("sampler.simple9", "playing", tempi::Message("b", isPlaying()));
     return isPlaying();
 }
 
@@ -319,7 +319,7 @@ bool App::toggleRecord()
 
     // Build node name
     std::ostringstream os;
-    os << "sampler.sampler" << recording_track_;
+    os << "sampler.simple" << recording_track_;
     engine_->getGraph("graph0")->setNodeAttribute(os.str().c_str(), "recording", tempi::Message("b", isRecording()));
     return isRecording();
 }
@@ -373,8 +373,8 @@ bool App::setupGraph()
     for (int i = 0; i < 10; i++)
     {
         std::ostringstream os;
-        os << "sampler.sampler" << i;
-        graph->addNode("base.sampler.sampler", os.str().c_str());
+        os << "sampler.simple" << i;
+        graph->addNode("base.sampler.simple", os.str().c_str());
     }
 
     graph->tick(); // calls Node::init() on each node.
@@ -387,12 +387,12 @@ bool App::setupGraph()
     for (int i = 0; i < 10; i++)
     {
         std::ostringstream os;
-        os << "sampler.sampler" << i;
+        os << "sampler.simple" << i;
         graph->connect("midi.recv0", "0", os.str().c_str(), "0");
         graph->connect(os.str().c_str(), "0", "midi.send0", "0");
         graph->connect(os.str().c_str(), "0", "base.print1", "0");
     }
-    //TODO graph->connect("sampler.sampler0", 0, "base.prepend0", 0);
+    //TODO graph->connect("sampler.simple0", 0, "base.prepend0", 0);
     // Set node attributes:
     if (verbose_)
         std::cout << "Set node attributes\n";

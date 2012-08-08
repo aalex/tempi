@@ -139,7 +139,7 @@ void BaseLibrary::load(NodeFactory &factory, const char * /*prefix*/) const
     factory.registerTypeT<OscRouteNode>(concatenate(prefix, "osc.route").c_str());
 
     factory.registerTypeT<SamplerSampleNode>(concatenate(prefix, "sampler.sample").c_str());
-    factory.registerTypeT<SamplerNode>(concatenate(prefix, "sampler.sampler").c_str());
+    factory.registerTypeT<SamplerNode>(concatenate(prefix, "sampler.simple").c_str());
     factory.registerTypeT<SamplerReadNode>(concatenate(prefix, "sampler.read").c_str());
     factory.registerTypeT<SamplerWriteNode>(concatenate(prefix, "sampler.write").c_str());
 
