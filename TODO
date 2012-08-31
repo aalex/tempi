@@ -8,6 +8,7 @@ Packaging
 
 To do for 0.2
 -------------
+* Counter: rename count attr to initial_count and make count not-an-attr
 * [flow.map]
 * [3d.speed]
 * [3d.orientation]
