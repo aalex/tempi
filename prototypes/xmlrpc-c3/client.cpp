@@ -35,22 +35,34 @@ int main(int argc, char **)
             xmlrpc_c::clientXmlTransport_curl::constrOpt()
                 .timeout(10000)  // milliseconds
                 .user_agent("sample_add/1.0"));
-        xmlrpc_c::client_xml myClient(&myTransport);
-        std::string const methodName("sample.add");
 
+        xmlrpc_c::client_xml myClient(&myTransport);
+
+        // call sample.add 5 7
         xmlrpc_c::paramList sampleAddParms;
         sampleAddParms.add(xmlrpc_c::value_int(5));
         sampleAddParms.add(xmlrpc_c::value_int(7));
+        std::string const methodName("sample.add");
         xmlrpc_c::rpcPtr myRpcP(methodName, sampleAddParms);
+
+        // call metro.tempo <value>
+        xmlrpc_c::paramList metro_params;
+        metro_params.add(xmlrpc_c::value_int(500));
+        std::string const metro_methodName("metro.tempo");
+        xmlrpc_c::rpcPtr myRpcMetro(metro_methodName, metro_params);
+
 
         std::string const serverUrl("http://localhost:8080/RPC2");
 
         xmlrpc_c::carriageParm_curl0 myCarriageParm(serverUrl);
         myRpcP->call(&myClient, &myCarriageParm);
+        myRpcMetro->call(&myClient, &myCarriageParm);
 
+        assert(myRpcMetro->isFinished());
         assert(myRpcP->isFinished());
 
         int const sum(xmlrpc_c::value_int(myRpcP->getResult()));
+        int const whatever(xmlrpc_c::value_int(myRpcMetro->getResult()));
             // Assume the method returned an integer; throws error if not
 
         std::cout << "Result of RPC (sum of 5 and 7): " << sum << std::endl;
