@@ -148,9 +148,9 @@ if test "x${have_log4cpp}" = "xfalse" ; then
     AC_MSG_ERROR([missing package: liblog4cpp5-dev])
 fi
 
-PKG_CHECK_MODULES([SPATOSC], [spatosc-0.3], have_spatosc=true, have_spatosc=false)
+PKG_CHECK_MODULES([SPATOSC], [spatosc-0.4], have_spatosc=true, have_spatosc=false)
 if test "x${have_spatosc}" = "xfalse" ; then
-    AC_MSG_WARN([missing package: libspatosc-0.3-dev])
+    AC_MSG_WARN([missing package: libspatosc-dev])
 else
     AC_DEFINE(HAVE_SPATOSC,[1],[SpatOSC headers successfully detected])
 fi
