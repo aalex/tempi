@@ -3,30 +3,30 @@
     <states default="walking">
         <state name="walking">
             <rules>
-                <rule event="scared" action="goto" arg="running" />
+                <rule event="scared" action="__goto__" arg="running" />
             </rules>
         </state>
         <state name="running">
             <rules>
-                <rule event="attacked" action="goto" arg="fighting" />
+                <rule event="attacked" action="__goto__" arg="fighting" />
             </rules>
         </state>
         <state name="fighting">
             <rules>
-                <rule event="onLeave" action="goto" arg="walking" />
-                <rule event="attacked" action="goto" arg="fight" />
+                <rule event="__onLeave__" action="__goto__" arg="walking" />
+                <rule event="attacked" action="__goto__" arg="fight" />
             </rules>
             <states>
                 <state name="attacking">
                     <rules>
-                        <rule event="hit" action="goto" arg="deflecting" />
-                        <rule event="onLeave" action="goto" arg="walking" />
-                        <rule event="enemy killed" action="pop" />
+                        <rule event="hit" action="__goto__" arg="deflecting" />
+                        <rule event="__onLeave__" action="__goto__" arg="walking" />
+                        <rule event="enemy killed" action="__pop__" />
                     </rules>
                 </state>
                 <state name="deflecting">
                     <rules>
-                        <rule event="fail" action="goto" arg="fight" />
+                        <rule event="fail" action="__goto__" arg="fight" />
                     </rules>
                 </state>
             </states>
