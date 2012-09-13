@@ -99,7 +99,6 @@ class App
         std::string file_name_;
         tempi::ThreadedScheduler::ptr engine_; // FIXME
         tempi::Graph::ptr graph_; // FIXME
-        tempi::serializer::Serializer::ptr saver_; // FIXME
         bool saveGraph(); // FIXME
         ClutterActor *stage_;
     private:
@@ -126,7 +125,7 @@ bool SaveCommand::apply(App &app)
     tempi::Logger::log(tempi::WARNING, "will save the graph.");
     tempi::ScopedLock::ptr lock = app.engine_->acquireLock();
     tempi::Graph::ptr graph = app.graph_;
-    bool ok = app.saver_->save(*graph.get(), app.file_name_.c_str());
+    bool ok = tempi::serializer::Serializer::save(*graph.get(), app.file_name_.c_str());
     if (ok)
         tempi::Logger::log(tempi::INFO, "Successfully saved the graph..");
     else
@@ -362,7 +361,7 @@ bool App::setupGraph()
         return true;
     }
     // Check for XML file
-    if (! this->saver_->fileExists(this->file_name_.c_str()))
+    if (! tempi::serializer::Serializer::fileExists(this->file_name_.c_str()))
     {
         std::cerr << "miller: ERROR: File \"" << this->file_name_ << "\" not found!\n";
         return false;
@@ -379,7 +378,7 @@ bool App::setupGraph()
     graph_ = engine_->getGraph(GRAPH_NAME);
 
     // load graph
-    saver_->load(*graph_.get(), this->file_name_.c_str());
+    tempi::serializer::Serializer::load(*graph_.get(), this->file_name_.c_str());
     graph_->tick(); // FIXME
 
     this->drawGraph();
