@@ -68,10 +68,10 @@ class App
         static const char * const OSC_RECV_PORT_ATTR;
 };
 
-const char * const App::NOP_NODE = "base.nop";
-const char * const App::OSC_RECV_NODE = "osc.receive";
+const char * const App::NOP_NODE = "base.flow.nop";
+const char * const App::OSC_RECV_NODE = "base.osc.receive";
 const char * const App::OSC_RECV_OUTLET = "incoming";
-const char * const App::OSC_SEND_NODE = "osc.send";
+const char * const App::OSC_SEND_NODE = "base.osc.send";
 const char * const App::OSC_SEND_HOST_PORT_ATTR = "host_port";
 const char * const App::OSC_RECV_PORT_ATTR = "port";
 
