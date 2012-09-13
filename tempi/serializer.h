@@ -96,6 +96,12 @@ class Serializer
          * @return success
          */
         static bool createDirectory(const char *dirname);
+        /**
+         * Cleans up XML backend specific memory usage.
+         * Call before exiting your app.
+         * Watch out : it's not thread-safe!
+         */
+        static bool cleanup();
 };
 
         // TODO: isADirectory
