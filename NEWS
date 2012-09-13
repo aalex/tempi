@@ -6,10 +6,15 @@ Tempi 0.1.18 (2012-0?-??)
 This release is a developer snapshot in the 0.1 series.
 
 New features:
-* (none)
+* Update spatosc API to 0.4
+* Add API version to name of plugins shared libraries
+* Rename sampler.sampler to sampler.simple
+* Miller: F1 shows help
 
 Bugs fixed:
-* (none)
+* tempi-osc-forward: fix node type names
+* Fix 100^ CPU usage in tempi-launch and miller
+* Miller: Fix the bad connection position
 
 New prototypes and documentation:
 * (none)
