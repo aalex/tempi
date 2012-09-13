@@ -245,15 +245,6 @@ int TempiLauncher::parse_options(int argc, char **argv)
     return -1;
 }
 
-static gboolean on_idle(gpointer data)
-{
-    g_usleep(1000000);
-    TempiLauncher *app = (TempiLauncher *) data;
-    (void) app;
-    //if (app->getVerbose())
-    //   std::cout << __FUNCTION__ << std::endl;
-    return TRUE; // stay registered
-}
 
 int main(int argc, char *argv[])
 {
@@ -281,7 +272,7 @@ int main(int argc, char *argv[])
 
     g_thread_init(NULL);
     GMainLoop *mainLoop = g_main_loop_new(NULL, FALSE);
-    g_idle_add(on_idle, (gpointer) &app);
+    //g_idle_add(on_idle, (gpointer) &app);
     tempi::Logger::log(DEBUG, "Run main loop.");
     g_main_loop_run(mainLoop);
     g_main_loop_unref(mainLoop);

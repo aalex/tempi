@@ -236,6 +236,7 @@ gboolean App::on_idle(gpointer data)
     }
     // FIXME: seems to crash
     //clutter_threads_leave();
+    g_usleep(1000);
     return TRUE;
 }
 
@@ -312,7 +313,7 @@ void App::drawGraph()
     clutter_actor_set_name(connections_actor, CONNECTIONS_ACTOR);
     clutter_container_add_actor(CLUTTER_CONTAINER(stage_), connections_actor);
     clutter_actor_show(connections_actor);
-    
+
     updateAllConnectionsGeometry(connections_actor, clutter_container_find_child_by_name(CLUTTER_CONTAINER(stage_), NODES_GROUP), *graph_.get());
 }
 
@@ -374,7 +375,7 @@ bool App::setupGraph()
     }
     //if (verbose_)
     //    std::cout << (*engine_.get()) << std::endl;
-    
+
     graph_ = engine_->getGraph(GRAPH_NAME);
 
     // load graph
@@ -443,7 +444,7 @@ bool App::createGUI()
     }
     else
     {
-        std::cerr << "App::" << __FUNCTION__ << ": Stage already created.\n"; 
+        std::cerr << "App::" << __FUNCTION__ << ": Stage already created.\n";
         return false;
     }
     stage_ = clutter_stage_get_default();
@@ -453,7 +454,7 @@ bool App::createGUI()
     g_signal_connect(stage_, "destroy", G_CALLBACK(clutter_main_quit), NULL);
     g_signal_connect(G_OBJECT(stage_), "fullscreen", G_CALLBACK(on_fullscreen), this);
     g_signal_connect(G_OBJECT(stage_), "unfullscreen", G_CALLBACK(on_unfullscreen), this);
-    
+
     // timeline to attach a callback for each frame that is rendered
     ClutterTimeline *timeline;
     timeline = clutter_timeline_new(60); // ms
