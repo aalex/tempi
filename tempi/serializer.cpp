@@ -583,6 +583,11 @@ bool Serializer::load(sampler::Region &region, const char *filename)
     return true;
 }
 
+bool Serializer::cleanup()
+{
+    xmlCleanupParser();
+}
+
 } // end of namespace
 } // end of namespace
 
