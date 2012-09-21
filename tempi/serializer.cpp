@@ -8,12 +8,12 @@
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * Tempi is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -90,7 +90,7 @@ static TimePosition stringToTimePosition(const char *event_time)
 
 bool node_name_is(xmlNode *node, const std::string &name)
 {
-    return (node->type == XML_ELEMENT_NODE && node->name && 
+    return (node->type == XML_ELEMENT_NODE && node->name &&
         (xmlStrcmp(node->name, XMLSTR name.c_str()) == 0));
 }
 
@@ -160,7 +160,7 @@ bool save_nodes(xmlNodePtr graph_node, Graph &graph)
         xmlNodePtr node_node = xmlNewChild(graph_node, NULL, XMLSTR NODE_NODE, NULL);
         // node type attribute
         Node::ptr node = graph.getNode((*iter).c_str());
-        xmlNewProp(node_node, XMLSTR NODE_CLASS_PROPERTY, 
+        xmlNewProp(node_node, XMLSTR NODE_CLASS_PROPERTY,
             XMLSTR node->getTypeName().c_str());
         // and its id
         xmlNewProp(node_node, XMLSTR NODE_ID_PROPERTY, XMLSTR (*iter).c_str());
@@ -169,9 +169,9 @@ bool save_nodes(xmlNodePtr graph_node, Graph &graph)
         std::vector<std::string>::const_iterator iter2;
         for (iter2 = attribute_names.begin(); iter2 != attribute_names.end(); ++iter2)
         {
-            xmlNodePtr attr_node = xmlNewChild(node_node, NULL, 
+            xmlNodePtr attr_node = xmlNewChild(node_node, NULL,
                 XMLSTR ATTRIBUTE_NODE, NULL);
-            xmlNewProp(attr_node, XMLSTR ATTRIBUTE_NAME_PROPERTY, 
+            xmlNewProp(attr_node, XMLSTR ATTRIBUTE_NAME_PROPERTY,
                 XMLSTR (*iter2).c_str());
             Message attr_value = node->getAttributeValue((*iter2).c_str());
             save_message(attr_node, attr_value);
@@ -192,10 +192,10 @@ bool Serializer::save(Graph &graph, const char *filename)
     // "graph" node:
     xmlNodePtr graph_node = xmlNewChild(root_node, NULL, XMLSTR GRAPH_NODE, NULL);
     // TODO: add Graph name attribute
-    // nodes node: 
+    // nodes node:
     //xmlNodePtr nodes_node = xmlNewChild(graph_node, NULL, XMLSTR NODES_NODE, NULL);
     save_nodes(graph_node, graph);
-    
+
     // connections
     save_connections(graph_node, graph);
 
@@ -209,7 +209,6 @@ bool Serializer::save(Graph &graph, const char *filename)
     // Free the document + global variables that may have been
     // allocated by the parser.
     xmlFreeDoc(doc);
-    xmlCleanupParser();
     return true;
 }
 
@@ -347,10 +346,10 @@ bool load_graph(xmlNodePtr graph_node, Graph &graph)
         if (node_name_is(node_node, NODE_NODE))
         { // is a node
             // TODO: check if it has the property
-            xmlChar *node_type = xmlGetProp(node_node, 
+            xmlChar *node_type = xmlGetProp(node_node,
                 XMLSTR NODE_CLASS_PROPERTY);
             // TODO: check if it has the property
-            xmlChar *node_name = xmlGetProp(node_node, 
+            xmlChar *node_name = xmlGetProp(node_node,
                 XMLSTR NODE_ID_PROPERTY);
             {
                 std::ostringstream os;
@@ -383,7 +382,7 @@ bool load_region(xmlNodePtr region_node, sampler::Region &region)
         if (node_name_is(event_node, EVENT_NODE))
         { // is an event
             // TODO: check if it has the property
-            xmlChar *event_time = xmlGetProp(event_node, 
+            xmlChar *event_time = xmlGetProp(event_node,
                 XMLSTR EVENT_TIMEPOSITION_PROPERTY);
             {
                 std::ostringstream os;
@@ -453,7 +452,6 @@ bool Serializer::load(Graph &graph, const char *filename)
     }
     // Free the document + global variables that may have been allocated by the parser.
     xmlFreeDoc(doc);
-    xmlCleanupParser();
     return true;
 }
 
@@ -487,7 +485,7 @@ bool save_message(xmlNodePtr message_node, const Message &value)
         try
         {
             atom_value = utils::argumentToString(value, i);
-            xmlNodePtr atom_node = xmlNewChild(message_node, NULL, 
+            xmlNodePtr atom_node = xmlNewChild(message_node, NULL,
                 XMLSTR atom_type.c_str(), XMLSTR atom_value.c_str());
         }
         catch (const BadAtomTypeException &e)
@@ -508,7 +506,7 @@ bool save_region(xmlNodePtr root_node, sampler::Region &region)
         xmlNodePtr event_node = xmlNewChild(region_node, NULL, XMLSTR EVENT_NODE, NULL);
         sampler::Region::Event event = (*iter);
         std::string pos = boost::lexical_cast<std::string>(event.get<0>());
-        xmlNewProp(event_node, XMLSTR EVENT_TIMEPOSITION_PROPERTY, 
+        xmlNewProp(event_node, XMLSTR EVENT_TIMEPOSITION_PROPERTY,
             XMLSTR pos.c_str());
         Message value = (*iter).get<1>();
         save_message(event_node, value);
@@ -535,7 +533,6 @@ bool Serializer::save(sampler::Region &region, const char *filename)
     // Free the document + global variables that may have been
     // allocated by the parser.
     xmlFreeDoc(doc);
-    xmlCleanupParser();
     return true;
 }
 
@@ -583,8 +580,12 @@ bool Serializer::load(sampler::Region &region, const char *filename)
     }
     // Free the document + global variables that may have been allocated by the parser.
     xmlFreeDoc(doc);
-    xmlCleanupParser();
     return true;
+}
+
+bool Serializer::cleanup()
+{
+    xmlCleanupParser();
 }
 
 } // end of namespace

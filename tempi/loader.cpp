@@ -18,6 +18,7 @@
  */
 
 #include "tempi/loader.h"
+#include "tempi/config.h"
 #include "tempi/log.h"
 //TODO #include "tempi/config.h"
 #include <dlfcn.h>
@@ -106,7 +107,7 @@ bool Loader::load(NodeFactory &factory, const char *name)
     {
         std::string prefix(*iter);
         std::string fileName;
-        fileName = prefix + "/" + FILE_PREFIX + name + FILE_SUFFIX;
+        fileName = prefix + "/" + FILE_PREFIX + TEMPI_API_VERSION + PLUGINS_STR + name + FILE_SUFFIX;
         {
             std::ostringstream os;
             os << __FUNCTION__ << ": Trying " << fileName;
@@ -189,7 +190,8 @@ bool Loader::hasPath(const char *path)
     return false;
 }
 
-const char * const Loader::FILE_PREFIX = "libtempi-plugins-";
+const char * const Loader::FILE_PREFIX = "libtempi-";
+const char * const Loader::PLUGINS_STR = "-plugins-";
 const char * const Loader::FILE_SUFFIX = ".so"; // TODO: if Linux
 const char * const Loader::FUNC_PREFIX = "tempi_";
 const char * const Loader::FUNC_SUFFIX = "_setup";

@@ -8,6 +8,7 @@ Packaging
 
 To do for 0.2
 -------------
+* Counter: rename count attr to initial_count and make count not-an-attr
 * [flow.map]
 * [3d.speed]
 * [3d.orientation]
@@ -69,7 +70,6 @@ To do for 0.4
 * Atom types: replace switch/case by a hierarchy of classes
 * Allow range for int attributes?
 * abstractions and tempi-launch: watch for changes in files with GFileMonitor
-* serializer: write class before node name
 * create a validator for XML schemas
 * make documentation strings common to all objects of a same type to save memory use
 * allow pads to have types
@@ -81,7 +81,6 @@ To do for 0.4
 * Handle objects renaming
 * Regions have mapping modifiers. (range, clip, etc.)
 * Regions have follow actions. (nothing, stop, play again, previous, next, first, last, any, other)
-* Create libraries of nodes (tempi-plugins-base)
 * Enclose signals as private data member. Provide accessors to it, or allow to add callbacks to it.
 * Improve FilterNode to explode arrays and make sure they are doubles, not floats.
 * Feature: allow to configure externals with an XML config file. (system-wide, then user-specific)

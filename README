@@ -1,11 +1,5 @@
-::
-_                       _ 
-  | |_ ___ _ __ ___  _ __ (_)
-  | __/ _ \ '_ ` _ \| '_ \| |
-  | ||  __/ | | | | | |_) | |
-   \__\___|_| |_| |_| .__/|_|
-                    |_|
-
+Tempi
+=====
 
 About
 -----
@@ -43,7 +37,9 @@ http://tempi.toonloop.com/
 
 The source code is currently managed at http://code.sat.qc.ca/redmine/projects/tempi
 
-git clone https://github.com/aalex/tempi.git
+To clone::
+
+  git clone https://github.com/aalex/tempi.git
 
 
 Sponsors
@@ -56,13 +52,13 @@ Installation
 ------------
 Here is how to build and install it on Debian GNU/Linux or Ubuntu::
 
-  $ sudo apt-get install help2man gettext automake bison build-essential flex libtool 
-  $ sudo apt-get install libxml2-dev libclutter-1.0-dev libglib2.0-dev libboost-all-dev librtmidi-dev liblo0-dev liblog4cpp5-dev libportmidi-dev
-  $ ./autogen.sh
-  $ ./configure
-  $ make
-  $ sudo make install
-  $ sudo ldconfig
+  sudo apt-get install help2man gettext automake bison build-essential flex libtool 
+  sudo apt-get install libxml2-dev libclutter-1.0-dev libglib2.0-dev libboost-all-dev librtmidi-dev liblo0-dev liblog4cpp5-dev
+  ./autogen.sh
+  ./configure
+  make
+  sudo make install
+  sudo ldconfig
 
 
 More about dataflow programming

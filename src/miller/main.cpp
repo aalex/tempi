@@ -58,6 +58,7 @@ static const char * const PROGRAM_NAME = "miller";
 static const char * const GRAPH_NAME = "graph0";
 static const char * const NODES_GROUP = "group0";
 static const char * const CONNECTIONS_ACTOR = "connections0";
+static const char * const HELP_TEXT_ACTOR = "help0";
 
 // Static functions:
 static void key_event_cb(ClutterActor *actor, ClutterKeyEvent *event, gpointer user_data);
@@ -102,7 +103,7 @@ class App
          */
         bool poll();
         void toggle_fullscreen();
-        void toggle_help() {}
+        void toggle_help();
     private:
         bool verbose_;
         bool debug_;
@@ -114,7 +115,6 @@ class App
         std::string file_name_;
         tempi::ThreadedScheduler::ptr engine_; // FIXME
         tempi::Graph::ptr graph_; // FIXME
-        tempi::serializer::Serializer::ptr saver_; // FIXME
         bool saveGraph(); // FIXME
         ClutterActor *stage_;
     private:
@@ -127,12 +127,21 @@ class App
         static gboolean on_group0_scrolled(ClutterActor *actor, ClutterEvent *event, gpointer user_data);
 };
 
+void App::toggle_help()
+{
+    ClutterActor *actor = clutter_container_find_child_by_name(CLUTTER_CONTAINER(this->stage_), HELP_TEXT_ACTOR);
+    if (CLUTTER_ACTOR_IS_VISIBLE(actor))
+        clutter_actor_hide(actor);
+    else
+        clutter_actor_show(actor);
+}
+
 bool SaveCommand::apply(App &app)
 {
     tempi::Logger::log(tempi::WARNING, "will save the graph.");
     tempi::ScopedLock::ptr lock = app.engine_->acquireLock();
     tempi::Graph::ptr graph = app.graph_;
-    bool ok = app.saver_->save(*graph.get(), app.file_name_.c_str());
+    bool ok = tempi::serializer::Serializer::save(*graph.get(), app.file_name_.c_str());
     if (ok)
         tempi::Logger::log(tempi::INFO, "Successfully saved the graph..");
     else
@@ -242,6 +251,7 @@ gboolean App::on_idle(gpointer data)
     }
     // FIXME: seems to crash
     //clutter_threads_leave();
+    g_usleep(1000);
     return TRUE;
 }
 
@@ -318,7 +328,7 @@ void App::drawGraph()
     clutter_actor_set_name(connections_actor, CONNECTIONS_ACTOR);
     clutter_container_add_actor(CLUTTER_CONTAINER(stage_), connections_actor);
     clutter_actor_show(connections_actor);
-    
+
     updateAllConnectionsGeometry(connections_actor, clutter_container_find_child_by_name(CLUTTER_CONTAINER(stage_), NODES_GROUP), *graph_.get());
 }
 
@@ -367,7 +377,7 @@ bool App::setupGraph()
         return true;
     }
     // Check for XML file
-    if (! this->saver_->fileExists(this->file_name_.c_str()))
+    if (! tempi::serializer::Serializer::fileExists(this->file_name_.c_str()))
     {
         std::cerr << "miller: ERROR: File \"" << this->file_name_ << "\" not found!\n";
         return false;
@@ -380,11 +390,11 @@ bool App::setupGraph()
     }
     //if (verbose_)
     //    std::cout << (*engine_.get()) << std::endl;
-    
+
     graph_ = engine_->getGraph(GRAPH_NAME);
 
     // load graph
-    saver_->load(*graph_.get(), this->file_name_.c_str());
+    tempi::serializer::Serializer::load(*graph_.get(), this->file_name_.c_str());
     graph_->tick(); // FIXME
 
     this->drawGraph();
@@ -445,11 +455,11 @@ bool App::createGUI()
 {
     if (stage_ == 0)
     {
-        std::cout << "Creating GUI.\n";
+        //std::cout << "Creating GUI.\n";
     }
     else
     {
-        std::cerr << "App::" << __FUNCTION__ << ": Stage already created.\n"; 
+        std::cerr << "App::" << __FUNCTION__ << ": Stage already created.\n";
         return false;
     }
     stage_ = clutter_stage_get_default();
@@ -459,7 +469,7 @@ bool App::createGUI()
     g_signal_connect(stage_, "destroy", G_CALLBACK(clutter_main_quit), NULL);
     g_signal_connect(G_OBJECT(stage_), "fullscreen", G_CALLBACK(on_fullscreen), this);
     g_signal_connect(G_OBJECT(stage_), "unfullscreen", G_CALLBACK(on_unfullscreen), this);
-    
+
     // timeline to attach a callback for each frame that is rendered
     ClutterTimeline *timeline;
     timeline = clutter_timeline_new(60); // ms
@@ -475,6 +485,11 @@ bool App::createGUI()
     clutter_actor_set_reactive(group0, TRUE);
     g_signal_connect(group0, "scroll-event", G_CALLBACK(App::on_group0_scrolled), this);
     clutter_container_add_actor(CLUTTER_CONTAINER(stage_), group0);
+
+    ClutterActor *help_text = clutter_text_new_full(FONT_NAME, HELP_TEXT_CONTENTS, &WHITE);
+    clutter_container_add_actor(CLUTTER_CONTAINER(stage_), help_text);
+    clutter_actor_hide(help_text);
+    clutter_actor_set_name(help_text, HELP_TEXT_ACTOR);
 
     clutter_actor_show(stage_);
     return true;

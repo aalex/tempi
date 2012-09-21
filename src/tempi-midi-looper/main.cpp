@@ -18,7 +18,9 @@
  */
 
 /**
- * @file A MIDI printer.
+ * @file A MIDI looper.
+ *
+ * Note: this files expects the DATADIR macro to be defined (to something like "/usr/local/share")
  */
 
 #include <iostream>
@@ -46,15 +48,15 @@ int main(int argc, char *argv[])
 // namespaces:
 namespace po = boost::program_options;
 
-// String constants:
+// constants:
 static const char *PROGRAM_NAME = "tempi-midi-looper";
-
-// Color constants:
 static ClutterColor black = { 0x00, 0x00, 0x00, 0xff };
 static ClutterColor red = { 0xcc, 0x33, 0x33, 0xff };
 static ClutterColor green = { 0x33, 0xcc, 0x33, 0xff };
 static ClutterColor gray = { 0x99, 0x99, 0x99, 0xff };
-static ClutterColor white = { 0xcc, 0xcc, 0xcc, 0xff };
+static ClutterColor light_gray = { 0xcc, 0xcc, 0xcc, 0xff };
+static const char * const HELP_TEXT = "Press the space bar to toggle recording.\n"
+    "Press numbers from 0 to 9 to choose a track.";
 
 // Static functions:
 static gboolean record_button_press_cb(ClutterActor *actor, ClutterEvent *event, gpointer user_data);
@@ -63,6 +65,25 @@ static void key_event_cb(ClutterActor *actor, ClutterKeyEvent *event, gpointer u
 static void on_frame_cb(ClutterTimeline *timeline, guint *ms, gpointer user_data);
 static void list_input_midi_devices();
 static void list_output_midi_devices();
+static bool findDataPath(std::string &result, const char *file_name);
+
+bool findDataPath(std::string &result, const char *file_name)
+{
+    // try local first:
+    if (g_file_test(file_name, G_FILE_TEST_EXISTS))
+    {
+        result = std::string(file_name);
+        return true;
+    }
+    std::ostringstream os;
+    os << DATADIR << "/tempi/" << file_name;
+    if (g_file_test(os.str().c_str(), G_FILE_TEST_EXISTS))
+    {
+        result = os.str();
+        return true;
+    }
+    return false;
+}
 
 // Clutter legacy macro aliases:
 #if CLUTTER_CHECK_VERSION(1,4,0)
@@ -79,6 +100,16 @@ static void list_output_midi_devices();
 #define CLUTTER_KEY_space CLUTTER_space
 #define CLUTTER_KEY_Delete CLUTTER_Delete
 #define CLUTTER_KEY_BackSpace CLUTTER_BackSpace
+#define CLUTTER_KEY_0 CLUTTER_0
+#define CLUTTER_KEY_1 CLUTTER_1
+#define CLUTTER_KEY_2 CLUTTER_2
+#define CLUTTER_KEY_3 CLUTTER_3
+#define CLUTTER_KEY_4 CLUTTER_4
+#define CLUTTER_KEY_5 CLUTTER_5
+#define CLUTTER_KEY_6 CLUTTER_6
+#define CLUTTER_KEY_7 CLUTTER_7
+#define CLUTTER_KEY_8 CLUTTER_8
+#define CLUTTER_KEY_9 CLUTTER_9
 #endif
 
 /**
@@ -114,6 +145,7 @@ class App
          * Toggles recording and returns its new state.
          */
         bool toggleRecord();
+        bool chooseRecordingTrack(unsigned int number);
         //void clearScore();
     protected:
         bool setupGraph();
@@ -125,10 +157,12 @@ class App
         unsigned int midi_input_port_;
         unsigned int midi_output_port_;
         bool graph_ok_;
+        unsigned int recording_track_;
         tempi::ThreadedScheduler::ptr engine_;
         ClutterActor *playback_button_;
         ClutterActor *record_button_;
         ClutterActor *stage_;
+        ClutterActor *track_number_text_;
 };
 
 App::App() :
@@ -137,7 +171,8 @@ App::App() :
     playing_(false),
     midi_input_port_(0),
     midi_output_port_(0),
-    graph_ok_(false)
+    graph_ok_(false),
+    recording_track_(0)
 {
     stage_ = NULL;
 }
@@ -199,7 +234,41 @@ static void key_event_cb(ClutterActor *actor, ClutterKeyEvent *event, gpointer u
         case CLUTTER_KEY_space:
             app->toggleRecord();
             break;
+        case CLUTTER_KEY_0:
+        case CLUTTER_KEY_1:
+        case CLUTTER_KEY_2:
+        case CLUTTER_KEY_3:
+        case CLUTTER_KEY_4:
+        case CLUTTER_KEY_5:
+        case CLUTTER_KEY_6:
+        case CLUTTER_KEY_7:
+        case CLUTTER_KEY_8:
+        case CLUTTER_KEY_9:
+            {
+                guint keyval = event->keyval; // clutter_event_get_key_symbol(event);
+                unsigned int number_pressed = (keyval & 0x0F);
+                app->chooseRecordingTrack(number_pressed);
+            }
+            break;
     }
+}
+
+bool App::chooseRecordingTrack(unsigned int number)
+{
+    if (number > 9)
+    {
+    if (verbose_)
+        std::cout << __FUNCTION__ << ": Wrong track number: " << number << "\n";
+        return false;
+    }
+    if (isRecording())
+        toggleRecord();
+    recording_track_ = number;
+
+    std::ostringstream os;
+    os << "Track number: " << number;
+    clutter_text_set_text(CLUTTER_TEXT(track_number_text_), os.str().c_str());
+    return true;
 }
 
 bool App::togglePlayback()
@@ -214,7 +283,16 @@ bool App::togglePlayback()
         clutter_rectangle_set_color(CLUTTER_RECTANGLE(playback_button_), &gray);
     
     tempi::ScopedLock::ptr lock = engine_->acquireLock();
-    engine_->getGraph("graph0")->setNodeAttribute("sampler.sampler0", "playing", tempi::Message("b", isPlaying()));
+    engine_->getGraph("graph0")->setNodeAttribute("sampler.simple0", "playing", tempi::Message("b", isPlaying()));
+    engine_->getGraph("graph0")->setNodeAttribute("sampler.simple1", "playing", tempi::Message("b", isPlaying()));
+    engine_->getGraph("graph0")->setNodeAttribute("sampler.simple2", "playing", tempi::Message("b", isPlaying()));
+    engine_->getGraph("graph0")->setNodeAttribute("sampler.simple3", "playing", tempi::Message("b", isPlaying()));
+    engine_->getGraph("graph0")->setNodeAttribute("sampler.simple4", "playing", tempi::Message("b", isPlaying()));
+    engine_->getGraph("graph0")->setNodeAttribute("sampler.simple5", "playing", tempi::Message("b", isPlaying()));
+    engine_->getGraph("graph0")->setNodeAttribute("sampler.simple6", "playing", tempi::Message("b", isPlaying()));
+    engine_->getGraph("graph0")->setNodeAttribute("sampler.simple7", "playing", tempi::Message("b", isPlaying()));
+    engine_->getGraph("graph0")->setNodeAttribute("sampler.simple8", "playing", tempi::Message("b", isPlaying()));
+    engine_->getGraph("graph0")->setNodeAttribute("sampler.simple9", "playing", tempi::Message("b", isPlaying()));
     return isPlaying();
 }
 
@@ -238,7 +316,11 @@ bool App::toggleRecord()
     }
 
     tempi::ScopedLock::ptr lock = engine_->acquireLock();
-    engine_->getGraph("graph0")->setNodeAttribute("sampler.sampler0", "recording", tempi::Message("b", isRecording()));
+
+    // Build node name
+    std::ostringstream os;
+    os << "sampler.simple" << recording_track_;
+    engine_->getGraph("graph0")->setNodeAttribute(os.str().c_str(), "recording", tempi::Message("b", isRecording()));
     return isRecording();
 }
 
@@ -283,11 +365,17 @@ bool App::setupGraph()
     if (verbose_)
         std::cout << "Add nodes\n";
     // Create objects:
-    graph->addNode("midi.input", "midi.recv0");
-    graph->addNode("sampler.sampler", "sampler.sampler0");
-    graph->addNode("midi.output", "midi.send0");
-    graph->addNode("base.print", "base.print0");
-    graph->addNode("base.print", "base.print1");
+    graph->addNode("base.midi.input", "midi.recv0");
+    graph->addNode("base.midi.output", "midi.send0");
+    graph->addNode("base.flow.print", "base.print0");
+    graph->addNode("base.flow.print", "base.print1");
+
+    for (int i = 0; i < 10; i++)
+    {
+        std::ostringstream os;
+        os << "sampler.simple" << i;
+        graph->addNode("base.sampler.simple", os.str().c_str());
+    }
 
     graph->tick(); // calls Node::init() on each node.
     if (verbose_)
@@ -295,10 +383,16 @@ bool App::setupGraph()
     // Connections:
     //graph->connect("midi.recv0", 0, "midi.send0", 0);
     graph->connect("midi.recv0", "0", "base.print0", "0");
-    graph->connect("midi.recv0", "0", "sampler.sampler0", "0");
-    graph->connect("sampler.sampler0", "0", "midi.send0", "0");
-    graph->connect("sampler.sampler0", "0", "base.print1", "0");
-    //TODO graph->connect("sampler.sampler0", 0, "base.prepend0", 0);
+
+    for (int i = 0; i < 10; i++)
+    {
+        std::ostringstream os;
+        os << "sampler.simple" << i;
+        graph->connect("midi.recv0", "0", os.str().c_str(), "0");
+        graph->connect(os.str().c_str(), "0", "midi.send0", "0");
+        graph->connect(os.str().c_str(), "0", "base.print1", "0");
+    }
+    //TODO graph->connect("sampler.simple0", 0, "base.prepend0", 0);
     // Set node attributes:
     if (verbose_)
         std::cout << "Set node attributes\n";
@@ -353,39 +447,75 @@ bool App::createGUI()
     else
         std::cout << "Creating GUI.\n";
     stage_ = clutter_stage_get_default();
-    clutter_actor_set_size(stage_, 300, 200);
-    clutter_stage_set_color(CLUTTER_STAGE(stage_), &black);
+    clutter_actor_set_size(stage_, 544, 408);
+    clutter_stage_set_color(CLUTTER_STAGE(stage_), &light_gray);
     g_signal_connect(stage_, "destroy", G_CALLBACK(clutter_main_quit), NULL);
+
+
+    std::string background_image_file;
+    if (findDataPath(background_image_file, "background.png"))
+    {
+        GError *error = NULL;
+        ClutterActor *bg = clutter_texture_new_from_file(background_image_file.c_str(), &error);
+        if (error)
+        {
+            std::cerr << error->message;
+            g_error_free(error);
+        }
+        else
+            clutter_container_add_actor(CLUTTER_CONTAINER(stage_), bg);
+    }
+    else
+        std::cerr << "Could not find background image.\n";
     
+    // MAIN LABEL:
+    ClutterActor *main_label = clutter_text_new_full("Sans semibold 24px", "Tempi MIDI Looper", &black);
+    clutter_actor_set_position(main_label, 2.0, 2.0);
+    clutter_container_add_actor(CLUTTER_CONTAINER(stage_), main_label);
+
     // Record button:
     record_button_ = clutter_rectangle_new_with_color(&gray);
     clutter_actor_set_size(record_button_, 50.0f, 50.0f);
+    clutter_rectangle_set_border_width(CLUTTER_RECTANGLE(record_button_), 1);
+    clutter_rectangle_set_border_color(CLUTTER_RECTANGLE(record_button_), &black);
     clutter_actor_set_anchor_point_from_gravity(record_button_, CLUTTER_GRAVITY_CENTER);
-    clutter_actor_set_position(record_button_, 100.0f, 100.0f);
+    clutter_actor_set_position(record_button_, 200.0f, 150.0f);
     clutter_container_add_actor(CLUTTER_CONTAINER(stage_), record_button_);
     clutter_actor_set_reactive(record_button_, TRUE);
     g_signal_connect(record_button_, "button-press-event", G_CALLBACK(record_button_press_cb), this);
     // TODO g_signal_connect(stage_, "button-release-event", G_CALLBACK(record_button_released_cb), this);
 
-    ClutterActor *record_label = clutter_text_new_full("Sans semibold 12px", "Record", &white);
-    clutter_actor_set_position(record_label, 100.0f, 150.0f);
+    ClutterActor *record_label = clutter_text_new_full("Sans semibold 12px", "Record", &black);
+    clutter_actor_set_position(record_label, 200.0f, 200.0f);
     clutter_actor_set_anchor_point_from_gravity(record_label, CLUTTER_GRAVITY_CENTER);
     clutter_container_add_actor(CLUTTER_CONTAINER(stage_), record_label);
 
     // Playback button:
     playback_button_ = clutter_rectangle_new_with_color(&gray);
     clutter_actor_set_size(playback_button_, 50.0f, 50.0f);
+    clutter_rectangle_set_border_width(CLUTTER_RECTANGLE(playback_button_), 1);
+    clutter_rectangle_set_border_color(CLUTTER_RECTANGLE(playback_button_), &black);
     clutter_actor_set_anchor_point_from_gravity(playback_button_, CLUTTER_GRAVITY_CENTER);
-    clutter_actor_set_position(playback_button_, 200.0f, 100.0f);
+    clutter_actor_set_position(playback_button_, 300.0f, 150.0f);
     clutter_container_add_actor(CLUTTER_CONTAINER(stage_), playback_button_);
     clutter_actor_set_reactive(playback_button_, TRUE);
     g_signal_connect(playback_button_, "button-press-event", G_CALLBACK(playback_button_press_cb), this);
     // TODO g_signal_connect(stage_, "button-release-event", G_CALLBACK(playback_button_released_cb), this);
 
-    ClutterActor *playback_label = clutter_text_new_full("Sans semibold 12px", "Playback", &white);
-    clutter_actor_set_position(playback_label, 200.0f, 150.0f);
+    ClutterActor *playback_label = clutter_text_new_full("Sans semibold 12px", "Playback", &black);
+    clutter_actor_set_position(playback_label, 300.0f, 200.0f);
     clutter_actor_set_anchor_point_from_gravity(playback_label, CLUTTER_GRAVITY_CENTER);
     clutter_container_add_actor(CLUTTER_CONTAINER(stage_), playback_label);
+
+    track_number_text_ = clutter_text_new_full("Sans semibold 12px", "Track number: 0", &black);
+    clutter_actor_set_anchor_point_from_gravity(track_number_text_, CLUTTER_GRAVITY_CENTER);
+    clutter_actor_set_position(track_number_text_, clutter_actor_get_width(stage_) / 2.0, 50.0f);
+    clutter_container_add_actor(CLUTTER_CONTAINER(stage_), track_number_text_);
+
+    ClutterActor *help_text = clutter_text_new_full("Sans 12px", HELP_TEXT, &black);
+    clutter_actor_set_anchor_point_from_gravity(help_text, CLUTTER_GRAVITY_CENTER);
+    clutter_actor_set_position(help_text, clutter_actor_get_width(stage_) / 2.0, 280.0f);
+    clutter_container_add_actor(CLUTTER_CONTAINER(stage_), help_text);
 
     // timeline to attach a callback for each frame that is rendered
     ClutterTimeline *timeline;

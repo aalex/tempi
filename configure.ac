@@ -14,7 +14,7 @@
 # - increase tempi_interface_version to the next odd number
 m4_define([tempi_major_version], [0])
 m4_define([tempi_minor_version], [1])
-m4_define([tempi_micro_version], [15])
+m4_define([tempi_micro_version], [17])
 
 m4_define([tempi_release_status],
           [m4_if(m4_eval(tempi_micro_version % 2), [1], [git],
@@ -80,6 +80,7 @@ AC_SUBST([TEMPI_LT_VERSION], "$TEMPI_LT_VERSION")
 TEMPI_LT_LDFLAGS="-version-info $TEMPI_LT_VERSION"
 
 AC_DEFINE_UNQUOTED(TEMPI_PLUGINS_DIR,["tempi-$TEMPI_API_VERSION"],[Path to Tempi plugins])
+AC_DEFINE_UNQUOTED(TEMPI_API_VERSION,["$TEMPI_API_VERSION"],[Tempi API version])
 
 # Checks for programs.
 AC_PROG_CC
@@ -166,9 +167,9 @@ if test "x${have_log4cpp}" = "xfalse" ; then
     AC_MSG_ERROR([missing package: liblog4cpp5-dev])
 fi
 
-PKG_CHECK_MODULES([SPATOSC], [spatosc-0.3], have_spatosc=true, have_spatosc=false)
+PKG_CHECK_MODULES([SPATOSC], [spatosc-0.4], have_spatosc=true, have_spatosc=false)
 if test "x${have_spatosc}" = "xfalse" ; then
-    AC_MSG_WARN([missing package: libspatosc-0.3-dev])
+    AC_MSG_WARN([missing package: libspatosc-dev])
 else
     AC_DEFINE(HAVE_SPATOSC,[1],[SpatOSC headers successfully detected])
 fi

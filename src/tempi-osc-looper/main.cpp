@@ -207,7 +207,7 @@ bool App::togglePlayback()
         clutter_rectangle_set_color(CLUTTER_RECTANGLE(playback_button_), &gray);
     
     tempi::ScopedLock::ptr lock = engine_->acquireLock();
-    engine_->getGraph("graph0")->setNodeAttribute("sampler.sampler0", "playing", tempi::Message("b", isPlaying()));
+    engine_->getGraph("graph0")->setNodeAttribute("sampler.simple0", "playing", tempi::Message("b", isPlaying()));
     return isPlaying();
 }
 
@@ -231,7 +231,7 @@ bool App::toggleRecord()
     }
 
     tempi::ScopedLock::ptr lock = engine_->acquireLock();
-    engine_->getGraph("graph0")->setNodeAttribute("sampler.sampler0", "recording", tempi::Message("b", isRecording()));
+    engine_->getGraph("graph0")->setNodeAttribute("sampler.simple0", "recording", tempi::Message("b", isRecording()));
     return isRecording();
 }
 
@@ -276,20 +276,20 @@ bool App::setupGraph()
     if (verbose_)
         std::cout << "Add nodes\n";
     // Create objects:
-    graph->addNode("osc.receive", "osc.recv0");
-    graph->addNode("sampler.sampler", "sampler.sampler0");
-    graph->addNode("osc.send", "osc.send0");
-    graph->addNode("base.print", "base.print0");
-    graph->addNode("base.print", "base.print1");
+    graph->addNode("base.osc.receive", "osc.recv0");
+    graph->addNode("base.sampler.simple", "sampler.simple0");
+    graph->addNode("base.osc.send", "osc.send0");
+    graph->addNode("base.flow.print", "base.print0");
+    graph->addNode("base.flow.print", "base.print1");
 
     graph->tick(); // calls Node::init() on each node.
     if (verbose_)
         std::cout << "Connect nodes\n";
     // Connections:
-    graph->connect("osc.recv0", "0", "base.print0", "0");
-    graph->connect("osc.recv0", "0", "sampler.sampler0", "0");
-    graph->connect("sampler.sampler0", "0", "osc.send0", "0");
-    graph->connect("sampler.sampler0", "0", "base.print1", "0");
+    graph->connect("osc.recv0", "incoming", "base.print0", "0");
+    graph->connect("osc.recv0", "incoming", "sampler.simple0", "0");
+    graph->connect("sampler.simple0", "0", "osc.send0", "0");
+    graph->connect("sampler.simple0", "0", "base.print1", "0");
     // Set node attributes:
     if (verbose_)
         std::cout << "Set node attributes\n";
@@ -403,7 +403,7 @@ int App::parse_options(int argc, char **argv)
         //  "Sets the OSC control port to listen to")
         ("output,o", po::value<unsigned int>()->default_value(0),
             "Sets the OSC output port to send to")
-        ("host,o", po::value<std::string>()->default_value("127.0.0.1"),
+        ("host,H", po::value<std::string>()->default_value("127.0.0.1"),
             "Sets the OSC output host IP to send to")
         ("verbose,v", po::bool_switch(), "Enables a verbose output")
         ;

@@ -1,7 +1,26 @@
 Tempi release notes
 ===================
 
-Tempi 0.1.16 (2012-0?-??)
+Tempi 0.1.18 (2012-0?-??)
+-------------------------
+This release is a developer snapshot in the 0.1 series.
+
+New features:
+* Update spatosc API to 0.4
+* Add API version to name of plugins shared libraries
+* Rename sampler.sampler to sampler.simple
+* Miller: F1 shows help
+
+Bugs fixed:
+* tempi-osc-forward: fix node type names
+* Fix 100^ CPU usage in tempi-launch and miller
+* Miller: Fix the bad connection position
+
+New prototypes and documentation:
+* (none)
+
+
+Tempi 0.1.16 (2012-07-27)
 -------------------------
 This release is a developer snapshot in the 0.1 series.
 
@@ -26,12 +45,19 @@ New features:
   * etc.
 * more verbose attr loading from XML
 * Do not print common inlets/outlets/attributes in tempi-inspect, nor when there is no method
+* note about RtMidi's bug
+* add a lunch script for the example for tempi-osc-looper
+* osc-looper: add pd example patch
+* tempi-midi-looper: add background image and prettify
+* make midi-looper multi-track
 
 
 Bugs fixed:
 * less strict gcc flags
 * Fix a bug when generating man pages without a X11 display.  (tempi-draw: clutter_init after parsing options)
 * XML: rename node "id" attribute to "name"
+* fix rst markup in README
+* osc-looper: fix short options name clash
 
 New prototypes and documentation:
 * add MillerConnection actor type

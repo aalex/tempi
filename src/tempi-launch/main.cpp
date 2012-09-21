@@ -8,12 +8,12 @@
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * Tempi is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -159,7 +159,7 @@ bool TempiLauncher::setupGraph()
         os << "tempi-launch: Create Graph\n";
         tempi::Logger::log(DEBUG, os.str().c_str());
     }
-    
+
     engine_->createGraph("graph0");
     graph_ = engine_->getGraph("graph0");
 
@@ -260,14 +260,6 @@ int TempiLauncher::parse_options(int argc, char **argv)
         return -1;
 }
 
-static gboolean on_idle(gpointer data)
-{
-    TempiLauncher *app = (TempiLauncher *) data;
-    (void) app;
-    //if (app->getVerbose())
-    //   std::cout << __FUNCTION__ << std::endl;
-    return TRUE; // stay registered
-}
 
 int main(int argc, char *argv[])
 {
@@ -287,7 +279,7 @@ int main(int argc, char *argv[])
 
     g_thread_init(NULL);
     GMainLoop *mainLoop = g_main_loop_new(NULL, FALSE);
-    g_idle_add(on_idle, (gpointer) &app);
+    //g_idle_add(on_idle, (gpointer) &app);
     tempi::Logger::log(DEBUG, "Run main loop.");
     g_main_loop_run(mainLoop);
     g_main_loop_unref(mainLoop);
