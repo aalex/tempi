@@ -48,6 +48,7 @@ int main(int argc, char *argv[])
 #include <boost/program_options.hpp>
 #include <clutter/clutter.h>
 #include <glib.h>
+//#include <gtk/gtk.h>
 #include <sstream>
 
 namespace miller {
@@ -63,6 +64,21 @@ static void key_event_cb(ClutterActor *actor, ClutterKeyEvent *event, gpointer u
 static void on_frame_cb(ClutterTimeline *timeline, guint *ms, gpointer user_data);
 static void on_fullscreen(ClutterStage* stage, gpointer user_data);
 static void on_unfullscreen(ClutterStage* stage, gpointer user_data);
+
+static gboolean help = FALSE;
+static gboolean version = FALSE;
+static gboolean verbose = FALSE;
+static gboolean debug = FALSE;
+static gchar** filenames = NULL;
+
+static GOptionEntry entries[] =
+{
+    {"version", 0, 0, G_OPTION_ARG_NONE, &version, "Show program's version number and exit"},
+    {"verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose, "Enables a verbose output"},
+    {"debug", 'd', 0, G_OPTION_ARG_NONE, &debug, "Enables a very verbose output"},
+    {G_OPTION_REMAINING, 0, 0, G_OPTION_ARG_FILENAME_ARRAY, &filenames, "Tempi files to read"},
+    {NULL}
+};
 
 /**
  * The App class manages the tempi::Graph and the Clutter GUI.
@@ -466,52 +482,45 @@ bool App::createGUI()
 
 int App::parse_options(int argc, char **argv)
 {
-    namespace po = boost::program_options;
+    GError* error = NULL;
+    GOptionContext* context;
 
-    po::options_description desc("Options");
-    desc.add_options()
-        ("help,h", "Show this help message and exit")
-        ("version", "Show program's version number and exit")
-        ("file,f", po::value<std::string>(), // ->default_value("")
-            "Specifies a Tempi file to read.")
-        ("verbose,v", po::bool_switch(), "Enables a verbose output")
-        ("debug,d", po::bool_switch(), "Enables a very verbose output")
-        ;
-    po::variables_map options;
-    try
+    context = g_option_context_new(" - miller");
+    g_option_context_add_main_entries(context, entries, NULL);
+    g_option_context_add_group(context, clutter_get_option_group());
+    
+    if(!g_option_context_parse(context, &argc, &argv, &error))
     {
-        po::store(po::parse_command_line(argc, argv, desc), options);
-        po::notify(options);
-    }
-    catch (const po::error &e)
-    {
-        std::cerr << e.what() << std::endl;
-        std::cout << desc << std::endl;
         return 1;
     }
 
-    verbose_ = options["verbose"].as<bool>();
-    debug_ = options["debug"].as<bool>();
-    if (options.count("file"))
-    {
-        file_name_ = options["file"].as<std::string>();
-    }
-    if (verbose_)
-    {
-        std::cout << "File name: " << file_name_ << std::endl;
-        std::cout << "Verbose: " << verbose_ << std::endl;
-        std::cout << "Debug: " << debug_ << std::endl;
-    }
-    // Options that makes the program exit:
-    if (options.count("help"))
-    {
-        std::cout << desc << std::endl;
-        return 0;
-    }
-    if (options.count("version"))
+    if(version)
     {
         std::cout << PROGRAM_NAME << " " << PACKAGE_VERSION << std::endl;
         return 0;
+    }
+    if(filenames != NULL)
+    {
+        guint numFiles;
+        numFiles = g_strv_length(filenames);
+
+        for(guint i=0; i<numFiles; ++i)
+        {
+            g_print("Trying to load file: %s\n", filenames[i]);
+        }
+
+        // At the moment we load just the first file specified
+        file_name_ = filenames[0];
+        std::cout << file_name_ << std::endl;
+    }
+    if(verbose)
+    {
+        debug_ = debug;
+        verbose_ = verbose;
+
+        std::cout << "File name: " << file_name_ << std::endl;
+        std::cout << "Verbose: " << verbose_ << std::endl;
+        std::cout << "Debug: " << debug_ << std::endl;
     }
     return -1;
 }
@@ -523,25 +532,17 @@ int main(int argc, char *argv[])
     using namespace miller;
     int ret;
     App app;
-    try
-    {
-        ret = app.parse_options(argc, argv);
-    }
-    catch (const boost::bad_any_cast &e)
-    {
-        std::cerr << "Error parsing options ";
-        std::cerr << e.what() << std::endl;
+
+    if (clutter_init(&argc, &argv) != CLUTTER_INIT_SUCCESS)
         return 1;
-    }
+
+    ret = app.parse_options(argc, argv);
     if (ret != -1)
         return ret;
 
     // Important, since we use threads:
     g_thread_init(NULL);
     clutter_threads_init();
-
-    if (clutter_init(&argc, &argv) != CLUTTER_INIT_SUCCESS)
-        return 1;
 
     if (app.launch())
         clutter_main();
