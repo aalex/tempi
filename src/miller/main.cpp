@@ -515,12 +515,15 @@ int App::parse_options(int argc, char **argv)
     }
     if(verbose)
     {
-        debug_ = debug;
         verbose_ = verbose;
 
         std::cout << "File name: " << file_name_ << std::endl;
         std::cout << "Verbose: " << verbose_ << std::endl;
         std::cout << "Debug: " << debug_ << std::endl;
+    }
+    if(debug)
+    {
+        debug_ = debug;
     }
     return -1;
 }
