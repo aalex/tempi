@@ -573,5 +573,17 @@ std::vector<std::string> Wrapper::listNodes(const std::string &graph)
     }
 }
 
+bool Wrapper::getNode(const std::string &graph, const std::string &nodeName, Node::ptr &result)
+{
+    if (this->scheduler_->getGraph(graph.c_str())->hasNode(nodeName.c_str()))
+    {
+        result = this->scheduler_->getGraph(graph.c_str())->getNode(nodeName.c_str());
+        return true;
+    }
+    else
+        return false;
+}
+
+
 } // end of namespace
 
