@@ -390,7 +390,8 @@ int TempiInspect::parse_options(int argc, char **argv)
     }
     if(all)
     {
-        all_ = all;
+        std::cout << "Detailed info for all node types:" << std::endl;
+        all_ = true;
     }
     if(verbose)
     {
