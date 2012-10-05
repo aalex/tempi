@@ -73,6 +73,7 @@ class Wrapper
 
         bool createNode(const std::string &graph, const std::string &nodeType,
             const std::string &nodeName);
+        bool getNode(const std::string &graph, const std::string &nodeName, Node::ptr &result);
         bool destroyNode(const std::string &graph, const std::string &nodeName);
         bool messageInlet(const std::string &graph, const std::string &nodeName,
             const std::string &nodeInlet, const Message &message);
