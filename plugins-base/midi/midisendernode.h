@@ -25,7 +25,7 @@
 #ifndef __TEMPI_MIDI_MIDISENDERNODE_H__
 #define __TEMPI_MIDI_MIDISENDERNODE_H__
 
-#include "tempi/midi_output.h"
+#include "tempi/midi.h"
 #include "tempi/node.h"
 
 namespace tempi {
@@ -38,6 +38,7 @@ class MidiSenderNode : public Node
 {
     public:
         MidiSenderNode();
+        ~MidiSenderNode();
     protected:
         virtual void processMessage(const char *inlet, const Message &message);
         virtual bool onNodeAttributeChanged(const char *name, const Message &value);
@@ -45,7 +46,8 @@ class MidiSenderNode : public Node
         {}
         virtual void onInit();
     private:
-        midi::MidiOutput::ptr midi_output_;
+        midi::Midi *midi_output_;
+	int port_;
         /**
          * Opens the given port. Return success.
          */

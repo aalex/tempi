@@ -30,6 +30,7 @@
 #include "tempi/inlet.h"
 #include "tempi/log.h"
 #include "tempi/utils.h"
+#include <glib.h>
 #include <boost/lexical_cast.hpp>
 #include <boost/program_options.hpp>
 #include <iostream>
@@ -56,6 +57,23 @@ static void print_title(const std::string &text, TitleLevel level);
 static void print_line_if_not_empty(const std::string &text);
 static void print_bullet_line_if_not_empty(const std::string &text);
 static bool stringInVector(const std::string &text, const std::vector<std::string> &vec);
+
+static gboolean help = FALSE;
+static gboolean version = FALSE;
+static gboolean verbose = FALSE;
+static gboolean debug = FALSE;
+static gboolean all = FALSE;
+static gchar** keywords = NULL;
+
+static GOptionEntry entries[] =
+{
+    {"version", 0, 0, G_OPTION_ARG_NONE, &version, "Show program's version number and exit"},
+    {"verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose, "Enables a verbose output"},
+    {"debug", 'd', 0, G_OPTION_ARG_NONE, &debug, "Enables a very verbose output"},
+    {"all", 'a', 0, G_OPTION_ARG_NONE, &all, "Prints detailed info for all node types"},
+    {G_OPTION_REMAINING, 0, 0, G_OPTION_ARG_FILENAME_ARRAY, &keywords, "Sets the node type names to look for in Tempi's documentation. There can be many."},
+    {NULL}
+};
 
 // classes:
 
@@ -344,68 +362,63 @@ bool TempiInspect::run()
 
 int TempiInspect::parse_options(int argc, char **argv)
 {
-    po::options_description desc("Options");
-    desc.add_options()
-        ("help,h", "Show this help message and exit")
-        ("version", "Show program's version number and exit")
-        ("keywords,k", po::value<std::vector<std::string> >(&keywords_)->multitoken(), "Sets the node type names to look for in Tempi's documentation. There can be many.")
-        ("verbose,v", po::bool_switch(), "Enables a verbose output")
-        ("debug,d", po::bool_switch(), "Enables a very verbose output")
-        ("all,a", po::bool_switch(), "Prints detailed info for all node types")
-        ;
-    po::variables_map options;
-    try
+    GError* error = NULL;
+    GOptionContext* context;
+
+    context = g_option_context_new(" - tempi-inspect");
+    g_option_context_add_main_entries(context, entries, NULL);
+    
+    if(!g_option_context_parse(context, &argc, &argv, &error))
     {
-        // all positional options should be translated into "keyword" options
-        po::positional_options_description p;
-        p.add("keywords", -1);
-        po::store(po::command_line_parser(argc, argv).
-            options(desc).positional(p).run(), options);
-        po::notify(options);
-    }
-    catch (const po::error &e)
-    {
-        std::cerr << e.what() << std::endl;
-        std::cout << desc << std::endl;
         return 1;
     }
 
-    verbose_ = options["verbose"].as<bool>();
-    debug_ = options["debug"].as<bool>();
-    if (verbose_)
-    {
-        tempi::Logger::getInstance().setLevel(tempi::INFO);
-        tempi::Logger::log(INFO, "Set logging level to INFO");
-    }
-    if (debug_)
-    {
-        tempi::Logger::getInstance().setLevel(tempi::DEBUG);
-        tempi::Logger::log(INFO, "Set logging level to DEBUG");
-    }
-    all_ = options["all"].as<bool>();
-    // Options that makes the program exit:
-    if (options.count("help"))
-    {
-        std::cout << desc << std::endl;
-        return 0;
-    }
-    if (options.count("version"))
+    if(version)
     {
         std::cout << PROGRAM_NAME << " " << PACKAGE_VERSION << std::endl;
         return 0;
     }
-    if (verbose_)
+    if(keywords != NULL)
     {
-        Logger::getInstance().setLevel(DEBUG);
+        guint numWords;
+        numWords = g_strv_length(keywords);
+
+        for(guint i=0; i<numWords; ++i)
+        {
+            keywords_.push_back(keywords[i]);
+        }
     }
-    return -1;
+    if(all)
+    {
+        std::cout << "Detailed info for all node types:" << std::endl;
+        all_ = true;
+    }
+    if(verbose)
+    {
+        verbose_ = verbose;
+
+        tempi::Logger::getInstance().setLevel(tempi::INFO);
+        tempi::Logger::log(INFO, "Set logging level to INFO");
+    }
+    if(debug)
+    {
+        debug_ = debug;
+
+        tempi::Logger::getInstance().setLevel(tempi::DEBUG);
+        tempi::Logger::log(INFO, "Set logging level to DEBUG");
+    }
+
+    if(keywords == NULL)
+        return 1;
+    else
+        return -1;
 }
 
 int main(int argc, char *argv[])
 {
     int ret;
     TempiInspect app;
-    try
+    /*try
     {
         ret = app.parse_options(argc, argv);
     }
@@ -414,7 +427,9 @@ int main(int argc, char *argv[])
         std::cerr << "Error parsing options ";
         std::cerr << e.what() << std::endl;
         return 1;
-    }
+    }*/
+
+    ret = app.parse_options(argc, argv);
     if (ret != -1)
         return ret;
 

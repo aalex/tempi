@@ -52,6 +52,21 @@ using tempi::DEBUG;
 // String constants:
 static const char *PROGRAM_NAME = "tempi-launch";
 
+static gboolean help = FALSE;
+static gboolean version = FALSE;
+static gboolean verbose = FALSE;
+static gboolean debug = FALSE;
+static gchar** filenames = NULL;
+
+static GOptionEntry entries[] =
+{
+    {"version", 0, 0, G_OPTION_ARG_NONE, &version, "Show program's version number and exit"},
+    {"verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose, "Enables a verbose output"},
+    {"debug", 'd', 0, G_OPTION_ARG_NONE, &debug, "Enables a very verbose output"},
+    {G_OPTION_REMAINING, 0, 0, G_OPTION_ARG_FILENAME_ARRAY, &filenames, "Tempi files to read"},
+    {NULL}
+};
+
 /**
  * The TempiLauncher class is the tempi-launch application.
  */
@@ -188,61 +203,61 @@ bool TempiLauncher::launch()
 
 int TempiLauncher::parse_options(int argc, char **argv)
 {
-    po::options_description desc("Options");
-    desc.add_options()
-        ("help,h", "Show this help message and exit")
-        ("version", "Show program's version number and exit")
-        ("file,f", po::value<std::string>()->default_value(""), "Sets the XML file to load")
-        ("verbose,v", po::bool_switch(), "Enables a verbose output")
-        ("debug,d", po::bool_switch(), "Enables a very verbose output")
-        ;
-    po::variables_map options;
-    try
+    GError* error = NULL;
+    GOptionContext* context;
+
+    context = g_option_context_new(" - tempi-launch");
+    g_option_context_add_main_entries(context, entries, NULL);
+    //g_option_context_add_group(context, g_option_context_get_main_group(context));
+    
+    if(!g_option_context_parse(context, &argc, &argv, &error))
     {
-        // all positional options should be translated into "file" options
-        po::positional_options_description p;
-        p.add("file", -1);
-        po::store(po::command_line_parser(argc, argv).
-            options(desc).positional(p).run(), options);
-        po::notify(options);
-    }
-    catch (const po::error &e)
-    {
-        std::cerr << e.what() << std::endl;
-        std::cout << desc << std::endl;
         return 1;
     }
 
-    verbose_ = options["verbose"].as<bool>();
-    debug_ = options["debug"].as<bool>();
-    fileName_ = options["file"].as<std::string>();
-    // Options that makes the program exit:
-    if (options.count("help"))
-    {
-        std::cout << desc << std::endl;
-        return 0;
-    }
-    if (options.count("version"))
+    if(version)
     {
         std::cout << PROGRAM_NAME << " " << PACKAGE_VERSION << std::endl;
         return 0;
     }
-    if (verbose_)
+    if(filenames != NULL)
     {
+        guint numFiles;
+        numFiles = g_strv_length(filenames);
+
+        for(guint i=0; i<numFiles; ++i)
+        {
+            g_print("Trying to load file: %s\n", filenames[i]);
+        }
+
+        // At the moment we load just the first file specified
+        fileName_ = filenames[0];
+        std::cout << fileName_ << std::endl;
+    }
+    if(verbose)
+    {
+        verbose_ = verbose;
+
         tempi::Logger::getInstance().setLevel(tempi::INFO);
         tempi::Logger::log(INFO, "Set logging level to INFO");
     }
-    if (debug_)
+    if(debug)
     {
+        debug_ = debug;
         tempi::Logger::getInstance().setLevel(tempi::DEBUG);
         tempi::Logger::log(INFO, "Set logging level to DEBUG");
     }
+
     {
         std::ostringstream os;
         os << "XML file to load: " << fileName_;
         tempi::Logger::log(DEBUG, os.str().c_str());
     }
-    return -1;
+
+    if(filenames == NULL)
+        return 1;
+    else
+        return -1;
 }
 
 
@@ -250,16 +265,8 @@ int main(int argc, char *argv[])
 {
     int ret;
     TempiLauncher app;
-    try
-    {
-        ret = app.parse_options(argc, argv);
-    }
-    catch (const boost::bad_any_cast &e)
-    {
-        std::cerr << "Error parsing options ";
-        std::cerr << e.what() << std::endl;
-        return 1;
-    }
+
+    ret = app.parse_options(argc, argv); 
     if (ret != -1)
         return ret;
 

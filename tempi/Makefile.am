@@ -5,10 +5,11 @@ AM_CXXFLAGS = \
     $(BOOST_CPPFLAGS) \
     $(LIBXML_CFLAGS) \
     $(LIBLO_CFLAGS) \
-    $(RTMIDI_CFLAGS) \
     -I$(top_srcdir) \
     -I$(top_srcdir)/plugins-base \
-    -I$(top_srcdir)/tempi
+    -I$(top_srcdir)/tempi \
+    $(PORTMIDI_CFLAGS) \
+    $(RTMIDI_CFLAGS)
 
 # XXX BOOST_FILESYSTEM_LIBS must be after BOOST_SYSTEM_LIBS
 
@@ -20,7 +21,8 @@ AM_LIBS = \
     $(LIBLO_LIBS) \
     $(LIBXML_LIBS) \
     $(LOG4CPP_LIBS) \
-    $(RTMIDI_LIBS)
+    $(RTMIDI_LIBS) \
+    $(PORTMIDI_LIBS)
 
 # this file is not installed, just included by .cpp files at compile time.
 EXTRA_DIST = config.h
@@ -55,6 +57,8 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     loader.cpp \
     log.cpp \
     message.cpp \
+    midi.cpp \
+    midi_scheduler.cpp \
     midi_input.cpp \
     midi_output.cpp \
     nameallocator.cpp \
@@ -109,6 +113,8 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     loader.h \
     log.h \
     message.h \
+    midi.h \
+    midi_scheduler.h \
     midi_input.h \
     midi_output.h \
     nameallocator.h \
