@@ -159,7 +159,8 @@ static void print_bullet_line_if_not_empty(const std::string &text)
 
 TempiInspect::TempiInspect() :
     verbose_(false),
-    debug_(false)
+    debug_(false),
+    all_(false)
 {
 }
 
@@ -367,6 +368,7 @@ int TempiInspect::parse_options(int argc, char **argv)
 
     context = g_option_context_new(" - tempi-inspect");
     g_option_context_add_main_entries(context, entries, NULL);
+
     
     if(!g_option_context_parse(context, &argc, &argv, &error))
     {
@@ -388,7 +390,7 @@ int TempiInspect::parse_options(int argc, char **argv)
             keywords_.push_back(keywords[i]);
         }
     }
-    if(all)
+    if(all == TRUE)
     {
         std::cout << "Detailed info for all node types:" << std::endl;
         all_ = true;
@@ -408,10 +410,11 @@ int TempiInspect::parse_options(int argc, char **argv)
         tempi::Logger::log(INFO, "Set logging level to DEBUG");
     }
 
-    if(keywords == NULL)
+    /*if(keywords == NULL && all != TRUE)
         return 1;
     else
-        return -1;
+        return -1;*/
+    return -1;
 }
 
 int main(int argc, char *argv[])
