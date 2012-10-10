@@ -18,13 +18,14 @@ bool check_internals()
 {
     NodeFactory factory;
     internals::loadInternals(factory);
+    // FIXME: this is plugins-base specific. should not be in core lib tests
     if (! didRegister(factory, "base.time.metro")) return false;
     if (! didRegister(factory, "base.flow.nop")) return false;
     if (! didRegister(factory, "base.flow.print")) return false;
     if (! didRegister(factory, "base.midi.input")) return false;
     if (! didRegister(factory, "base.osc.receive")) return false;
     if (! didRegister(factory, "base.osc.send")) return false;
-    if (! didRegister(factory, "base.sampler.sampler")) return false;
+    if (! didRegister(factory, "base.sampler.simple")) return false;
     return true;
 }
 
