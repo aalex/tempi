@@ -40,7 +40,6 @@
 #include "plugins-base/flow/unpacknode.h"
 #include "plugins-base/spatosc/spatoscnode.h"
 #include "plugins-base/flow/spigotnode.h"
-#include "plugins-base/clutter/clutterstagenode.h"
 #include "plugins-base/mapper/mapperinputnode.h"
 #include "plugins-base/math/onefloatmathnode.h"
 #include "plugins-base/math/twofloatmathnode.h"
@@ -70,6 +69,10 @@
 #include "tempi/config.h"
 #include "tempi/nodefactory.h"
 #include "tempi/utils.h"
+
+#ifdef HAVE_CLUTTER
+#include "plugins-base/clutter/clutterstagenode.h"
+#endif
 
 namespace tempi {
 namespace plugins_base {
