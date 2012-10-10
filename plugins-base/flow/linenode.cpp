@@ -284,10 +284,10 @@ float Line::calculateCurrent()
 
     if (duration_ == 0L)
         return target_; // avoid division by zero
-    float progress = (float) elapsed / (float) duration_; // both in ns
+    float progress = (float) elapsed / (float) duration_; // both in ns, thus progress has no unit
     float current = utils::map_float(
         progress,
-        0.0f, (float) duration_, // map from [0, duration in ns]
+        0.0f, 1.f, // map from [start, end], according to progress
         origin_, target_);       // to [origin, target] (whatever value)
     if (true)
     {
