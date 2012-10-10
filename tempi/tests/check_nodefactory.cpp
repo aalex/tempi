@@ -104,6 +104,7 @@ bool check_print()
 {
     if (VERBOSE)
         std::cout << __FUNCTION__ << std::endl;
+    // FIXME: this is plugins-base specific. should not be in core lib tests
     Node::ptr nop0 = factory->create("base.flow.nop");
     Node::ptr nop1 = factory->create("base.flow.nop");
     Node::ptr print0 = factory->create("base.flow.print");
