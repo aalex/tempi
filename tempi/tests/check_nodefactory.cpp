@@ -104,10 +104,11 @@ bool check_print()
 {
     if (VERBOSE)
         std::cout << __FUNCTION__ << std::endl;
+    // FIXME: this is plugins-base specific. should not be in core lib tests
     Node::ptr nop0 = factory->create("base.flow.nop");
     Node::ptr nop1 = factory->create("base.flow.nop");
     Node::ptr print0 = factory->create("base.flow.print");
-    Node::ptr sampler0 = factory->create("base.sampler.sampler");
+    Node::ptr sampler0 = factory->create("base.sampler.simple");
     Node::ptr print1 = factory->create("base.flow.print");
 
     if (nop0.get() == 0 || print0.get() == 0 || sampler0.get() == 0)
@@ -119,7 +120,7 @@ bool check_print()
     graph.addNode("base.flow.nop", "nop0");
     graph.addNode("base.flow.nop", "nop1");
     graph.addNode("base.flow.print", "print0");
-    graph.addNode("base.sampler.sampler", "sampler0");
+    graph.addNode("base.sampler.simple", "sampler0");
     graph.addNode("base.flow.print", "print1");
 
     graph.tick(); // call init() on each node
