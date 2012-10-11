@@ -254,10 +254,7 @@ int TempiLauncher::parse_options(int argc, char **argv)
         tempi::Logger::log(DEBUG, os.str().c_str());
     }
 
-    if(filenames == NULL)
-        return 1;
-    else
-        return -1;
+    return -1;
 }
 
 
