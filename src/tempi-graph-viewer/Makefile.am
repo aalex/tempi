@@ -1,5 +1,6 @@
-noinst_PROGRAMS = \
-    miller
+bin_PROGRAMS = \
+    tempi-graph-viewer
+    
 
 AM_CXXFLAGS = \
     $(BOOST_CPPFLAGS) \
@@ -17,12 +18,12 @@ LDADD = \
     $(GLIB_LIBS) \
     $(top_builddir)/tempi/libtempi-@TEMPI_API_VERSION@.la
 
-miller_CXXFLAGS = $(AM_CXXFLAGS)
-miller_CFLAGS = \
+tempi_graph_viewer_CXXFLAGS = $(AM_CXXFLAGS)
+tempi_graph_viewer_CFLAGS = \
     $(CLUTTER_CFLAGS) \
     $(GLIB_CFLAGS)
 
-miller_LDADD = $(LDADD)
+tempi_graph_viewer_LDADD = $(LDADD)
 
 EXTRA_DIST = \
     miller-command.h \
@@ -30,7 +31,7 @@ EXTRA_DIST = \
     miller-macros.h \
 	miller-connection.h
 
-miller_SOURCES = \
+tempi_graph_viewer_SOURCES = \
     miller-draw.cpp \
 	miller-connection.c \
     main.cpp
