@@ -45,17 +45,14 @@ int main(int argc, char *argv[])
 #include "tempi/log.h"
 #include "tempi/concurrentqueue.h"
 #include <boost/algorithm/string.hpp>
-#include <boost/lexical_cast.hpp>
-#include <boost/program_options.hpp>
 #include <clutter/clutter.h>
 #include <glib.h>
-//#include <gtk/gtk.h>
 #include <sstream>
 
 namespace miller {
 
 // String constants:
-static const char * const PROGRAM_NAME = "miller";
+static const char * const PROGRAM_NAME = "tempi-graph-viewer";
 static const char * const GRAPH_NAME = "graph0";
 static const char * const NODES_GROUP = "group0";
 static const char * const CONNECTIONS_ACTOR = "connections0";
@@ -501,26 +498,26 @@ int App::parse_options(int argc, char **argv)
     GError* error = NULL;
     GOptionContext* context;
 
-    context = g_option_context_new(" - miller");
+    context = g_option_context_new(" - Displays Tempi graphs and runs them");
     g_option_context_add_main_entries(context, entries, NULL);
     g_option_context_add_group(context, clutter_get_option_group());
     
-    if(!g_option_context_parse(context, &argc, &argv, &error))
+    if (! g_option_context_parse(context, &argc, &argv, &error))
     {
         return 1;
     }
 
-    if(version)
+    if (version)
     {
         std::cout << PROGRAM_NAME << " " << PACKAGE_VERSION << std::endl;
         return 0;
     }
-    if(filenames != NULL)
+    if (filenames != NULL)
     {
         guint numFiles;
         numFiles = g_strv_length(filenames);
 
-        for(guint i=0; i<numFiles; ++i)
+        for (guint i = 0; i < numFiles; ++i)
         {
             g_print("Trying to load file: %s\n", filenames[i]);
         }
@@ -529,7 +526,7 @@ int App::parse_options(int argc, char **argv)
         file_name_ = filenames[0];
         std::cout << file_name_ << std::endl;
     }
-    if(verbose)
+    if (verbose)
     {
         verbose_ = verbose;
 
@@ -537,7 +534,7 @@ int App::parse_options(int argc, char **argv)
         std::cout << "Verbose: " << verbose_ << std::endl;
         std::cout << "Debug: " << debug_ << std::endl;
     }
-    if(debug)
+    if (debug)
     {
         debug_ = debug;
     }
