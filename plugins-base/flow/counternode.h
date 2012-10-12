@@ -44,7 +44,6 @@ class CounterNode : public Node
         virtual bool onNodeAttributeChanged(const char *name, const Message &value);
     private:
         int count_;
-        int increment_;
 };
 
 } // end of namespace

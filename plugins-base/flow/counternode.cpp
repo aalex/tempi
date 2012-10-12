@@ -29,8 +29,7 @@ const char * const CounterNode::PROP_INCREMENT = "increment";
 const char * const CounterNode::PROP_INITIAL_COUNT = "initial_count";
 
 CounterNode::CounterNode() :
-    Node(),
-    increment_(1)
+    Node()
 {
     setShortDocumentation("Counts from its start value, incrementing or decrementing the count when it gets a bang.");
     addOutlet("0", "Count.");
