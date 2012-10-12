@@ -41,6 +41,7 @@ OscReceiverNode::OscReceiverNode() :
 
 bool OscReceiverNode::onNodeAttributeChanged(const char *name, const Message &value)
 {
+    if (Logger::isEnabledFor(DEBUG))
     {
         std::ostringstream os;
         os << "OscReceiverNode::" << __FUNCTION__ << "(\"" << name << "\", " << value << ")";
@@ -59,12 +60,16 @@ bool OscReceiverNode::onNodeAttributeChanged(const char *name, const Message &va
         unsigned int portNumber = (unsigned int) tmp;
         if (portNumber == port_number_)
         {
-            std::ostringstream os;
-            os << "OscReceiver::" << __FUNCTION__ << " already listening on port " << portNumber;
-            Logger::log(DEBUG, os.str().c_str());
+            if (Logger::isEnabledFor(DEBUG))
+            {
+                std::ostringstream os;
+                os << "OscReceiver::" << __FUNCTION__ << " already listening on port " << portNumber;
+                Logger::log(DEBUG, os.str().c_str());
+            }
             return false;
         }
         port_number_ = portNumber;
+        if (Logger::isEnabledFor(INFO))
         {
             std::ostringstream os;
             os << "OscReceiver::" << __FUNCTION__ << " listen on port " << portNumber;

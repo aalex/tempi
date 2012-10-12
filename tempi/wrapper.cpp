@@ -47,10 +47,13 @@ bool Wrapper::setSynchronous(bool synchronous)
     //    delete scheduler_;
     if (synchronous_)
     {
-        std::ostringstream os;
-        os << "Wrapper." << __FUNCTION__ << ": " <<
-            "Using SynchronousScheduler.";
-        Logger::log(INFO, os);
+        if (Logger::isEnabledFor(INFO))
+        {
+            std::ostringstream os;
+            os << "Wrapper." << __FUNCTION__ << ": " <<
+                "Using SynchronousScheduler.";
+            Logger::log(INFO, os);
+        }
         scheduler_ = new SynchronousScheduler;
     }
     else
@@ -58,11 +61,14 @@ bool Wrapper::setSynchronous(bool synchronous)
         scheduler_ = new ThreadedScheduler;
         ThreadedScheduler *threaded = dynamic_cast<ThreadedScheduler*>(scheduler_);
         threaded->start(5); // 5 ms
-        std::ostringstream os;
-        os << "Wrapper." << __FUNCTION__ << ": " <<
-            "Using ThreadedScheduler. ";
-            "Starting ThreadedScheduler";
-        Logger::log(INFO, os);
+        if (Logger::isEnabledFor(INFO))
+        {
+            std::ostringstream os;
+            os << "Wrapper." << __FUNCTION__ << ": " <<
+                "Using ThreadedScheduler. ";
+                "Starting ThreadedScheduler";
+            Logger::log(INFO, os);
+        }
     }
 }
 
@@ -71,10 +77,13 @@ Wrapper::~Wrapper()
     if (! synchronous_)
     {
         ThreadedScheduler *threaded = dynamic_cast<ThreadedScheduler*>(scheduler_);
-        std::ostringstream os;
-        os << "Wrapper." << __FUNCTION__ <<
-            "(): Waiting for Scheduler's thread to join.";
-        Logger::log(DEBUG, os);
+        if (Logger::isEnabledFor(DEBUG))
+        {
+            std::ostringstream os;
+            os << "Wrapper." << __FUNCTION__ <<
+                "(): Waiting for Scheduler's thread to join.";
+            Logger::log(DEBUG, os);
+        }
         threaded->stop();
     }
     delete scheduler_;
@@ -105,10 +114,13 @@ bool Wrapper::setLogLevel(const std::string &level)
     }
     {
         tempi::Logger::getInstance().setLevel(new_level);
-        std::ostringstream os;
-        os << "Wrapper." << __FUNCTION__ <<
-            "Set log level to " << level;
-        Logger::log(INFO, os);
+        if (Logger::isEnabledFor(INFO))
+        {
+            std::ostringstream os;
+            os << "Wrapper." << __FUNCTION__ <<
+                "Set log level to " << level;
+            Logger::log(INFO, os);
+        }
     }
     return true;
 }
@@ -133,6 +145,7 @@ bool Wrapper::loadGraph(const std::string &name, const std::string &fileName)
         tempi::Logger::log(ERROR, os);
         return false;
     }
+    if (Logger::isEnabledFor(DEBUG))
     {
         std::ostringstream os;
         os << "Wrapper" << __FUNCTION__ << ": " <<
@@ -145,6 +158,7 @@ bool Wrapper::loadGraph(const std::string &name, const std::string &fileName)
     // load graph
     serializer::load(*(graph.get()), fileName.c_str());
     graph->tick(); // FIXME
+    if (Logger::isEnabledFor(INFO))
     {
         std::ostringstream os;
         os << "Wrapper" << __FUNCTION__ << ": " <<

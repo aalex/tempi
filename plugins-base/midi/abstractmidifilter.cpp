@@ -50,6 +50,7 @@ bool AbstractMidiEventBuilderNode::onNodeAttributeChanged(const char *name, cons
 
 void AbstractMidiEventBuilderNode::processMessage(const char *inlet, const Message &message)
 {
+    if (Logger::isEnabledFor(INFO))
     {
         std::ostringstream os;
         os << "AbstractMidiEventBuilderNode." << __FUNCTION__ << ": " << message;
@@ -83,7 +84,6 @@ void AbstractMidiEventBuilderNode::processMessage(const char *inlet, const Messa
         return;
     }
 }
-
 
 } // end of namespace
 } // end of namespace

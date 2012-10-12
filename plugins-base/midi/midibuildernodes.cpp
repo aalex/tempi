@@ -118,6 +118,7 @@ bool ControlBuilderNode::buildMidiEvent(const std::vector<int>& ints, Message &r
             break;
         }
     }
+    if (Logger::isEnabledFor(DEBUG))
     {
         std::ostringstream os;
         os << "ControlBuilderNode." << __FUNCTION__ <<

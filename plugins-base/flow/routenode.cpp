@@ -43,13 +43,18 @@ void RouteNode::processMessage(const char *inlet, const Message &message)
         return;
     if (! message.indexMatchesType(0, 's'))
     {
-        std::ostringstream os;
-        os << "[route] processMessage: First atom is not a string: " << message;
-        Logger::log(DEBUG, os);
+        if (Logger::isEnabledFor(WARNING))
+        {
+            std::ostringstream os;
+            os << "[route] processMessage: First atom is not a string: " << message;
+            Logger::log(WARNING, os);
+        }
         return;
     }
     std::string selector = message.getString(0);
     Message ret = message.cloneRange(1, message.getSize() - 1);
+
+    if (Logger::isEnabledFor(DEBUG))
     {
         std::ostringstream os;
         os << "[route] processMessage: result is : " << ret;
@@ -59,16 +64,18 @@ void RouteNode::processMessage(const char *inlet, const Message &message)
         output(selector.c_str(), ret);
     else
     {
+        if (Logger::isEnabledFor(WARNING))
         {
             std::ostringstream os;
             os << "[route] processMessage: No selector named like first atom:  " << message;
-            Logger::log(DEBUG, os.str().c_str());
+            Logger::log(WARNING, os.str().c_str());
         }
     }
 }
 
 void RouteNode::printOutletsInfo() const
 {
+    if (Logger::isEnabledFor(DEBUG))
     {
         std::ostringstream os;
         os << "[route]: selectors it stored:";
@@ -77,6 +84,7 @@ void RouteNode::printOutletsInfo() const
             os << " " << (*iter);
         Logger::log(DEBUG, os.str().c_str());
     }
+    if (Logger::isEnabledFor(DEBUG))
     {
         std::ostringstream os;
         os << "[route]: actual outlets:";
@@ -92,6 +100,7 @@ bool RouteNode::onNodeAttributeChanged(const char *name, const Message &value)
 {
     if (! utils::stringsMatch("selectors", name))
         return true;
+    if (Logger::isEnabledFor(DEBUG))
     {
         std::ostringstream os;
         os << "[route] " << __FUNCTION__ << ": name=\"" << name << "\" value=" << value;
@@ -109,16 +118,22 @@ bool RouteNode::onNodeAttributeChanged(const char *name, const Message &value)
             if (hasOutlet(s.c_str()) && 
                 utils::find_in_vector<std::string>(selectors_, s))
             {
-                std::ostringstream os;
-                os << "[route] " << __FUNCTION__ << ": Already have selector named " << s;
-                Logger::log(DEBUG, os.str().c_str());
+                if (Logger::isEnabledFor(DEBUG))
+                {
+                    std::ostringstream os;
+                    os << "[route] " << __FUNCTION__ << ": Already have selector named " << s;
+                    Logger::log(DEBUG, os.str().c_str());
+                }
                 new_outlets_list.push_back(s);
             }
             else
             {
-                std::ostringstream os;
-                os << "[route] " << __FUNCTION__ << ": new_outlets_list.push_back(" << s << ")";
-                Logger::log(DEBUG, os.str().c_str());
+                if (Logger::isEnabledFor(DEBUG))
+                {
+                    std::ostringstream os;
+                    os << "[route] " << __FUNCTION__ << ": new_outlets_list.push_back(" << s << ")";
+                    Logger::log(DEBUG, os.str().c_str());
+                }
                 new_outlets_list.push_back(s);
             }
         }
@@ -129,9 +144,12 @@ bool RouteNode::onNodeAttributeChanged(const char *name, const Message &value)
     {
         if (! utils::find_in_vector<std::string>(new_outlets_list, (*iter)))
         {
-            std::ostringstream os;
-            os << "[route]: remove outlet " << (*iter) << std::endl;
-            Logger::log(DEBUG, os.str().c_str());
+            if (Logger::isEnabledFor(DEBUG))
+            {
+                std::ostringstream os;
+                os << "[route]: remove outlet " << (*iter) << std::endl;
+                Logger::log(DEBUG, os.str().c_str());
+            }
 
             selectors_.erase(std::find(selectors_.begin(), selectors_.end(), (*iter)));
             removeOutlet((*iter).c_str());
@@ -142,9 +160,12 @@ bool RouteNode::onNodeAttributeChanged(const char *name, const Message &value)
     {
         if (! utils::find_in_vector<std::string>(selectors_, (*iter)))
         {
-            std::ostringstream os;
-            os << "[route]: add outlet " << (*iter) << std::endl;
-            Logger::log(DEBUG, os.str().c_str());
+            if (Logger::isEnabledFor(DEBUG))
+            {
+                std::ostringstream os;
+                os << "[route]: add outlet " << (*iter) << std::endl;
+                Logger::log(DEBUG, os.str().c_str());
+            }
 
             selectors_.push_back((*iter));
             addOutlet((*iter).c_str(), "Output for the message starting with a string of the same name.");

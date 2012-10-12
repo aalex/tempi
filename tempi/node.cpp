@@ -70,6 +70,7 @@ bool Node::isInitiated() const
 
 bool Node::init()
 {
+    if (Logger::isEnabledFor(DEBUG))
     {
         std::ostringstream os;
         os << "Node.init(): " << getName();
@@ -87,6 +88,7 @@ bool Node::init()
 
 void Node::loadBang()
 {
+    if (Logger::isEnabledFor(DEBUG))
     {
         std::ostringstream os;
         os << "Node.loadBang: " << getName();
@@ -99,9 +101,12 @@ void Node::loadBang()
     }
     else
     {
-        std::ostringstream os;
-        os << "Node.loadBang: had already been loadBanged: " << getName();
-        Logger::log(DEBUG, os.str().c_str());
+        if (Logger::isEnabledFor(DEBUG))
+        {
+            std::ostringstream os;
+            os << "Node.loadBang: had already been loadBanged: " << getName();
+            Logger::log(DEBUG, os.str().c_str());
+        }
     }
 }
 

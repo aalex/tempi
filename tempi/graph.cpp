@@ -190,10 +190,13 @@ bool Graph::connect(const char *from, const char *outlet, const char *to, const 
         return false;
     }
     connections_.push_back(Connection(std::string(from), std::string(outlet), std::string(to), std::string(inlet)));
-    std::ostringstream os;
-    os << "Graph." << __FUNCTION__ << "(" <<
-        from << ":" << outlet << ", " << to << ":" << inlet << ")";
-    Logger::log(DEBUG, os.str().c_str());
+    if (Logger::isEnabledFor(DEBUG))
+    {
+        std::ostringstream os;
+        os << "Graph." << __FUNCTION__ << "(" <<
+            from << ":" << outlet << ", " << to << ":" << inlet << ")";
+        Logger::log(DEBUG, os.str().c_str());
+    }
     return true;
 }
 

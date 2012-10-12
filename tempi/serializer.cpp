@@ -196,6 +196,7 @@ bool save(Graph &graph, const char *filename)
 
     // Save document to file
     xmlSaveFormatFileEnc(filename, doc, "UTF-8", 1);
+    if (Logger::isEnabledFor(INFO))
     {
         std::ostringstream os;
         os << "serializer::save(): Saved the graph to " << filename;
@@ -227,10 +228,13 @@ bool load_graph_connections(xmlNodePtr graph_node, Graph &graph)
             if (from != NULL && outlet != NULL
                 && to != NULL && inlet != NULL)
             {
-                std::ostringstream os;
-                os << "serializer::" << __FUNCTION__ << "(): Connect "
-                    << from << ":" << outlet << " -> " << to << ":" << inlet;
-                Logger::log(INFO, os.str().c_str());
+                if (Logger::isEnabledFor(INFO))
+                {
+                    std::ostringstream os;
+                    os << "serializer::" << __FUNCTION__ << "(): Connect "
+                        << from << ":" << outlet << " -> " << to << ":" << inlet;
+                    Logger::log(INFO, os.str().c_str());
+                }
                 graph.connect((char *) from, (char *) outlet, (char *) to, (char *) inlet);
             }
             xmlFree(from);
@@ -244,9 +248,12 @@ bool load_graph_connections(xmlNodePtr graph_node, Graph &graph)
             ! node_name_is(connection_node, REGION_NODE) &&
             connection_node->type == XML_ELEMENT_NODE)
         {
-            std::ostringstream os;
-            os << "Found unknown XML tag: \"" << connection_node->name << "\"";
-            Logger::log(ERROR, os.str().c_str());
+            if (Logger::isEnabledFor(INFO))
+            {
+                std::ostringstream os;
+                os << "Found unknown XML tag: \"" << connection_node->name << "\"";
+                Logger::log(ERROR, os.str().c_str());
+            }
         }
     } // for each connection
 }
@@ -283,11 +290,14 @@ bool load_message(xmlNodePtr message_node, Message &message)
             try
             {
                 utils::appendArgumentFromString(message, atom_value.c_str(), atom_typetag);
-                std::ostringstream os;
-                os << "    * atom " <<
-                    (char) atom_typetag << ":" <<
-                    atom_value;
-                Logger::log(INFO, os.str().c_str());
+                if (Logger::isEnabledFor(INFO))
+                {
+                    std::ostringstream os;
+                    os << "    * atom " <<
+                        (char) atom_typetag << ":" <<
+                        atom_value;
+                    Logger::log(INFO, os.str().c_str());
+                }
             }
             catch (const BadAtomTypeException &e)
             {
@@ -318,6 +328,7 @@ bool load_node_attributes(xmlNodePtr node_node, Node &node)
             xmlChar *attr_name = xmlGetProp(attribute_node,
                 XMLSTR ATTRIBUTE_NAME_PROPERTY);
             //std::cout << "   * attr " << attr_name << std::endl;
+            if (Logger::isEnabledFor(INFO))
             {
                 std::ostringstream os;
                 os << "   * attr \"" << attr_name << "\":";
@@ -346,6 +357,7 @@ bool load_graph(xmlNodePtr graph_node, Graph &graph)
             // TODO: check if it has the property
             xmlChar *node_name = xmlGetProp(node_node,
                 XMLSTR NODE_ID_PROPERTY);
+            if (Logger::isEnabledFor(INFO))
             {
                 std::ostringstream os;
                 os << "  * node " << node_name << " of type " << node_type;
@@ -379,6 +391,7 @@ bool load_region(xmlNodePtr region_node, sampler::Region &region)
             // TODO: check if it has the property
             xmlChar *event_time = xmlGetProp(event_node,
                 XMLSTR EVENT_TIMEPOSITION_PROPERTY);
+            if (Logger::isEnabledFor(DEBUG))
             {
                 std::ostringstream os;
                 os << "  * event " << event_time;
@@ -409,6 +422,7 @@ bool load(Graph &graph, const char *filename)
         Logger::log(ERROR, os.str().c_str());
         return false;
     }
+    if (Logger::isEnabledFor(INFO))
     {
         std::ostringstream os;
         os << "Loading project file " << filename;
@@ -435,6 +449,7 @@ bool load(Graph &graph, const char *filename)
     graph.tick();
     graph.loadBang();
 
+    if (Logger::isEnabledFor(INFO))
     {
         std::ostringstream os;
         os << "Loaded the graph from " << filename;

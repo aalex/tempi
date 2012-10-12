@@ -82,10 +82,11 @@ void Entity::setAttributeValue(const char *name, const Message &value)
     if (ok_to_change)
     {
         // TODO: //if (isInitiated())
+        if (Logger::isEnabledFor(DEBUG))
         {
             std::ostringstream os;
             os << "Entity." << __FUNCTION__ << ": (" << this->getName() << ") \"" << name << "\"=" << value;
-            Logger::log(DEBUG, os.str().c_str());
+            Logger::log(DEBUG, os);
         }
         ok_to_change = onAttributeChanged(name, value);
         if (ok_to_change)

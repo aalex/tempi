@@ -39,19 +39,24 @@ void LoadMessNode::processMessage(const char *inlet, const Message &message)
 }
 bool LoadMessNode::onNodeAttributeChanged(const char *name, const Message &value)
 {
-    std::ostringstream os;
-    os << "[base.loadmess](" << getName() << ")." << __FUNCTION__ << ": " << name << "=" << value;
-    Logger::log(INFO, os.str().c_str());
+    if (Logger::isEnabledFor(INFO))
+    {
+        std::ostringstream os;
+        os << "[base.loadmess](" << getName() << ")." << __FUNCTION__ << ": " << name << "=" << value;
+        Logger::log(INFO, os.str().c_str());
+    }
     return true;
 }
 
 void LoadMessNode::onLoadBang()
 {
-
     this->output("0", this->getAttributeValue("value"));
-    std::ostringstream os;
-    os << "[base.loadmess]." << __FUNCTION__ << ": output(" << this->getAttributeValue("value") << ")";
-    Logger::log(INFO, os.str().c_str());
+    if (Logger::isEnabledFor(INFO))
+    {
+        std::ostringstream os;
+        os << "[base.loadmess]." << __FUNCTION__ << ": output(" << this->getAttributeValue("value") << ")";
+        Logger::log(INFO, os.str().c_str());
+    }
 }
 
 } // end of namespace
