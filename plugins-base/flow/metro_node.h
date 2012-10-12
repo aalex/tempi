@@ -43,10 +43,12 @@ class MetroNode : public Node
         virtual void processMessage(const char *inlet, const Message &message) {}
         virtual bool onNodeAttributeChanged(const char *name, const Message &value);
     private:
+        bool initial_tick_done_;
         Timer timer_;
         TimePosition interval_;
 
         virtual void doTick();
+        void outputTick();
         void startMetro();
 };
 

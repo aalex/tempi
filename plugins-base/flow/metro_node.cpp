@@ -20,62 +20,101 @@
 
 #include "plugins-base/flow/metro_node.h"
 #include "tempi/timeposition.h"
+#include "tempi/log.h"
 
 namespace tempi {
 namespace plugins_base {
 
+static const char * const RUNNING_ATTR = "running";
+static const char * const INTERVAL_ATTR = "interval";
+
 MetroNode::MetroNode() :
-    Node()
+    Node(),
+    initial_tick_done_(false)
 {
     this->setShortDocumentation("Sends an empty message every n milliseconds.");
     Message running = Message("b", false);
-    this->addAttribute(Attribute::ptr(new Attribute("running", running, "Whether it's ticking or not.")));
+    this->addAttribute(Attribute::ptr(new Attribute(RUNNING_ATTR, running, "Whether it's ticking or not.")));
 
     Message interval = Message("i", 1000);
-    this->addAttribute(Attribute::ptr(new Attribute("interval", interval, "Interval in milliseconds."))); // ms
+    this->addAttribute(Attribute::ptr(new Attribute(INTERVAL_ATTR, interval, "Interval in milliseconds."))); // ms
 
     this->addOutlet("0");
 }
 
 bool MetroNode::onNodeAttributeChanged(const char *name, const Message &value)
 {
-    const static std::string running("running");
-//  const static std::string interval("interval");
-    //std::cout << "MetroNode::" << __FUNCTION__ << ": " << name << " = " << value << std::endl;
-    if (running == name)
+    static const std::string RUNNING(RUNNING_ATTR);
+
+    if (Logger::isEnabledFor(DEBUG))
+    {
+        std::ostringstream os;
+        os << "MetroNode::" << __FUNCTION__ << ": " << name << " = " << value;
+        Logger::log(DEBUG, os);
+    }
+    if (RUNNING == name)
     {
         if (value.getBoolean(0))
         {
-            Message message = Message(""); // bang
-            output("0", message);
             this->startMetro();
+            // XXX: do not output tick here, since nodes are not yet connection. We do this in doTick()
         }
-        //else
-        //    startMetro(); // we restart it anyways
     }
     return true;
 }
 
 void MetroNode::startMetro()
 {
+    if (Logger::isEnabledFor(DEBUG))
+    {
+        std::ostringstream os;
+        os << "MetroNode::" << __FUNCTION__;
+        Logger::log(DEBUG, os);
+    }
+    this->initial_tick_done_ = false;
     timer_.reset();
+    if (this->isInitiated())
+        this->outputTick();
+}
+
+void MetroNode::outputTick()
+{
+    if (Logger::isEnabledFor(DEBUG))
+    {
+        std::ostringstream os;
+        os << "MetroNode::" << __FUNCTION__;
+        Logger::log(DEBUG, os);
+    }
+    this->initial_tick_done_ = true;
+    Message message = Message(""); // bang
+    this->output("0", message);
 }
 
 void MetroNode::doTick()
 {
     using timeposition::from_ms;
     using timeposition::to_ms;
-    //std::cout << "MetroNode::" << __FUNCTION__ << " running:" << getAttributeValue("running").getBoolean(0) << std::endl;
-    if (getAttributeValue("running").getBoolean(0))
+
+    if (getAttributeValue(RUNNING_ATTR).getBoolean(0))
     {
+        if (! this->initial_tick_done_)
+        {
+            if (this->isInitiated())
+                this->outputTick();
+            return;
+        }
         TimePosition interval = from_ms((unsigned long long) getAttributeValue("interval").getInt(0));
         TimePosition elapsed = timer_.elapsed();
-        //std::cout << "MetroNode::" << __FUNCTION__ << " interval:" << to_ms(interval) << " elapsed:" << elapsed << std::endl;
+        if (Logger::isEnabledFor(DEBUG))
+        {
+            std::ostringstream os;
+            os << "MetroNode::" << __FUNCTION__ << " interval:" << to_ms(interval) <<
+                " elapsed:" << elapsed;
+            Logger::log(DEBUG, os);
+        }
         if (elapsed >= interval)
         {
-            Message message = Message(""); // bang
-            //std::cout << "TICK" << std::endl;
-            this->output("0", message);
+            this->outputTick();
             timer_.reset();
         }
     }
