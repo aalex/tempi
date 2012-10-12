@@ -382,6 +382,12 @@ bool Node::hasOutlet(Outlet *outlet)
 
 void Node::tick()
 {
+    if (Logger::isEnabledFor(DEBUG))
+    {
+        std::ostringstream os;
+        os << "Node::" << __FUNCTION__;
+        Logger::log(DEBUG, os);
+    }
     if (! isInitiated())
         init();
     doTick();
