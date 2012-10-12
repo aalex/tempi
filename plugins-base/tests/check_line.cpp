@@ -3,7 +3,7 @@
 #include <cmath>
 #include "plugins-base/flow/linenode.h"
 
-static const bool VERBOSE = true;
+static const bool VERBOSE = false;
 
 using namespace tempi;
 
@@ -21,7 +21,8 @@ bool check_line()
     float duration = 100.0f;
     plugins_base::Line line = plugins_base::Line();
     line.start(target, duration);
-    std::cout << "target: " << line.getTarget() << ", duration: " << line.getDuration() << std::endl;
+    if (VERBOSE)
+        std::cout << "target: " << line.getTarget() << ", duration: " << line.getDuration() << std::endl;
     if (VERBOSE)
     {
         std::cout << "line: [" << line.getTarget() <<
@@ -42,7 +43,8 @@ bool check_line()
     }
     const int num_iter = 10;
     long interval_ms = ((long) duration) / num_iter;
-    std::cout << "interval: " << interval_ms << std::endl;
+    if (VERBOSE)
+        std::cout << "interval: " << interval_ms << std::endl;
     for (int i = 0; i < num_iter; ++i)
     {
         usleep(interval_ms * 1000);
@@ -50,7 +52,8 @@ bool check_line()
         if (VERBOSE)
             std::cout << "line: " << i << " = " << result << std::endl;
         float expected = ((i+1) / (float) num_iter) * target;
-        std::cout << "expected: " << expected << std::endl;
+        if (VERBOSE)
+            std::cout << "expected: " << expected << std::endl;
         if (! float_is_about(result, expected))
         {
             std::cout << "result expected=" << expected <<
