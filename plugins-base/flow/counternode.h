@@ -37,7 +37,7 @@ class CounterNode : public Node
 {
     public:
         static const char * const PROP_INCREMENT;
-        static const char * const PROP_COUNT;
+        static const char * const PROP_INITIAL_COUNT;
         CounterNode();
     protected:
         virtual void processMessage(const char *inlet, const Message &message);

@@ -26,7 +26,7 @@ namespace tempi {
 namespace plugins_base {
 
 const char * const CounterNode::PROP_INCREMENT = "increment";
-const char * const CounterNode::PROP_COUNT = "count";
+const char * const CounterNode::PROP_INITIAL_COUNT = "initial_count";
 
 CounterNode::CounterNode() :
     Node(),
@@ -37,8 +37,8 @@ CounterNode::CounterNode() :
     addInlet("0", "Bangs increase and output the count. Integers sets and outputs the count.");
     Message increment = Message("i", 1);
     addAttribute(Attribute::ptr(new Attribute(PROP_INCREMENT, increment)));
-    Message count = Message("i", 0);
-    addAttribute(Attribute::ptr(new Attribute(PROP_COUNT, count, "Current count value.")));
+    Message ini_count_attr = Message("i", 0);
+    addAttribute(Attribute::ptr(new Attribute(PROP_INITIAL_COUNT, ini_count_attr, "Initial count value.")));
 }
 
 void CounterNode::processMessage(const char *inlet, const Message &message)
@@ -47,18 +47,16 @@ void CounterNode::processMessage(const char *inlet, const Message &message)
     // bang outputs and increments
     if (message.getTypes() == "")
     {
-        int count = getAttributeValue(PROP_COUNT).getInt(0);
         int increment = getAttributeValue(PROP_INCREMENT).getInt(0);
-        output("0", getAttributeValue(PROP_COUNT));
-        count += increment;
-        setAttributeValue(PROP_COUNT, Message("i", count));
+        output("0", Message("i", count_));
+        count_ += increment;
     }
     // int replaces the value and outputs
     else if (message.getTypes() == "i")
     {
         count_ = message.getInt(0);
-        setAttributeValue(PROP_COUNT, message);
-        output("0", getAttributeValue(PROP_COUNT));
+        setAttributeValue(PROP_INITIAL_COUNT, message);
+        output("0", getAttributeValue(PROP_INITIAL_COUNT));
     }
     else
     {
@@ -68,9 +66,9 @@ void CounterNode::processMessage(const char *inlet, const Message &message)
 
 bool CounterNode::onNodeAttributeChanged(const char *name, const Message &value)
 {
-    if (utils::stringsMatch("increment", name))
+    if (utils::stringsMatch(PROP_INITIAL_COUNT, name))
     {
-        increment_ = value.getInt(0);
+        count_ = value.getInt(0);
     }
     return true;
 }
