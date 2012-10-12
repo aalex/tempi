@@ -48,7 +48,6 @@ bool MapperInputNode::onNodeAttributeChanged(const char *name, const Message &va
     // TODO
 }
 
-
 void MapperInputNode::processMessage(const char *inlet, const Message &message)
 {
     Logger::log(DEBUG, "MapperInputNode::processMessage()");

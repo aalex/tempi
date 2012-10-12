@@ -43,6 +43,7 @@ void TriggerNode::processMessage(const char *inlet, const Message &message)
     if (! utils::stringsMatch(inlet, INPUT_INLET))
         return;
     std::string types = this->getAttributeValue(TYPES_ATTR).getString(0);
+    if (Logger::isEnabledFor(INFO))
     {
         std::ostringstream os;
         os << "[trigger]: current types are " << types;
@@ -53,6 +54,7 @@ void TriggerNode::processMessage(const char *inlet, const Message &message)
     {
         // output last atom first. (to last outlet)
         bool is_bang = types[(unsigned int) i] == 'b';
+        if (Logger::isEnabledFor(INFO))
         {
             std::ostringstream os;
             os << "[trigger] " << __FUNCTION__ << ": output ";
@@ -74,6 +76,7 @@ void TriggerNode::processMessage(const char *inlet, const Message &message)
 
 void TriggerNode::printOutletsInfo() const
 {
+    if (Logger::isEnabledFor(DEBUG))
     {
         std::ostringstream os;
         os << "[trigger]: actual outlets:";
@@ -112,6 +115,7 @@ bool TriggerNode::onNodeAttributeChanged(const char *name, const Message &value)
             name_os << i;
             std::ostringstream doc;
             doc << "Output number " << i;
+            if (Logger::isEnabledFor(INFO))
             {
                 std::ostringstream os;
                 os << "[trigger] " << __FUNCTION__ << ": add outlet " << i;
@@ -126,6 +130,7 @@ bool TriggerNode::onNodeAttributeChanged(const char *name, const Message &value)
         {
             std::ostringstream name_os;
             name_os << i;
+            if (Logger::isEnabledFor(INFO))
             {
                 std::ostringstream os;
                 os << "[trigger] " << __FUNCTION__ << ": remove outlet " << i;

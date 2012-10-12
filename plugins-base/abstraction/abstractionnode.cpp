@@ -54,6 +54,7 @@ AbstractionNode::AbstractionNode() :
 
 bool AbstractionNode::onNodeAttributeChanged(const char *name, const Message &value)
 {
+    if (Logger::isEnabledFor(DEBUG))
     {
         std::ostringstream os;
         os << "AbstractionNode::" << __FUNCTION__ << "(\"" << name << "\", " << value << ")";
@@ -64,9 +65,12 @@ bool AbstractionNode::onNodeAttributeChanged(const char *name, const Message &va
         std::string path = value.getString(0);
         if (path == "")
         {
-            std::ostringstream os;
-            os << "AbstractionNode::" << __FUNCTION__ << ": Emtpy file_path string doesn't load any patch." << path;
-            Logger::log(INFO, os.str().c_str());
+            if (Logger::isEnabledFor(INFO))
+            {
+                std::ostringstream os;
+                os << "AbstractionNode::" << __FUNCTION__ << ": Emtpy file_path string doesn't load any patch." << path;
+                Logger::log(INFO, os.str().c_str());
+            }
             return false;
         }
         if (path == file_path_)

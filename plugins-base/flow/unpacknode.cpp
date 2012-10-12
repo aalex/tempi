@@ -57,6 +57,7 @@ void UnpackNode::processMessage(const char *inlet, const Message &message)
     {
         // output last atom first. (to last outlet)
         Message ret = message.cloneRange(i, i);
+        if (Logger::isEnabledFor(INFO))
         {
             std::ostringstream os;
             os << "[unpack] " << __FUNCTION__ << ": output " << ret << " to " << i << "th outlet.";
@@ -72,6 +73,7 @@ void UnpackNode::processMessage(const char *inlet, const Message &message)
 
 void UnpackNode::printOutletsInfo() const
 {
+    if (Logger::isEnabledFor(DEBUG))
     {
         std::ostringstream os;
         os << "[unpack]: actual outlets:";
@@ -87,6 +89,7 @@ bool UnpackNode::onNodeAttributeChanged(const char *name, const Message &value)
 {
     if (! utils::stringsMatch(TYPES_ATTR, name))
         return true; // true means it's OK to change that attribute
+    if (Logger::isEnabledFor(DEBUG))
     {
         std::ostringstream os;
         os << "[unpack] " << __FUNCTION__ << ": name=\"" << name << "\" value=" << value;
@@ -111,6 +114,7 @@ bool UnpackNode::onNodeAttributeChanged(const char *name, const Message &value)
             name_os << i;
             std::ostringstream doc;
             doc << "Output for the " << i << "th atom";
+            if (Logger::isEnabledFor(INFO))
             {
                 std::ostringstream os;
                 os << "[unpack] " << __FUNCTION__ << ": add outlet " << i;
@@ -125,6 +129,7 @@ bool UnpackNode::onNodeAttributeChanged(const char *name, const Message &value)
         {
             std::ostringstream name_os;
             name_os << i;
+            if (Logger::isEnabledFor(INFO))
             {
                 std::ostringstream os;
                 os << "[unpack] " << __FUNCTION__ << ": remove outlet " << i;

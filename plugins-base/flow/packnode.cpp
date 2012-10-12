@@ -71,11 +71,14 @@ void PackNode::outputResult()
         std::ostringstream name_os;
         name_os << i;
         unsigned int index = (unsigned int) i; // XXX
+
+        if (Logger::isEnabledFor(INFO))
         {
             std::ostringstream os;
             os << "[pack] " << __FUNCTION__ << ": add atom to output: " << i;
             Logger::log(INFO, os);
         }
+        if (Logger::isEnabledFor(INFO))
         {
             std::ostringstream os;
             os << "[pack] " << __FUNCTION__ << ": add atom to output: " << i << " " << stored_messages_[index];
@@ -89,19 +92,23 @@ void PackNode::outputResult()
 
 void PackNode::printInletsInfo() const
 {
-    std::ostringstream os;
-    os << "[pack]: actual inlets:";
-    std::vector<std::string> inlets = this->listInlets();
-    std::vector<std::string>::const_iterator iter;
-    for (iter = inlets.begin(); iter != inlets.end(); ++iter)
-        os << " " << (*iter);
-    Logger::log(DEBUG, os.str().c_str());
+    if (Logger::isEnabledFor(DEBUG))
+    {
+        std::ostringstream os;
+        os << "[pack]: actual inlets:";
+        std::vector<std::string> inlets = this->listInlets();
+        std::vector<std::string>::const_iterator iter;
+        for (iter = inlets.begin(); iter != inlets.end(); ++iter)
+            os << " " << (*iter);
+        Logger::log(DEBUG, os.str().c_str());
+    }
 }
 
 bool PackNode::onNodeAttributeChanged(const char *name, const Message &value)
 {
     if (! utils::stringsMatch(NUM_ATTR, name))
         return true; // true means it's OK to change that attribute
+    if (Logger::isEnabledFor(DEBUG))
     {
         std::ostringstream os;
         os << "[pack] " << __FUNCTION__ << ": name=\"" << name << "\" value=" << value;
@@ -128,6 +135,7 @@ bool PackNode::onNodeAttributeChanged(const char *name, const Message &value)
             name_os << i;
             std::ostringstream doc;
             doc << "Input for the " << i << "th message to pack together with the other ones.";
+            if (Logger::isEnabledFor(INFO))
             {
                 std::ostringstream os;
                 os << "[pack] " << __FUNCTION__ << ": add inlet " << i;

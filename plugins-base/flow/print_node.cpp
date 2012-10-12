@@ -44,9 +44,12 @@ void PrintNode::processMessage(const char *inlet, const Message &message)
 {
     if (getAttributeValue("enabled").getBoolean(0))
     {
-        std::ostringstream os;
-        os << "[print]: Printing since enabled is true.";
-        Logger::log(DEBUG, os.str().c_str());
+        if (Logger::isEnabledFor(DEBUG))
+        {
+            std::ostringstream os;
+            os << "[print]: Printing since enabled is true.";
+            Logger::log(DEBUG, os.str().c_str());
+        }
         std::cout << getAttributeValue("prefix").getString(0) << message << std::endl;
     }
 }

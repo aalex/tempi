@@ -86,9 +86,12 @@ void SamplerReadNode::setRegion(const std::string &name)
     }
     if (! scheduler->hasRegion(name.c_str()))
     {
-        std::ostringstream os;
-        os << "SamplerReadNode.setRegion: No such region: " << name;
-        Logger::log(ERROR, os.str().c_str());
+        if (Logger::isEnabledFor(ERROR))
+        {
+            std::ostringstream os;
+            os << "SamplerReadNode.setRegion: No such region: " << name;
+            Logger::log(ERROR, os.str().c_str());
+        }
         return;
     }
     player_->setRegion(scheduler->getRegion(name.c_str()));
