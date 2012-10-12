@@ -123,12 +123,12 @@ void BaseLibrary::load(NodeFactory &factory, const char * /*prefix*/) const
 #endif // HAVE_CLUTTER
 
 // TODO: #ifdef HAVE_STK
-    factory.registerTypeT<ControlBuilderNode>(concatenate(prefix, "midi.control").c_str());
-    factory.registerTypeT<NoteBuilderNode>(concatenate(prefix, "midi.note").c_str());
+    factory.registerTypeT<ControlBuilderNode>(concatenate(prefix, "midi.build.control").c_str());
+    factory.registerTypeT<NoteBuilderNode>(concatenate(prefix, "midi.build.note").c_str());
     factory.registerTypeT<MidiReceiverNode>(concatenate(prefix, "midi.input").c_str());
     factory.registerTypeT<MidiSenderNode>(concatenate(prefix, "midi.output").c_str());
     factory.registerTypeT<MidiRouteNode>(concatenate(prefix, "midi.route").c_str());
-    factory.registerTypeT<ProgramChangeBuilderNode>(concatenate(prefix, "midi.program").c_str());
+    factory.registerTypeT<ProgramChangeBuilderNode>(concatenate(prefix, "midi.build.program").c_str());
 // TODO: #endif // HAVE_STK
 
     factory.registerTypeT<NearestNoteNode>(concatenate(prefix, "music.nearest.note").c_str());
