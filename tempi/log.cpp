@@ -31,8 +31,19 @@ Logger& Logger::getInstance()
 
 void Logger::setLevel(LogLevel level)
 {
+    level_ = level;
     log4cpp::Category& category = log4cpp::Category::getInstance(category_name_);
-    category.setPriority(level);
+    category.setPriority(level_);
+}
+
+bool Logger::isEnabledFor(LogLevel level)
+{
+    return level <= Logger::getInstance().getLevel();
+}
+
+LogLevel Logger::getLevel()
+{
+    return level_;
 }
 
 void Logger::log(LogLevel level, const std::ostringstream &os)
@@ -82,7 +93,8 @@ Logger::Logger()
     appender_->setLayout(layout_);
     log4cpp::Category& category = log4cpp::Category::getInstance(category_name_);
     category.setAppender(appender_);
-    category.setPriority(WARNING); //default
+    level_ = WARNING; // default
+    category.setPriority(level_); //default
 }
 
 const char * const Logger::category_name_ = "default";

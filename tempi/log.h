@@ -46,6 +46,10 @@ typedef enum
     ERROR = log4cpp::Priority::ERROR
 } LogLevel;
 
+/**
+ * Helps one to log messages.
+ * It is a singleton.
+ */
 class Logger
 {
     public:
@@ -58,12 +62,17 @@ class Logger
          * Sets log level.
          */
         void setLevel(LogLevel level);
+        LogLevel getLevel();
         /**
          * Logs a message.
          */
         static void log(LogLevel level, const char *message);
         static void log(LogLevel level, const std::ostringstream &os);
         static void log(LogLevel level, const std::string &text);
+        /**
+         * Returns true if messages of the specified LogLevel should be logged.
+         */
+        static bool isEnabledFor(LogLevel level);
         ~Logger();
     private:
         log4cpp::Appender *appender_;
@@ -76,6 +85,7 @@ class Logger
         // your singelton appearing.
         Logger(Logger const&);         // Don't Implement
         void operator=(Logger const&); // Don't implement
+        LogLevel level_;
 };
 
 } // end of namespace
