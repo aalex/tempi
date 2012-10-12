@@ -38,19 +38,18 @@ int main(int argc, char *argv[])
 #include "tempi/threadedscheduler.h"
 #include "tempi/serializer.h"
 #include "tempi/log.h"
-#include <boost/lexical_cast.hpp>
 #include <glib.h>
-#include <boost/program_options.hpp>
 #include <sstream>
 
 // namespaces:
-namespace po = boost::program_options;
 using tempi::INFO;
 using tempi::DEBUG;
 
 // String constants:
 static const char *PROGRAM_NAME = "tempi-launch";
+static const char *GRAPH_NAME = "graph0";
 
+// FIXME: store these options in a struct
 static gboolean help = FALSE;
 static gboolean version = FALSE;
 static gboolean verbose = FALSE;
@@ -141,6 +140,7 @@ bool TempiLauncher::setupGraph()
         tempi::Logger::log(DEBUG, os.str().c_str());
     }
     // Create Scheduler
+    if (tempi::Logger::isEnabledFor(tempi::DEBUG))
     {
         std::ostringstream os;
         os << "tempi-launch: Create ThreadedScheduler\n";
@@ -152,14 +152,15 @@ bool TempiLauncher::setupGraph()
     //if (verbose_)
     //    std::cout << (*engine_.get()) << std::endl;
     tempi::ScopedLock::ptr lock = engine_->acquireLock();
+    if (tempi::Logger::isEnabledFor(tempi::DEBUG))
     {
         std::ostringstream os;
         os << "tempi-launch: Create Graph\n";
         tempi::Logger::log(DEBUG, os.str().c_str());
     }
 
-    engine_->createGraph("graph0");
-    graph_ = engine_->getGraph("graph0");
+    engine_->createGraph(GRAPH_NAME);
+    graph_ = engine_->getGraph(GRAPH_NAME);
 
     // load graph
     tempi::serializer::load(*graph_.get(), fileName_.c_str());
@@ -204,52 +205,59 @@ int TempiLauncher::parse_options(int argc, char **argv)
     GError* error = NULL;
     GOptionContext* context;
 
-    context = g_option_context_new(" - tempi-launch");
+    context = g_option_context_new(" - Runs Tempi graphs from XML files");
     g_option_context_add_main_entries(context, entries, NULL);
     //g_option_context_add_group(context, g_option_context_get_main_group(context));
     
-    if(!g_option_context_parse(context, &argc, &argv, &error))
+    if (! g_option_context_parse(context, &argc, &argv, &error))
     {
         return 1;
     }
 
-    if(version)
+    if (version)
     {
         std::cout << PROGRAM_NAME << " " << PACKAGE_VERSION << std::endl;
         return 0;
     }
-    if(filenames != NULL)
-    {
-        guint numFiles;
-        numFiles = g_strv_length(filenames);
-
-        for(guint i=0; i<numFiles; ++i)
-        {
-            g_print("Trying to load file: %s\n", filenames[i]);
-        }
-
-        // At the moment we load just the first file specified
-        fileName_ = filenames[0];
-        std::cout << fileName_ << std::endl;
-    }
-    if(verbose)
+    if (verbose)
     {
         verbose_ = verbose;
-
         tempi::Logger::getInstance().setLevel(tempi::INFO);
         tempi::Logger::log(INFO, "Set logging level to INFO");
     }
-    if(debug)
+    if (debug)
     {
         debug_ = debug;
         tempi::Logger::getInstance().setLevel(tempi::DEBUG);
         tempi::Logger::log(INFO, "Set logging level to DEBUG");
     }
+    if (filenames != NULL)
+    {
+        guint numFiles;
+        numFiles = g_strv_length(filenames);
 
+        for (guint i = 0; i < numFiles; ++i)
+        {
+            // TODO: load all files
+        }
+        if (numFiles >= 1)
+        {
+            // // At the moment we load just the first file specified
+            fileName_ = filenames[0];
+            // std::cout << fileName_ << std::endl;
+        }
+        else
+        {
+            std::ostringstream os;
+            os << "No file name specified";
+            tempi::Logger::log(tempi::ERROR, os.str().c_str());
+        }
+    }
+    if (tempi::Logger::isEnabledFor(tempi::INFO))
     {
         std::ostringstream os;
-        os << "XML file to load: " << fileName_;
-        tempi::Logger::log(DEBUG, os.str().c_str());
+        os << "File name specified on the command line: " << fileName_;
+        tempi::Logger::log(tempi::INFO, os.str().c_str());
     }
 
     return -1;
