@@ -19,6 +19,7 @@
 
 /**
  * @file A graphical patcher.
+ * This project used to be called miller. That is why we still use that prefix, temporarily, for file names and such.
  */
 
 #include <iostream>
