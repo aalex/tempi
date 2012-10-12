@@ -27,7 +27,6 @@
 
 #include "tempi/node.h"
 #include "tempi/synchronousscheduler.h"
-#include "tempi/serializer.h"
 #include <string>
 #include <vector>
 
@@ -48,7 +47,6 @@ class AbstractionNode : public Node
     private:
         std::string file_path_;
         tempi::SynchronousScheduler::ptr scheduler_;
-        tempi::serializer::Serializer::ptr loader_;
         tempi::Graph::ptr graph_;
         std::vector<std::string> outlet_names_;
         std::vector<std::string> inlet_names_;

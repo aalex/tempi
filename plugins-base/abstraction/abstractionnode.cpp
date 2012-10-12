@@ -21,6 +21,7 @@
 #include "plugins-base/abstraction/abstractionnode.h"
 #include "plugins-base/abstraction/outletnode.h"
 #include "plugins-base/abstraction/inletnode.h"
+#include "tempi/serializer.h"
 #include "tempi/utils.h"
 #include "tempi/log.h"
 #include <iostream>
@@ -40,8 +41,7 @@ static bool hasNodeOfType(
 AbstractionNode::AbstractionNode() :
     Node(),
     file_path_(""),
-    scheduler_(new SynchronousScheduler),
-    loader_(new serializer::Serializer)
+    scheduler_(new SynchronousScheduler)
 {
     this->setShortDocumentation("Loads a Graph from an XML file and allows one to send and receives messages to and from its nodes.");
     this->setLongDocumentation(
@@ -109,7 +109,7 @@ bool AbstractionNode::loadGraph()
     scheduler_->createGraph("graph0");
 
     // Check for XML file
-    if (! loader_->fileExists(file_path_.c_str()))
+    if (! serializer::fileExists(file_path_.c_str()))
     {
         std::ostringstream os;
         os << "AbstractionNode: ERROR: File \"" << file_path_ << "\" not found!\n";
@@ -125,7 +125,7 @@ bool AbstractionNode::loadGraph()
     graph_ = scheduler_->getGraph("graph0");
 
     // load graph
-    bool ok = loader_->load(*graph_.get(), file_path_.c_str());
+    bool ok = serializer::load(*graph_.get(), file_path_.c_str());
     if (! ok)
     {
         std::ostringstream os;

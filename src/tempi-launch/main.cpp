@@ -24,7 +24,6 @@
 
 #include <iostream>
 #include "tempi/config.h"
-#include "tempi/log.h"
 
 #ifndef HAVE_GLIB
 int main(int argc, char *argv[])
@@ -92,7 +91,6 @@ class TempiLauncher
         bool verbose_;
         bool debug_;
         tempi::ThreadedScheduler::ptr engine_;
-        tempi::serializer::Serializer::ptr saver_;
         tempi::Graph::ptr graph_;
         bool setupGraph();
 };
@@ -132,7 +130,7 @@ bool TempiLauncher::setupGraph()
     }
 
     // Check for XML file
-    if (! saver_->fileExists(fileName_.c_str()))
+    if (! tempi::serializer::fileExists(fileName_.c_str()))
     {
         std::cerr << "tempi-launch: ERROR: File \"" << fileName_ << "\" not found!\n";
         return false;
@@ -164,7 +162,7 @@ bool TempiLauncher::setupGraph()
     graph_ = engine_->getGraph("graph0");
 
     // load graph
-    saver_->load(*graph_.get(), fileName_.c_str());
+    tempi::serializer::load(*graph_.get(), fileName_.c_str());
     graph_->tick(); // FIXME
 
     graph_ok_ = true;

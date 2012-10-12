@@ -20,7 +20,7 @@
 
 /**
  * @file
- * The Serializer class.
+ * Loading and saving utilities.
  */
 #ifndef __TEMPI_SERIALIZER_H__
 #define __TEMPI_SERIALIZER_H__
@@ -33,8 +33,7 @@
 namespace tempi
 {
 
-namespace serializer
-{
+namespace serializer {
 
 const char * const ROOT_NODE = "tempi";
 const char * const SOFTWARE_VERSION_ATTR = "version";
@@ -66,46 +65,37 @@ const char * const REGION_NAME_PROPERTY = "name";
 const char * const EVENT_NODE = "event";
 const char * const EVENT_TIMEPOSITION_PROPERTY = "time";
 
-/**
- * Saves and loads graphs and other stuff.
+/** 
+ * Saves a graph to an XML file.
+ * @return success
  */
-class Serializer
-{
-    public:
-        typedef std::tr1::shared_ptr<Serializer> ptr;
-        Serializer();
-        /** 
-         * Saves a graph to an XML file.
-         * @return success
-         */
-        static bool save(Graph &graph, const char *filename);
-        static bool save(sampler::Region &region, const char *filename);
-        /** 
-         * Loads a graph from an XML file.
-         * @return success
-         */
-        static bool load(Graph &graph, const char *filename);
-        static bool load(sampler::Region &region, const char *filename);
-        /**
-         * Checks if a file exists.
-         * @return success
-         */
-        static bool fileExists(const char *filename);
-        /**
-         * Creates a directory, if it does not exist.
-         * @return success
-         */
-        static bool createDirectory(const char *dirname);
-        /**
-         * Cleans up XML backend specific memory usage.
-         * Call before exiting your app.
-         * Watch out : it's not thread-safe!
-         */
-        static bool cleanup();
-};
+bool save(Graph &graph, const char *filename);
+bool save(sampler::Region &region, const char *filename);
+/** 
+ * Loads a graph from an XML file.
+ * @return success
+ */
+bool load(Graph &graph, const char *filename);
+bool load(sampler::Region &region, const char *filename);
+/**
+ * Checks if a file exists.
+ * @return success
+ */
+bool fileExists(const char *filename);
+/**
+ * Creates a directory, if it does not exist.
+ * @return success
+ */
+bool createDirectory(const char *dirname);
+/**
+ * Cleans up XML backend specific memory usage.
+ * Call before exiting your app.
+ * Watch out : it's not thread-safe!
+ */
+bool cleanup();
 
-        // TODO: isADirectory
-        // static bool isADirectory(const char *dirname);
+// TODO: isADirectory
+// static bool isADirectory(const char *dirname);
 
 } // end of namespace
 } // end of namespace

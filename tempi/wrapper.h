@@ -162,7 +162,6 @@ class Wrapper
     private:
         bool synchronous_;
         Scheduler *scheduler_;
-        serializer::Serializer::ptr saver_;
         // TODO
         bool setSynchronous(bool synchronous);
 };
