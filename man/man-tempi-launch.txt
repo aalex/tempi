@@ -1,3 +1,6 @@
+[USAGE]
+Provide a single file name as argument.
+
 [DESCRIPTION]
 Launches a Tempi graph reading XML files as input.
 
