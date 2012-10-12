@@ -44,7 +44,6 @@ int main(int argc, char *argv[])
 #include "tempi/wrapper.h"
 #include "tempi/log.h"
 #include "tempi/concurrentqueue.h"
-#include <boost/algorithm/string.hpp>
 #include <clutter/clutter.h>
 #include <glib.h>
 #include <sstream>
@@ -139,7 +138,7 @@ bool SaveCommand::apply(App &app)
     tempi::Logger::log(tempi::WARNING, "will save the graph.");
     tempi::ScopedLock::ptr lock = app.engine_->acquireLock();
     tempi::Graph::ptr graph = app.graph_;
-    bool ok = tempi::serializer::Serializer::save(*graph.get(), app.file_name_.c_str());
+    bool ok = tempi::serializer::save(*graph.get(), app.file_name_.c_str());
     if (ok)
         tempi::Logger::log(tempi::INFO, "Successfully saved the graph..");
     else
@@ -375,7 +374,7 @@ bool App::setupGraph()
         return true;
     }
     // Check for XML file
-    if (! tempi::serializer::Serializer::fileExists(this->file_name_.c_str()))
+    if (! tempi::serializer::fileExists(this->file_name_.c_str()))
     {
         std::cerr << "miller: ERROR: File \"" << this->file_name_ << "\" not found!\n";
         return false;
@@ -392,7 +391,7 @@ bool App::setupGraph()
     graph_ = engine_->getGraph(GRAPH_NAME);
 
     // load graph
-    tempi::serializer::Serializer::load(*graph_.get(), this->file_name_.c_str());
+    tempi::serializer::load(*graph_.get(), this->file_name_.c_str());
     graph_->tick(); // FIXME
 
     this->drawGraph();

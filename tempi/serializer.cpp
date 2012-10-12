@@ -111,11 +111,6 @@ xmlNode *seek_child_named(xmlNode *parent, const std::string &name)
     return NULL;
 }
 
-Serializer::Serializer()
-{
-    // pass
-}
-
 bool save_connections(xmlNodePtr graph_node, Graph &graph)
 {
     std::vector<Graph::Connection> connections = graph.getAllConnections();
@@ -180,7 +175,7 @@ bool save_nodes(xmlNodePtr graph_node, Graph &graph)
     return true;
 }
 
-bool Serializer::save(Graph &graph, const char *filename)
+bool save(Graph &graph, const char *filename)
 {
     xmlDocPtr doc = xmlNewDoc(XMLSTR "1.0");
     // "tempi" node with its "version" attribute
@@ -203,7 +198,7 @@ bool Serializer::save(Graph &graph, const char *filename)
     xmlSaveFormatFileEnc(filename, doc, "UTF-8", 1);
     {
         std::ostringstream os;
-        os << "Serializer::save(): Saved the graph to " << filename;
+        os << "serializer::save(): Saved the graph to " << filename;
         Logger::log(INFO, os.str().c_str());
     }
     // Free the document + global variables that may have been
@@ -402,7 +397,7 @@ bool load_region(xmlNodePtr region_node, sampler::Region &region)
     return true;
 }
 
-bool Serializer::load(Graph &graph, const char *filename)
+bool load(Graph &graph, const char *filename)
 {
     bool verbose = false;
     // parse the file and get the DOM tree
@@ -455,19 +450,19 @@ bool Serializer::load(Graph &graph, const char *filename)
     return true;
 }
 
-bool Serializer::fileExists(const char *filename)
+bool fileExists(const char *filename)
 {
     namespace fs = boost::filesystem;
     fs::path path = fs::path(filename);
     return fs::exists(path);
 }
 
-// bool Serializer::isADirectory(const char *dirname)
+// bool isADirectory(const char *dirname)
 // {
 //     return false; // not implemented
 // }
 
-bool Serializer::createDirectory(const char *dirname)
+bool createDirectory(const char *dirname)
 {
     namespace fs = boost::filesystem;
     fs::path directory = fs::path(dirname);
@@ -514,7 +509,7 @@ bool save_region(xmlNodePtr root_node, sampler::Region &region)
     return true;
 }
 
-bool Serializer::save(sampler::Region &region, const char *filename)
+bool save(sampler::Region &region, const char *filename)
 {
     xmlDocPtr doc = xmlNewDoc(XMLSTR "1.0");
     // "tempi" node with its "version" attribute
@@ -536,7 +531,7 @@ bool Serializer::save(sampler::Region &region, const char *filename)
     return true;
 }
 
-bool Serializer::load(sampler::Region &region, const char *filename)
+bool load(sampler::Region &region, const char *filename)
 {
     bool verbose = false;
     // parse the file and get the DOM tree
@@ -583,7 +578,7 @@ bool Serializer::load(sampler::Region &region, const char *filename)
     return true;
 }
 
-bool Serializer::cleanup()
+bool cleanup()
 {
     xmlCleanupParser();
 }

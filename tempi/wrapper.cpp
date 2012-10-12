@@ -125,7 +125,7 @@ bool Wrapper::loadGraph(const std::string &name, const std::string &fileName)
         return false;
     }
     // Check for XML file
-    if (! saver_->fileExists(fileName.c_str()))
+    if (! serializer::fileExists(fileName.c_str()))
     {
         std::ostringstream os;
         os << "Wrapper" << __FUNCTION__ << ": " <<
@@ -143,7 +143,7 @@ bool Wrapper::loadGraph(const std::string &name, const std::string &fileName)
     Graph::ptr graph = scheduler_->getGraph(name.c_str());
 
     // load graph
-    saver_->load(*(graph.get()), fileName.c_str());
+    serializer::load(*(graph.get()), fileName.c_str());
     graph->tick(); // FIXME
     {
         std::ostringstream os;
@@ -553,7 +553,7 @@ bool Wrapper::saveGraph(const std::string &name, const std::string &fileName)
     Graph::ptr graph = scheduler_->getGraph(name.c_str());
 
     // save graph
-    return saver_->save(*(graph.get()), fileName.c_str());
+    return serializer::save(*(graph.get()), fileName.c_str());
 }
 
 std::vector<std::string> Wrapper::listNodes(const std::string &graph)
