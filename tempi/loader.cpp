@@ -97,9 +97,12 @@ bool Loader::load(NodeFactory &factory, const char *name)
     }
     if (isLoaded(name))
     {
-        std::ostringstream os;
-        os << "Loader." << __FUNCTION__ << ": Plugin already loaded: " << name;
-        Logger::log(INFO, os);
+        if (Logger::isEnabledFor(INFO))
+        {
+            std::ostringstream os;
+            os << "Loader." << __FUNCTION__ << ": Plugin already loaded: " << name;
+            Logger::log(INFO, os);
+        }
         return false;
     }
     std::vector<std::string>::const_iterator iter;
@@ -108,6 +111,7 @@ bool Loader::load(NodeFactory &factory, const char *name)
         std::string prefix(*iter);
         std::string fileName;
         fileName = prefix + "/" + FILE_PREFIX + TEMPI_API_VERSION + PLUGINS_STR + name + FILE_SUFFIX;
+        if (Logger::isEnabledFor(DEBUG))
         {
             std::ostringstream os;
             os << __FUNCTION__ << ": Trying " << fileName;
@@ -115,6 +119,7 @@ bool Loader::load(NodeFactory &factory, const char *name)
         }
         if (fileExists(fileName.c_str()))
         {
+            if (Logger::isEnabledFor(DEBUG))
             {
                 std::ostringstream os;
                 os << "dlopen()...\n";

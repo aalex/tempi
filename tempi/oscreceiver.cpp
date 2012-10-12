@@ -110,12 +110,14 @@ bool OscReceiver::start()
     if (running_)
         return false;
     // TODO: handle errors
+    if (Logger::isEnabledFor(INFO))
     {
         std::ostringstream os;
         os << "OscReceive.start(): calling lo_server_new(" << port_ << ", " << onError << ")";
         Logger::log(INFO, os.str().c_str());
     }
     server_ = lo_server_new(boost::lexical_cast<std::string>(port_).c_str(), onError);
+    if (Logger::isEnabledFor(INFO))
     {
         std::ostringstream os;
         os << "OscReceive.start(): calling lo_server_add_method(" << server_ << ", NULL, NULL, " << generic_handler << ", this)";
