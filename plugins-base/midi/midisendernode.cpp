@@ -42,8 +42,11 @@ MidiSenderNode::MidiSenderNode() :
 
 MidiSenderNode::~MidiSenderNode()
 {
-    midi_output_->close_output_device(port_);
-    delete midi_output_;
+    if (midi_output_ != 0)
+    {
+        midi_output_->close_output_device(port_);
+        delete midi_output_;
+    }
 }
 
 void MidiSenderNode::onInit()
@@ -72,9 +75,9 @@ bool MidiSenderNode::open(unsigned int port)
         Logger::log(INFO, os);
     }
     port_ = port;
-    // FIXME: memleak????
-    // should first delete former midi_output_
-    midi_output_ = new midi::Midi();
+    // if (midi_output_ != 0)
+    //     delete midi_output_;
+    // midi_output_ = new midi::Midi();
     return midi_output_->open_output_device(port);
 }
 
