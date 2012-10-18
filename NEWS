@@ -9,13 +9,15 @@ New features:
 * Update spatosc API to 0.4
 * Add API version to name of plugins shared libraries
 * Rename sampler.sampler to sampler.simple
-* Miller: F1 shows help
+* rename miller to tempi-graph-viewer
+* tempi-graph-viewer: F1 shows help
 
 Bugs fixed:
 * tempi-osc-forward: fix node type names
-* Fix 100^ CPU usage in tempi-launch and miller
+* Fix 100% CPU usage in tempi-launch and miller
 * Miller: Fix the bad connection position
 * remove dependency to rtmidi. Now using portmidi.
+* fix memory leak in midi input and output nodes
 
 New prototypes and documentation:
 * (none)
