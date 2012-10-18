@@ -354,19 +354,16 @@ bool App::setupGraph()
         std::cerr << "App::" << __FUNCTION__ << ": already called.\n";
         return false;
     }
-    if (verbose_)
-        std::cout << "Create ThreadedScheduler\n";
+    tempi::Logger::log(tempi::DEBUG, "midi looper: Create ThreadedScheduler");
     engine_.reset(new tempi::ThreadedScheduler);
     engine_->start(5); // time precision in ms
-    if (verbose_)
-        std::cout << (*engine_.get()) << std::endl;
+    // if (verbose_)
+    //     std::cout << (*engine_.get()) << std::endl;
     tempi::ScopedLock::ptr lock = engine_->acquireLock();
-    if (verbose_)
-        std::cout << "Create Graph\n";
+    tempi::Logger::log(tempi::DEBUG, "midi looper: Create Graph");
     engine_->createGraph("graph0");
     tempi::Graph::ptr graph = engine_->getGraph("graph0");
-    if (verbose_)
-        std::cout << "Add nodes\n";
+    tempi::Logger::log(tempi::DEBUG, "midi looper: Add nodes");
     // Create objects:
     graph->addNode("base.midi.input", "midi.recv0");
     graph->addNode("base.midi.output", "midi.send0");
@@ -381,8 +378,7 @@ bool App::setupGraph()
     }
 
     graph->tick(); // calls Node::init() on each node.
-    if (verbose_)
-        std::cout << "Connect nodes\n";
+    tempi::Logger::log(tempi::DEBUG, "midi looper: Connect nodes");
     // Connections:
     //graph->connect("midi.recv0", 0, "midi.send0", 0);
     graph->connect("midi.recv0", "0", "base.print0", "0");
@@ -397,8 +393,7 @@ bool App::setupGraph()
     }
     //TODO graph->connect("sampler.simple0", 0, "base.prepend0", 0);
     // Set node attributes:
-    if (verbose_)
-        std::cout << "Set node attributes\n";
+    tempi::Logger::log(tempi::DEBUG, "midi looper: Set node attributes");
     graph->setNodeAttribute("midi.recv0", "port", tempi::Message("i", midi_input_port_));
     graph->setNodeAttribute("midi.send0", "port", tempi::Message("i", midi_output_port_));
     graph->setNodeAttribute("base.print0", "prefix", tempi::Message("s", "input: "));
@@ -447,13 +442,11 @@ bool App::createGUI()
         std::cerr << "App::" << __FUNCTION__ << ": Stage already created.\n"; 
         return false;
     }
-    else
-        std::cout << "Creating GUI.\n";
+    tempi::Logger::log(tempi::DEBUG, "Creating GUI.");
     stage_ = clutter_stage_get_default();
     clutter_actor_set_size(stage_, 544, 408);
     clutter_stage_set_color(CLUTTER_STAGE(stage_), &light_gray);
     g_signal_connect(stage_, "destroy", G_CALLBACK(clutter_main_quit), NULL);
-
 
     std::string background_image_file;
     if (findDataPath(background_image_file, "background.png"))
