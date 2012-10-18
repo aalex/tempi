@@ -43,7 +43,8 @@ MidiReceiverNode::MidiReceiverNode() :
 MidiReceiverNode::~MidiReceiverNode()
 {
     midi_input_->close_input_device(port_);
-    delete midi_input_;
+    if (midi_input_ != 0)
+        delete midi_input_;
 }
 
 bool MidiReceiverNode::onNodeAttributeChanged(const char *name, const Message &value)
@@ -70,7 +71,9 @@ bool MidiReceiverNode::open(unsigned int port)
         Logger::log(INFO, os);
     }
     port_ = port;
-    midi_input_ = new midi::Midi();
+    // if (midi_input_ != 0)
+    //     delete midi_input_;
+    // midi_input_ = new midi::Midi();
     return midi_input_->open_input_device(port);
 }
 
