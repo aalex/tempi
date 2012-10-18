@@ -28,14 +28,15 @@ namespace plugins_base {
 
 const char * const MidiSenderNode::EVENTS_INLET = "0"; // TODO: rename to events?
 const char * const MidiSenderNode::PORT_ATTR = "port";
+const char * const MidiSenderNode::ENUMERATE_INLET = "enumerate";
 
 MidiSenderNode::MidiSenderNode() :
     Node()
 {
     midi_output_ = new midi::Midi();
-    midi_output_->enumerate_devices();
     this->setShortDocumentation("Sends MIDI messages to a single device.");
     this->addInlet(EVENTS_INLET, "Send MIDI received from this inlet. (list of unsigned characters)");
+    this->addInlet(ENUMERATE_INLET, "Prints the list of devices when any message is sent to this inlet.");
     this->addAttribute(Attribute::ptr(new Attribute(PORT_ATTR, Message("i", midi_output_->get_default_output_device_id()), "portmidi device index.")));
 }
 
@@ -81,6 +82,11 @@ bool MidiSenderNode::open(unsigned int port)
 
 void MidiSenderNode::processMessage(const char *inlet, const Message &message)
 {
+    if (utils::stringsMatch(inlet, ENUMERATE_INLET))
+    {
+        midi_output_->enumerate_devices();
+        return;
+    }
     if (! utils::stringsMatch(inlet, EVENTS_INLET))
         return;
     if (midi_output_->is_open(port_))

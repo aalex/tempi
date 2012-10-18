@@ -41,8 +41,7 @@ class MidiReceiverNode : public Node
         ~MidiReceiverNode();
     protected:
         virtual void doTick();
-        virtual void processMessage(const char *inlet, const Message &message)
-        {}
+        virtual void processMessage(const char *inlet, const Message &message);
         virtual bool onNodeAttributeChanged(const char *name, const Message &value);
         virtual void onInit();
     private:
@@ -54,6 +53,7 @@ class MidiReceiverNode : public Node
         bool open(unsigned int port);
         static const char * const EVENTS_OUTLET;
         static const char * const PORT_ATTR;
+        static const char * const ENUMERATE_INLET;
 };
 
 } // end of namespace

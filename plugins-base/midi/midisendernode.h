@@ -53,6 +53,7 @@ class MidiSenderNode : public Node
          */
         bool open(unsigned int port);
         static const char * const EVENTS_INLET;
+        static const char * const ENUMERATE_INLET;
         static const char * const PORT_ATTR;
 };
 
