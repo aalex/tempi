@@ -11,6 +11,7 @@ New features:
 * Rename sampler.sampler to sampler.simple
 * rename miller to tempi-graph-viewer
 * tempi-graph-viewer: F1 shows help
+* move fsm utilities to another library: libbehave
 
 Bugs fixed:
 * tempi-osc-forward: fix node type names
