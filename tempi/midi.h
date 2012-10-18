@@ -42,11 +42,18 @@ class Midi
 {
     public:
         typedef std::tr1::shared_ptr<Midi> ptr;
+        typedef enum {
+            SOURCE = 1,
+            DESTINATION = 2
+            // BOTH = 4
+        } DeviceDirection;
         Midi();
         ~Midi();
 
-        /** Prints the list of MIDI source devices. */
+        /** Prints the list of MIDI devices. */
         void enumerate_devices() const;
+        /** Returns the list of desired MIDI devices. */
+        std::map<int, std::string> listDevices(DeviceDirection direction);
         
         //input
         int get_default_input_device_id();

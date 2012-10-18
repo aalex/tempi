@@ -36,8 +36,7 @@ int main(int argc, char *argv[])
 #include "tempi/message.h"
 #include "tempi/scheduler.h"
 #include "tempi/threadedscheduler.h"
-#include "tempi/midi_input.h"
-#include "tempi/midi_output.h"
+#include "tempi/midi.h"
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/program_options.hpp>
@@ -533,15 +532,25 @@ bool App::createGUI()
 static void list_input_midi_devices()
 {
     std::cout << "MIDI inputs you can listen to:" << std::endl;
-    tempi::midi::MidiInput input;
-    input.enumerateDevices();
+    tempi::midi::Midi dev;
+    std::map<int, std::string> devices = dev.listDevices(tempi::midi::Midi::SOURCE);
+    std::map<int, std::string>::const_iterator iter;
+    for (iter = devices.begin(); iter != devices.end(); ++iter)
+    {
+        std::cout << "* " << (*iter).first << " : " << (*iter).second << std::endl;
+    }
 }
 
 static void list_output_midi_devices()
 {
     std::cout << "MIDI outputs you can send to:" << std::endl;
-    tempi::midi::MidiOutput output;
-    output.enumerateDevices();
+    tempi::midi::Midi dev;
+    std::map<int, std::string> devices = dev.listDevices(tempi::midi::Midi::DESTINATION);
+    std::map<int, std::string>::const_iterator iter;
+    for (iter = devices.begin(); iter != devices.end(); ++iter)
+    {
+        std::cout << "* " << (*iter).first << " : " << (*iter).second << std::endl;
+    }
 }
 
 int App::parse_options(int argc, char **argv)

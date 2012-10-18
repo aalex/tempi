@@ -20,6 +20,8 @@
 #include "tempi/midi.h"
 #include <cstdlib>
 #include <iostream>
+#include <map>
+#include <sstream>
 
 namespace tempi {
 namespace midi {
@@ -42,7 +44,7 @@ Midi::~Midi()
     {
         delete sched_;
         if (sched_ != NULL)
-            std::cout << "sched not null" << std::endl;
+            std::cout << __FUNCTION__ << ": sched not null" << std::endl;
     }
 }
 
@@ -165,6 +167,23 @@ void Midi::enumerate_devices() const
         if (listinfo->output)
             std::cout << " (output)" << std::endl;
     }
+}
+
+std::map<int, std::string> Midi::listDevices(Midi::DeviceDirection direction)
+{
+    std::map<int, std::string> ret;
+    int i;
+    for (i = 0; i < Pm_CountDevices(); i++)
+    {
+        const PmDeviceInfo *listinfo = Pm_GetDeviceInfo(i);
+        std::ostringstream os;
+        os << listinfo->interf << ", " << listinfo->name ;
+        if (listinfo->input && direction == SOURCE)
+            ret[i] = os.str();
+        if (listinfo->output && direction == DESTINATION)
+            ret[i] = os.str();
+    }
+    return ret;
 }
 
 } // end of namespace
