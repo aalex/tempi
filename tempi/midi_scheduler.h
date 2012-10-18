@@ -26,6 +26,12 @@
 #ifndef __TEMPI_MIDI_MIDI_SCHEDULER_H__
 #define __TEMPI_MIDI_MIDI_SCHEDULER_H__
 
+#include "tempi/sharedptr.h"
+#include <portmidi.h>
+#include <porttime.h>
+#include <map>
+#include <queue>
+
 #ifndef MIDI_SYSEX
 #define MIDI_SYSEX 0xf0
 #endif
@@ -33,47 +39,40 @@
 #define MIDI_EOX 0xf7
 #endif
 
-#include "tempi/sharedptr.h"
-#include <portmidi.h>
-#include <porttime.h>
-#include <map>
-#include <queue>
-
 namespace tempi {
 namespace midi {
 
 /** 
- * MIDI scheduler for midi use based on portmidi. This classmust be used as a singleton 
- * This is done with the midi class
+ * MIDI scheduler for midi use based on portmidi. This class must be used as a singleton 
+ * This is done with the midi (device) class.
  */
-
 class MidiScheduler
 {
- public:
-  typedef std::tr1::shared_ptr<MidiScheduler> ptr;
-  MidiScheduler();
-  ~MidiScheduler();
-  // TODO: std::vector<boost::tuple<unsigned int, std::string> > enumerateDevices();
-  PmStream *add_input_stream(int id);
-  bool remove_input_stream(PmStream *stream);
-  PmEvent poll(PmStream *stream);
-  bool is_queue_empty(PmStream *stream);
+    public:
+        typedef std::tr1::shared_ptr<MidiScheduler> ptr;
+        MidiScheduler();
+        ~MidiScheduler();
+        // TODO: std::vector<boost::tuple<unsigned int, std::string> > enumerateDevices();
+        PmStream *add_input_stream(int id);
+        bool remove_input_stream(PmStream *stream);
+        PmEvent poll(PmStream *stream);
+        bool is_queue_empty(PmStream *stream);
 
-  PmStream *add_output_stream(int id);
-  bool remove_output_stream(PmStream *stream);
-  bool push_message(PmStream *stream, unsigned char status, unsigned char data1, unsigned char data2);
+        PmStream *add_output_stream(int id);
+        bool remove_output_stream(PmStream *stream);
+        bool push_message(PmStream *stream, unsigned char status, unsigned char data1, unsigned char data2);
 
- private:
-  //vector containing the streams to process 
-  std::map<PmStream *,std::queue<PmEvent> *> input_queues_;
-  std::map<PmStream *,std::queue<PmEvent> *> output_queues_;
+    private:
+        //vector containing the streams to process 
+        std::map<PmStream *,std::queue<PmEvent> *> input_queues_;
+        std::map<PmStream *,std::queue<PmEvent> *> output_queues_;
 
-  /* process_midi_exit_flag is set when the timer thread shuts down */
-  bool process_midi_exit_flag_;
-  bool portmidi_initialized_;
-  bool app_sysex_in_progress_;
-  bool thru_sysex_in_progress_;
-  static void process_midi(PtTimestamp timestamp, void *userData);
+        /* process_midi_exit_flag is set when the timer thread shuts down */
+        bool process_midi_exit_flag_;
+        bool portmidi_initialized_;
+        bool app_sysex_in_progress_;
+        bool thru_sysex_in_progress_;
+        static void process_midi(PtTimestamp timestamp, void *userData);
 };
  
 } // end of namespace

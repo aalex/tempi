@@ -47,7 +47,7 @@ class MidiSenderNode : public Node
         virtual void onInit();
     private:
         midi::Midi *midi_output_;
-	int port_;
+        int port_;
         /**
          * Opens the given port. Return success.
          */

@@ -38,7 +38,7 @@ class MidiReceiverNode : public Node
 {
     public:
         MidiReceiverNode();
-	~MidiReceiverNode();
+        ~MidiReceiverNode();
     protected:
         virtual void doTick();
         virtual void processMessage(const char *inlet, const Message &message)
@@ -47,7 +47,7 @@ class MidiReceiverNode : public Node
         virtual void onInit();
     private:
         midi::Midi *midi_input_;
-	int port_;
+        int port_;
         /**
          * Opens the given port. Return success.
          */

@@ -46,7 +46,6 @@ MidiReceiverNode::~MidiReceiverNode()
     delete midi_input_;
 }
 
-
 bool MidiReceiverNode::onNodeAttributeChanged(const char *name, const Message &value)
 {
     //std::cout << "MidiReceiverNode::" << __FUNCTION__ << "(" << name << ", " << value << ")" << std::endl;
