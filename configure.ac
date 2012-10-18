@@ -131,14 +131,6 @@ AC_CHECK_FUNCS([gettimeofday memmove mkdir setenv sqrt strchr strpbrk uname])
 
 AX_PTHREAD
 
-# check for the RTMIDI
-PKG_CHECK_MODULES([RTMIDI], [rtmidi], have_rtmidi=true, have_rtmidi=false)
-if test "x${have_rtmidi}" = "xfalse" ; then
-    AC_MSG_WARN([missing package: librtmidi-dev])
-else
-    AC_DEFINE(HAVE_RTMIDI,[1],[RTMIDI headers successfully detected])
-fi
-
 # Glib
 PKG_CHECK_MODULES([GLIB], [glib-2.0 gthread-2.0], have_glib=true, have_glib=false)
 if test "x${have_glib}" = "xfalse" ; then
