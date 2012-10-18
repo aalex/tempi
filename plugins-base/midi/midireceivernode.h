@@ -38,22 +38,22 @@ class MidiReceiverNode : public Node
 {
     public:
         MidiReceiverNode();
-	~MidiReceiverNode();
+        ~MidiReceiverNode();
     protected:
         virtual void doTick();
-        virtual void processMessage(const char *inlet, const Message &message)
-        {}
+        virtual void processMessage(const char *inlet, const Message &message);
         virtual bool onNodeAttributeChanged(const char *name, const Message &value);
         virtual void onInit();
     private:
         midi::Midi *midi_input_;
-	int port_;
+        int port_;
         /**
          * Opens the given port. Return success.
          */
         bool open(unsigned int port);
         static const char * const EVENTS_OUTLET;
         static const char * const PORT_ATTR;
+        static const char * const ENUMERATE_INLET;
 };
 
 } // end of namespace

@@ -26,13 +26,6 @@
 #ifndef __TEMPI_MIDI_MIDI_H__
 #define __TEMPI_MIDI_MIDI_H__
 
-#ifndef MIDI_SYSEX
-#define MIDI_SYSEX 0xf0
-#endif
-#ifndef MIDI_EOX
-#define MIDI_EOX 0xf7
-#endif
-
 #include "tempi/sharedptr.h"
 #include "tempi/message.h"
 #include "tempi/midi_scheduler.h"
@@ -43,44 +36,47 @@ namespace tempi {
 namespace midi {
 
 /** 
- * MIDI using portmidi.
+ * MIDI device using portmidi.
  */
-
 class Midi
 {
- public:
-  typedef std::tr1::shared_ptr<Midi> ptr;
-  Midi();
-  ~Midi();
+    public:
+        typedef std::tr1::shared_ptr<Midi> ptr;
+        typedef enum {
+            SOURCE = 1,
+            DESTINATION = 2
+            // BOTH = 4
+        } DeviceDirection;
+        Midi();
+        ~Midi();
 
-  /** Prints the list of MIDI source devices. */
-  void enumerate_devices() const;
-  
-  //input
-  int get_default_input_device_id();
-  bool open_input_device(int id);
-  void close_input_device(int id);
-  bool is_queue_empty(int id);
-  std::vector<unsigned char> poll(int id);
+        /** Prints the list of MIDI devices. */
+        void enumerate_devices() const;
+        /** Returns the list of desired MIDI devices. */
+        std::map<int, std::string> listDevices(DeviceDirection direction);
+        
+        //input
+        int get_default_input_device_id();
+        bool open_input_device(int id);
+        void close_input_device(int id);
+        bool is_queue_empty(int id);
+        std::vector<unsigned char> poll(int id);
 
-  //ouput
-  int get_default_output_device_id();
-  bool open_output_device(int id);
-  void close_output_device(int id);
-  bool send_message_to_output(int id, unsigned char status, unsigned char data1, unsigned char data2);
+        //ouput
+        int get_default_output_device_id();
+        bool open_output_device(int id);
+        void close_output_device(int id);
+        bool send_message_to_output(int id, unsigned char status, unsigned char data1, unsigned char data2);
 
-  bool is_open(int id);
+        bool is_open(int id);
 
- private:
-  static MidiScheduler *sched_;
-  static int streams;
-  //keeping track of device openned by the current instance
-  std::map<int, PmStream *> openned_streams_;
-
-
+    private:
+        static MidiScheduler *sched_;
+        static int streams;
+        //keeping track of device openned by the current instance
+        std::map<int, PmStream *> openned_streams_;
 };
 
- 
 } // end of namespace
 } // end of namespace
 

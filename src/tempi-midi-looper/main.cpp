@@ -36,8 +36,8 @@ int main(int argc, char *argv[])
 #include "tempi/message.h"
 #include "tempi/scheduler.h"
 #include "tempi/threadedscheduler.h"
-#include "tempi/midi_input.h"
-#include "tempi/midi_output.h"
+#include "tempi/midi.h"
+#include "tempi/log.h"
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/program_options.hpp>
@@ -181,8 +181,7 @@ App::~App()
 {
     if (engine_.get() != 0)
     {
-        if (verbose_)
-            std::cout << "Waiting for Scheduler's thread to join." << std::endl;
+        tempi::Logger::log(tempi::INFO, "Waiting for Scheduler's thread to join.");
         engine_->stop();
     }
 }
@@ -257,8 +256,12 @@ bool App::chooseRecordingTrack(unsigned int number)
 {
     if (number > 9)
     {
-    if (verbose_)
-        std::cout << __FUNCTION__ << ": Wrong track number: " << number << "\n";
+        if (tempi::Logger::isEnabledFor(tempi::INFO))
+        {
+            std::ostringstream os;
+            os << __FUNCTION__ << ": Wrong track number: " << number << "\n";
+            tempi::Logger::log(tempi::INFO, os);
+        }
         return false;
     }
     if (isRecording())
@@ -351,19 +354,16 @@ bool App::setupGraph()
         std::cerr << "App::" << __FUNCTION__ << ": already called.\n";
         return false;
     }
-    if (verbose_)
-        std::cout << "Create ThreadedScheduler\n";
+    tempi::Logger::log(tempi::DEBUG, "midi looper: Create ThreadedScheduler");
     engine_.reset(new tempi::ThreadedScheduler);
     engine_->start(5); // time precision in ms
-    if (verbose_)
-        std::cout << (*engine_.get()) << std::endl;
+    // if (verbose_)
+    //     std::cout << (*engine_.get()) << std::endl;
     tempi::ScopedLock::ptr lock = engine_->acquireLock();
-    if (verbose_)
-        std::cout << "Create Graph\n";
+    tempi::Logger::log(tempi::DEBUG, "midi looper: Create Graph");
     engine_->createGraph("graph0");
     tempi::Graph::ptr graph = engine_->getGraph("graph0");
-    if (verbose_)
-        std::cout << "Add nodes\n";
+    tempi::Logger::log(tempi::DEBUG, "midi looper: Add nodes");
     // Create objects:
     graph->addNode("base.midi.input", "midi.recv0");
     graph->addNode("base.midi.output", "midi.send0");
@@ -378,8 +378,7 @@ bool App::setupGraph()
     }
 
     graph->tick(); // calls Node::init() on each node.
-    if (verbose_)
-        std::cout << "Connect nodes\n";
+    tempi::Logger::log(tempi::DEBUG, "midi looper: Connect nodes");
     // Connections:
     //graph->connect("midi.recv0", 0, "midi.send0", 0);
     graph->connect("midi.recv0", "0", "base.print0", "0");
@@ -394,8 +393,7 @@ bool App::setupGraph()
     }
     //TODO graph->connect("sampler.simple0", 0, "base.prepend0", 0);
     // Set node attributes:
-    if (verbose_)
-        std::cout << "Set node attributes\n";
+    tempi::Logger::log(tempi::DEBUG, "midi looper: Set node attributes");
     graph->setNodeAttribute("midi.recv0", "port", tempi::Message("i", midi_input_port_));
     graph->setNodeAttribute("midi.send0", "port", tempi::Message("i", midi_output_port_));
     graph->setNodeAttribute("base.print0", "prefix", tempi::Message("s", "input: "));
@@ -444,13 +442,11 @@ bool App::createGUI()
         std::cerr << "App::" << __FUNCTION__ << ": Stage already created.\n"; 
         return false;
     }
-    else
-        std::cout << "Creating GUI.\n";
+    tempi::Logger::log(tempi::DEBUG, "Creating GUI.");
     stage_ = clutter_stage_get_default();
     clutter_actor_set_size(stage_, 544, 408);
     clutter_stage_set_color(CLUTTER_STAGE(stage_), &light_gray);
     g_signal_connect(stage_, "destroy", G_CALLBACK(clutter_main_quit), NULL);
-
 
     std::string background_image_file;
     if (findDataPath(background_image_file, "background.png"))
@@ -533,15 +529,25 @@ bool App::createGUI()
 static void list_input_midi_devices()
 {
     std::cout << "MIDI inputs you can listen to:" << std::endl;
-    tempi::midi::MidiInput input;
-    input.enumerateDevices();
+    tempi::midi::Midi dev;
+    std::map<int, std::string> devices = dev.listDevices(tempi::midi::Midi::SOURCE);
+    std::map<int, std::string>::const_iterator iter;
+    for (iter = devices.begin(); iter != devices.end(); ++iter)
+    {
+        std::cout << "* " << (*iter).first << " : " << (*iter).second << std::endl;
+    }
 }
 
 static void list_output_midi_devices()
 {
     std::cout << "MIDI outputs you can send to:" << std::endl;
-    tempi::midi::MidiOutput output;
-    output.enumerateDevices();
+    tempi::midi::Midi dev;
+    std::map<int, std::string> devices = dev.listDevices(tempi::midi::Midi::DESTINATION);
+    std::map<int, std::string>::const_iterator iter;
+    for (iter = devices.begin(); iter != devices.end(); ++iter)
+    {
+        std::cout << "* " << (*iter).first << " : " << (*iter).second << std::endl;
+    }
 }
 
 int App::parse_options(int argc, char **argv)
@@ -555,6 +561,7 @@ int App::parse_options(int argc, char **argv)
         ("input,i", po::value<unsigned int>()->default_value(0), "Sets the MIDI input port to listen to")
         ("output,o", po::value<unsigned int>()->default_value(0), "Sets the MIDI output port to send to")
         ("verbose,v", po::bool_switch(), "Enables a verbose output")
+        ("debug,d", po::bool_switch(), "Enables a very verbose output")
         ;
     po::variables_map options;
     try
@@ -570,6 +577,15 @@ int App::parse_options(int argc, char **argv)
     }
 
     verbose_ = options["verbose"].as<bool>();
+    bool debug = options["debug"].as<bool>();
+    if (debug)
+    {
+        tempi::Logger::getInstance().setLevel(tempi::DEBUG);
+    }
+    else if (verbose_)
+    {
+        tempi::Logger::getInstance().setLevel(tempi::INFO);
+    }
     midi_input_port_ = options["input"].as<unsigned int>();
     midi_output_port_ = options["output"].as<unsigned int>();
     if (verbose_)

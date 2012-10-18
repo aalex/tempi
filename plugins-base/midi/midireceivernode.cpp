@@ -27,16 +27,16 @@ namespace tempi {
 namespace plugins_base {
 
 const char * const MidiReceiverNode::EVENTS_OUTLET = "0";
+const char * const MidiReceiverNode::ENUMERATE_INLET = "enumerate";
 const char * const MidiReceiverNode::PORT_ATTR = "port";
 
 MidiReceiverNode::MidiReceiverNode() :
     Node()
 {
-    midi_input_->enumerate_devices();
-
     midi_input_ = new midi::Midi();
     this->setShortDocumentation("Receives MIDI messages from a single device.");
     this->addOutlet(EVENTS_OUTLET, "MIDI messages (unsigned characters) flow through this outlet.");
+    this->addInlet(ENUMERATE_INLET, "Prints the list of devices when any message is sent to this inlet.");
     this->addAttribute(Attribute::ptr(new Attribute(PORT_ATTR, Message("i", midi_input_->get_default_input_device_id()), "portmidi device index.")));
 }
 
@@ -45,7 +45,6 @@ MidiReceiverNode::~MidiReceiverNode()
     midi_input_->close_input_device(port_);
     delete midi_input_;
 }
-
 
 bool MidiReceiverNode::onNodeAttributeChanged(const char *name, const Message &value)
 {
@@ -87,7 +86,7 @@ void MidiReceiverNode::doTick()
         std::ostringstream os;
         os << "MidiReceiverNode::" << __FUNCTION__ <<
             "(): MidiInput is not initialized. Please specifiy a port number." << std::endl;
-        Logger::log(ERROR, os);
+        Logger::log(WARNING, os);
         return;
     }
 
@@ -102,6 +101,14 @@ void MidiReceiverNode::doTick()
             to_output_message.appendUnsignedChar((unsigned char) midi_message[2]);
         }
         output(EVENTS_OUTLET, to_output_message);
+    }
+}
+
+void MidiReceiverNode::processMessage(const char *inlet, const Message &message)
+{
+    if (utils::stringsMatch(inlet, ENUMERATE_INLET))
+    {
+        midi_input_->enumerate_devices();
     }
 }
 

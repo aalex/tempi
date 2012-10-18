@@ -47,12 +47,13 @@ class MidiSenderNode : public Node
         virtual void onInit();
     private:
         midi::Midi *midi_output_;
-	int port_;
+        int port_;
         /**
          * Opens the given port. Return success.
          */
         bool open(unsigned int port);
         static const char * const EVENTS_INLET;
+        static const char * const ENUMERATE_INLET;
         static const char * const PORT_ATTR;
 };
 

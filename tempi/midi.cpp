@@ -18,166 +18,179 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "tempi/midi.h"
+#include "tempi/log.h"
 #include <cstdlib>
 #include <iostream>
+#include <map>
+#include <sstream>
 
 namespace tempi {
-  namespace midi {
+namespace midi {
 
-    //initlization of the singleton to NULL
-    MidiScheduler * Midi::sched_ = NULL;
-    int Midi::streams = 0;
+//initlization of the singleton to NULL
+MidiScheduler * Midi::sched_ = NULL;
+int Midi::streams = 0;
 
-    Midi::Midi()
+Midi::Midi()
+{
+    if (sched_ != NULL) 
+        return;
+    sched_ = new MidiScheduler();
+    // TODO: replace by a shared pointer
+}
+
+Midi::~Midi()
+{
+    if (streams == 0)
     {
-      if (sched_ != NULL) 
-	return;
-      
-      sched_ = new MidiScheduler();
+        delete sched_;
+        if (sched_ != NULL)
+        {
+            std::ostringstream os;
+            os << "Midi::" << __FUNCTION__ << ": sched not null" << std::endl;
+            Logger::log(DEBUG, os);
+        }
     }
-    
-    Midi::~Midi()
+}
+
+int Midi::get_default_output_device_id()
+{
+    return Pm_GetDefaultOutputDeviceID();
+}
+
+int Midi::get_default_input_device_id()
+{
+    return Pm_GetDefaultInputDeviceID();
+}
+
+bool Midi::open_input_device(int id)
+{
+    PmStream *stream = sched_->add_input_stream (id);
+    if (stream != NULL)
     {
-      if (streams == 0)
-	{
-	  delete sched_;
-	  if (sched_ != NULL) std::cout << "sched not null" << std::endl;
-	}
+        streams++;
+        openned_streams_[id] = stream;
+        return true;
     }
-    
-    int Midi::get_default_output_device_id()
+    else
+        return false;
+}
+
+bool Midi::open_output_device(int id)
+{
+    PmStream *stream = sched_->add_output_stream (id);
+    if (stream != NULL)
     {
-      return Pm_GetDefaultOutputDeviceID();
+        streams++;
+        openned_streams_[id] = stream;
+        return true;
     }
-    
-    int Midi::get_default_input_device_id()
+    else
+        return false;
+}
+
+
+bool Midi::is_open(int id)
+{
+    //checking if the current instance has openned the device
+    if (openned_streams_.find(id) == openned_streams_.end())
+        return false;
+    else
+        return true;
+}
+
+void Midi::close_input_device(int id)
+{
+    std::map<int, PmStream *>::iterator it = openned_streams_.find(id);
+    if (it == openned_streams_.end())
+        return;
+    if (sched_->remove_input_stream (it->second))
+        streams--;
+}
+
+void Midi::close_output_device(int id)
+{
+    std::map<int, PmStream *>::iterator it = openned_streams_.find(id);
+    if (it == openned_streams_.end())
+        return;
+  
+    if (sched_->remove_output_stream (it->second))
+        streams--;
+}
+
+bool Midi::is_queue_empty(int id)
+{
+    std::map<int, PmStream *>::iterator it = openned_streams_.find(id);
+    if (it == openned_streams_.end())
     {
-      return Pm_GetDefaultInputDeviceID();
+      //the queue is actually not empty but the id is not managed by this instance
+      return false;
     }
+    return sched_->is_queue_empty (it->second);
+}
 
-    bool
-    Midi::open_input_device(int id)
+bool Midi::send_message_to_output(int id, unsigned char status, unsigned char data1, unsigned char data2)
+{
+    std::map<int, PmStream *>::iterator it = openned_streams_.find(id);
+    if ( it == openned_streams_.end())
     {
-      
-      PmStream *stream = sched_->add_input_stream (id);
-      
-      if (stream != NULL)
-	{
-	  streams++;
-	  openned_streams_[id] = stream;
-	  return true;
-	}
-      else
-	return false;
+        return false;
     }
+    return sched_->push_message(it->second,status,data1,data2);
+}
 
-    bool
-    Midi::open_output_device(int id)
+// return empty vector if not accessible or <status> <data1> <data2> id success
+std::vector<unsigned char> 
+Midi::poll(int id)
+{
+    std::vector<unsigned char> message;
+    std::map<int, PmStream *>::iterator it = openned_streams_.find(id);
+    if ( it == openned_streams_.end())
     {
-      
-      PmStream *stream = sched_->add_output_stream (id);
-      
-      if (stream != NULL)
-	{
-	  streams++;
-	  openned_streams_[id] = stream;
-	  return true;
-	}
-      else
-	return false;
+        //the queue is not accessible
+        return message;
     }
+    PmEvent event = sched_->poll (it->second);
+    message.push_back ((unsigned char)Pm_MessageStatus(event.message));
+    message.push_back ((unsigned char)Pm_MessageData1(event.message));
+    message.push_back ((unsigned char)Pm_MessageData2(event.message));
 
+    return message;
+} 
 
-    bool Midi::is_open(int id)
+void Midi::enumerate_devices() const
+{
+    // TODO: return a vector<string>
+    /* list device information */
+    int i;
+    for (i = 0; i < Pm_CountDevices(); i++)
     {
-      //checking if the current instance has openned the device
-      if (openned_streams_.find(id) == openned_streams_.end())
-	return false;
-      else
-	return true;
+        const PmDeviceInfo *listinfo = Pm_GetDeviceInfo(i);
+        std::cout << i << ": " << listinfo->interf << ", " << listinfo->name ;
+        if (listinfo->input)
+            std::cout << " (input)" << std::endl;
+        if (listinfo->output)
+            std::cout << " (output)" << std::endl;
     }
-    
-    void
-    Midi::close_input_device(int id)
+}
+
+std::map<int, std::string> Midi::listDevices(Midi::DeviceDirection direction)
+{
+    std::map<int, std::string> ret;
+    int i;
+    for (i = 0; i < Pm_CountDevices(); i++)
     {
-      std::map<int, PmStream *>::iterator it = openned_streams_.find(id);
-      if ( it == openned_streams_.end())
-	return;
-      
-      if (sched_->remove_input_stream (it->second))
-	streams--;
+        const PmDeviceInfo *listinfo = Pm_GetDeviceInfo(i);
+        std::ostringstream os;
+        os << listinfo->interf << ", " << listinfo->name ;
+        if (listinfo->input && direction == SOURCE)
+            ret[i] = os.str();
+        if (listinfo->output && direction == DESTINATION)
+            ret[i] = os.str();
     }
+    return ret;
+}
 
-    void
-    Midi::close_output_device(int id)
-    {
-      std::map<int, PmStream *>::iterator it = openned_streams_.find(id);
-      if ( it == openned_streams_.end())
-	return;
-      
-      if (sched_->remove_output_stream (it->second))
-	streams--;
-    }
-
-    bool 
-    Midi::is_queue_empty(int id)
-    {
-      std::map<int, PmStream *>::iterator it = openned_streams_.find(id);
-      if ( it == openned_streams_.end())
-	{
-	  //the queue is actually not empty but the id is not managed by this instance
-	  return false;
-	}
-      return sched_->is_queue_empty (it->second);
-    }
-    
-    bool
-    Midi::send_message_to_output(int id, unsigned char status, unsigned char data1, unsigned char data2)
-    {
-      std::map<int, PmStream *>::iterator it = openned_streams_.find(id);
-      if ( it == openned_streams_.end())
-	{
-	  return false;
-	}
-      return sched_->push_message(it->second,status,data1,data2);
-    }
-
-    // return empty vector if not accessible or <status> <data1> <data2> id success
-    std::vector<unsigned char> 
-    Midi::poll(int id)
-    {
-      std::vector<unsigned char> message;
-      
-      std::map<int, PmStream *>::iterator it = openned_streams_.find(id);
-      if ( it == openned_streams_.end())
-	{
-	  //the queue is not accessible
-	  return message;
-	}
-      PmEvent event = sched_->poll (it->second);
-      message.push_back ((unsigned char)Pm_MessageStatus(event.message));
-      message.push_back ((unsigned char)Pm_MessageData1(event.message));
-      message.push_back ((unsigned char)Pm_MessageData2(event.message));
-      
-      return message;
-    } 
-
-
-
-    void Midi::enumerate_devices() const
-    {
-      /* list device information */
-      int i;
-      for (i = 0; i < Pm_CountDevices(); i++) {
-	const PmDeviceInfo *listinfo = Pm_GetDeviceInfo(i);
-	std::cout << i << ": " << listinfo->interf << ", " << listinfo->name ;
-	if (listinfo->input) std::cout << " (input)" << std::endl;
-	if (listinfo->output) std::cout << " (output)" << std::endl;
-      }
-    }
-
-
-
-  } // end of namespace
+} // end of namespace
 } // end of namespace
 
