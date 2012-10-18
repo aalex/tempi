@@ -48,9 +48,6 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     documented.cpp \
     dict.cpp \
     entity.cpp \
-    fsm_rule.cpp \
-    fsm_state.cpp \
-    fsm_statemachine.cpp \
     graph.cpp \
     inlet.cpp \
     internals.cpp \
@@ -98,9 +95,6 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     documented.h \
     entity.h \
     exceptions.h \
-    fsm_rule.h \
-    fsm_state.h \
-    fsm_statemachine.h \
     graph.h \
     oscreceiver.h \
     oscsender.h \
