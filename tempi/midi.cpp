@@ -18,6 +18,7 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "tempi/midi.h"
+#include "tempi/log.h"
 #include <cstdlib>
 #include <iostream>
 #include <map>
@@ -44,7 +45,11 @@ Midi::~Midi()
     {
         delete sched_;
         if (sched_ != NULL)
-            std::cout << __FUNCTION__ << ": sched not null" << std::endl;
+        {
+            std::ostringstream os;
+            os << "Midi::" << __FUNCTION__ << ": sched not null" << std::endl;
+            Logger::log(DEBUG, os);
+        }
     }
 }
 

@@ -18,6 +18,7 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "tempi/midi_scheduler.h"
+#include "tempi/log.h"
 #include <cstdlib>
 #include <iostream>
 
@@ -48,6 +49,7 @@ MidiScheduler::~MidiScheduler()
     /* busy wait for flag from timer thread that it is done */
     while (! process_midi_exit_flag_)
     {
+        Logger::log(DEBUG, "Waiting for portmidi to exit...");
         // TODO: sleep
     }
     /* at this point, midi thread is inactive and we need to shut down

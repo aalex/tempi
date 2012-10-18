@@ -37,6 +37,7 @@ int main(int argc, char *argv[])
 #include "tempi/scheduler.h"
 #include "tempi/threadedscheduler.h"
 #include "tempi/midi.h"
+#include "tempi/log.h"
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/program_options.hpp>
@@ -180,8 +181,7 @@ App::~App()
 {
     if (engine_.get() != 0)
     {
-        if (verbose_)
-            std::cout << "Waiting for Scheduler's thread to join." << std::endl;
+        tempi::Logger::log(tempi::INFO, "Waiting for Scheduler's thread to join.");
         engine_->stop();
     }
 }
@@ -256,8 +256,12 @@ bool App::chooseRecordingTrack(unsigned int number)
 {
     if (number > 9)
     {
-    if (verbose_)
-        std::cout << __FUNCTION__ << ": Wrong track number: " << number << "\n";
+        if (tempi::Logger::isEnabledFor(tempi::INFO))
+        {
+            std::ostringstream os;
+            os << __FUNCTION__ << ": Wrong track number: " << number << "\n";
+            tempi::Logger::log(tempi::INFO, os);
+        }
         return false;
     }
     if (isRecording())
@@ -564,6 +568,7 @@ int App::parse_options(int argc, char **argv)
         ("input,i", po::value<unsigned int>()->default_value(0), "Sets the MIDI input port to listen to")
         ("output,o", po::value<unsigned int>()->default_value(0), "Sets the MIDI output port to send to")
         ("verbose,v", po::bool_switch(), "Enables a verbose output")
+        ("debug,d", po::bool_switch(), "Enables a very verbose output")
         ;
     po::variables_map options;
     try
@@ -579,6 +584,15 @@ int App::parse_options(int argc, char **argv)
     }
 
     verbose_ = options["verbose"].as<bool>();
+    bool debug = options["debug"].as<bool>();
+    if (debug)
+    {
+        tempi::Logger::getInstance().setLevel(tempi::DEBUG);
+    }
+    else if (verbose_)
+    {
+        tempi::Logger::getInstance().setLevel(tempi::INFO);
+    }
     midi_input_port_ = options["input"].as<unsigned int>();
     midi_output_port_ = options["output"].as<unsigned int>();
     if (verbose_)
