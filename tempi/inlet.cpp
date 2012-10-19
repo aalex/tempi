@@ -22,26 +22,25 @@
 #include "tempi/outlet.h"
 #include <iostream>
 
-namespace tempi
-{
+namespace tempi {
 
-Inlet::Inlet(const char *name, const char *documentation)
+Inlet::Inlet(const char *name, const char *short_documentation,
+    const char * long_documentation) :
+        Pad(name, short_documentation, long_documentation)
 {
-    name_ = std::string(name);
-    documentation_ = std::string(documentation);
 }
 
 Inlet::~Inlet()
 {
     // just in case.
-    disconnectAll();
+    this->disconnectAll();
 }
 
 bool Inlet::connect(Outlet::ptr source)
 {
-    if (! isConnected(source))
+    if (! this->isConnected(source))
     {
-        sources_.push_back(source);
+        this->sources_.push_back(source);
         source.get()->getOnTriggeredSignal().connect(boost::bind(&Inlet::trigger, this, _1));
         return true;
     }
@@ -69,23 +68,6 @@ bool Inlet::disconnect(Outlet::ptr source)
 bool Inlet::isConnected(Outlet::ptr source)
 {
     return std::find(sources_.begin(), sources_.end(), source) != sources_.end();
-}
-
-void Inlet::trigger(const Message &message)
-{
-    // TODO
-    //std::cout << __FUNCTION__ << std::endl;
-    on_triggered_signal_(this, message);
-}
-
-std::string Inlet::getName() const
-{
-    return name_;
-}
-
-std::string Inlet::getDocumentation() const
-{
-    return documentation_;
 }
 
 } // end of namespace

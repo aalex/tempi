@@ -21,29 +21,12 @@
 #include "tempi/outlet.h"
 #include <iostream>
 
-namespace tempi
-{
+namespace tempi {
 
-Outlet::Outlet(const char *name, const char *documentation)
+Outlet::Outlet(const char *name, const char *short_documentation,
+    const char * long_documentation) :
+        Pad(name, short_documentation, long_documentation);
 {
-    name_ = std::string(name);
-    documentation_ = std::string(documentation);
-}
-
-void Outlet::trigger(const Message &message)
-{
-    //std::cout << __FUNCTION__ << std::endl;
-    on_triggered_signal_(message);
-}
-
-std::string Outlet::getName() const
-{
-    return name_;
-}
-
-std::string Outlet::getDocumentation() const
-{
-    return documentation_;
 }
 
 } // end of namespace

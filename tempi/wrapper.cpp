@@ -502,7 +502,7 @@ bool Wrapper::getNodeInletDocumentation(
     {
         value = this->scheduler_->getGraph(graph.c_str())->
             getNode(node.c_str())->getInlet(inlet.c_str())->
-            getDocumentation();
+            getShortDocumentation();
         return true;
     }
     catch (const BaseException &e)
@@ -524,7 +524,7 @@ bool Wrapper::getNodeOutletDocumentation(
     {
         value = this->scheduler_->getGraph(graph.c_str())->
             getNode(node.c_str())->getOutlet(outlet.c_str())->
-            getDocumentation();
+            getShortDocumentation();
         return true;
     }
     catch (const BaseException &e)

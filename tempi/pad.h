@@ -25,12 +25,11 @@
 #ifndef __TEMPI_PAD_H__
 #define __TEMPI_PAD_H__
 
-#include <boost/signals2.hpp>
+//#include <boost/signals2.hpp>
 #include "tempi/entity.h"
 #include "tempi/message.h"
 
-namespace tempi
-{
+namespace tempi {
 
 /**
  * A Pad is something that can be connected to something else.
@@ -42,9 +41,13 @@ class Pad : public Entity
         Pad(const char *name,
             const char *short_documentation,
             const char *long_documentation);
+        // TODO: return bool
         void trigger(const Message &message);
         TriggeredSignal &getOnTriggeredSignal();
-    private:
+        // TODO:
+        // void setAcceptedTypes(const std::vector<std::string> &types_tags);
+        // std::vector<std::string> getAcceptedTypes() const;
+    protected:
         TriggeredSignal on_triggered_signal_;
 };
 

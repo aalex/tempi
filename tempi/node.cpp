@@ -318,7 +318,7 @@ bool Node::addInlet(Inlet::ptr inlet)
             os << "Node.addInlet: (" << getName() << "): " << inlet->getName();
             Logger::log(DEBUG, os.str().c_str());
         }
-        inlet.get()->getOnTriggeredSignal().connect(boost::bind(&Node::onInletTriggered, this, _1, _2));
+        inlet.get()->getOnTriggeredSignal().connect(boost::bind(&Node::onInletTriggered, *this, _1, _2));
         try
         {
             getSignal(INLET_CREATED_SIGNAL)->trigger(
