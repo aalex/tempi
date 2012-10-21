@@ -41,7 +41,7 @@ bool Inlet::connect(Outlet::ptr source)
     if (! this->isConnected(source))
     {
         this->sources_.push_back(source);
-        source.get()->getOnTriggeredSignal().connect(boost::bind(&Inlet::trigger, this, _1));
+        source.get()->getOnTriggeredSignal().connect(boost::bind(&Pad::trigger, this, _1));
         return true;
     }
     return false;
@@ -57,7 +57,7 @@ bool Inlet::disconnect(Outlet::ptr source)
 {
     if (isConnected(source))
     {
-        source.get()->getOnTriggeredSignal().disconnect(boost::bind(&Inlet::trigger, this, _1));
+        source.get()->getOnTriggeredSignal().disconnect(boost::bind(&Pad::trigger, this, _1));
         sources_.erase(std::find(sources_.begin(), sources_.end(), source));
         return true;
     }

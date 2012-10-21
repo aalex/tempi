@@ -37,7 +37,7 @@ namespace tempi {
 class Pad : public Entity
 {
     public:
-        typedef boost::signals2::signal<void (const Message&)> TriggeredSignal;
+        typedef boost::signals2::signal<void (const char *, const Message&)> TriggeredSignal;
         Pad(const char *name,
             const char *short_documentation,
             const char *long_documentation);

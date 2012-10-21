@@ -208,7 +208,7 @@ class Node : public Entity
          */
         void output(const char *outlet, const Message &message) const throw(BadIndexException);
         // TODO: make private:
-        void onInletTriggered(Inlet *inlet, const Message &message);
+        void onInletTriggered(const char *inlet_name, const Message &message);
         // TODO: make private:
         virtual void processMessage(const char *inlet, const Message &message) = 0;
         // TODO: make private:

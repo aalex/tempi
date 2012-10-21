@@ -25,7 +25,7 @@ namespace tempi {
 
 Outlet::Outlet(const char *name, const char *short_documentation,
     const char * long_documentation) :
-        Pad(name, short_documentation, long_documentation);
+        Pad(name, short_documentation, long_documentation)
 {
 }
 
