@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tempi version="0.1.9">
+  <graph>
+    <node name="loadmess0" class="base.flow.loadmess">
+      <attribute name="value">
+	<s>bang</s>
+      </attribute>
+    </node>
+    <node name="trigger0" class="base.flow.trigger">
+      <attribute name="types">
+	<s>bbbb</s>
+      </attribute>
+    </node>
+    <node name="any0" class="base.flow.any">
+      <attribute name="value">
+	<i>144</i><i>127</i><i>5</i>
+      </attribute>
+    </node>
+    <node name="midiout0" class="base.midi.output">
+      <attribute name="port">
+        <i>5</i>
+      </attribute>
+    </node>
+    <connection from="loadmess0" outlet="0" to="trigger0" inlet="input" />
+    <connection from="trigger0" outlet="1" to="any0" inlet="0" />
+    <connection from="any0" outlet="0" to="midiout0" inlet="0" />
+  </graph>
+</tempi>

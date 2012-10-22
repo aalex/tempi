@@ -70,6 +70,7 @@ bool Node::isInitiated() const
 
 bool Node::init()
 {
+    if (Logger::isEnabledFor(DEBUG))
     {
         std::ostringstream os;
         os << "Node.init(): " << getName();
@@ -87,6 +88,7 @@ bool Node::init()
 
 void Node::loadBang()
 {
+    if (Logger::isEnabledFor(DEBUG))
     {
         std::ostringstream os;
         os << "Node.loadBang: " << getName();
@@ -99,9 +101,12 @@ void Node::loadBang()
     }
     else
     {
-        std::ostringstream os;
-        os << "Node.loadBang: had already been loadBanged: " << getName();
-        Logger::log(DEBUG, os.str().c_str());
+        if (Logger::isEnabledFor(DEBUG))
+        {
+            std::ostringstream os;
+            os << "Node.loadBang: had already been loadBanged: " << getName();
+            Logger::log(DEBUG, os.str().c_str());
+        }
     }
 }
 
@@ -133,10 +138,23 @@ bool Node::onAttributeChanged(const char *name, const Message &value)
     return ok;
 }
 
-void Node::onInletTriggered(Inlet *inlet, const Message &message)
+void Node::onInletTriggered(const char *inlet_name, const Message &message)
 {
-    if (inlet->getName() == ATTRIBUTES_INLET)
+    static const std::string attr_inlet_name(ATTRIBUTES_INLET);
+    if (Logger::isEnabledFor(DEBUG))
     {
+        std::ostringstream os;
+        os << "Node." << __FUNCTION__ << "(" << inlet_name << ", " << message << ")";
+        Logger::log(DEBUG, os);
+    }
+    if (attr_inlet_name == inlet_name)
+    {
+        if (Logger::isEnabledFor(DEBUG))
+        {
+            std::ostringstream os;
+            os << "It is the ATTRIBUTES_INLET";
+            Logger::log(DEBUG, os);
+        }
         if (message.indexMatchesType(0, STRING))
         {
             if (message.getString(0) == ATTRIBUTES_GET_METHOD_SELECTOR)
@@ -240,7 +258,7 @@ void Node::onInletTriggered(Inlet *inlet, const Message &message)
         return;
     } // ATTRIBUTES_INLET
     // CALL INLET:
-    else if (inlet->getName() == INLET_CALL)
+    else if (inlet_name == INLET_CALL)
     {
         if (message.indexMatchesType(0, STRING))
         {
@@ -252,7 +270,7 @@ void Node::onInletTriggered(Inlet *inlet, const Message &message)
             }
         }
     }
-    processMessage(inlet->getName().c_str(), message);
+    processMessage(inlet_name, message);
 }
 
 std::map<std::string, Inlet::ptr> Node::getInlets()
@@ -377,6 +395,12 @@ bool Node::hasOutlet(Outlet *outlet)
 
 void Node::tick()
 {
+    // if (Logger::isEnabledFor(DEBUG))
+    // {
+    //     std::ostringstream os;
+    //     os << "Node::" << __FUNCTION__;
+    //     Logger::log(DEBUG, os);
+    // }
     if (! isInitiated())
         init();
     doTick();

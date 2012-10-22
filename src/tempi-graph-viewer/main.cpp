@@ -19,6 +19,7 @@
 
 /**
  * @file A graphical patcher.
+ * This project used to be called miller. That is why we still use that prefix, temporarily, for file names and such.
  */
 
 #include <iostream>
@@ -43,9 +44,6 @@ int main(int argc, char *argv[])
 #include "tempi/wrapper.h"
 #include "tempi/log.h"
 #include "tempi/concurrentqueue.h"
-#include <boost/algorithm/string.hpp>
-#include <boost/lexical_cast.hpp>
-#include <boost/program_options.hpp>
 #include <clutter/clutter.h>
 #include <glib.h>
 #include <sstream>
@@ -53,16 +51,32 @@ int main(int argc, char *argv[])
 namespace miller {
 
 // String constants:
-static const char * const PROGRAM_NAME = "miller";
+static const char * const PROGRAM_NAME = "tempi-graph-viewer";
 static const char * const GRAPH_NAME = "graph0";
 static const char * const NODES_GROUP = "group0";
 static const char * const CONNECTIONS_ACTOR = "connections0";
+static const char * const HELP_TEXT_ACTOR = "help0";
 
 // Static functions:
 static void key_event_cb(ClutterActor *actor, ClutterKeyEvent *event, gpointer user_data);
 static void on_frame_cb(ClutterTimeline *timeline, guint *ms, gpointer user_data);
 static void on_fullscreen(ClutterStage* stage, gpointer user_data);
 static void on_unfullscreen(ClutterStage* stage, gpointer user_data);
+
+static gboolean help = FALSE;
+static gboolean version = FALSE;
+static gboolean verbose = FALSE;
+static gboolean debug = FALSE;
+static gchar** filenames = NULL;
+
+static GOptionEntry entries[] =
+{
+    {"version", 0, 0, G_OPTION_ARG_NONE, &version, "Show program's version number and exit"},
+    {"verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose, "Enables a verbose output"},
+    {"debug", 'd', 0, G_OPTION_ARG_NONE, &debug, "Enables a very verbose output"},
+    {G_OPTION_REMAINING, 0, 0, G_OPTION_ARG_FILENAME_ARRAY, &filenames, "Tempi files to read"},
+    {NULL}
+};
 
 /**
  * The App class manages the tempi::Graph and the Clutter GUI.
@@ -86,7 +100,7 @@ class App
          */
         bool poll();
         void toggle_fullscreen();
-        void toggle_help() {}
+        void toggle_help();
     private:
         bool verbose_;
         bool debug_;
@@ -98,7 +112,6 @@ class App
         std::string file_name_;
         tempi::ThreadedScheduler::ptr engine_; // FIXME
         tempi::Graph::ptr graph_; // FIXME
-        tempi::serializer::Serializer::ptr saver_; // FIXME
         bool saveGraph(); // FIXME
         ClutterActor *stage_;
     private:
@@ -111,12 +124,21 @@ class App
         static gboolean on_group0_scrolled(ClutterActor *actor, ClutterEvent *event, gpointer user_data);
 };
 
+void App::toggle_help()
+{
+    ClutterActor *actor = clutter_container_find_child_by_name(CLUTTER_CONTAINER(this->stage_), HELP_TEXT_ACTOR);
+    if (CLUTTER_ACTOR_IS_VISIBLE(actor))
+        clutter_actor_hide(actor);
+    else
+        clutter_actor_show(actor);
+}
+
 bool SaveCommand::apply(App &app)
 {
     tempi::Logger::log(tempi::WARNING, "will save the graph.");
     tempi::ScopedLock::ptr lock = app.engine_->acquireLock();
     tempi::Graph::ptr graph = app.graph_;
-    bool ok = app.saver_->save(*graph.get(), app.file_name_.c_str());
+    bool ok = tempi::serializer::save(*graph.get(), app.file_name_.c_str());
     if (ok)
         tempi::Logger::log(tempi::INFO, "Successfully saved the graph..");
     else
@@ -226,6 +248,7 @@ gboolean App::on_idle(gpointer data)
     }
     // FIXME: seems to crash
     //clutter_threads_leave();
+    g_usleep(1000);
     return TRUE;
 }
 
@@ -302,7 +325,7 @@ void App::drawGraph()
     clutter_actor_set_name(connections_actor, CONNECTIONS_ACTOR);
     clutter_container_add_actor(CLUTTER_CONTAINER(stage_), connections_actor);
     clutter_actor_show(connections_actor);
-    
+
     updateAllConnectionsGeometry(connections_actor, clutter_container_find_child_by_name(CLUTTER_CONTAINER(stage_), NODES_GROUP), *graph_.get());
 }
 
@@ -351,7 +374,7 @@ bool App::setupGraph()
         return true;
     }
     // Check for XML file
-    if (! this->saver_->fileExists(this->file_name_.c_str()))
+    if (! tempi::serializer::fileExists(this->file_name_.c_str()))
     {
         std::cerr << "miller: ERROR: File \"" << this->file_name_ << "\" not found!\n";
         return false;
@@ -364,11 +387,11 @@ bool App::setupGraph()
     }
     //if (verbose_)
     //    std::cout << (*engine_.get()) << std::endl;
-    
+
     graph_ = engine_->getGraph(GRAPH_NAME);
 
     // load graph
-    saver_->load(*graph_.get(), this->file_name_.c_str());
+    tempi::serializer::load(*graph_.get(), this->file_name_.c_str());
     graph_->tick(); // FIXME
 
     this->drawGraph();
@@ -429,11 +452,11 @@ bool App::createGUI()
 {
     if (stage_ == 0)
     {
-        std::cout << "Creating GUI.\n";
+        //std::cout << "Creating GUI.\n";
     }
     else
     {
-        std::cerr << "App::" << __FUNCTION__ << ": Stage already created.\n"; 
+        std::cerr << "App::" << __FUNCTION__ << ": Stage already created.\n";
         return false;
     }
     stage_ = clutter_stage_get_default();
@@ -443,7 +466,7 @@ bool App::createGUI()
     g_signal_connect(stage_, "destroy", G_CALLBACK(clutter_main_quit), NULL);
     g_signal_connect(G_OBJECT(stage_), "fullscreen", G_CALLBACK(on_fullscreen), this);
     g_signal_connect(G_OBJECT(stage_), "unfullscreen", G_CALLBACK(on_unfullscreen), this);
-    
+
     // timeline to attach a callback for each frame that is rendered
     ClutterTimeline *timeline;
     timeline = clutter_timeline_new(60); // ms
@@ -460,58 +483,59 @@ bool App::createGUI()
     g_signal_connect(group0, "scroll-event", G_CALLBACK(App::on_group0_scrolled), this);
     clutter_container_add_actor(CLUTTER_CONTAINER(stage_), group0);
 
+    ClutterActor *help_text = clutter_text_new_full(FONT_NAME, HELP_TEXT_CONTENTS, &WHITE);
+    clutter_container_add_actor(CLUTTER_CONTAINER(stage_), help_text);
+    clutter_actor_hide(help_text);
+    clutter_actor_set_name(help_text, HELP_TEXT_ACTOR);
+
     clutter_actor_show(stage_);
     return true;
 }
 
 int App::parse_options(int argc, char **argv)
 {
-    namespace po = boost::program_options;
+    GError* error = NULL;
+    GOptionContext* context;
 
-    po::options_description desc("Options");
-    desc.add_options()
-        ("help,h", "Show this help message and exit")
-        ("version", "Show program's version number and exit")
-        ("file,f", po::value<std::string>(), // ->default_value("")
-            "Specifies a Tempi file to read.")
-        ("verbose,v", po::bool_switch(), "Enables a verbose output")
-        ("debug,d", po::bool_switch(), "Enables a very verbose output")
-        ;
-    po::variables_map options;
-    try
+    context = g_option_context_new(" - Displays Tempi graphs and runs them");
+    g_option_context_add_main_entries(context, entries, NULL);
+    g_option_context_add_group(context, clutter_get_option_group());
+    
+    if (! g_option_context_parse(context, &argc, &argv, &error))
     {
-        po::store(po::parse_command_line(argc, argv, desc), options);
-        po::notify(options);
-    }
-    catch (const po::error &e)
-    {
-        std::cerr << e.what() << std::endl;
-        std::cout << desc << std::endl;
         return 1;
     }
 
-    verbose_ = options["verbose"].as<bool>();
-    debug_ = options["debug"].as<bool>();
-    if (options.count("file"))
+    if (version)
     {
-        file_name_ = options["file"].as<std::string>();
+        std::cout << PROGRAM_NAME << " " << PACKAGE_VERSION << std::endl;
+        return 0;
     }
-    if (verbose_)
+    if (filenames != NULL)
     {
+        guint numFiles;
+        numFiles = g_strv_length(filenames);
+
+        for (guint i = 0; i < numFiles; ++i)
+        {
+            g_print("Trying to load file: %s\n", filenames[i]);
+        }
+
+        // At the moment we load just the first file specified
+        file_name_ = filenames[0];
+        std::cout << file_name_ << std::endl;
+    }
+    if (verbose)
+    {
+        verbose_ = verbose;
+
         std::cout << "File name: " << file_name_ << std::endl;
         std::cout << "Verbose: " << verbose_ << std::endl;
         std::cout << "Debug: " << debug_ << std::endl;
     }
-    // Options that makes the program exit:
-    if (options.count("help"))
+    if (debug)
     {
-        std::cout << desc << std::endl;
-        return 0;
-    }
-    if (options.count("version"))
-    {
-        std::cout << PROGRAM_NAME << " " << PACKAGE_VERSION << std::endl;
-        return 0;
+        debug_ = debug;
     }
     return -1;
 }
@@ -523,25 +547,17 @@ int main(int argc, char *argv[])
     using namespace miller;
     int ret;
     App app;
-    try
-    {
-        ret = app.parse_options(argc, argv);
-    }
-    catch (const boost::bad_any_cast &e)
-    {
-        std::cerr << "Error parsing options ";
-        std::cerr << e.what() << std::endl;
+
+    if (clutter_init(&argc, &argv) != CLUTTER_INIT_SUCCESS)
         return 1;
-    }
+
+    ret = app.parse_options(argc, argv);
     if (ret != -1)
         return ret;
 
     // Important, since we use threads:
     g_thread_init(NULL);
     clutter_threads_init();
-
-    if (clutter_init(&argc, &argv) != CLUTTER_INIT_SUCCESS)
-        return 1;
 
     if (app.launch())
         clutter_main();

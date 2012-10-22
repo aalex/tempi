@@ -2,11 +2,11 @@
  * Copyright (C) 2011 Alexandre Quessy
  * Copyright (C) 2011 Michal Seta
  * Copyright (C) 2012 Nicolas Bouillot
+ * Copyright (C) 2012 Emmanuel Durand
  *
- * This file is part of Tempi.
+ * This file is part of Tempi-plugins-base.
  *
- * This program is free software: you can redistribute it and/or
- * modify it under the terms of, either version 3 of the License, or
+ * This program is free software; you can redistither version 3 of the License, or
  * (at your option) any later version.
  * 
  * Tempi is distributed in the hope that it will be useful,
@@ -39,19 +39,24 @@ void LoadMessNode::processMessage(const char *inlet, const Message &message)
 }
 bool LoadMessNode::onNodeAttributeChanged(const char *name, const Message &value)
 {
-    std::ostringstream os;
-    os << "[base.loadmess](" << getName() << ")." << __FUNCTION__ << ": " << name << "=" << value;
-    Logger::log(INFO, os.str().c_str());
+    if (Logger::isEnabledFor(INFO))
+    {
+        std::ostringstream os;
+        os << "[base.loadmess](" << getName() << ")." << __FUNCTION__ << ": " << name << "=" << value;
+        Logger::log(INFO, os.str().c_str());
+    }
     return true;
 }
 
 void LoadMessNode::onLoadBang()
 {
-
     this->output("0", this->getAttributeValue("value"));
-    std::ostringstream os;
-    os << "[base.loadmess]." << __FUNCTION__ << ": output(" << this->getAttributeValue("value") << ")";
-    Logger::log(INFO, os.str().c_str());
+    if (Logger::isEnabledFor(INFO))
+    {
+        std::ostringstream os;
+        os << "[base.loadmess]." << __FUNCTION__ << ": output(" << this->getAttributeValue("value") << ")";
+        Logger::log(INFO, os.str().c_str());
+    }
 }
 
 } // end of namespace

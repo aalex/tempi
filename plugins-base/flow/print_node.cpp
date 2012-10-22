@@ -2,11 +2,11 @@
  * Copyright (C) 2011 Alexandre Quessy
  * Copyright (C) 2011 Michal Seta
  * Copyright (C) 2012 Nicolas Bouillot
+ * Copyright (C) 2012 Emmanuel Durand
  *
- * This file is part of Tempi.
+ * This file is part of Tempi-plugins-base.
  *
- * This program is free software: you can redistribute it and/or
- * modify it under the terms of, either version 3 of the License, or
+ * This program is free software; you can redistither version 3 of the License, or
  * (at your option) any later version.
  * 
  * Tempi is distributed in the hope that it will be useful,
@@ -44,9 +44,12 @@ void PrintNode::processMessage(const char *inlet, const Message &message)
 {
     if (getAttributeValue("enabled").getBoolean(0))
     {
-        std::ostringstream os;
-        os << "[print]: Printing since enabled is true.";
-        Logger::log(DEBUG, os.str().c_str());
+        if (Logger::isEnabledFor(DEBUG))
+        {
+            std::ostringstream os;
+            os << "[print]: Printing since enabled is true.";
+            Logger::log(DEBUG, os.str().c_str());
+        }
         std::cout << getAttributeValue("prefix").getString(0) << message << std::endl;
     }
 }

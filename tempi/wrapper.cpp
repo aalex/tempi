@@ -1,12 +1,11 @@
 /*
  * Copyright (C) 2011 Alexandre Quessy
- * Copyright (C) 2011 Michal Seta
- * Copyright (C) 2012 Nicolas Bouillot
  *
  * This file is part of Tempi.
  *
- * This program is free software: you can redistribute it and/or
- * modify it under the terms of, either version 3 of the License, or
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software ither version 3 of the License, or
  * (at your option) any later version.
  * 
  * Tempi is distributed in the hope that it will be useful,
@@ -14,8 +13,9 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License
- * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with Tempi.  If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 
 #include "tempi/graph.h"
@@ -47,10 +47,13 @@ bool Wrapper::setSynchronous(bool synchronous)
     //    delete scheduler_;
     if (synchronous_)
     {
-        std::ostringstream os;
-        os << "Wrapper." << __FUNCTION__ << ": " <<
-            "Using SynchronousScheduler.";
-        Logger::log(INFO, os);
+        if (Logger::isEnabledFor(INFO))
+        {
+            std::ostringstream os;
+            os << "Wrapper." << __FUNCTION__ << ": " <<
+                "Using SynchronousScheduler.";
+            Logger::log(INFO, os);
+        }
         scheduler_ = new SynchronousScheduler;
     }
     else
@@ -58,11 +61,14 @@ bool Wrapper::setSynchronous(bool synchronous)
         scheduler_ = new ThreadedScheduler;
         ThreadedScheduler *threaded = dynamic_cast<ThreadedScheduler*>(scheduler_);
         threaded->start(5); // 5 ms
-        std::ostringstream os;
-        os << "Wrapper." << __FUNCTION__ << ": " <<
-            "Using ThreadedScheduler. ";
-            "Starting ThreadedScheduler";
-        Logger::log(INFO, os);
+        if (Logger::isEnabledFor(INFO))
+        {
+            std::ostringstream os;
+            os << "Wrapper." << __FUNCTION__ << ": " <<
+                "Using ThreadedScheduler. ";
+                "Starting ThreadedScheduler";
+            Logger::log(INFO, os);
+        }
     }
 }
 
@@ -71,10 +77,13 @@ Wrapper::~Wrapper()
     if (! synchronous_)
     {
         ThreadedScheduler *threaded = dynamic_cast<ThreadedScheduler*>(scheduler_);
-        std::ostringstream os;
-        os << "Wrapper." << __FUNCTION__ <<
-            "(): Waiting for Scheduler's thread to join.";
-        Logger::log(DEBUG, os);
+        if (Logger::isEnabledFor(DEBUG))
+        {
+            std::ostringstream os;
+            os << "Wrapper." << __FUNCTION__ <<
+                "(): Waiting for Scheduler's thread to join.";
+            Logger::log(DEBUG, os);
+        }
         threaded->stop();
     }
     delete scheduler_;
@@ -105,10 +114,13 @@ bool Wrapper::setLogLevel(const std::string &level)
     }
     {
         tempi::Logger::getInstance().setLevel(new_level);
-        std::ostringstream os;
-        os << "Wrapper." << __FUNCTION__ <<
-            "Set log level to " << level;
-        Logger::log(INFO, os);
+        if (Logger::isEnabledFor(INFO))
+        {
+            std::ostringstream os;
+            os << "Wrapper." << __FUNCTION__ <<
+                "Set log level to " << level;
+            Logger::log(INFO, os);
+        }
     }
     return true;
 }
@@ -125,7 +137,7 @@ bool Wrapper::loadGraph(const std::string &name, const std::string &fileName)
         return false;
     }
     // Check for XML file
-    if (! saver_->fileExists(fileName.c_str()))
+    if (! serializer::fileExists(fileName.c_str()))
     {
         std::ostringstream os;
         os << "Wrapper" << __FUNCTION__ << ": " <<
@@ -133,6 +145,7 @@ bool Wrapper::loadGraph(const std::string &name, const std::string &fileName)
         tempi::Logger::log(ERROR, os);
         return false;
     }
+    if (Logger::isEnabledFor(DEBUG))
     {
         std::ostringstream os;
         os << "Wrapper" << __FUNCTION__ << ": " <<
@@ -143,8 +156,9 @@ bool Wrapper::loadGraph(const std::string &name, const std::string &fileName)
     Graph::ptr graph = scheduler_->getGraph(name.c_str());
 
     // load graph
-    saver_->load(*(graph.get()), fileName.c_str());
+    serializer::load(*(graph.get()), fileName.c_str());
     graph->tick(); // FIXME
+    if (Logger::isEnabledFor(INFO))
     {
         std::ostringstream os;
         os << "Wrapper" << __FUNCTION__ << ": " <<
@@ -488,7 +502,7 @@ bool Wrapper::getNodeInletDocumentation(
     {
         value = this->scheduler_->getGraph(graph.c_str())->
             getNode(node.c_str())->getInlet(inlet.c_str())->
-            getDocumentation();
+            getShortDocumentation();
         return true;
     }
     catch (const BaseException &e)
@@ -510,7 +524,7 @@ bool Wrapper::getNodeOutletDocumentation(
     {
         value = this->scheduler_->getGraph(graph.c_str())->
             getNode(node.c_str())->getOutlet(outlet.c_str())->
-            getDocumentation();
+            getShortDocumentation();
         return true;
     }
     catch (const BaseException &e)
@@ -553,7 +567,7 @@ bool Wrapper::saveGraph(const std::string &name, const std::string &fileName)
     Graph::ptr graph = scheduler_->getGraph(name.c_str());
 
     // save graph
-    return saver_->save(*(graph.get()), fileName.c_str());
+    return serializer::save(*(graph.get()), fileName.c_str());
 }
 
 std::vector<std::string> Wrapper::listNodes(const std::string &graph)
@@ -572,6 +586,18 @@ std::vector<std::string> Wrapper::listNodes(const std::string &graph)
         return ret;
     }
 }
+
+bool Wrapper::getNode(const std::string &graph, const std::string &nodeName, Node::ptr &result)
+{
+    if (this->scheduler_->getGraph(graph.c_str())->hasNode(nodeName.c_str()))
+    {
+        result = this->scheduler_->getGraph(graph.c_str())->getNode(nodeName.c_str());
+        return true;
+    }
+    else
+        return false;
+}
+
 
 } // end of namespace
 

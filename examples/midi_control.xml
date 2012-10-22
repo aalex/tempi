@@ -26,7 +26,7 @@
 	<i>60</i><i>107</i>
       </attribute>
     </node>
-    <node name="midictl0" class="base.midi.control">
+    <node name="midictl0" class="base.midi.build.control">
       <attribute name="channel">
         <i>1</i>
       </attribute>

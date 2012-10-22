@@ -1,12 +1,11 @@
 /*
  * Copyright (C) 2011 Alexandre Quessy
- * Copyright (C) 2011 Michal Seta
- * Copyright (C) 2012 Nicolas Bouillot
  *
  * This file is part of Tempi.
  *
- * This program is free software: you can redistribute it and/or
- * modify it under the terms of, either version 3 of the License, or
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software ither version 3 of the License, or
  * (at your option) any later version.
  * 
  * Tempi is distributed in the hope that it will be useful,
@@ -14,8 +13,9 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License
- * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with Tempi.  If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 
 #include "tempi/log.h"
@@ -31,8 +31,19 @@ Logger& Logger::getInstance()
 
 void Logger::setLevel(LogLevel level)
 {
+    level_ = level;
     log4cpp::Category& category = log4cpp::Category::getInstance(category_name_);
-    category.setPriority(level);
+    category.setPriority(level_);
+}
+
+bool Logger::isEnabledFor(LogLevel level)
+{
+    return level <= Logger::getInstance().getLevel();
+}
+
+LogLevel Logger::getLevel()
+{
+    return level_;
 }
 
 void Logger::log(LogLevel level, const std::ostringstream &os)
@@ -82,7 +93,8 @@ Logger::Logger()
     appender_->setLayout(layout_);
     log4cpp::Category& category = log4cpp::Category::getInstance(category_name_);
     category.setAppender(appender_);
-    category.setPriority(WARNING); //default
+    level_ = WARNING; // default
+    category.setPriority(level_); //default
 }
 
 const char * const Logger::category_name_ = "default";

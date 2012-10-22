@@ -1,12 +1,11 @@
 /*
  * Copyright (C) 2011 Alexandre Quessy
- * Copyright (C) 2011 Michal Seta
- * Copyright (C) 2012 Nicolas Bouillot
  *
  * This file is part of Tempi.
  *
- * This program is free software: you can redistribute it and/or
- * modify it under the terms of, either version 3 of the License, or
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software ither version 3 of the License, or
  * (at your option) any later version.
  * 
  * Tempi is distributed in the hope that it will be useful,
@@ -14,8 +13,9 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License
- * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with Tempi.  If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 
 #include "tempi/message.h"
@@ -24,9 +24,9 @@
 #include <iostream>
 #include <sstream>
 #include <ostream>
+#include <cstring>
 
-namespace tempi
-{
+namespace tempi {
 
 Message::Message()
 {
@@ -35,6 +35,12 @@ Message::Message()
 
 Message::Message(const char *types, ...)
 {
+    // if (Logger::isEnabledFor(DEBUG))
+    // {
+    //     std::ostringstream os;
+    //     os << "Message." << __FUNCTION__ << "(" << types << ", ...)";
+    //     Logger::log(DEBUG, os);
+    // }
     va_list arguments;
     va_start(arguments, types);
     appendVaList(types, arguments);
@@ -43,6 +49,12 @@ Message::Message(const char *types, ...)
 
 void Message::append(const char *types, ...)
 {
+    // if (Logger::isEnabledFor(DEBUG))
+    // {
+    //     std::ostringstream os;
+    //     os << "Message." << __FUNCTION__ << ": " << types;
+    //     Logger::log(DEBUG, os);
+    // }
     va_list arguments;
     va_start(arguments, types);
     appendVaList(types, arguments);
@@ -51,6 +63,12 @@ void Message::append(const char *types, ...)
 
 void Message::appendVaList(const char *types, va_list arguments)
 {
+    // if (Logger::isEnabledFor(DEBUG))
+    // {
+    //     std::ostringstream os;
+    //     os << "Message." << __FUNCTION__ << ": " << types;
+    //     Logger::log(DEBUG, os);
+    // }
     // TODO: avoid segfault if length does not match
     // TODO: avoid segfault if types do not match
     for (int i = 0; types[i] != '\0'; ++i)
@@ -134,7 +152,11 @@ void Message::appendVaList(const char *types, va_list arguments)
                 break;
             }
             default:
-                std::cerr << "Message::" << __FUNCTION__ << ": Unsupported type tag: " << types[i];
+                {
+                    std::ostringstream os;
+                    os << "Message::" << __FUNCTION__ << ": Unsupported type tag: " << types[i] << " (types=\"" << types << "\") (length=" << std::strlen(types) << ")";
+                    Logger::log(ERROR, os);
+                }
                 break;
         }
         //std::cout << std::endl;
@@ -600,6 +622,7 @@ std::ostream &operator<<(std::ostream &os, const Message &message)
 
 void Message::prependMessage(const Message &message)
 {
+    if (Logger::isEnabledFor(DEBUG))
     {
         std::ostringstream os;
         os << "Message." << __FUNCTION__ << ": " << message << " to " << (*this);

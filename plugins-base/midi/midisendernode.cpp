@@ -2,11 +2,11 @@
  * Copyright (C) 2011 Alexandre Quessy
  * Copyright (C) 2011 Michal Seta
  * Copyright (C) 2012 Nicolas Bouillot
+ * Copyright (C) 2012 Emmanuel Durand
  *
- * This file is part of Tempi.
+ * This file is part of Tempi-plugins-base.
  *
- * This program is free software: you can redistribute it and/or
- * modify it under the terms of, either version 3 of the License, or
+ * This program is free software; you can redistither version 3 of the License, or
  * (at your option) any later version.
  * 
  * Tempi is distributed in the hope that it will be useful,
@@ -28,19 +28,30 @@ namespace plugins_base {
 
 const char * const MidiSenderNode::EVENTS_INLET = "0"; // TODO: rename to events?
 const char * const MidiSenderNode::PORT_ATTR = "port";
+const char * const MidiSenderNode::ENUMERATE_INLET = "enumerate";
 
 MidiSenderNode::MidiSenderNode() :
     Node()
 {
+    midi_output_ = new midi::Midi();
     this->setShortDocumentation("Sends MIDI messages to a single device.");
     this->addInlet(EVENTS_INLET, "Send MIDI received from this inlet. (list of unsigned characters)");
-    this->addAttribute(Attribute::ptr(new Attribute(PORT_ATTR, Message("i", 0), "STK MIDI device index.")));
-    midi_output_.reset(new midi::MidiOutput);
+    this->addInlet(ENUMERATE_INLET, "Prints the list of devices when any message is sent to this inlet.");
+    this->addAttribute(Attribute::ptr(new Attribute(PORT_ATTR, Message("i", midi_output_->get_default_output_device_id()), "portmidi device index.")));
+}
+
+MidiSenderNode::~MidiSenderNode()
+{
+    if (midi_output_ != 0)
+    {
+        midi_output_->close_output_device(port_);
+        delete midi_output_;
+    }
 }
 
 void MidiSenderNode::onInit()
 {
-    this->open(0);
+    // pass
 }
 
 bool MidiSenderNode::onNodeAttributeChanged(const char *name, const Message &value)
@@ -57,28 +68,58 @@ bool MidiSenderNode::onNodeAttributeChanged(const char *name, const Message &val
 
 bool MidiSenderNode::open(unsigned int port)
 {
+    if (Logger::isEnabledFor(INFO))
     {
         std::ostringstream os;
         os << "MidiSenderNode: open port " << port;
         Logger::log(INFO, os);
     }
-    midi_output_.reset(new midi::MidiOutput);
-    return midi_output_->open(port);
+    port_ = port;
+    // if (midi_output_ != 0)
+    //     delete midi_output_;
+    // midi_output_ = new midi::Midi();
+    return midi_output_->open_output_device(port);
 }
 
 // TODO: output the list of devices upon query
 
 void MidiSenderNode::processMessage(const char *inlet, const Message &message)
 {
+    if (utils::stringsMatch(inlet, ENUMERATE_INLET))
+    {
+        midi_output_->enumerate_devices();
+        return;
+    }
     if (! utils::stringsMatch(inlet, EVENTS_INLET))
         return;
-    if (midi_output_->isOpen())
+    if (midi_output_->is_open(port_))
     {
-        bool ok = midi_output_->sendMessage(message);
-        if (! ok)
+        std::vector<unsigned char> event;
+        for (unsigned int i = 0; i < message.getSize(); ++i)
+        {
+            AtomType type;
+            message.getAtomType(i, type);
+            if (type == UNSIGNED_CHAR)
+                event.push_back(message.getUnsignedChar(i));
+            if (type == INT)
+                event.push_back((unsigned char)message.getInt(i));
+            if (type == UNSIGNED_INT)
+                event.push_back((unsigned char)message.getUnsignedInt(i));
+        }
+        if (event.size() == 3)
+        {
+            bool ok = midi_output_->send_message_to_output (port_,event[0],event[1],event[2]);
+            if (! ok)
+            {
+                std::ostringstream os;
+                os << "MidiSenderNode::" << __FUNCTION__ << ": Error sending " << message;
+                Logger::log(WARNING, os);
+            }
+        }
+        else
         {
             std::ostringstream os;
-            os << "MidiSenderNode::" << __FUNCTION__ << ": Error sending " << message;
+            os << "MidiSenderNode::" << __FUNCTION__ << ": Malformed incomming message. Cannot send " << message;
             Logger::log(WARNING, os);
         }
     }

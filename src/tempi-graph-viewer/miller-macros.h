@@ -69,6 +69,13 @@ static const ClutterColor YELLOW = { 0xcc, 0xcc, 0x33, 0xff };
 
 // string constants:
 static const char * const FONT_NAME = "Monospace Bold 12px";
+static const char * const HELP_TEXT_CONTENTS = ""
+    "Miller help\n"
+    "-----------\n"
+    "* Help:               F1\n"
+    "* Quit:               Ctrl-Q\n"
+    "* Save graph :        Ctrl-S\n"
+    "* Toggle fullscreen:  F11\n";
 
 } // end of namespace
 

@@ -8,12 +8,12 @@
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * Tempi is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -24,7 +24,6 @@
 
 #include <iostream>
 #include "tempi/config.h"
-#include "tempi/log.h"
 
 #ifndef HAVE_GLIB
 int main(int argc, char *argv[])
@@ -39,18 +38,32 @@ int main(int argc, char *argv[])
 #include "tempi/threadedscheduler.h"
 #include "tempi/serializer.h"
 #include "tempi/log.h"
-#include <boost/lexical_cast.hpp>
 #include <glib.h>
-#include <boost/program_options.hpp>
 #include <sstream>
 
 // namespaces:
-namespace po = boost::program_options;
 using tempi::INFO;
 using tempi::DEBUG;
 
 // String constants:
 static const char *PROGRAM_NAME = "tempi-launch";
+static const char *GRAPH_NAME = "graph0";
+
+// FIXME: store these options in a struct
+static gboolean help = FALSE;
+static gboolean version = FALSE;
+static gboolean verbose = FALSE;
+static gboolean debug = FALSE;
+static gchar** filenames = NULL;
+
+static GOptionEntry entries[] =
+{
+    {"version", 0, 0, G_OPTION_ARG_NONE, &version, "Show program's version number and exit"},
+    {"verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose, "Enables a verbose output"},
+    {"debug", 'd', 0, G_OPTION_ARG_NONE, &debug, "Enables a very verbose output"},
+    {G_OPTION_REMAINING, 0, 0, G_OPTION_ARG_FILENAME_ARRAY, &filenames, "Tempi files to read"},
+    {NULL}
+};
 
 /**
  * The TempiLauncher class is the tempi-launch application.
@@ -77,7 +90,6 @@ class TempiLauncher
         bool verbose_;
         bool debug_;
         tempi::ThreadedScheduler::ptr engine_;
-        tempi::serializer::Serializer::ptr saver_;
         tempi::Graph::ptr graph_;
         bool setupGraph();
 };
@@ -117,7 +129,7 @@ bool TempiLauncher::setupGraph()
     }
 
     // Check for XML file
-    if (! saver_->fileExists(fileName_.c_str()))
+    if (! tempi::serializer::fileExists(fileName_.c_str()))
     {
         std::cerr << "tempi-launch: ERROR: File \"" << fileName_ << "\" not found!\n";
         return false;
@@ -128,6 +140,7 @@ bool TempiLauncher::setupGraph()
         tempi::Logger::log(DEBUG, os.str().c_str());
     }
     // Create Scheduler
+    if (tempi::Logger::isEnabledFor(tempi::DEBUG))
     {
         std::ostringstream os;
         os << "tempi-launch: Create ThreadedScheduler\n";
@@ -139,17 +152,18 @@ bool TempiLauncher::setupGraph()
     //if (verbose_)
     //    std::cout << (*engine_.get()) << std::endl;
     tempi::ScopedLock::ptr lock = engine_->acquireLock();
+    if (tempi::Logger::isEnabledFor(tempi::DEBUG))
     {
         std::ostringstream os;
         os << "tempi-launch: Create Graph\n";
         tempi::Logger::log(DEBUG, os.str().c_str());
     }
-    
-    engine_->createGraph("graph0");
-    graph_ = engine_->getGraph("graph0");
+
+    engine_->createGraph(GRAPH_NAME);
+    graph_ = engine_->getGraph(GRAPH_NAME);
 
     // load graph
-    saver_->load(*graph_.get(), fileName_.c_str());
+    tempi::serializer::load(*graph_.get(), fileName_.c_str());
     graph_->tick(); // FIXME
 
     graph_ok_ = true;
@@ -188,86 +202,74 @@ bool TempiLauncher::launch()
 
 int TempiLauncher::parse_options(int argc, char **argv)
 {
-    po::options_description desc("Options");
-    desc.add_options()
-        ("help,h", "Show this help message and exit")
-        ("version", "Show program's version number and exit")
-        ("file,f", po::value<std::string>()->default_value(""), "Sets the XML file to load")
-        ("verbose,v", po::bool_switch(), "Enables a verbose output")
-        ("debug,d", po::bool_switch(), "Enables a very verbose output")
-        ;
-    po::variables_map options;
-    try
+    GError* error = NULL;
+    GOptionContext* context;
+
+    context = g_option_context_new(" - Runs Tempi graphs from XML files");
+    g_option_context_add_main_entries(context, entries, NULL);
+    //g_option_context_add_group(context, g_option_context_get_main_group(context));
+    
+    if (! g_option_context_parse(context, &argc, &argv, &error))
     {
-        // all positional options should be translated into "file" options
-        po::positional_options_description p;
-        p.add("file", -1);
-        po::store(po::command_line_parser(argc, argv).
-            options(desc).positional(p).run(), options);
-        po::notify(options);
-    }
-    catch (const po::error &e)
-    {
-        std::cerr << e.what() << std::endl;
-        std::cout << desc << std::endl;
         return 1;
     }
 
-    verbose_ = options["verbose"].as<bool>();
-    debug_ = options["debug"].as<bool>();
-    fileName_ = options["file"].as<std::string>();
-    // Options that makes the program exit:
-    if (options.count("help"))
-    {
-        std::cout << desc << std::endl;
-        return 0;
-    }
-    if (options.count("version"))
+    if (version)
     {
         std::cout << PROGRAM_NAME << " " << PACKAGE_VERSION << std::endl;
         return 0;
     }
-    if (verbose_)
+    if (verbose)
     {
+        verbose_ = verbose;
         tempi::Logger::getInstance().setLevel(tempi::INFO);
         tempi::Logger::log(INFO, "Set logging level to INFO");
     }
-    if (debug_)
+    if (debug)
     {
+        debug_ = debug;
         tempi::Logger::getInstance().setLevel(tempi::DEBUG);
         tempi::Logger::log(INFO, "Set logging level to DEBUG");
     }
+    if (filenames != NULL)
+    {
+        guint numFiles;
+        numFiles = g_strv_length(filenames);
+
+        for (guint i = 0; i < numFiles; ++i)
+        {
+            // TODO: load all files
+        }
+        if (numFiles >= 1)
+        {
+            // // At the moment we load just the first file specified
+            fileName_ = filenames[0];
+            // std::cout << fileName_ << std::endl;
+        }
+        else
+        {
+            std::ostringstream os;
+            os << "No file name specified";
+            tempi::Logger::log(tempi::ERROR, os.str().c_str());
+        }
+    }
+    if (tempi::Logger::isEnabledFor(tempi::INFO))
     {
         std::ostringstream os;
-        os << "XML file to load: " << fileName_;
-        tempi::Logger::log(DEBUG, os.str().c_str());
+        os << "File name specified on the command line: " << fileName_;
+        tempi::Logger::log(tempi::INFO, os.str().c_str());
     }
+
     return -1;
 }
 
-static gboolean on_idle(gpointer data)
-{
-    TempiLauncher *app = (TempiLauncher *) data;
-    (void) app;
-    //if (app->getVerbose())
-    //   std::cout << __FUNCTION__ << std::endl;
-    return TRUE; // stay registered
-}
 
 int main(int argc, char *argv[])
 {
     int ret;
     TempiLauncher app;
-    try
-    {
-        ret = app.parse_options(argc, argv);
-    }
-    catch (const boost::bad_any_cast &e)
-    {
-        std::cerr << "Error parsing options ";
-        std::cerr << e.what() << std::endl;
-        return 1;
-    }
+
+    ret = app.parse_options(argc, argv); 
     if (ret != -1)
         return ret;
 
@@ -280,7 +282,7 @@ int main(int argc, char *argv[])
 
     g_thread_init(NULL);
     GMainLoop *mainLoop = g_main_loop_new(NULL, FALSE);
-    g_idle_add(on_idle, (gpointer) &app);
+    //g_idle_add(on_idle, (gpointer) &app);
     tempi::Logger::log(DEBUG, "Run main loop.");
     g_main_loop_run(mainLoop);
     g_main_loop_unref(mainLoop);

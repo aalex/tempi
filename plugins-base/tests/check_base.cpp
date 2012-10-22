@@ -108,15 +108,16 @@ static bool checkMetro()
         return true; // FIXME
         //return false;
     }
-    if (VERBOSE)
-        std::cout << "count = counter0->getAttributeValue(\"count\").getInt(0);" << std::endl;
-    int count = counter0->getAttributeValue("count").getInt(0);
-    if (count < 10)
-    {
-        std::cout << "[counter] Bad count: expect 10 but got " << count << std::endl;
-        std::cout << "FIXME: This test should fail " << std::endl;
-        // TODO: return false;
-    }
+    // FIXME: the following is deprecated:
+    // if (VERBOSE)
+    //     std::cout << "count = counter0->getAttributeValue(\"count\").getInt(0);" << std::endl;
+    // int count = counter0->getAttributeValue("count").getInt(0);
+    // if (count < 10)
+    // {
+    //     std::cout << "[counter] Bad count: expect 10 but got " << count << std::endl;
+    //     std::cout << "FIXME: This test should fail " << std::endl;
+    //     // TODO: return false;
+    // }
 
     Node* any0 = graph.getNode("any0").get();
     if (any0 == 0)

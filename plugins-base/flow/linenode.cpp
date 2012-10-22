@@ -2,11 +2,11 @@
  * Copyright (C) 2011 Alexandre Quessy
  * Copyright (C) 2011 Michal Seta
  * Copyright (C) 2012 Nicolas Bouillot
+ * Copyright (C) 2012 Emmanuel Durand
  *
- * This file is part of Tempi.
+ * This file is part of Tempi-plugins-base.
  *
- * This program is free software: you can redistribute it and/or
- * modify it under the terms of, either version 3 of the License, or
+ * This program is free software; you can redistither version 3 of the License, or
  * (at your option) any later version.
  * 
  * Tempi is distributed in the hope that it will be useful,
@@ -77,6 +77,7 @@ void LineNode::computeTargets(const Message &message)
         float value = message.getFloat(0);
         line_.jumpTo(value);
         this->output(OUTLET_RAMP, Message("f", value)); // Jump to target
+        if (Logger::isEnabledFor(DEBUG))
         {
             Logger::Output os;
             os << "[line]: Jump to target: " << value;
@@ -112,9 +113,13 @@ void LineNode::computeTargets(const Message &message)
                 }
                 float ms = message.getFloat(i + 1);
                 duration = floatToTimePosition(ms);
-                Logger::Output os;
-                os << "[line]: add target: " << target << " " << ms;
-                Logger::log(INFO, os);
+
+                if (Logger::isEnabledFor(INFO))
+                {
+                    Logger::Output os;
+                    os << "[line]: add target: " << target << " " << ms;
+                    Logger::log(INFO, os);
+                }
             }
             targets_.push_back(Target(target, duration));
         }
@@ -156,17 +161,23 @@ bool LineNode::tryPopTarget(Target &result)
 {
     if (targets_.size() == 0)
     {
-        Logger::Output os;
-        os << "[line]: No more target.";
-        Logger::log(DEBUG, os);
+        if (Logger::isEnabledFor(DEBUG))
+        {
+            Logger::Output os;
+            os << "[line]: No more target.";
+            Logger::log(DEBUG, os);
+        }
         return false;
     }
     result = targets_[0];
     targets_.erase(targets_.begin());
     {
-        Logger::Output os;
-        os << "[line]: target " << result.get<0>() << " " << result.get<1>();
-        Logger::log(INFO, os);
+        if (Logger::isEnabledFor(INFO))
+        {
+            Logger::Output os;
+            os << "[line]: target " << result.get<0>() << " " << result.get<1>();
+            Logger::log(INFO, os);
+        }
     }
     true;
 }
@@ -178,16 +189,22 @@ bool LineNode::isTimeToOutput()
 
     if (rate_timer_.elapsed() > rate)
     {
-        Logger::Output os;
-        os << "[line]: Not yet time to output a new value.";
-        Logger::log(DEBUG, os);
+        if (Logger::isEnabledFor(DEBUG))
+        {
+            Logger::Output os;
+            os << "[line]: Not yet time to output a new value.";
+            Logger::log(DEBUG, os);
+        }
         return false;
     }
     else
     {
-        Logger::Output os;
-        os << "[line]: time to output a new value since last rate: " << rate_timer_.elapsed();
-        Logger::log(DEBUG, os);
+        if (Logger::isEnabledFor(DEBUG))
+        {
+            Logger::Output os;
+            os << "[line]: time to output a new value since last rate: " << rate_timer_.elapsed();
+            Logger::log(DEBUG, os);
+        }
     }
     rate_timer_.reset(); // very important!!
     return true;
@@ -267,6 +284,7 @@ void Line::start(float target, float duration_ms)
     target_ = target;
     duration_ = floatToTimePosition(duration_ms);
     timer_.reset();
+    if (Logger::isEnabledFor(NOTICE))
     {
         Logger::Output os;
         os << "Line.start(" << target_ << ", " << duration_ms <<
@@ -284,12 +302,12 @@ float Line::calculateCurrent()
 
     if (duration_ == 0L)
         return target_; // avoid division by zero
-    float progress = (float) elapsed / (float) duration_; // both in ns
+    float progress = (float) elapsed / (float) duration_; // both in ns, thus progress has no unit
     float current = utils::map_float(
         progress,
-        0.0f, (float) duration_, // map from [0, duration in ns]
+        0.0f, 1.f, // map from [start, end], according to progress
         origin_, target_);       // to [origin, target] (whatever value)
-    if (true)
+    if (Logger::isEnabledFor(INFO))
     {
         Logger::Output os;
         os << "Line: map " << progress <<

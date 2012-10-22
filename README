@@ -26,7 +26,14 @@ This program is free software; you can redistribute it and/or modify it under th
 
 Authors
 -------
+Authors who contributed to the core of Tempi:
+
 * Alexandre Quessy <alexandre@quessy.net>
+
+Authors who contributed to the base plugins for Tempi:
+
+* Alexandre Quessy <alexandre@quessy.net>
+* Emmanuel Durand <emmanueldurand@gmail.com>
 * Michal Seta <mis@artengine.ca>
 * Nicolas Bouillot <nicolas.bouillot@gmail.com>
 
@@ -53,7 +60,7 @@ Installation
 Here is how to build and install it on Debian GNU/Linux or Ubuntu::
 
   sudo apt-get install help2man gettext automake bison build-essential flex libtool 
-  sudo apt-get install libxml2-dev libclutter-1.0-dev libglib2.0-dev libboost-all-dev librtmidi-dev liblo0-dev liblog4cpp5-dev
+  sudo apt-get install libxml2-dev libclutter-1.0-dev libglib2.0-dev libboost-all-dev libportmidi-dev liblo0-dev liblog4cpp5-dev
   ./autogen.sh
   ./configure
   make

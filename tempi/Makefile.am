@@ -5,10 +5,11 @@ AM_CXXFLAGS = \
     $(BOOST_CPPFLAGS) \
     $(LIBXML_CFLAGS) \
     $(LIBLO_CFLAGS) \
-    $(RTMIDI_CFLAGS) \
     -I$(top_srcdir) \
     -I$(top_srcdir)/plugins-base \
-    -I$(top_srcdir)/tempi
+    -I$(top_srcdir)/tempi \
+    $(PORTMIDI_CFLAGS) \
+    $(RTMIDI_CFLAGS)
 
 # XXX BOOST_FILESYSTEM_LIBS must be after BOOST_SYSTEM_LIBS
 
@@ -20,7 +21,8 @@ AM_LIBS = \
     $(LIBLO_LIBS) \
     $(LIBXML_LIBS) \
     $(LOG4CPP_LIBS) \
-    $(RTMIDI_LIBS)
+    $(RTMIDI_LIBS) \
+    $(PORTMIDI_LIBS)
 
 # this file is not installed, just included by .cpp files at compile time.
 EXTRA_DIST = config.h
@@ -46,17 +48,14 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     documented.cpp \
     dict.cpp \
     entity.cpp \
-    fsm_rule.cpp \
-    fsm_state.cpp \
-    fsm_statemachine.cpp \
     graph.cpp \
     inlet.cpp \
     internals.cpp \
     loader.cpp \
     log.cpp \
     message.cpp \
-    midi_input.cpp \
-    midi_output.cpp \
+    midi.cpp \
+    midi_scheduler.cpp \
     nameallocator.cpp \
     namedobject.cpp \
     node.cpp \
@@ -96,9 +95,6 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     documented.h \
     entity.h \
     exceptions.h \
-    fsm_rule.h \
-    fsm_state.h \
-    fsm_statemachine.h \
     graph.h \
     oscreceiver.h \
     oscsender.h \
@@ -109,8 +105,8 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     loader.h \
     log.h \
     message.h \
-    midi_input.h \
-    midi_output.h \
+    midi.h \
+    midi_scheduler.h \
     nameallocator.h \
     namedobject.h \
     namedobjectmap.h \

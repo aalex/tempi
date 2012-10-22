@@ -1,6 +1,27 @@
 Tempi release notes
 ===================
 
+Tempi 0.1.18 (2012-10-22)
+-------------------------
+This release is a developer snapshot in the 0.1 series.
+
+New features:
+* Update spatosc API to 0.4
+* Add API version to name of plugins shared libraries
+* Rename sampler.sampler to sampler.simple
+* rename miller to tempi-graph-viewer
+* tempi-graph-viewer: F1 shows help
+* move fsm utilities to another library: libbehave
+* Outlet and Inlet are now children of Pad
+
+Bugs fixed:
+* tempi-osc-forward: fix node type names
+* Fix 100% CPU usage in tempi-launch and miller
+* Miller: Fix the bad connection position
+* remove dependency to rtmidi. Now using portmidi.
+* fix memory leak in midi input and output nodes
+
+
 Tempi 0.1.16 (2012-07-27)
 -------------------------
 This release is a developer snapshot in the 0.1 series.

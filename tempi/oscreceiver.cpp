@@ -1,12 +1,11 @@
 /*
  * Copyright (C) 2011 Alexandre Quessy
- * Copyright (C) 2011 Michal Seta
- * Copyright (C) 2012 Nicolas Bouillot
  *
  * This file is part of Tempi.
  *
- * This program is free software: you can redistribute it and/or
- * modify it under the terms of, either version 3 of the License, or
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software ither version 3 of the License, or
  * (at your option) any later version.
  * 
  * Tempi is distributed in the hope that it will be useful,
@@ -14,8 +13,9 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License
- * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with Tempi.  If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 
 #include "tempi/oscreceiver.h"
@@ -110,12 +110,14 @@ bool OscReceiver::start()
     if (running_)
         return false;
     // TODO: handle errors
+    if (Logger::isEnabledFor(INFO))
     {
         std::ostringstream os;
         os << "OscReceive.start(): calling lo_server_new(" << port_ << ", " << onError << ")";
         Logger::log(INFO, os.str().c_str());
     }
     server_ = lo_server_new(boost::lexical_cast<std::string>(port_).c_str(), onError);
+    if (Logger::isEnabledFor(INFO))
     {
         std::ostringstream os;
         os << "OscReceive.start(): calling lo_server_add_method(" << server_ << ", NULL, NULL, " << generic_handler << ", this)";

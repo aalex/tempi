@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tempi version="0.1.9">
+  <graph>
+    <node name="midireceive0" class="base.midi.input">
+      <attribute name="port">
+        <i>3</i>
+      </attribute>
+    </node>
+    <node name="midiout0" class="base.midi.output">
+      <attribute name="port">
+        <i>4</i>
+      </attribute>
+    </node>
+    <connection from="midireceive0" outlet="0" to="midiout0" inlet="0" />
+  </graph>
+</tempi>

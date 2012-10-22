@@ -1,12 +1,11 @@
 /*
  * Copyright (C) 2011 Alexandre Quessy
- * Copyright (C) 2011 Michal Seta
- * Copyright (C) 2012 Nicolas Bouillot
  *
  * This file is part of Tempi.
  *
- * This program is free software: you can redistribute it and/or
- * modify it under the terms of, either version 3 of the License, or
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software ither version 3 of the License, or
  * (at your option) any later version.
  * 
  * Tempi is distributed in the hope that it will be useful,
@@ -14,35 +13,47 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License
- * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with Tempi.  If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 
 #include "tempi/inlet.h"
 #include "tempi/outlet.h"
+#include "tempi/log.h"
 #include <iostream>
 
-namespace tempi
-{
+namespace tempi {
 
-Inlet::Inlet(const char *name, const char *documentation)
+Inlet::Inlet(const char *name, const char *short_documentation,
+    const char * long_documentation) :
+        Pad(name, short_documentation, long_documentation)
 {
-    name_ = std::string(name);
-    documentation_ = std::string(documentation);
 }
 
 Inlet::~Inlet()
 {
     // just in case.
-    disconnectAll();
+    this->disconnectAll();
+}
+
+void Inlet::onMessageReceivedFromSource(const char *outlet_name, const Message &message)
+{
+    if (Logger::isEnabledFor(DEBUG))
+    {
+        std::ostringstream os;
+        os << "Inlet::" << __FUNCTION__ << "(" << outlet_name << ", " << message << ")";
+        Logger::log(DEBUG, os);
+    }
+    this->trigger(message);
 }
 
 bool Inlet::connect(Outlet::ptr source)
 {
-    if (! isConnected(source))
+    if (! this->isConnected(source))
     {
-        sources_.push_back(source);
-        source.get()->getOnTriggeredSignal().connect(boost::bind(&Inlet::trigger, this, _1));
+        this->sources_.push_back(source);
+        source.get()->getOnTriggeredSignal().connect(boost::bind(&Inlet::onMessageReceivedFromSource, this, _1, _2));
         return true;
     }
     return false;
@@ -58,7 +69,7 @@ bool Inlet::disconnect(Outlet::ptr source)
 {
     if (isConnected(source))
     {
-        source.get()->getOnTriggeredSignal().disconnect(boost::bind(&Inlet::trigger, this, _1));
+        source.get()->getOnTriggeredSignal().disconnect(boost::bind(&Inlet::onMessageReceivedFromSource, this, _1, _2));
         sources_.erase(std::find(sources_.begin(), sources_.end(), source));
         return true;
     }
@@ -69,23 +80,6 @@ bool Inlet::disconnect(Outlet::ptr source)
 bool Inlet::isConnected(Outlet::ptr source)
 {
     return std::find(sources_.begin(), sources_.end(), source) != sources_.end();
-}
-
-void Inlet::trigger(const Message &message)
-{
-    // TODO
-    //std::cout << __FUNCTION__ << std::endl;
-    on_triggered_signal_(this, message);
-}
-
-std::string Inlet::getName() const
-{
-    return name_;
-}
-
-std::string Inlet::getDocumentation() const
-{
-    return documentation_;
 }
 
 } // end of namespace

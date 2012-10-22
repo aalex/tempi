@@ -14,7 +14,7 @@
 # - increase tempi_interface_version to the next odd number
 m4_define([tempi_major_version], [0])
 m4_define([tempi_minor_version], [1])
-m4_define([tempi_micro_version], [16])
+m4_define([tempi_micro_version], [18])
 
 m4_define([tempi_release_status],
           [m4_if(m4_eval(tempi_micro_version % 2), [1], [git],
@@ -80,6 +80,7 @@ AC_SUBST([TEMPI_LT_VERSION], "$TEMPI_LT_VERSION")
 TEMPI_LT_LDFLAGS="-version-info $TEMPI_LT_VERSION"
 
 AC_DEFINE_UNQUOTED(TEMPI_PLUGINS_DIR,["tempi-$TEMPI_API_VERSION"],[Path to Tempi plugins])
+AC_DEFINE_UNQUOTED(TEMPI_API_VERSION,["$TEMPI_API_VERSION"],[Tempi API version])
 
 # Checks for programs.
 AC_PROG_CC
@@ -105,19 +106,30 @@ AC_CHECK_LIB([m],[sqrt])
 # Checks for header files.
 AC_CHECK_HEADERS([arpa/inet.h stddef.h stdlib.h string.h sys/time.h])
 
+# portmidi
+AC_CHECK_HEADERS([portmidi.h porttime.h], have_portmidi_headers=true, have_portmidi_headers=false)
+if test "x${have_portmidi_headers}" = "xfalse" ; then
+    AC_MSG_ERROR([missing portmidi headers, install libportmidi-dev])
+fi
+AC_CHECK_LIB([portmidi],[Pm_Initialize], have_portmidi=true, have_portmidi=false)
+if test "x${have_portmidi}" = "xfalse" ; then
+    AC_MSG_ERROR([missing portmidi library, install libportmidi-dev])
+fi
+AC_CHECK_LIB([porttime],[Pt_Time], have_porttime=true, have_porttime=false)
+if test "x${have_porttime}" = "xfalse" ; then
+    AC_MSG_ERROR([missing porttime library, install libportmidi-dev])
+fi
+PORTMIDI_CFLAGS="-DPMALSA"
+AC_SUBST([PORTMIDI_CFLAGS], "$PORTMIDI_CFLAGS")
+PORTMIDI_LIBS="-lportmidi -lporttime -lpthread -lm"
+AC_SUBST([PORTMIDI_LIBS], "$PORTMIDI_LIBS")
+
+
 # Checks for library functions.
 AC_FUNC_ERROR_AT_LINE
 AC_CHECK_FUNCS([gettimeofday memmove mkdir setenv sqrt strchr strpbrk uname])
 
 AX_PTHREAD
-
-# check for the RTMIDI
-PKG_CHECK_MODULES([RTMIDI], [rtmidi], have_rtmidi=true, have_rtmidi=false)
-if test "x${have_rtmidi}" = "xfalse" ; then
-    AC_MSG_WARN([missing package: librtmidi-dev])
-else
-    AC_DEFINE(HAVE_RTMIDI,[1],[RTMIDI headers successfully detected])
-fi
 
 # Glib
 PKG_CHECK_MODULES([GLIB], [glib-2.0 gthread-2.0], have_glib=true, have_glib=false)
@@ -147,9 +159,9 @@ if test "x${have_log4cpp}" = "xfalse" ; then
     AC_MSG_ERROR([missing package: liblog4cpp5-dev])
 fi
 
-PKG_CHECK_MODULES([SPATOSC], [spatosc-0.3], have_spatosc=true, have_spatosc=false)
+PKG_CHECK_MODULES([SPATOSC], [spatosc-0.4], have_spatosc=true, have_spatosc=false)
 if test "x${have_spatosc}" = "xfalse" ; then
-    AC_MSG_WARN([missing package: libspatosc-0.3-dev])
+    AC_MSG_WARN([missing package: libspatosc-dev])
 else
     AC_DEFINE(HAVE_SPATOSC,[1],[SpatOSC headers successfully detected])
 fi
@@ -203,7 +215,7 @@ AC_MSG_NOTICE([BOOST_SIGNALS_LIBS:         ${BOOST_SIGNALS_LIBS}])
 AC_MSG_NOTICE([BOOST_SYSTEM_LIBS:          ${BOOST_SYSTEM_LIBS}])
 AC_MSG_NOTICE([BOOST_THREAD_LIBS:         ${BOOST_THREAD_LIBS}])
 
-CFLAGS+=" -Wall -g" dnl -Wextra -Wfatal-errors -Werror "
+CFLAGS+=" -Wall -g3 -O0" dnl -Wextra -Wfatal-errors -Werror "
 
 # GNU help2man creates man pages from --help output; in many cases, this
 # is sufficient, and obviates the need to maintain man pages separately.
@@ -227,7 +239,7 @@ AC_CONFIG_FILES([
         plugins-base/tests/Makefile
         python_module/Makefile
         src/Makefile
-        src/miller/Makefile
+        src/tempi-graph-viewer/Makefile
         src/tempi-midi-looper/Makefile
         src/tempi-osc-forward/Makefile
         src/tempi-draw/Makefile

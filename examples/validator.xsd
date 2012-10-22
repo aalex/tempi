@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  
+  <xs:element name="tempi" type="tempiType"/>
+
+  <xs:complexType name="attributeType">
+    <xs:sequence>
+      <xs:element name="i" type="xs:int" minOccurs="0"/>
+      <xs:element name="f" type="xs:float" minOccurs="0"/>
+      <xs:element name="b" type="xs:string" minOccurs="0"/>
+      <xs:element name="s" type="xs:string" minOccurs="0"/>
+      <xs:element name="C" type="xs:string" minOccurs="0"/>
+      <xs:element name="c" type="xs:string" minOccurs="0"/>
+      <xs:element name="p" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="name" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="nodeType">
+    <xs:sequence>
+      <xs:element type="attributeType" name="attribute" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="class" use="required"/>
+    <xs:attribute type="xs:string" name="name" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="connectionType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="from" use="required"/>
+        <xs:attribute type="xs:byte" name="outlet" use="required"/>
+        <xs:attribute type="xs:string" name="to" use="required"/>
+        <xs:attribute type="xs:byte" name="inlet" use="required"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <xs:complexType name="graphType">
+    <xs:sequence>
+      <xs:element type="nodeType" name="node" maxOccurs="unbounded" minOccurs="0"/>
+      <xs:element type="connectionType" name="connection" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="tempiType">
+    <xs:sequence>
+      <xs:element type="graphType" name="graph"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="version" use="required"/>
+  </xs:complexType>
+
+</xs:schema>

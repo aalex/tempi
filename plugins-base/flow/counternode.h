@@ -2,11 +2,11 @@
  * Copyright (C) 2011 Alexandre Quessy
  * Copyright (C) 2011 Michal Seta
  * Copyright (C) 2012 Nicolas Bouillot
+ * Copyright (C) 2012 Emmanuel Durand
  *
- * This file is part of Tempi.
+ * This file is part of Tempi-plugins-base.
  *
- * This program is free software: you can redistribute it and/or
- * modify it under the terms of, either version 3 of the License, or
+ * This program is free software; you can redistither version 3 of the License, or
  * (at your option) any later version.
  * 
  * Tempi is distributed in the hope that it will be useful,
@@ -37,14 +37,13 @@ class CounterNode : public Node
 {
     public:
         static const char * const PROP_INCREMENT;
-        static const char * const PROP_COUNT;
+        static const char * const PROP_INITIAL_COUNT;
         CounterNode();
     protected:
         virtual void processMessage(const char *inlet, const Message &message);
         virtual bool onNodeAttributeChanged(const char *name, const Message &value);
     private:
         int count_;
-        int increment_;
 };
 
 } // end of namespace

@@ -1,12 +1,11 @@
 /*
  * Copyright (C) 2011 Alexandre Quessy
- * Copyright (C) 2011 Michal Seta
- * Copyright (C) 2012 Nicolas Bouillot
  *
  * This file is part of Tempi.
  *
- * This program is free software: you can redistribute it and/or
- * modify it under the terms of, either version 3 of the License, or
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software ither version 3 of the License, or
  * (at your option) any later version.
  * 
  * Tempi is distributed in the hope that it will be useful,
@@ -14,8 +13,9 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License
- * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with Tempi.  If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 
 /**
@@ -52,34 +52,6 @@ void hello();
 std::string get_version();
 
 }; // end of namespace
-
-// #include "tempi/graph.h"
-// #include "tempi/identifier.h"
-// #include "tempi/sampler/loopingplayback.h"
-// #include "tempi/sampler/marker.h"
-// #include "tempi/message.h"
-// #include "tempi/node.h"
-// #include "tempi/nodefactory.h"
-// #include "tempi/sampler/pingpongplayback.h"
-// #include "tempi/sampler/playback.h"
-// #include "tempi/sampler/player.h"
-// #include "tempi/sampler/recorder.h"
-// #include "tempi/fsm/rule.h"
-// #include "tempi/sharedptr.h"
-// #include "tempi/mapping/filter.h"
-// #include "tempi/mapping/slidefilter.h"
-// #include "tempi/inlet.h"
-// #include "tempi/outlet.h"
-// #include "tempi/fsm/state.h"
-// #include "tempi/fsm/statemachine.h"
-// #include "tempi/table/table.h"
-// #include "tempi/tempi-version.h"
-// #include "tempi/timeposition.h"
-// #include "tempi/timer.h"
-// #include "tempi/sampler/track.h"
-//#include "tempi/types.h"
-//#include "tempi/attribute.h"
-//TODO: #include "tempi/sampler/score.h"
 
 #endif // ifndef
 

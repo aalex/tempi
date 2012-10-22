@@ -2,11 +2,11 @@
  * Copyright (C) 2011 Alexandre Quessy
  * Copyright (C) 2011 Michal Seta
  * Copyright (C) 2012 Nicolas Bouillot
+ * Copyright (C) 2012 Emmanuel Durand
  *
- * This file is part of Tempi.
+ * This file is part of Tempi-plugins-base.
  *
- * This program is free software: you can redistribute it and/or
- * modify it under the terms of, either version 3 of the License, or
+ * This program is free software; you can redistither version 3 of the License, or
  * (at your option) any later version.
  * 
  * Tempi is distributed in the hope that it will be useful,
@@ -27,7 +27,6 @@
 
 #include "tempi/node.h"
 #include "tempi/synchronousscheduler.h"
-#include "tempi/serializer.h"
 #include <string>
 #include <vector>
 
@@ -48,7 +47,6 @@ class AbstractionNode : public Node
     private:
         std::string file_path_;
         tempi::SynchronousScheduler::ptr scheduler_;
-        tempi::serializer::Serializer::ptr loader_;
         tempi::Graph::ptr graph_;
         std::vector<std::string> outlet_names_;
         std::vector<std::string> inlet_names_;

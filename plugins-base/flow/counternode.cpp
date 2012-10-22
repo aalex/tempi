@@ -2,11 +2,11 @@
  * Copyright (C) 2011 Alexandre Quessy
  * Copyright (C) 2011 Michal Seta
  * Copyright (C) 2012 Nicolas Bouillot
+ * Copyright (C) 2012 Emmanuel Durand
  *
- * This file is part of Tempi.
+ * This file is part of Tempi-plugins-base.
  *
- * This program is free software: you can redistribute it and/or
- * modify it under the terms of, either version 3 of the License, or
+ * This program is free software; you can redistither version 3 of the License, or
  * (at your option) any later version.
  * 
  * Tempi is distributed in the hope that it will be useful,
@@ -26,19 +26,18 @@ namespace tempi {
 namespace plugins_base {
 
 const char * const CounterNode::PROP_INCREMENT = "increment";
-const char * const CounterNode::PROP_COUNT = "count";
+const char * const CounterNode::PROP_INITIAL_COUNT = "initial_count";
 
 CounterNode::CounterNode() :
-    Node(),
-    increment_(1)
+    Node()
 {
     setShortDocumentation("Counts from its start value, incrementing or decrementing the count when it gets a bang.");
     addOutlet("0", "Count.");
     addInlet("0", "Bangs increase and output the count. Integers sets and outputs the count.");
     Message increment = Message("i", 1);
     addAttribute(Attribute::ptr(new Attribute(PROP_INCREMENT, increment)));
-    Message count = Message("i", 0);
-    addAttribute(Attribute::ptr(new Attribute(PROP_COUNT, count, "Current count value.")));
+    Message ini_count_attr = Message("i", 0);
+    addAttribute(Attribute::ptr(new Attribute(PROP_INITIAL_COUNT, ini_count_attr, "Initial count value.")));
 }
 
 void CounterNode::processMessage(const char *inlet, const Message &message)
@@ -47,18 +46,16 @@ void CounterNode::processMessage(const char *inlet, const Message &message)
     // bang outputs and increments
     if (message.getTypes() == "")
     {
-        int count = getAttributeValue(PROP_COUNT).getInt(0);
         int increment = getAttributeValue(PROP_INCREMENT).getInt(0);
-        output("0", getAttributeValue(PROP_COUNT));
-        count += increment;
-        setAttributeValue(PROP_COUNT, Message("i", count));
+        output("0", Message("i", count_));
+        count_ += increment;
     }
     // int replaces the value and outputs
     else if (message.getTypes() == "i")
     {
         count_ = message.getInt(0);
-        setAttributeValue(PROP_COUNT, message);
-        output("0", getAttributeValue(PROP_COUNT));
+        setAttributeValue(PROP_INITIAL_COUNT, message);
+        output("0", getAttributeValue(PROP_INITIAL_COUNT));
     }
     else
     {
@@ -68,9 +65,9 @@ void CounterNode::processMessage(const char *inlet, const Message &message)
 
 bool CounterNode::onNodeAttributeChanged(const char *name, const Message &value)
 {
-    if (utils::stringsMatch("increment", name))
+    if (utils::stringsMatch(PROP_INITIAL_COUNT, name))
     {
-        increment_ = value.getInt(0);
+        count_ = value.getInt(0);
     }
     return true;
 }

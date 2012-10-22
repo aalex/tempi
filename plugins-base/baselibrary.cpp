@@ -2,11 +2,11 @@
  * Copyright (C) 2011 Alexandre Quessy
  * Copyright (C) 2011 Michal Seta
  * Copyright (C) 2012 Nicolas Bouillot
+ * Copyright (C) 2012 Emmanuel Durand
  *
- * This file is part of Tempi.
+ * This file is part of Tempi-plugins-base.
  *
- * This program is free software: you can redistribute it and/or
- * modify it under the terms of, either version 3 of the License, or
+ * This program is free software; you can redistither version 3 of the License, or
  * (at your option) any later version.
  * 
  * Tempi is distributed in the hope that it will be useful,
@@ -40,7 +40,6 @@
 #include "plugins-base/flow/unpacknode.h"
 #include "plugins-base/spatosc/spatoscnode.h"
 #include "plugins-base/flow/spigotnode.h"
-#include "plugins-base/clutter/clutterstagenode.h"
 #include "plugins-base/mapper/mapperinputnode.h"
 #include "plugins-base/math/onefloatmathnode.h"
 #include "plugins-base/math/twofloatmathnode.h"
@@ -70,6 +69,10 @@
 #include "tempi/config.h"
 #include "tempi/nodefactory.h"
 #include "tempi/utils.h"
+
+#ifdef HAVE_CLUTTER
+#include "plugins-base/clutter/clutterstagenode.h"
+#endif
 
 namespace tempi {
 namespace plugins_base {
@@ -120,12 +123,12 @@ void BaseLibrary::load(NodeFactory &factory, const char * /*prefix*/) const
 #endif // HAVE_CLUTTER
 
 // TODO: #ifdef HAVE_STK
-    factory.registerTypeT<ControlBuilderNode>(concatenate(prefix, "midi.control").c_str());
-    factory.registerTypeT<NoteBuilderNode>(concatenate(prefix, "midi.note").c_str());
+    factory.registerTypeT<ControlBuilderNode>(concatenate(prefix, "midi.build.control").c_str());
+    factory.registerTypeT<NoteBuilderNode>(concatenate(prefix, "midi.build.note").c_str());
     factory.registerTypeT<MidiReceiverNode>(concatenate(prefix, "midi.input").c_str());
     factory.registerTypeT<MidiSenderNode>(concatenate(prefix, "midi.output").c_str());
     factory.registerTypeT<MidiRouteNode>(concatenate(prefix, "midi.route").c_str());
-    factory.registerTypeT<ProgramChangeBuilderNode>(concatenate(prefix, "midi.program").c_str());
+    factory.registerTypeT<ProgramChangeBuilderNode>(concatenate(prefix, "midi.build.program").c_str());
 // TODO: #endif // HAVE_STK
 
     factory.registerTypeT<NearestNoteNode>(concatenate(prefix, "music.nearest.note").c_str());
@@ -139,7 +142,7 @@ void BaseLibrary::load(NodeFactory &factory, const char * /*prefix*/) const
     factory.registerTypeT<OscRouteNode>(concatenate(prefix, "osc.route").c_str());
 
     factory.registerTypeT<SamplerSampleNode>(concatenate(prefix, "sampler.sample").c_str());
-    factory.registerTypeT<SamplerNode>(concatenate(prefix, "sampler.sampler").c_str());
+    factory.registerTypeT<SamplerNode>(concatenate(prefix, "sampler.simple").c_str());
     factory.registerTypeT<SamplerReadNode>(concatenate(prefix, "sampler.read").c_str());
     factory.registerTypeT<SamplerWriteNode>(concatenate(prefix, "sampler.write").c_str());
 

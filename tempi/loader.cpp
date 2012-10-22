@@ -13,11 +13,13 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License
- * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with Tempi.  If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 
 #include "tempi/loader.h"
+#include "tempi/config.h"
 #include "tempi/log.h"
 //TODO #include "tempi/config.h"
 #include <dlfcn.h>
@@ -96,9 +98,12 @@ bool Loader::load(NodeFactory &factory, const char *name)
     }
     if (isLoaded(name))
     {
-        std::ostringstream os;
-        os << "Loader." << __FUNCTION__ << ": Plugin already loaded: " << name;
-        Logger::log(INFO, os);
+        if (Logger::isEnabledFor(INFO))
+        {
+            std::ostringstream os;
+            os << "Loader." << __FUNCTION__ << ": Plugin already loaded: " << name;
+            Logger::log(INFO, os);
+        }
         return false;
     }
     std::vector<std::string>::const_iterator iter;
@@ -106,7 +111,8 @@ bool Loader::load(NodeFactory &factory, const char *name)
     {
         std::string prefix(*iter);
         std::string fileName;
-        fileName = prefix + "/" + FILE_PREFIX + name + FILE_SUFFIX;
+        fileName = prefix + "/" + FILE_PREFIX + TEMPI_API_VERSION + PLUGINS_STR + name + FILE_SUFFIX;
+        if (Logger::isEnabledFor(DEBUG))
         {
             std::ostringstream os;
             os << __FUNCTION__ << ": Trying " << fileName;
@@ -114,6 +120,7 @@ bool Loader::load(NodeFactory &factory, const char *name)
         }
         if (fileExists(fileName.c_str()))
         {
+            if (Logger::isEnabledFor(DEBUG))
             {
                 std::ostringstream os;
                 os << "dlopen()...\n";
@@ -189,7 +196,8 @@ bool Loader::hasPath(const char *path)
     return false;
 }
 
-const char * const Loader::FILE_PREFIX = "libtempi-plugins-";
+const char * const Loader::FILE_PREFIX = "libtempi-";
+const char * const Loader::PLUGINS_STR = "-plugins-";
 const char * const Loader::FILE_SUFFIX = ".so"; // TODO: if Linux
 const char * const Loader::FUNC_PREFIX = "tempi_";
 const char * const Loader::FUNC_SUFFIX = "_setup";
