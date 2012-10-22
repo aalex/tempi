@@ -119,6 +119,8 @@ AC_CHECK_LIB([porttime],[Pt_Time], have_porttime=true, have_porttime=false)
 if test "x${have_porttime}" = "xfalse" ; then
     AC_MSG_ERROR([missing porttime library, install libportmidi-dev])
 fi
+
+dnl FIXME: if on linux only:
 PORTMIDI_CFLAGS="-DPMALSA"
 AC_SUBST([PORTMIDI_CFLAGS], "$PORTMIDI_CFLAGS")
 PORTMIDI_LIBS="-lportmidi -lporttime -lpthread -lm"
