@@ -4,7 +4,6 @@ LDADD = \
 	$(top_builddir)/tempi/libtempi-@TEMPI_API_VERSION@.la
 
 check_PROGRAMS = \
-    check_fsm \
     check_graph \
     check_message \
     check_libraries \
@@ -21,7 +20,6 @@ check_PROGRAMS = \
 
 TESTS = $(check_PROGRAMS)
 
-check_fsm_SOURCES = check_fsm.cpp
 check_graph_SOURCES = check_graph.cpp
 check_message_SOURCES = check_message.cpp
 check_libraries_SOURCES = check_libraries.cpp

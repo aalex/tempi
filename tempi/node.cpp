@@ -1,11 +1,12 @@
 /*
  * Copyright (C) 2011 Alexandre Quessy
+ * Copyright (C) 2011 Michal Seta
+ * Copyright (C) 2012 Nicolas Bouillot
  *
  * This file is part of Tempi.
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public License
- * as published by the Free Software ither version 3 of the License, or
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of, either version 3 of the License, or
  * (at your option) any later version.
  * 
  * Tempi is distributed in the hope that it will be useful,
@@ -13,9 +14,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with Tempi.  If not, see
- * <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "tempi/node.h"
@@ -140,8 +140,21 @@ bool Node::onAttributeChanged(const char *name, const Message &value)
 
 void Node::onInletTriggered(const char *inlet_name, const Message &message)
 {
-    if (inlet_name == ATTRIBUTES_INLET)
+    static const std::string attr_inlet_name(ATTRIBUTES_INLET);
+    if (Logger::isEnabledFor(DEBUG))
     {
+        std::ostringstream os;
+        os << "Node." << __FUNCTION__ << "(" << inlet_name << ", " << message << ")";
+        Logger::log(DEBUG, os);
+    }
+    if (attr_inlet_name == inlet_name)
+    {
+        if (Logger::isEnabledFor(DEBUG))
+        {
+            std::ostringstream os;
+            os << "It is the ATTRIBUTES_INLET";
+            Logger::log(DEBUG, os);
+        }
         if (message.indexMatchesType(0, STRING))
         {
             if (message.getString(0) == ATTRIBUTES_GET_METHOD_SELECTOR)

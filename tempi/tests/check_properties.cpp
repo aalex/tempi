@@ -1,4 +1,5 @@
 #include "tempi/node.h"
+#include "tempi/log.h"
 #include <string>
 #include <iostream>
 
@@ -20,7 +21,7 @@ class DummyNode : public Node
         }
         bool triggered_;
     private:
-        virtual bool onAttributeChanged(const char *name, const Message &value)
+        virtual bool onNodeAttributeChanged(const char *name, const Message &value)
         {
             triggered_ = true;
             if (VERBOSE)
@@ -33,7 +34,7 @@ class DummyNode : public Node
         virtual void processMessage(const char *inlet, const Message &message)
         {
             if (VERBOSE)
-                std::cout << __FUNCTION__ << " " << inlet << " " << message << std::endl;
+                std::cout << "DummyNode." << __FUNCTION__ << "(" << inlet << ", " << message << ")" << std::endl;
         }
 };
 
@@ -74,9 +75,9 @@ static bool check_properties()
     catch (const BadIndexException &e)
     {}
 
-    Message set_message = Message("ssifs", "set", "hello", 3, 9.124351f, "qweqweqweqw");
+    Message set_message = Message("ssifs", Node::ATTRIBUTES_SET_METHOD_SELECTOR, "hello", 3, 9.124351f, "qweqweqweqw");
     n.triggered_ = false;
-    n.getInlet("__attr__")->trigger(set_message);
+    n.getInlet(Node::ATTRIBUTES_INLET)->trigger(set_message);
     if (VERBOSE)
     {
         std::cout << n.triggered_ << std::endl;
@@ -92,6 +93,8 @@ static bool check_properties()
 
 int main(int /* argc */, char ** /*argv */)
 {
+    if (VERBOSE)
+        Logger::getInstance().setLevel(DEBUG);
     if (! check_properties())
         return 1;
 
