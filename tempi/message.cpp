@@ -35,12 +35,12 @@ Message::Message()
 
 Message::Message(const char *types, ...)
 {
-    if (Logger::isEnabledFor(DEBUG))
-    {
-        std::ostringstream os;
-        os << "Message." << __FUNCTION__ << "(" << types << ", ...)";
-        Logger::log(DEBUG, os);
-    }
+    // if (Logger::isEnabledFor(DEBUG))
+    // {
+    //     std::ostringstream os;
+    //     os << "Message." << __FUNCTION__ << "(" << types << ", ...)";
+    //     Logger::log(DEBUG, os);
+    // }
     va_list arguments;
     va_start(arguments, types);
     appendVaList(types, arguments);
@@ -49,12 +49,12 @@ Message::Message(const char *types, ...)
 
 void Message::append(const char *types, ...)
 {
-    if (Logger::isEnabledFor(DEBUG))
-    {
-        std::ostringstream os;
-        os << "Message." << __FUNCTION__ << ": " << types;
-        Logger::log(DEBUG, os);
-    }
+    // if (Logger::isEnabledFor(DEBUG))
+    // {
+    //     std::ostringstream os;
+    //     os << "Message." << __FUNCTION__ << ": " << types;
+    //     Logger::log(DEBUG, os);
+    // }
     va_list arguments;
     va_start(arguments, types);
     appendVaList(types, arguments);
@@ -63,12 +63,12 @@ void Message::append(const char *types, ...)
 
 void Message::appendVaList(const char *types, va_list arguments)
 {
-    if (Logger::isEnabledFor(DEBUG))
-    {
-        std::ostringstream os;
-        os << "Message." << __FUNCTION__ << ": " << types;
-        Logger::log(DEBUG, os);
-    }
+    // if (Logger::isEnabledFor(DEBUG))
+    // {
+    //     std::ostringstream os;
+    //     os << "Message." << __FUNCTION__ << ": " << types;
+    //     Logger::log(DEBUG, os);
+    // }
     // TODO: avoid segfault if length does not match
     // TODO: avoid segfault if types do not match
     for (int i = 0; types[i] != '\0'; ++i)
