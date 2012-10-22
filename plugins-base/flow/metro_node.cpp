@@ -86,7 +86,7 @@ void MetroNode::outputTick()
         Logger::log(DEBUG, os);
     }
     this->initial_tick_done_ = true;
-    Message message = Message("s", "hello"); // bang
+    Message message = Message();
     this->output("0", message);
 }
 
