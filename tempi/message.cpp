@@ -24,6 +24,7 @@
 #include <iostream>
 #include <sstream>
 #include <ostream>
+#include <cstring>
 
 namespace tempi {
 
@@ -153,7 +154,7 @@ void Message::appendVaList(const char *types, va_list arguments)
             default:
                 {
                     std::ostringstream os;
-                    os << "Message::" << __FUNCTION__ << ": Unsupported type tag: " << types[i];
+                    os << "Message::" << __FUNCTION__ << ": Unsupported type tag: " << types[i] << " (types=\"" << types << "\") (length=" << std::strlen(types) << ")";
                     Logger::log(ERROR, os);
                 }
                 break;
