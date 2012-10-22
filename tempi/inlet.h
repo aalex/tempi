@@ -67,6 +67,7 @@ class Inlet : public Pad
     private:
         typedef std::vector<Outlet::ptr> OutletsVec;
         OutletsVec sources_;
+        void onMessageReceivedFromSource(const char *outlet_name, const Message &message);
 };
 
 } // end of namespace

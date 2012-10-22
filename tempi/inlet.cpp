@@ -20,6 +20,7 @@
 
 #include "tempi/inlet.h"
 #include "tempi/outlet.h"
+#include "tempi/log.h"
 #include <iostream>
 
 namespace tempi {
@@ -36,12 +37,23 @@ Inlet::~Inlet()
     this->disconnectAll();
 }
 
+void Inlet::onMessageReceivedFromSource(const char *outlet_name, const Message &message)
+{
+    if (Logger::isEnabledFor(DEBUG))
+    {
+        std::ostringstream os;
+        os << "Inlet::" << __FUNCTION__ << "(" << outlet_name << ", " << message << ")";
+        Logger::log(DEBUG, os);
+    }
+    this->trigger(message);
+}
+
 bool Inlet::connect(Outlet::ptr source)
 {
     if (! this->isConnected(source))
     {
         this->sources_.push_back(source);
-        source.get()->getOnTriggeredSignal().connect(boost::bind(&Pad::trigger, this, _1));
+        source.get()->getOnTriggeredSignal().connect(boost::bind(&Inlet::onMessageReceivedFromSource, this, _1, _2));
         return true;
     }
     return false;
@@ -57,7 +69,7 @@ bool Inlet::disconnect(Outlet::ptr source)
 {
     if (isConnected(source))
     {
-        source.get()->getOnTriggeredSignal().disconnect(boost::bind(&Pad::trigger, this, _1));
+        source.get()->getOnTriggeredSignal().disconnect(boost::bind(&Inlet::onMessageReceivedFromSource, this, _1, _2));
         sources_.erase(std::find(sources_.begin(), sources_.end(), source));
         return true;
     }
