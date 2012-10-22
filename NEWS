@@ -12,6 +12,7 @@ New features:
 * rename miller to tempi-graph-viewer
 * tempi-graph-viewer: F1 shows help
 * move fsm utilities to another library: libbehave
+* Outlet and Inlet are not children of Pad
 
 Bugs fixed:
 * tempi-osc-forward: fix node type names
