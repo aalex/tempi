@@ -30,23 +30,20 @@
 #include "tempi/sharedptr.h"
 #include "tempi/message.h"
 #include "tempi/outlet.h"
+#include "tempi/pad.h"
 #include <string>
 
-namespace tempi
-{
+namespace tempi {
 
 /**
  * A Inlet is a pad to which we can connect Outlet pads.
  */
-class Inlet
+class Inlet : public Pad
 {
     public:
         typedef std::tr1::shared_ptr<Inlet> ptr;
-        // TODO: rename to ReceiveSignal
-        typedef boost::signals2::signal<void (Inlet *sink, const Message&)> TriggeredSignal;
-        // TODO: rename to ReceiveSlot
-        typedef TriggeredSignal::slot_function_type TriggeredSlot;
-        Inlet(const char *name, const char *documentation="");
+        Inlet(const char *name, const char *short_documentation="",
+            const char *long_documentation="");
         ~Inlet();
         /**
          * Connects this given Outlet to this Inlet.
@@ -63,37 +60,14 @@ class Inlet
          * @param source The Outlet to check if it is connected to this Inlet.
          */
         bool isConnected(Outlet::ptr source);
-        // TODO: rename to receive
-        /**
-         * Called when a message is receive via this Inlet.
-         */
-        void trigger(const Message &message);
-        TriggeredSignal &getOnTriggeredSignal()
-        {
-            return on_triggered_signal_;
-        }
         /**
          * Disconnects all Outlets connected to this Inlet.
          */
         void disconnectAll();
-        /**
-         * Returns the name of this Inlet.
-         * Each Node should take care of naming its inlets.
-         */
-        std::string getName() const;
-        /**
-         * Returns the documentation string for this Inlet.
-         * Each Node should take care of documenting its inlets.
-         */
-        std::string getDocumentation() const;
     private:
-        //typedef std::map<Outlet::ptr, std::tr1::shared_ptr<boost::signals2::scoped_connection> > OutletMap;
-        //OutletMap sources_;
-        std::string name_;
-        std::string documentation_;
         typedef std::vector<Outlet::ptr> OutletsVec;
         OutletsVec sources_;
-        TriggeredSignal on_triggered_signal_;
+        void onMessageReceivedFromSource(const char *outlet_name, const Message &message);
 };
 
 } // end of namespace

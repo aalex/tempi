@@ -20,29 +20,40 @@
 
 #include "tempi/inlet.h"
 #include "tempi/outlet.h"
+#include "tempi/log.h"
 #include <iostream>
 
-namespace tempi
-{
+namespace tempi {
 
-Inlet::Inlet(const char *name, const char *documentation)
+Inlet::Inlet(const char *name, const char *short_documentation,
+    const char * long_documentation) :
+        Pad(name, short_documentation, long_documentation)
 {
-    name_ = std::string(name);
-    documentation_ = std::string(documentation);
 }
 
 Inlet::~Inlet()
 {
     // just in case.
-    disconnectAll();
+    this->disconnectAll();
+}
+
+void Inlet::onMessageReceivedFromSource(const char *outlet_name, const Message &message)
+{
+    if (Logger::isEnabledFor(DEBUG))
+    {
+        std::ostringstream os;
+        os << "Inlet::" << __FUNCTION__ << "(" << outlet_name << ", " << message << ")";
+        Logger::log(DEBUG, os);
+    }
+    this->trigger(message);
 }
 
 bool Inlet::connect(Outlet::ptr source)
 {
-    if (! isConnected(source))
+    if (! this->isConnected(source))
     {
-        sources_.push_back(source);
-        source.get()->getOnTriggeredSignal().connect(boost::bind(&Inlet::trigger, this, _1));
+        this->sources_.push_back(source);
+        source.get()->getOnTriggeredSignal().connect(boost::bind(&Inlet::onMessageReceivedFromSource, this, _1, _2));
         return true;
     }
     return false;
@@ -58,7 +69,7 @@ bool Inlet::disconnect(Outlet::ptr source)
 {
     if (isConnected(source))
     {
-        source.get()->getOnTriggeredSignal().disconnect(boost::bind(&Inlet::trigger, this, _1));
+        source.get()->getOnTriggeredSignal().disconnect(boost::bind(&Inlet::onMessageReceivedFromSource, this, _1, _2));
         sources_.erase(std::find(sources_.begin(), sources_.end(), source));
         return true;
     }
@@ -69,23 +80,6 @@ bool Inlet::disconnect(Outlet::ptr source)
 bool Inlet::isConnected(Outlet::ptr source)
 {
     return std::find(sources_.begin(), sources_.end(), source) != sources_.end();
-}
-
-void Inlet::trigger(const Message &message)
-{
-    // TODO
-    //std::cout << __FUNCTION__ << std::endl;
-    on_triggered_signal_(this, message);
-}
-
-std::string Inlet::getName() const
-{
-    return name_;
-}
-
-std::string Inlet::getDocumentation() const
-{
-    return documentation_;
 }
 
 } // end of namespace

@@ -285,8 +285,8 @@ bool TempiInspect::printClass(const std::string &name)
                 if (! stringInVector((*iter).first, undesired_inlets))
                 {
                     cout << "* Inlet \"" << (*iter).first << "\" : ";
-                    if (((*iter).second).get()->getDocumentation() != "")
-                        cout << ((*iter).second).get()->getDocumentation() << endl;
+                    if (((*iter).second).get()->getShortDocumentation() != "")
+                        cout << ((*iter).second).get()->getShortDocumentation() << endl;
                     else
                         cout << "(Not documented)" << endl;
                 }
@@ -304,8 +304,8 @@ bool TempiInspect::printClass(const std::string &name)
                 if (! stringInVector((*iter).first, undesired_outlets))
                 {
                     cout << "* Outlet \"" << (*iter).first << "\" : ";
-                    if (((*iter).second).get()->getDocumentation() != "")
-                        cout << ((*iter).second).get()->getDocumentation() << endl;
+                    if (((*iter).second).get()->getShortDocumentation() != "")
+                        cout << ((*iter).second).get()->getShortDocumentation() << endl;
                     else
                         cout << "(Not documented)" << endl;
                 }

@@ -41,6 +41,7 @@ namespace tempi
 class Entity : public Documented
 {
     public:
+        typedef std::tr1::shared_ptr<Entity> ptr;
         /**
          * Constructor.
          */

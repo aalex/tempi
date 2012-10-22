@@ -138,9 +138,9 @@ bool Node::onAttributeChanged(const char *name, const Message &value)
     return ok;
 }
 
-void Node::onInletTriggered(Inlet *inlet, const Message &message)
+void Node::onInletTriggered(const char *inlet_name, const Message &message)
 {
-    if (inlet->getName() == ATTRIBUTES_INLET)
+    if (inlet_name == ATTRIBUTES_INLET)
     {
         if (message.indexMatchesType(0, STRING))
         {
@@ -245,7 +245,7 @@ void Node::onInletTriggered(Inlet *inlet, const Message &message)
         return;
     } // ATTRIBUTES_INLET
     // CALL INLET:
-    else if (inlet->getName() == INLET_CALL)
+    else if (inlet_name == INLET_CALL)
     {
         if (message.indexMatchesType(0, STRING))
         {
@@ -257,7 +257,7 @@ void Node::onInletTriggered(Inlet *inlet, const Message &message)
             }
         }
     }
-    processMessage(inlet->getName().c_str(), message);
+    processMessage(inlet_name, message);
 }
 
 std::map<std::string, Inlet::ptr> Node::getInlets()

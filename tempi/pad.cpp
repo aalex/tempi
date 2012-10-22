@@ -30,7 +30,7 @@ Pad::Pad(const char *name, const char *short_documentation, const char *long_doc
 
 void Pad::trigger(const Message &message)
 {
-    on_triggered_signal_(message);
+    on_triggered_signal_(this->getName().c_str(), message);
 }
 
 Pad::TriggeredSignal &Pad::getOnTriggeredSignal()

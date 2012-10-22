@@ -28,40 +28,20 @@
 #include <boost/signals2.hpp>
 #include "tempi/sharedptr.h"
 #include "tempi/message.h"
+#include "tempi/pad.h"
 #include <string>
 
-namespace tempi
-{
+namespace tempi {
 
 /**
  * A Outlet is a pad that can be connected to Inlet pads.
  */
-class Outlet
+class Outlet : public Pad
 {
     public:
         typedef std::tr1::shared_ptr<Outlet> ptr;
-        typedef boost::signals2::signal<void (const Message&)> TriggeredSignal;
-        Outlet(const char *name, const char *documentation);
-        // TODO: return success
-        void trigger(const Message &message);
-        TriggeredSignal &getOnTriggeredSignal()
-        {
-            return on_triggered_signal_;
-        }
-        /**
-         * Returns the name of this outlet.
-         * Each Node should take care of naming its outlets.
-         */
-        std::string getName() const;
-        /**
-         * Returns the documentation of this outlet.
-         * Each Node should take care of documenting its outlets.
-         */
-        std::string getDocumentation() const;
-    private:
-         TriggeredSignal on_triggered_signal_;
-         std::string name_;
-         std::string documentation_;
+        Outlet(const char *name, const char *short_documentation="",
+            const char *long_documentation="");
 };
 
 } // end of namespace
