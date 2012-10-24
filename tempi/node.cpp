@@ -73,7 +73,7 @@ bool Node::init()
     if (Logger::isEnabledFor(DEBUG))
     {
         std::ostringstream os;
-        os << "Node.init(): " << getName();
+        os << "Node(" << getName() << ").init()";
         Logger::log(DEBUG, os.str().c_str());
     }
     if (isInitiated())
@@ -91,7 +91,7 @@ void Node::loadBang()
     if (Logger::isEnabledFor(DEBUG))
     {
         std::ostringstream os;
-        os << "Node.loadBang: " << getName();
+        os << "Node(" << getName() << ").loadBang()";
         Logger::log(DEBUG, os.str().c_str());
     }
     if (! load_banged_)
@@ -104,7 +104,7 @@ void Node::loadBang()
         if (Logger::isEnabledFor(DEBUG))
         {
             std::ostringstream os;
-            os << "Node.loadBang: had already been loadBanged: " << getName();
+            os << "Node(" << getName() << ").loadBang: had already been loadBanged";
             Logger::log(DEBUG, os.str().c_str());
         }
     }
@@ -144,7 +144,7 @@ void Node::onInletTriggered(const char *inlet_name, const Message &message)
     if (Logger::isEnabledFor(DEBUG))
     {
         std::ostringstream os;
-        os << "Node." << __FUNCTION__ << "(" << inlet_name << ", " << message << ")";
+        os << "Node(" << getName() << ")." << __FUNCTION__ << "(" << inlet_name << ", " << message << ")";
         Logger::log(DEBUG, os);
     }
     if (attr_inlet_name == inlet_name)
@@ -172,7 +172,7 @@ void Node::onInletTriggered(const char *inlet_name, const Message &message)
                 else
                 {
                     std::ostringstream os;
-                    os << "Node." << __FUNCTION__ <<
+                    os << "Node(" << getName() << ")" << __FUNCTION__ <<
                         ": Wrong arguments for message " <<
                         message << " in inlet " << ATTRIBUTES_INLET;
                     Logger::log(ERROR, os);
@@ -198,7 +198,7 @@ void Node::onInletTriggered(const char *inlet_name, const Message &message)
                         else
                         {
                             std::ostringstream os;
-                            os << "Node." << __FUNCTION__ << ": " <<
+                            os << "Node(" << getName() << ")." << __FUNCTION__ << ": " <<
                                 attr_name <<
                                 " is not mutable! Cannot change it via messages.";
                             Logger::log(ERROR, os);
@@ -302,7 +302,7 @@ bool Node::addOutlet(Outlet::ptr outlet)
     {
         {
             std::ostringstream os;
-            os << "Node.addOutlet: (" << getName() << "): " << outlet->getName();
+            os << "Node(" << getName() << ").addOutlet(" << outlet->getName() << ")";
             Logger::log(DEBUG, os.str().c_str());
         }
         outlets_[outlet->getName()] = outlet;
@@ -328,7 +328,7 @@ bool Node::addInlet(Inlet::ptr inlet)
         inlets_[inlet->getName()] = inlet;
         {
             std::ostringstream os;
-            os << "Node.addInlet: (" << getName() << "): " << inlet->getName();
+            os << "Node(" << getName() << ").addInlet: (" << inlet->getName() << ")";
             Logger::log(DEBUG, os.str().c_str());
         }
         inlet.get()->getOnTriggeredSignal().connect(boost::bind(&Node::onInletTriggered, this, _1, _2));
