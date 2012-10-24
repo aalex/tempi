@@ -587,8 +587,18 @@ std::vector<std::string> Wrapper::listNodes(const std::string &graph)
     }
 }
 
+bool Wrapper::nodeHasAttribute(const std::string &graph, const std::string &nodeName, const std::string &attributeName)
+{
+    if (! this->hasGraph(graph))
+        return false;
+    if (! this->scheduler_->getGraph(graph.c_str())->hasNode(nodeName.c_str()))
+        return false;
+    return this->scheduler_->getGraph(graph.c_str())->getNode(nodeName.c_str())->hasAttribute(attributeName.c_str());
+}
+
 bool Wrapper::getNode(const std::string &graph, const std::string &nodeName, Node::ptr &result)
 {
+    // FIXME: this might segfault!
     if (this->scheduler_->getGraph(graph.c_str())->hasNode(nodeName.c_str()))
     {
         result = this->scheduler_->getGraph(graph.c_str())->getNode(nodeName.c_str());

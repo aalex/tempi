@@ -158,6 +158,7 @@ class Wrapper
         bool loadLibrary(const std::string &name);
 
         std::vector<std::string> listNodes(const std::string &graph);
+        bool nodeHasAttribute(const std::string &graph, const std::string &nodeName, const std::string &attributeName);
 
     private:
         bool synchronous_;
