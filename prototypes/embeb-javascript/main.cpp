@@ -35,8 +35,8 @@ bool check_expr()
 {
     std::vector<double> args;
     args.push_back(2.0);
-    args.push_back(2.0);
-    std::cout << calculate("f0 + f1", args);
+    args.push_back(10.0);
+    std::cout << calculate("Math.pow(f0, f1)", args);
     return true;
 }
 
