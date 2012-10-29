@@ -45,7 +45,7 @@ CounterNode::CounterNode() :
     {
         std::ostringstream os;
         os << "CounterNode::" << __FUNCTION__ << "(): count_ = " << this->count_;
-        Logger::log(INFO, os);
+        Logger::log(DEBUG, os);
     }
 }
 
@@ -59,7 +59,7 @@ void CounterNode::processMessage(const char *inlet, const Message &message)
         {
             std::ostringstream os;
             os << "CounterNode::" << __FUNCTION__ << "(" << inlet << ", " << message << "): count_ = " << this->count_;
-            Logger::log(INFO, os);
+            Logger::log(DEBUG, os);
         }
         output("0", Message("i", count_));
         count_ += increment;
@@ -85,7 +85,7 @@ bool CounterNode::onNodeAttributeChanged(const char *name, const Message &value)
         {
             std::ostringstream os;
             os << "CounterNode::" << __FUNCTION__ << "(" << name << ", " << value << "): count_ = " << this->count_;
-            Logger::log(INFO, os);
+            Logger::log(DEBUG, os);
         }
     }
     return true;
