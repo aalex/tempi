@@ -323,6 +323,7 @@ bool Node::addOutlet(Outlet::ptr outlet)
             std::cerr << "In Node::" << __FUNCTION__ << ": already got such and outlet: " << std::endl;
             std::cerr << e.what() << std::endl;
         }
+        outlet->setOwner(this);
         return true;
     }
     return false;
@@ -338,7 +339,8 @@ bool Node::addInlet(Inlet::ptr inlet)
             os << "Node(" << getName() << ").addInlet: (" << inlet->getName() << ")";
             Logger::log(DEBUG, os.str().c_str());
         }
-        inlet.get()->getOnTriggeredSignal().connect(boost::bind(&Node::onInletTriggered, this, _1, _2));
+        inlet->setOwner(this);
+        inlet->getOnTriggeredSignal().connect(boost::bind(&Node::onInletTriggered, this, _1, _2));
         try
         {
             getSignal(INLET_CREATED_SIGNAL)->trigger(
