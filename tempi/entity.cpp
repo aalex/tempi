@@ -20,9 +20,9 @@
 
 #include "tempi/entity.h"
 #include "tempi/log.h"
+#include "tempi/utils.h"
 
-namespace tempi
-{
+namespace tempi {
 
 Entity::Entity(
     const char *name,
@@ -71,6 +71,13 @@ void Entity::setAttributeValue(const char *name, const Message &value)
         }
         else
         {
+            // XXX Special case: cast i to f is OK.
+            if (value.getTypes() == "f" && current->getValue().getTypes() == "i")
+            {
+                Message tmp("i", (int) value.getFloat(0));
+                current->setValue(tmp);
+                return;
+            }
             std::ostringstream os;
             os << "Entity::" << __FUNCTION__ << ": Attribute " << name << ": Bad type " << value.getTypes() << " while expecting " << current->getValue().getTypes();
             throw (BadAtomTypeException(os.str().c_str()));
