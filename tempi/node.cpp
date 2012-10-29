@@ -138,8 +138,10 @@ bool Node::onAttributeChanged(const char *name, const Message &value)
     return ok;
 }
 
-void Node::onInletTriggered(const char *inlet_name, const Message &message)
+void Node::onInletTriggered(Pad *inlet, const Message &message)
 {
+    std::string inlet_name = inlet->getName();
+
     static const std::string attr_inlet_name(ATTRIBUTES_INLET);
     if (Logger::isEnabledFor(DEBUG))
     {
@@ -275,7 +277,7 @@ void Node::onInletTriggered(const char *inlet_name, const Message &message)
             }
         }
     }
-    processMessage(inlet_name, message);
+    processMessage(inlet_name.c_str(), message);
 }
 
 std::map<std::string, Inlet::ptr> Node::getInlets()
