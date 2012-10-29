@@ -117,8 +117,8 @@ bool Wrapper::setLogLevel(const std::string &level)
         if (Logger::isEnabledFor(INFO))
         {
             std::ostringstream os;
-            os << "Wrapper." << __FUNCTION__ <<
-                "Set log level to " << level;
+            os << "Wrapper." << __FUNCTION__ << "(" << level << "): "
+                "Set log level to " << new_level;
             Logger::log(INFO, os);
         }
     }
@@ -183,7 +183,7 @@ bool Wrapper::tick()
     else
     {
         std::ostringstream os;
-        os << "Wrapper" << __FUNCTION__ << ": " <<
+        os << "Wrapper" << __FUNCTION__ << "(): " <<
             "Do not call tick if using a synchronous is false.";
         tempi::Logger::log(ERROR, os);
         return false;

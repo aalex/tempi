@@ -207,16 +207,21 @@ void Node::onInletTriggered(const char *inlet_name, const Message &message)
                     }
                     catch (const BadIndexException &e)
                     {
-                        std::cerr << "Node " << getTypeName() << " \"" <<
+
+                        std::ostringstream os;
+                        os << "Node " << getTypeName() << " \"" <<
                             getName() << "\":" << __FUNCTION__ << ": " <<
                             message << " " << e.what();
+                        Logger::log(ERROR, os);
                         return;
                     }
                     catch (const BadAtomTypeException &e)
                     {
-                        std::cerr << "Node " << getTypeName() << " \"" <<
+                        std::ostringstream os;
+                        os << "Node " << getTypeName() << " \"" <<
                             getName() << "\":" << __FUNCTION__ << ": " <<
                             message << " " << e.what();
+                        Logger::log(ERROR, os);
                         return;
                     }
                 }
@@ -456,15 +461,21 @@ bool Node::message(const char *inlet, const Message &message)
 {
     if (inlet == 0)
     {
-        std::cerr << "Error: Called " << __FUNCTION__ << "() with null-string inlet on node of type " << getTypeName() << ": " << message << std::endl;
+        std::ostringstream os;
+        os << "Node(\"" << this->getName() << "\")::"  << __FUNCTION__ << "(" << inlet << ", " << message << ")";
+        os << " null-string inlet name on node of type " << this->getTypeName();
+        Logger::log(ERROR, os);
         return false;
     }
-    if (isInitiated())
+    if (this->isInitiated())
     {
         Inlet *inletPtr = getInlet(inlet);
         if (inletPtr == 0)
         {
-            std::cerr << "Error: Node::message(): Node of type " << getTypeName() << " has no inlet named " << inlet << "!!" << std::endl;
+            std::ostringstream os;
+            os << "Node(\"" << this->getName() << "\")::"  << __FUNCTION__ << "(" << inlet << ", " << message << ")";
+            os << " invalid inlet named \"" << inlet << "\" on node of type " << this->getTypeName();
+            Logger::log(ERROR, os);
             return false;
         }
         inletPtr->trigger(message);
@@ -472,7 +483,10 @@ bool Node::message(const char *inlet, const Message &message)
     }
     else
     {
-        std::cerr << "Warning: Called " << __FUNCTION__ << "() on null-string Node of type " << getTypeName() << " in inlet " << inlet << ": " << message << std::endl;
+        std::ostringstream os;
+        os << "Node(\"" << this->getName() << "\")::"  << __FUNCTION__ << "(" << inlet << ", " << message << ")";
+        os << ": Node is not yet initiated.";
+        Logger::log(ERROR, os);
         return false;
     }
 }
