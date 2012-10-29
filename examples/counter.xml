@@ -8,7 +8,7 @@
         <f>0</f>
       </attribute>
       <attribute name="initial_count">
-        <i>0</i>
+        <i>100</i>
       </attribute>
       <attribute name="increment">
         <i>1</i>
