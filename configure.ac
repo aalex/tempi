@@ -115,21 +115,21 @@ AC_CHECK_LIB([portmidi],[Pm_Initialize], have_portmidi=true, have_portmidi=false
 if test "x${have_portmidi}" = "xfalse" ; then
     AC_MSG_ERROR([missing portmidi library, install libportmidi-dev])
 fi
-AC_CHECK_LIB([porttime],[Pt_Time], have_porttime=true, have_porttime=false)
-if test "x${have_porttime}" = "xfalse" ; then
-    AC_MSG_ERROR([missing porttime library, install libportmidi-dev])
-fi
+dnl AC_CHECK_LIB([porttime],[Pt_Time], have_porttime=true, have_porttime=false)
+dnl if test "x${have_porttime}" = "xfalse" ; then
+dnl     AC_MSG_ERROR([missing porttime library, install libportmidi-dev])
+dnl fi
 PORTMIDI_CFLAGS="-DPMALSA"
 AC_SUBST([PORTMIDI_CFLAGS], "$PORTMIDI_CFLAGS")
-PORTMIDI_LIBS="-lportmidi -lporttime -lpthread -lm"
+PORTMIDI_LIBS="-lportmidi -lm"
+dnl -lporttime -lpthread 
 AC_SUBST([PORTMIDI_LIBS], "$PORTMIDI_LIBS")
-
 
 # Checks for library functions.
 AC_FUNC_ERROR_AT_LINE
 AC_CHECK_FUNCS([gettimeofday memmove mkdir setenv sqrt strchr strpbrk uname])
 
-AX_PTHREAD
+dnl AX_PTHREAD
 
 # Glib
 PKG_CHECK_MODULES([GLIB], [glib-2.0 gthread-2.0], have_glib=true, have_glib=false)
