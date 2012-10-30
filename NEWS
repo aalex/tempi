@@ -7,11 +7,14 @@ This release is a developer snapshot in the 0.1 series.
 
 New features:
 
-* none
+* pass Pad* to its triggered signal
+* fix bug with initial count in counter node
+* allow to cast float to int for attributes
 
 Bugs fixed:
 
-* none
+* NOTICE log message were never displayed
+* decrease verbosity of counter
 
 
 Tempi 0.1.18 (2012-10-22)
