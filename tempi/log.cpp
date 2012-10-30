@@ -68,6 +68,9 @@ void Logger::log(LogLevel level, const char *message)
         case INFO:
             category.info(message);
             break;
+        case NOTICE:
+            category.notice(message);
+            break;
         case WARNING:
             category.warn(message);
             break;
