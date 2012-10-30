@@ -68,6 +68,15 @@ Here is how to build and install it on Debian GNU/Linux or Ubuntu::
   sudo ldconfig
 
 
+Here is how to build and install it on MAC OSX::
+
+  sudo port install gettext libtool automake autoconf-archive autoconf bison  log4ccp boost libxml2 portmidi liblo glib2-devel
+  ./autogen.sh
+  CPPFLAGS="-I/opt/local/include -L/opt/local/lib" ./configure
+  make
+  sudo make install
+  sudo ldconfig
+
 More about dataflow programming
 -------------------------------
 
