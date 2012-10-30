@@ -7,6 +7,7 @@ int main(int argc, char *argv[])
     logger.setLevel(ERROR);
     logger.log(DEBUG, "DEBUG");
     logger.log(INFO, "INFO");
+    logger.log(NOTICE, "NOTICE");
     logger.log(WARNING, "WARNING");
     //logger.log(ERROR, "ERROR");
     //logger.log(CRITICAL, "CRITICAL");
