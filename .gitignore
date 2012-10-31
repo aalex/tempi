@@ -76,6 +76,7 @@ prototypes/va_list/var_types
 prototypes/variant
 src/miller/miller
 src/tempi-draw/tempi-draw
+src/tempi-graph-viewer/tempi-graph-viewer
 src/tempi-inspect/tempi-inspect
 src/tempi-launch/tempi-launch
 src/tempi-midi-looper/tempi-midi-looper
