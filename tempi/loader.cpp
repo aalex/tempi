@@ -167,7 +167,7 @@ bool Loader::load(NodeFactory &factory, const char *name)
         {
             std::ostringstream os;
             os << "Loader." << __FUNCTION__ << ": Could not find " << fileName;
-            Logger::log(DEBUG, os);
+            Logger::log(INFO, os);
         }
     }
     {
@@ -198,7 +198,11 @@ bool Loader::hasPath(const char *path)
 
 const char * const Loader::FILE_PREFIX = "libtempi-";
 const char * const Loader::PLUGINS_STR = "-plugins-";
-const char * const Loader::FILE_SUFFIX = ".so"; // TODO: if Linux
+#ifdef HAVE_OSX
+const char * const Loader::FILE_SUFFIX = ".dylib";
+#else
+const char * const Loader::FILE_SUFFIX = ".so";
+#endif
 const char * const Loader::FUNC_PREFIX = "tempi_";
 const char * const Loader::FUNC_SUFFIX = "_setup";
 std::vector<std::string> Loader::loaded_;

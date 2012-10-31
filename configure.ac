@@ -94,6 +94,34 @@ if test -z "$DOXYGEN";
 fi
 AM_CONDITIONAL([HAVE_DOXYGEN], [test -n "$DOXYGEN"])
 
+# Special cases, copied from SPIN
+case "$host" in *-darwin* | *-macos10*)
+  #AC_LANG_DEFINES_PROVIDED # remove autogen.sh warnings on OSX
+  AM_CONDITIONAL([HAVE_OSX], true)
+  AC_DEFINE(HAVE_OSX,[1],[Apple Mac OS X operating system detected])
+  LIBTOOL="glibtool"
+  SRCDIR=`pwd`
+  #LIBTOOL="libtool"
+  CPPFLAGS="$CPPFLAGS -D__Darwin"
+  LDFLAGS="-undefined dynamic_lookup -Wl,-headerpad_max_install_names"
+  if test -d /opt/local ; then
+    CPPFLAGS="$CPPFLAGS -I/usr/local/include -I/opt/local/include"
+    LDFLAGS="$LDFLAGS -L/usr/local/lib -L/opt/local/lib"
+  elif test -d /sw ; then
+    CPPFLAGS="$CPPFLAGS -I/sw/include"
+    LDFLAGS="$LDFLAGS -L/sw/lib"
+  fi
+  # OSX does not include /usr/local/lib/pkgconfig path, so we export it here
+  # (for everyone, just in case)
+  # TODO: also need to add the path for linux64
+  #PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH:$SRCDIR/pkgconfig/osx
+  #export PKG_CONFIG_PATH
+  ;;
+*)
+  AM_CONDITIONAL([HAVE_OSX], false)
+  ;;
+esac
+
 # Checks for typedefs, structures, and compiler characteristics.
 AC_HEADER_STDBOOL
 AC_C_INLINE
@@ -115,23 +143,30 @@ AC_CHECK_LIB([portmidi],[Pm_Initialize], have_portmidi=true, have_portmidi=false
 if test "x${have_portmidi}" = "xfalse" ; then
     AC_MSG_ERROR([missing portmidi library, install libportmidi-dev])
 fi
-AC_CHECK_LIB([porttime],[Pt_Time], have_porttime=true, have_porttime=false)
-if test "x${have_porttime}" = "xfalse" ; then
-    AC_MSG_ERROR([missing porttime library, install libportmidi-dev])
+
+dnl PORTTIME: commented out since it doesn't work on Mac OS X
+dnl since the mac port package is missing the binary for it.
+
+dnl AC_CHECK_LIB([porttime],[Pt_Time], have_porttime=true, have_porttime=false)
+dnl if test "x${have_porttime}" = "xfalse" ; then
+dnl     AC_MSG_ERROR([missing porttime library, install libportmidi-dev])
+dnl fi
+
+if test "x${HAVE_OSX}" = "x1" ; then
+  PORTMIDI_CFLAGS=""
+else
+  PORTMIDI_CFLAGS="-DPMALSA"
 fi
-
-dnl FIXME: if on linux only:
-PORTMIDI_CFLAGS="-DPMALSA"
 AC_SUBST([PORTMIDI_CFLAGS], "$PORTMIDI_CFLAGS")
-PORTMIDI_LIBS="-lportmidi -lporttime -lpthread -lm"
+PORTMIDI_LIBS="-lportmidi -lm"
+dnl -lporttime -lpthread 
 AC_SUBST([PORTMIDI_LIBS], "$PORTMIDI_LIBS")
-
 
 # Checks for library functions.
 AC_FUNC_ERROR_AT_LINE
 AC_CHECK_FUNCS([gettimeofday memmove mkdir setenv sqrt strchr strpbrk uname])
 
-AX_PTHREAD
+dnl AX_PTHREAD
 
 # Glib
 PKG_CHECK_MODULES([GLIB], [glib-2.0 gthread-2.0], have_glib=true, have_glib=false)
