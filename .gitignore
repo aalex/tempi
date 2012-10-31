@@ -1,6 +1,7 @@
 *.1
 *.cxx
 *.dia~
+*.dylib
 *.la
 *.lo
 *.o
