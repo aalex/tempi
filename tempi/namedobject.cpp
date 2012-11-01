@@ -20,6 +20,7 @@
 
 #include "tempi/namedobject.h"
 #include "tempi/log.h"
+#include "tempi/namevalidator.h"
 
 namespace tempi {
 
@@ -42,7 +43,8 @@ std::string NamedObject::getName() const
 
 bool NamedObject::setName(const char *name)
 {
-    if (! this->validator_.matches(name))
+    static NameValidator validator;
+    if (! validator.matches(name))
     {
         std::ostringstream os;
         os << "NamedObject::" << __FUNCTION__ << ": Name \"" << name << "\" is not valid. Leave unchanged.";

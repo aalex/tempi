@@ -27,7 +27,6 @@
 
 #include <string>
 #include <tr1/memory>
-#include "tempi/namevalidator.h"
 
 namespace tempi {
 
@@ -60,7 +59,6 @@ class NamedObject
         virtual ~NamedObject() {}
     private:
         std::string name_;
-        NameValidator validator_;
         static const char * const DEFAULT_NAME;
 };
 

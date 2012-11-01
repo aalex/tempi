@@ -42,7 +42,7 @@ bool NameValidator::setPattern(const char *pattern)
 {
     try
     {
-        this->pattern_ = std::string(pattern);
+        this->pattern_ = boost::regex(pattern);
         this->text_pattern_ = pattern;
         this->ok_ = true;
     }
