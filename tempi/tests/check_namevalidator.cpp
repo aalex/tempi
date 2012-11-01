@@ -2,7 +2,7 @@
 #include "tempi/namevalidator.h"
 
 using namespace tempi;
-static const bool VERBOSE = false;
+static const bool VERBOSE = true;
 
 class Test
 {
@@ -36,15 +36,20 @@ bool check_validator()
         }
         bool ok = validator.matches((*iter).text_.c_str());
         bool should_match = (*iter).should_match_;
+
         if (ok && ! should_match)
         {
-            std::cout << "Should not match but does: " << (*iter).pattern_ << " " << (*iter).text_ << std::endl;
+            std::cout << "Should not match but does: " << validator.getPattern() << " " << (*iter).text_ << std::endl;
             ret = false;
         }
-        if (! ok && should_match)
+        else if (! ok && should_match)
         {
-            std::cout << "Should match but doesn't: " << (*iter).pattern_ << " " << (*iter).text_ << std::endl;
+            std::cout << "Should match but doesn't: " << validator.getPattern() << " " << (*iter).text_ << std::endl;
             ret = false;
+        }
+        else
+        {
+            std::cout << "OK: " << ok << " " << validator.getPattern() << " " << (*iter).text_ << std::endl;
         }
     }
     return ret;
