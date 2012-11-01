@@ -11,6 +11,7 @@ AM_CXXFLAGS = \
 LDADD = \
     $(BOOST_PROGRAM_OPTIONS_LIBS) \
     $(BOOST_LIBS) \
+    $(BOOST_REGEX_LIBS) \
     $(CLUTTER_LIBS) \
     $(GLIB_LIBS) \
     $(LIBLO_LIBS) \
