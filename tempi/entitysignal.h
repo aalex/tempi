@@ -20,7 +20,7 @@
 
 /**
  * @file
- * The NodeSignal class.
+ * The EntitySignal class.
  */
 #ifndef __TEMPI_NODESIGNAL_H__
 #define __TEMPI_NODESIGNAL_H__
@@ -32,25 +32,25 @@
 
 namespace tempi {
 
-class NodeSignal : public Documented
+class EntitySignal : public Documented
 {
     public:
-        typedef std::tr1::shared_ptr<NodeSignal> ptr;
+        typedef std::tr1::shared_ptr<EntitySignal> ptr;
         typedef boost::signals2::signal<void(Message)> Signal;
         /**
-         * Creates a new NodeSignal with messages of a specific type.
+         * Creates a new EntitySignal with messages of a specific type.
          */
-        NodeSignal(const char *name, const char *short_documentation,
+        EntitySignal(const char *name, const char *short_documentation,
             const char *long_documentation, const char *type);
         /**
-         * Creates a new NodeSignal with wildcard type. (its message can have any types arguments in it)
+         * Creates a new EntitySignal with wildcard type. (its message can have any types arguments in it)
          */
-        NodeSignal(const char *name, const char *short_documentation,
+        EntitySignal(const char *name, const char *short_documentation,
             const char *long_documentation);
         /**
          * A virtual destructor makes this class polymorphic.
          */
-        virtual ~NodeSignal();
+        virtual ~EntitySignal();
         /**
          * Returns the type tags of the messages triggered by this signal.
          * An asterisk ("*") means it can be of any type.

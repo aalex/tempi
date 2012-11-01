@@ -39,13 +39,13 @@ Attribute* Entity::getAttribute(const char *name) const
     return attributes_.get(name).get();
 }
 
-NodeSignal* Entity::getSignal(const char *name) const
+EntitySignal* Entity::getSignal(const char *name) const
     throw(BadIndexException)
 {
     return signals_.get(name).get();
 }
 
-NodeSignal* Entity::getMethod(const char *name) const
+EntitySignal* Entity::getMethod(const char *name) const
     throw(BadIndexException)
 {
     return methods_.get(name).get();
@@ -131,7 +131,7 @@ bool Entity::hasMethod(const char *name) const
     return methods_.has(name);
 }
 
-void Entity::addSignal(NodeSignal::ptr signal) // TODO: rename to newSignal?
+void Entity::addSignal(EntitySignal::ptr signal) // TODO: rename to newSignal?
     throw(BadIndexException)
 {
     if (signal.get() == 0)
@@ -142,7 +142,7 @@ void Entity::addSignal(NodeSignal::ptr signal) // TODO: rename to newSignal?
     // deletes the NamedObject* if name is already taken
 }
 
-void Entity::addMethod(NodeSignal::ptr method) // TODO: rename to newMethod?
+void Entity::addMethod(EntitySignal::ptr method) // TODO: rename to newMethod?
     throw(BadIndexException)
 {
     if (method.get() == 0)
