@@ -24,7 +24,7 @@
 
 namespace tempi {
 
-NodeSignal::NodeSignal(
+EntitySignal::EntitySignal(
         const char *name,
         const char *short_documentation,
         const char *long_documentation,
@@ -34,7 +34,7 @@ NodeSignal::NodeSignal(
     type_strict_(true)
 {}
 
-NodeSignal::NodeSignal(
+EntitySignal::EntitySignal(
         const char *name, 
         const char *short_documentation,
         const char *long_documentation) :
@@ -43,27 +43,27 @@ NodeSignal::NodeSignal(
     type_strict_(false)
 {}
 
-bool NodeSignal::isTypeStrict() const
+bool EntitySignal::isTypeStrict() const
 {
     return type_strict_;
 }
 
-NodeSignal::~NodeSignal()
+EntitySignal::~EntitySignal()
 {
     signal_.disconnect_all_slots();
 }
 
-std::string NodeSignal::getType() const
+std::string EntitySignal::getType() const
 {
     return type_;
 }
 
-NodeSignal::Signal &NodeSignal::getSignal()
+EntitySignal::Signal &EntitySignal::getSignal()
 {
     return signal_;
 }
 
-bool NodeSignal::trigger(const Message &message)
+bool EntitySignal::trigger(const Message &message)
 {
     if (isTypeStrict())
     {

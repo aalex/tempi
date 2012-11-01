@@ -31,8 +31,7 @@
 #include "tempi/attribute.h"
 #include "tempi/nodesignal.h"
 
-namespace tempi
-{
+namespace tempi {
 
 // TODO: add methods
 /**
@@ -57,12 +56,12 @@ class Entity : public Documented
         /**
          * Retrieves a Signal.
          */
-        NodeSignal* getSignal(const char *name) const
+        EntitySignal* getSignal(const char *name) const
             throw(BadIndexException);
         /**
          * Retrieves a Method.
          */
-        NodeSignal* getMethod(const char *name) const
+        EntitySignal* getMethod(const char *name) const
             throw(BadIndexException);
         /**
          * Retrieves an Attribute.
@@ -141,17 +140,17 @@ class Entity : public Documented
         /**
          * Adds a signal to this Entity.
          */
-        void addSignal(NodeSignal::ptr signal)
+        void addSignal(EntitySignal::ptr signal)
             throw(BadIndexException);
         /**
          * Adds a method to this Entity.
          */
-        void addMethod(NodeSignal::ptr method)
+        void addMethod(EntitySignal::ptr method)
             throw(BadIndexException);
     private:
         NamedObjectMap<Attribute> attributes_;
-        NamedObjectMap<NodeSignal> signals_;
-        NamedObjectMap<NodeSignal> methods_;
+        NamedObjectMap<EntitySignal> signals_;
+        NamedObjectMap<EntitySignal> methods_;
 };
 
 } // end of namespace

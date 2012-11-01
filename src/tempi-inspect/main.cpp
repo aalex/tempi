@@ -257,7 +257,7 @@ bool TempiInspect::printClass(const std::string &name)
                 vector<string>::const_iterator iter;
                 for (iter = methods.begin(); iter != methods.end(); ++iter)
                 {
-                    NodeSignal* method = node->getMethod((*iter).c_str());
+                    EntitySignal* method = node->getMethod((*iter).c_str());
                     cout << "* Method \"" << method->getName() << "\" : ";
                     if (method->isTypeStrict())
                         cout << "(Arguments types: " << method->getType() << ")";
