@@ -48,6 +48,7 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     documented.cpp \
     dict.cpp \
     entity.cpp \
+    entitysignal.cpp \
     graph.cpp \
     inlet.cpp \
     internals.cpp \
@@ -60,7 +61,6 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     namedobject.cpp \
     node.cpp \
     nodefactory.cpp \
-    nodesignal.cpp \
     oscreceiver.cpp \
     oscsender.cpp \
     outlet.cpp \
@@ -94,6 +94,7 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     dict.h \
     documented.h \
     entity.h \
+    entitysignal.h \
     exceptions.h \
     graph.h \
     oscreceiver.h \
@@ -112,7 +113,6 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     namedobjectmap.h \
     node.h \
     nodefactory.h \
-    nodesignal.h \
     nodetype.h \
     outlet.h \
     pad.h \

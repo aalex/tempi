@@ -29,7 +29,7 @@
 #include "tempi/namedobjectmap.h"
 #include "tempi/documented.h"
 #include "tempi/attribute.h"
-#include "tempi/nodesignal.h"
+#include "tempi/entitysignal.h"
 
 namespace tempi {
 

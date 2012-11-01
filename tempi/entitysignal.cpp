@@ -18,7 +18,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#include "tempi/nodesignal.h"
+#include "tempi/entitysignal.h"
 #include <boost/bind.hpp>
 #include <iostream>
 
