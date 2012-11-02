@@ -20,45 +20,45 @@
 
 /**
  * @file
- * The MidiReceiverNode class.
+ * The MidiDeviceListerMethod class.
  */
-#ifndef __TEMPI_MIDI_MIDIRECEIVERNODE_H__
-#define __TEMPI_MIDI_MIDIRECEIVERNODE_H__
+#ifndef __TEMPI_MIDI_MIDIDEVICELISTERMETHOD_H__
+#define __TEMPI_MIDI_MIDIDEVICELISTERMETHOD_H__
 
 #include "tempi/midi.h"
-#include "tempi/node.h"
+#include "tempi/entitymethod.h"
+#include <map>
 
 namespace tempi {
 namespace plugins_base {
 
 /**
- * Node that receives MIDI messages.
+ * Lists MIDI devices.
  */
-class MidiReceiverNode : public Node
+class MidiDeviceListerMethod : public EntityMethod
 {
     public:
-        MidiReceiverNode();
-        ~MidiReceiverNode();
+        typedef enum {
+            SOURCE = 0, 
+            DESTINATION = 1
+        } Direction;
+
+        MidiDeviceListerMethod(const char *name, const char *short_documentation,
+            const char *long_documentation, Direction direction);
+        ~MidiDeviceListerMethod()
+        {
+        }
     protected:
-        virtual void doTick();
-        virtual void processMessage(const char *inlet, const Message &message);
-        virtual bool onNodeAttributeChanged(const char *name, const Message &value);
-        virtual void onInit();
+        virtual bool doCall(const Message &arguments, Message & return_value);
     private:
-        midi::Midi *midi_input_;
-        int port_;
-        /**
-         * Opens the given port. Return success.
-         */
-        bool open(unsigned int port);
-        static const char * const EVENTS_OUTLET;
-        static const char * const PORT_ATTR;
-        static const char * const ENUMERATE_INLET;
-        static const char * const LIST_METHOD;
+        Direction direction_;
+        static std::map<int, std::string> list_input_midi_devices();
+        static std::map<int, std::string> list_output_midi_devices();
 };
 
 } // end of namespace
 } // end of namespace
 
 #endif // ifndef
+
 
