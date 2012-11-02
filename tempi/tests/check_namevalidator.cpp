@@ -2,7 +2,8 @@
 #include "tempi/namevalidator.h"
 
 using namespace tempi;
-static const bool VERBOSE = true;
+
+static const bool VERBOSE = false;
 
 class Test
 {
@@ -49,7 +50,8 @@ bool check_validator()
         }
         else
         {
-            std::cout << "OK: " << ok << " " << validator.getPattern() << " " << (*iter).text_ << std::endl;
+            if (VERBOSE)
+                std::cout << "OK: " << ok << " " << validator.getPattern() << " " << (*iter).text_ << std::endl;
         }
     }
     return ret;
