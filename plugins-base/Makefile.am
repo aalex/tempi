@@ -77,6 +77,7 @@ libtempi_@TEMPI_API_VERSION@_plugins_base_la_SOURCES = \
     math/twofloatmathnode.cpp \
     midi/abstractmidifilter.cpp \
     midi/midibuildernodes.cpp \
+    midi/mididevicelistermethod.cpp \
     midi/midireceivernode.cpp \
     midi/midiroutenode.cpp \
     midi/midisendernode.cpp \
@@ -135,6 +136,7 @@ EXTRA_DIST = \
     midi/midireceivernode.h \
     midi/abstractmidifilter.h \
     midi/midibuildernodes.h \
+    midi/mididevicelistermethod.h \
     midi/midiroutenode.h \
     midi/midisendernode.h \
     midi/midiutilities.h \

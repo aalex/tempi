@@ -43,6 +43,7 @@ const char * const Node::OUTLET_DELETED_SIGNAL = "__delete_outlet__";
 const char * const Node::INLET_CALL = "__call__";
 const char * const Node::OUTLET_RETURN = "__return__";
 const char * const Node::ATTRIBUTE_POSITION = "__position__";
+const char * const Node::ATTRIBUTE_DATA = "__data__";
 
 Node::Node()
 {
@@ -61,6 +62,7 @@ Node::Node()
     addOutlet(OUTLET_RETURN, "Outputs return value for every method called, prefixed by the name of the method called.");
     addInlet(INLET_CALL, "Inlet to call methods of this node. Their return value should be output by the __return__ outlet, prefixed by the name of the method called.");
     addAttribute(Attribute::ptr(new Attribute(ATTRIBUTE_POSITION, Message("fff", 0.0f, 0.0f, 0.0f), "Position of the node, in an hypothetical GUI.")));
+    addAttribute(Attribute::ptr(new Attribute(ATTRIBUTE_DATA, Message("s", ""), "Attribute in which developers can store anything.")));
 }
 
 bool Node::isInitiated() const
@@ -259,7 +261,8 @@ void Node::onInletTriggered(Pad *inlet, const Message &message)
         else
         {
             std::ostringstream os;
-            os << "Node." << __FUNCTION__ << ": Cannot handle message " << message << " in inlet " << ATTRIBUTES_INLET;
+            os << "Node." << __FUNCTION__ << ": Cannot handle message " << message <<
+                " in inlet " << ATTRIBUTES_INLET;
             Logger::log(ERROR, os);
         }
         return;
@@ -269,13 +272,48 @@ void Node::onInletTriggered(Pad *inlet, const Message &message)
     {
         if (message.indexMatchesType(0, STRING))
         {
-            if (this->hasMethod(message.getString(0).c_str()))
+            std::string method_name = message.getString(0);
+            if (this->hasMethod(method_name.c_str()))
             {
-                this->getMethod(message.getString(0).c_str())->
-                    trigger(message.cloneRange(1, message.getSize()));
-                return;
+                Message return_value;
+                Message arguments = message.cloneRange(1, message.getSize());
+                if (Logger::isEnabledFor(INFO))
+                {
+                    std::ostringstream os;
+                    os << "Node::" << __FUNCTION__ << ": call method " << method_name <<
+                        " with arguments " << arguments << " on node " << this->getName();
+                    Logger::log(INFO, os);
+                }
+                bool called_ok = this->callMethod(method_name.c_str(), arguments, return_value);
+                if (called_ok)
+                {
+                    return_value.prependString(method_name.c_str());
+                    output(OUTLET_RETURN, return_value);
+                }
+                else
+                {
+                    std::ostringstream os;
+                    os << "Node::" << __FUNCTION__ << ": error calling method " << method_name <<
+                        " with arguments " << arguments << " on node " << this->getName();
+                    Logger::log(ERROR, os);
+                }
+            }
+            else
+            {
+                std::ostringstream os;
+                os << "Node." << __FUNCTION__ << ": Cannot handle message " << message <<
+                    " in inlet " << inlet_name << " since 0th arg must be a string.";
+                Logger::log(ERROR, os);
             }
         }
+        else
+        {
+            std::ostringstream os;
+            os << "Node." << __FUNCTION__ << ": Cannot handle message " << message <<
+                " in inlet " << inlet_name << " since 0th arg must be a string.";
+            Logger::log(ERROR, os);
+        }
+        return;
     }
     processMessage(inlet_name.c_str(), message);
 }

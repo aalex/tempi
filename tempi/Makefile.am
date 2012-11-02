@@ -49,6 +49,7 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     documented.cpp \
     dict.cpp \
     entity.cpp \
+    entitymethod.cpp \
     entitysignal.cpp \
     graph.cpp \
     inlet.cpp \
@@ -96,6 +97,7 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     dict.h \
     documented.h \
     entity.h \
+    entitymethod.h \
     entitysignal.h \
     exceptions.h \
     graph.h \

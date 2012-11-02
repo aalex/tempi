@@ -30,6 +30,7 @@
 #include "tempi/documented.h"
 #include "tempi/attribute.h"
 #include "tempi/entitysignal.h"
+#include "tempi/entitymethod.h"
 
 namespace tempi {
 
@@ -61,7 +62,7 @@ class Entity : public Documented
         /**
          * Retrieves a Method.
          */
-        EntitySignal* getMethod(const char *name) const
+        EntityMethod* getMethod(const char *name) const
             throw(BadIndexException);
         /**
          * Retrieves an Attribute.
@@ -145,12 +146,19 @@ class Entity : public Documented
         /**
          * Adds a method to this Entity.
          */
-        void addMethod(EntitySignal::ptr method)
+        void addMethod(EntityMethod::ptr method)
             throw(BadIndexException);
+
+        /**
+         * Calls a method of this entity.
+         */
+        bool callMethod(const char * method_name, const Message &arguments, Message & return_value)
+            throw(BadIndexException);
+
     private:
         NamedObjectMap<Attribute> attributes_;
         NamedObjectMap<EntitySignal> signals_;
-        NamedObjectMap<EntitySignal> methods_;
+        NamedObjectMap<EntityMethod> methods_;
 };
 
 } // end of namespace

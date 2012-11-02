@@ -45,7 +45,7 @@ EntitySignal* Entity::getSignal(const char *name) const
     return signals_.get(name).get();
 }
 
-EntitySignal* Entity::getMethod(const char *name) const
+EntityMethod* Entity::getMethod(const char *name) const
     throw(BadIndexException)
 {
     return methods_.get(name).get();
@@ -142,7 +142,7 @@ void Entity::addSignal(EntitySignal::ptr signal) // TODO: rename to newSignal?
     // deletes the NamedObject* if name is already taken
 }
 
-void Entity::addMethod(EntitySignal::ptr method) // TODO: rename to newMethod?
+void Entity::addMethod(EntityMethod::ptr method) // TODO: rename to newMethod?
     throw(BadIndexException)
 {
     if (method.get() == 0)
@@ -161,6 +161,12 @@ std::vector<std::string> Entity::listSignals() const
 std::vector<std::string> Entity::listMethods() const
 {
     return methods_.listNames();
+}
+
+bool Entity::callMethod(const char *method_name, const Message &arguments, Message & return_value)
+    throw(BadIndexException)
+{
+    return methods_.get(method_name)->call(arguments, return_value);
 }
 
 } // end of namespace

@@ -19,6 +19,7 @@
  */
 
 #include "plugins-base/midi/midisendernode.h"
+#include "plugins-base/midi/mididevicelistermethod.h"
 #include "tempi/log.h"
 #include "tempi/utils.h"
 #include <iostream>
@@ -29,6 +30,7 @@ namespace plugins_base {
 const char * const MidiSenderNode::EVENTS_INLET = "0"; // TODO: rename to events?
 const char * const MidiSenderNode::PORT_ATTR = "port";
 const char * const MidiSenderNode::ENUMERATE_INLET = "enumerate";
+const char * const MidiSenderNode::LIST_METHOD = "list";
 
 MidiSenderNode::MidiSenderNode() :
     Node()
@@ -38,6 +40,8 @@ MidiSenderNode::MidiSenderNode() :
     this->addInlet(EVENTS_INLET, "Send MIDI received from this inlet. (list of unsigned characters)");
     this->addInlet(ENUMERATE_INLET, "Prints the list of devices when any message is sent to this inlet.");
     this->addAttribute(Attribute::ptr(new Attribute(PORT_ATTR, Message("i", midi_output_->get_default_output_device_id()), "portmidi device index.")));
+    this->addMethod(EntityMethod::ptr(new MidiDeviceListerMethod(LIST_METHOD, "Lists output MIDI devices.",
+        "Returns messages with pairs of int and string.", MidiDeviceListerMethod::DESTINATION)));
 }
 
 MidiSenderNode::~MidiSenderNode()
@@ -68,11 +72,11 @@ bool MidiSenderNode::onNodeAttributeChanged(const char *name, const Message &val
 
 bool MidiSenderNode::open(unsigned int port)
 {
-    if (Logger::isEnabledFor(INFO))
+    if (Logger::isEnabledFor(NOTICE))
     {
         std::ostringstream os;
         os << "MidiSenderNode: open port " << port;
-        Logger::log(INFO, os);
+        Logger::log(NOTICE, os);
     }
     port_ = port;
     // if (midi_output_ != 0)
