@@ -259,7 +259,8 @@ void Node::onInletTriggered(Pad *inlet, const Message &message)
         else
         {
             std::ostringstream os;
-            os << "Node." << __FUNCTION__ << ": Cannot handle message " << message << " in inlet " << ATTRIBUTES_INLET;
+            os << "Node." << __FUNCTION__ << ": Cannot handle message " << message <<
+                " in inlet " << ATTRIBUTES_INLET;
             Logger::log(ERROR, os);
         }
         return;
@@ -269,13 +270,48 @@ void Node::onInletTriggered(Pad *inlet, const Message &message)
     {
         if (message.indexMatchesType(0, STRING))
         {
-            if (this->hasMethod(message.getString(0).c_str()))
+            std::string method_name = message.getString(0);
+            if (this->hasMethod(method_name.c_str()))
             {
-                this->getMethod(message.getString(0).c_str())->
-                    trigger(message.cloneRange(1, message.getSize()));
-                return;
+                Message return_value;
+                Message arguments = message.cloneRange(1, message.getSize());
+                if (Logger::isEnabledFor(INFO))
+                {
+                    std::ostringstream os;
+                    os << "Node::" << __FUNCTION__ << ": call method " << method_name <<
+                        " with arguments " << arguments << " on node " << this->getName();
+                    Logger::log(INFO, os);
+                }
+                bool called_ok = this->callMethod(method_name.c_str(), arguments, return_value);
+                if (called_ok)
+                {
+                    return_value.prependString(method_name.c_str());
+                    output(OUTLET_RETURN, return_value);
+                }
+                else
+                {
+                    std::ostringstream os;
+                    os << "Node::" << __FUNCTION__ << ": error calling method " << method_name <<
+                        " with arguments " << arguments << " on node " << this->getName();
+                    Logger::log(ERROR, os);
+                }
+            }
+            else
+            {
+                std::ostringstream os;
+                os << "Node." << __FUNCTION__ << ": Cannot handle message " << message <<
+                    " in inlet " << inlet_name << " since 0th arg must be a string.";
+                Logger::log(ERROR, os);
             }
         }
+        else
+        {
+            std::ostringstream os;
+            os << "Node." << __FUNCTION__ << ": Cannot handle message " << message <<
+                " in inlet " << inlet_name << " since 0th arg must be a string.";
+            Logger::log(ERROR, os);
+        }
+        return;
     }
     processMessage(inlet_name.c_str(), message);
 }

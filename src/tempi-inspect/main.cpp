@@ -257,12 +257,10 @@ bool TempiInspect::printClass(const std::string &name)
                 vector<string>::const_iterator iter;
                 for (iter = methods.begin(); iter != methods.end(); ++iter)
                 {
-                    EntitySignal* method = node->getMethod((*iter).c_str());
+                    EntityMethod* method = node->getMethod((*iter).c_str());
                     cout << "* Method \"" << method->getName() << "\" : ";
-                    if (method->isTypeStrict())
-                        cout << "(Arguments types: " << method->getType() << ")";
-                    else
-                        cout << "(argument of variable type)";
+                    cout << "(Arguments types: " << method->getArgumentsType() << ")";
+                    cout << "(Return types: " << method->getReturnType() << ")";
                     cout << " ";
                     if (method->getShortDocumentation() != "")
                         cout << method->getShortDocumentation();
