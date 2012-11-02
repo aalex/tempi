@@ -160,6 +160,13 @@ class Wrapper
         std::vector<std::string> listNodes(const std::string &graph);
         bool nodeHasAttribute(const std::string &graph, const std::string &nodeName, const std::string &attributeName);
 
+        bool callNodeMethod(
+            const std::string &graph,
+            const std::string &node,
+            const std::string &method,
+            const Message &arguments,
+            Message &return_value);
+
     private:
         bool synchronous_;
         Scheduler *scheduler_;

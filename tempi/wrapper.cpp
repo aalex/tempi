@@ -470,6 +470,28 @@ bool Wrapper::getNodeAttributeValue(
     }
 }
 
+bool Wrapper::callNodeMethod(
+    const std::string &graph,
+    const std::string &node,
+    const std::string &method,
+    const Message &arguments,
+    Message &return_value)
+{
+    try
+    {
+        bool success = this->scheduler_->getGraph(graph.c_str())->
+            getNode(node.c_str())->callMethod(method.c_str(), arguments, return_value);
+        return success;
+    }
+    catch (const BaseException &e)
+    {
+        std::ostringstream os;
+        os << "Wrapper." << __FUNCTION__ << ": " << e.what();
+        Logger::log(ERROR, os);
+        return false;
+    }
+}
+
 bool Wrapper::getNodeAttributeDocumentation(
     const std::string &graph,
     const std::string &node,
