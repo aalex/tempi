@@ -43,6 +43,7 @@ const char * const Node::OUTLET_DELETED_SIGNAL = "__delete_outlet__";
 const char * const Node::INLET_CALL = "__call__";
 const char * const Node::OUTLET_RETURN = "__return__";
 const char * const Node::ATTRIBUTE_POSITION = "__position__";
+const char * const Node::ATTRIBUTE_DATA = "__data__";
 
 Node::Node()
 {
@@ -61,6 +62,7 @@ Node::Node()
     addOutlet(OUTLET_RETURN, "Outputs return value for every method called, prefixed by the name of the method called.");
     addInlet(INLET_CALL, "Inlet to call methods of this node. Their return value should be output by the __return__ outlet, prefixed by the name of the method called.");
     addAttribute(Attribute::ptr(new Attribute(ATTRIBUTE_POSITION, Message("fff", 0.0f, 0.0f, 0.0f), "Position of the node, in an hypothetical GUI.")));
+    addAttribute(Attribute::ptr(new Attribute(ATTRIBUTE_DATA, Message("s", ""), "Attribute in which developers can store anything.")));
 }
 
 bool Node::isInitiated() const

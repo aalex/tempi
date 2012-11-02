@@ -58,6 +58,7 @@ class Node : public Entity
         static const char * const ATTRIBUTES_SET_METHOD_SELECTOR;
         static const char * const ATTRIBUTES_SET_OUTPUT_PREFIX;
         static const char * const ATTRIBUTE_LOG;
+        static const char * const ATTRIBUTE_DATA;
         static const char * const ATTRIBUTE_POSITION;
         static const char * const INLET_CREATED_SIGNAL;
         static const char * const INLET_DELETED_SIGNAL;

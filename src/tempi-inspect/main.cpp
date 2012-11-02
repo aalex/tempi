@@ -191,6 +191,7 @@ bool TempiInspect::printClass(const std::string &name)
     undesired_outlets.push_back(std::string("__attr__"));
     undesired_outlets.push_back(std::string("__return__"));
     undesired_attributes.push_back(std::string("__position__"));
+    undesired_attributes.push_back(std::string("__data__"));
 
     if (factory_.hasType(name.c_str()))
     {
