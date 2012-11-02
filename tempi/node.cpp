@@ -48,13 +48,13 @@ Node::Node()
 {
     load_banged_ = false;
     // XXX: Add Signals BEFORE adding inlets/outlets!
-    addSignal(NodeSignal::ptr(new NodeSignal(OUTLET_DELETED_SIGNAL,
+    addSignal(EntitySignal::ptr(new EntitySignal(OUTLET_DELETED_SIGNAL,
         "Triggered when an outlet is deleted. Arguments are: the name of this node, the name of the outlet.", "TODO", "ss")));
-    addSignal(NodeSignal::ptr(new NodeSignal(INLET_DELETED_SIGNAL,
+    addSignal(EntitySignal::ptr(new EntitySignal(INLET_DELETED_SIGNAL,
         "Triggered when an inlet is deleted. Arguments are: the name of this node, the name of the inlet.", "TODO", "ss")));
-    addSignal(NodeSignal::ptr(new NodeSignal(OUTLET_CREATED_SIGNAL,
+    addSignal(EntitySignal::ptr(new EntitySignal(OUTLET_CREATED_SIGNAL,
         "Triggered when an outlet is created. Arguments are: the name of this node, the name of the outlet.", "TODO", "ss")));
-    addSignal(NodeSignal::ptr(new NodeSignal(INLET_CREATED_SIGNAL,
+    addSignal(EntitySignal::ptr(new EntitySignal(INLET_CREATED_SIGNAL,
         "Triggered when an inlet is created. Arguments are: the name of this node, the name of the inlet.", "TODO", "ss")));
     addInlet(ATTRIBUTES_INLET, "Set attribute value with (s:\"set\", s:<name>, ...) and list them via the __attr__ outlet with the (s:\"list\") message. Get attribute value with (s:\"get\", s:<name>)"); // all nodes have at least one inlet for attributes
     addOutlet(ATTRIBUTES_OUTLET, "Outputs value of each attribute, prefixed by their respective name, and also the list of all attributes name, prefixed with s:\"__list__\"."); // all nodes have at least one outlet for attributes

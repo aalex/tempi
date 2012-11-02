@@ -32,7 +32,6 @@
 #include "tempi/inlet.h"
 #include "tempi/pad.h"
 #include "tempi/message.h"
-#include "tempi/nodesignal.h"
 #include "tempi/outlet.h"
 #include "tempi/sharedptr.h"
 #include "tempi/entity.h"

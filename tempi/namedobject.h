@@ -28,8 +28,7 @@
 #include <string>
 #include <tr1/memory>
 
-namespace tempi
-{
+namespace tempi {
 
 /**
  * An NamedObject is an object that has a name.
@@ -53,13 +52,14 @@ class NamedObject
         /**
          * Sets the name of this Documented.
          */
-        void setName(const char *name);
+        bool setName(const char *name);
         /**
          * A virtual destructor makes this class polymorphic.
          */
         virtual ~NamedObject() {}
     private:
         std::string name_;
+        static const char * const DEFAULT_NAME;
 };
 
 } // end of namespace
