@@ -53,7 +53,7 @@ class Midi
         /** Prints the list of MIDI devices. */
         void enumerate_devices() const;
         /** Returns the list of desired MIDI devices. */
-        std::map<int, std::string> listDevices(DeviceDirection direction);
+        static std::map<int, std::string> listDevices(DeviceDirection direction);
         
         //input
         int get_default_input_device_id();

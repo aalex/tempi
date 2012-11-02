@@ -6,23 +6,40 @@
         <s>list</s>
       </attribute>
     </node>
+
     <node name="midiout0" class="base.midi.output">
     </node>
     <node name="midiin0" class="base.midi.input">
     </node>
+
     <node name="print_inputs" class="base.flow.print">
       <attribute name="prefix">
-        <s>inputs: </s>
+        <s>[print] inputs: </s>
       </attribute>
     </node>
     <node name="print_outputs" class="base.flow.print">
       <attribute name="prefix">
-        <s>outputs: </s>
+        <s>[print] outputs: </s>
       </attribute>
     </node>
+
+    <node name="route_outputs" class="base.flow.route">
+      <attribute name="selectors">
+        <s>list</s>
+      </attribute>
+    </node>
+    <node name="route_inputs" class="base.flow.route">
+      <attribute name="selectors">
+        <s>list</s>
+      </attribute>
+    </node>
+
     <connection from="loadmess0" outlet="0" to="midiin0" inlet="__call__" />
     <connection from="loadmess0" outlet="0" to="midiout0" inlet="__call__" />
-    <connection from="midiin0" outlet="__return__" to="print_inputs" inlet="0" />
-    <connection from="midiout0" outlet="__return__" to="print_outputs" inlet="0" />
+    <connection from="midiin0" outlet="__return__" to="route_inputs" inlet="0" />
+    <connection from="midiout0" outlet="__return__" to="route_outputs" inlet="0" />
+    <connection from="route_inputs" outlet="list" to="print_inputs" inlet="0" />
+    <connection from="route_outputs" outlet="list" to="print_outputs" inlet="0" />
+
   </graph>
 </tempi>

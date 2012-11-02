@@ -32,7 +32,8 @@ const char * const MidiReceiverNode::PORT_ATTR = "port";
 const char * const MidiReceiverNode::LIST_METHOD = "list";
 
 MidiReceiverNode::MidiReceiverNode() :
-    Node()
+    Node(),
+    did_print_unitialized_message_(false)
 {
     midi_input_ = new midi::Midi();
     this->setShortDocumentation("Receives MIDI messages from a single device.");
@@ -89,10 +90,14 @@ void MidiReceiverNode::doTick()
 {
     if (! midi_input_->is_open(port_))
     {
-        std::ostringstream os;
-        os << "MidiReceiverNode::" << __FUNCTION__ <<
-            "(): MidiInput is not initialized. Please specifiy a port number." << std::endl;
-        Logger::log(WARNING, os);
+        if (! this->did_print_unitialized_message_)
+        {
+            std::ostringstream os;
+            os << "MidiReceiverNode::" << __FUNCTION__ <<
+                "(): MidiInput is not initialized. Please specifiy a port number.";
+            Logger::log(WARNING, os);
+            this->did_print_unitialized_message_ = true;
+        }
         return;
     }
 

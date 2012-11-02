@@ -35,15 +35,13 @@ MidiDeviceListerMethod::MidiDeviceListerMethod(const char *name, const char *sho
 
 std::map<int, std::string> MidiDeviceListerMethod::list_input_midi_devices()
 {
-    tempi::midi::Midi dev;
-    std::map<int, std::string> devices = dev.listDevices(tempi::midi::Midi::SOURCE);
+    std::map<int, std::string> devices = tempi::midi::Midi::listDevices(tempi::midi::Midi::SOURCE);
     return devices;
 }
 
 std::map<int, std::string> MidiDeviceListerMethod::list_output_midi_devices()
 {
-    tempi::midi::Midi dev;
-    std::map<int, std::string> devices = dev.listDevices(tempi::midi::Midi::DESTINATION);
+    std::map<int, std::string> devices = tempi::midi::Midi::listDevices(tempi::midi::Midi::DESTINATION);
     return devices;
 }
 
@@ -60,11 +58,12 @@ bool MidiDeviceListerMethod::doCall(const Message &arguments, Message & return_v
     {
         return_value.appendInt((*iter).first);
         return_value.appendString((*iter).second.c_str());
-        if (Logger::isEnabledFor(DEBUG))
+
+        if (Logger::isEnabledFor(INFO))
         {
             std::ostringstream os;
             os << "MidiDeviceListerMethod::doCall: Detect MIDI device " << (*iter).first << " : " << (*iter).second;
-            Logger::log(DEBUG, os);
+            Logger::log(INFO, os);
         }
     }
     return true;
