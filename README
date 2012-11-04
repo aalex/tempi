@@ -121,6 +121,6 @@ Known bugs
 ----------
 
 * Favours Tempi plugins from /usr/local/lib/, rather than ./ if present.
-* [base.math.expr]: creates segmentation faults
+* [base.math.expr]: creates segmentation faults when scripts return an array
 * [base.clutter.stage]: creates segmentation faults
 
