@@ -132,12 +132,12 @@ bool messageToJavascript(const Message &message, std::string &result)
     return ok;
 }
 
-bool javaScriptToMessage(v8::Value *value, Message &result)
+bool javaScriptToMessage(v8::Local<v8::Value> value, Message &result)
 {
     bool success = true;
     if (value->IsNumber())
     {
-        double number = v8::Number::Cast(value)->Value();
+        double number = value->ToNumber()->Value();
         result.appendFloat(number);
     }
     else if (value->IsString())
@@ -147,13 +147,24 @@ bool javaScriptToMessage(v8::Value *value, Message &result)
     }
     else if (value->IsArray())
     {
-        v8::Array *array = v8::Array::Cast(value);
+        v8::Array *array = v8::Array::Cast(*value);
+        unsigned int length = array->Length();
+        std::cout << __FUNCTION__ << ": array length : " << length << std::endl;
+
         for (unsigned int i = 0; i < array->Length(); i++)
         {
             v8::Local<v8::Object> element = array->CloneElementAt(i);
+            if (*element == 0)
+            {
+                std::ostringstream os;
+                os << __FUNCTION__ << ": array element is NULL";
+                Logger::log(ERROR, os);
+                //return false;
+            }
+            std::cout << __FUNCTION__ << " element: " << *element << std::endl;
             if (element->IsNumber())
             {
-                double number = v8::Number::Cast(*element)->Value();
+                double number = v8::NumberObject::Cast(*element)->NumberValue();
                 result.appendFloat(number);
             }
             else if (element->IsString())
@@ -195,8 +206,11 @@ bool runJavaScript(const char *source, const Message &args, Message &result)
     std::string args_text;
     bool ok = messageToJavascript(args, args_text);
     (void) ok;
-    code << "var args = " << args_text << "; ";
-    code << source << std::endl;
+    code << "var args = " << args_text << ";" << std::endl;
+    code << "var func = function(args) { ";
+    code << source;
+    code << " }" << std::endl;
+    code << "func(args);";
 
     Logger::log(INFO, code);
 
@@ -217,9 +231,10 @@ bool runJavaScript(const char *source, const Message &args, Message &result)
         Logger::log(ERROR, os);
         return false;
     }
-    v8::Handle<v8::Value> v8_value = script->Run();
+    v8::Local<v8::Value> v8_handle = script->Run();
 
-    bool ret = javaScriptToMessage( ( * v8_value), result);
+    //v8::Value *v8_value = (*v8_handle);
+    bool ret = javaScriptToMessage(v8_handle, result);
     
     return ret && ok;
 }
