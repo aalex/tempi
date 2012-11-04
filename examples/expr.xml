@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tempi version="0.1.9">
+  <graph>
+    <node name="loadmess0" class="base.flow.loadmess">
+      <attribute name="value"><s>hello</s><i>2</i><f>3.14159</f></attribute>
+    </node>
+    <node name="expr0" class="base.math.expr">
+      <attribute name="script"><s>[args[2], args[1] * 10, args[0]]</s></attribute>
+    </node>
+    <node name="print0" class="base.flow.print">
+    </node>
+    <connection from="loadmess0" outlet="0" to="expr0" inlet="input"/>
+    <connection from="expr0" outlet="output" to="print0" inlet="0"/>
+  </graph>
+</tempi>
