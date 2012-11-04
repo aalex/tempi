@@ -51,7 +51,7 @@ class ExprNode : public Node
         static const char * const SCRIPT_ATTR;
 };
 
-bool runJavaScript(const char *script, const Message &args, Message &result);
+bool runJavaScript(const char *source, const Message &args, Message &result);
 bool javaScriptToMessage(const v8::Handle<v8::Value> &value, Message &result);
 
 } // end of namespace
