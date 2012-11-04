@@ -10,6 +10,9 @@ New features:
 * pass Pad* to its triggered signal
 * fix bug with initial count in counter node
 * allow to cast float to int for attributes
+* add entity methods which return right away with a message
+* midi nodes can list devices as a method
+
 
 Bugs fixed:
 
