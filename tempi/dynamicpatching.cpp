@@ -119,16 +119,22 @@ bool split_path(const char *path, std::vector<std::string> &result)
 /**
  * Handles messages meant to dynamically alter the Tempi entities managed by a Scheduler.
  *
- * - /graph0 connect [s:from] [s:outlet] [s:to] [s:inlet]
- * - /graph0 disconnect [s:from] [s:outlet] [s:to] [s:inlet]
+ * - /graphs/graph0 connect [s:from] [s:outlet] [s:to] [s:inlet]
+ * - /graphs/graph0 disconnect [s:from] [s:outlet] [s:to] [s:inlet]
+ * - /graphs/graph0 create [s:type] [s:name]
+ * - /graphs/graph0 destroy [s:name]
+ * - /graphs/graph0 load [s:filename]
+ * - /graphs/graph0 save [s:filename]
+ * - /graphs/graph0 clear
+ * - /graphs/graph0/nodes/metro0/attributes/interval set [i:1000]
+ * - /graphs/graph0/nodes/metro0/attributes/interval reset
+ * - /graphs/graph0/nodes/midiinput0 list
+ *   
+ * Shortcuts: (when there is no name clash)
+ *
  * - /graph0 create [s:type] [s:name]
- * - /graph0 destroy [s:name]
- * - /graph0 load [s:filename]
- * - /graph0 save [s:filename]
- * - /graph0 clear
  * - /graph0/metro0/interval set [i:1000]
- * - /graph0/metro0/interval reset
- * - /graph0/midiinput0 list
+ * - /graph0 save [s:filename]
  */
 bool handle_message(Scheduler &scheduler, const Message &message)
 {
