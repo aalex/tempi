@@ -10,6 +10,7 @@ AM_CXXFLAGS = \
     $(LIBXML_CFLAGS) \
     $(SPATOSC_CFLAGS) \
     $(STK_CXXFLAGS) \
+    $(V8_CFLAGS) \
     -I$(top_srcdir)
 
 AM_LIBS = \
@@ -25,7 +26,8 @@ AM_LIBS = \
     $(LIBXML_LIBS) \
     $(LOG4CPP_LIBS) \
     $(SPATOSC_LIBS) \
-    $(STK_LIBS)
+    $(STK_LIBS) \
+    $(V8_LIBS)
 
 LDADD = $(top_builddir)/tempi/libtempi-@TEMPI_API_VERSION@.la
 
@@ -73,6 +75,7 @@ libtempi_@TEMPI_API_VERSION@_plugins_base_la_SOURCES = \
     mapping/slide.cpp \
     mapping/slidefilter.cpp \
     math/booleanoperatornode.cpp \
+    math/expr.cpp \
     math/onefloatmathnode.cpp \
     math/twofloatmathnode.cpp \
     midi/abstractmidifilter.cpp \
@@ -129,6 +132,7 @@ EXTRA_DIST = \
     mapping/slide.h \
     mapping/slidefilter.h \
     math/booleanoperatornode.h \
+    math/expr.h \
     math/onefloatmathnode.h \
     math/twofloatmathnode.h \
     music/musicnearestnode.h \

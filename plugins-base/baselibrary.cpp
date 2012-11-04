@@ -41,6 +41,7 @@
 #include "plugins-base/spatosc/spatoscnode.h"
 #include "plugins-base/flow/spigotnode.h"
 #include "plugins-base/mapper/mapperinputnode.h"
+#include "plugins-base/math/expr.h"
 #include "plugins-base/math/onefloatmathnode.h"
 #include "plugins-base/math/twofloatmathnode.h"
 #include "plugins-base/math/booleanoperatornode.h"
@@ -106,6 +107,10 @@ void BaseLibrary::load(NodeFactory &factory, const char * /*prefix*/) const
     factory.registerTypeT<SpatoscNode>(concatenate(prefix, "osc.spatosc").c_str());
     factory.registerTypeT<Angle3dNode>(concatenate(prefix, "3d.angle").c_str());
 #endif // HAVE_SPATOSC
+
+#ifdef HAVE_V8
+    factory.registerTypeT<ExprNode>(concatenate(prefix, "math.expr").c_str());
+#endif // HAVE_V8
 
     factory.registerTypeT<AddNode>(concatenate(prefix, "math.+").c_str());
     factory.registerTypeT<DivNode>(concatenate(prefix, "math./").c_str());

@@ -50,9 +50,9 @@ m4_define([tempi_binary_age], [m4_eval(100 * tempi_minor_version + tempi_micro_v
 AC_PREREQ([2.63])
 AC_INIT([tempi],
         [tempi_version],
-        [http://github.com/aalex/tempi/issues],
+        [http://code.sat.qc.cq/redmine/projects/tempi/issues],
         [tempi],
-        [http://tempi.toonloop.com])
+        [http://code.sat.qc.ca/tempi])
 AC_RUN_IFELSE([AC_LANG_PROGRAM([[ ]], [[ ]])],
     [AC_MSG_RESULT(yes)], [AC_MSG_RESULT(no)], [AC_MSG_RESULT(can not test)])
 AC_CONFIG_MACRO_DIR([m4])
@@ -133,6 +133,35 @@ AC_CHECK_LIB([m],[sqrt])
 
 # Checks for header files.
 AC_CHECK_HEADERS([arpa/inet.h stddef.h stdlib.h string.h sys/time.h])
+
+AC_CHECK_LIB([v8],[sqrt], have_v8=true, have_v8=false)
+if test "x${have_v8}" = "xfalse" ; then
+    AC_MSG_WARN([missing v8 library, install libv8-dev])
+else
+    V8_CFLAGS=""
+    AC_SUBST([V8_CFLAGS], "$V8_CFLAGS")
+    V8_LIBS="-lv8"
+    AC_SUBST([V8_LIBS], "$V8_LIBS")
+    AC_DEFINE(HAVE_V8,[1],[v8 headers successfully detected])
+fi
+
+
+dnl # v8
+dnl AC_CHECK_HEADERS([v8.h], have_v8_headers=true, have_v8_headers=false,
+dnl [#ifdef HAVE_V8_H
+dnl # include <v8.h>
+dnl #endif
+dnl ])
+dnl if test "x${have_v8_headers}" = "xfalse" ; then
+dnl     AC_MSG_WARN([missing package: libv8-dev])
+dnl else
+dnl     V8_CFLAGS=""
+dnl     AC_SUBST([V8_CFLAGS], "$V8_CFLAGS")
+dnl     V8_LIBS="-lv8"
+dnl     AC_SUBST([V8_LIBS], "$V8_LIBS")
+dnl     AC_DEFINE(HAVE_V8,[1],[v8 headers successfully detected])
+dnl fi
+
 
 # portmidi
 AC_CHECK_HEADERS([portmidi.h porttime.h], have_portmidi_headers=true, have_portmidi_headers=false)
