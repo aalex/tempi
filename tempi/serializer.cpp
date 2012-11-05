@@ -210,6 +210,7 @@ bool save(Graph &graph, const char *filename)
 
 bool load_graph_connections(xmlNodePtr graph_node, Graph &graph)
 {
+    bool overall_success = true;
     for (xmlNode *connection_node = graph_node->children;
         connection_node; connection_node = connection_node->next)
     { // for each connection
@@ -235,7 +236,18 @@ bool load_graph_connections(xmlNodePtr graph_node, Graph &graph)
                         << from << ":" << outlet << " -> " << to << ":" << inlet;
                     Logger::log(INFO, os.str().c_str());
                 }
-                graph.connect((char *) from, (char *) outlet, (char *) to, (char *) inlet);
+                bool success = graph.connect((char *) from, (char *) outlet, (char *) to, (char *) inlet);
+                if (success)
+                {
+                }
+                else
+                {
+                    std::ostringstream os;
+                    os << "serializer::" << __FUNCTION__ << "(): Could not connect "
+                        << from << ":" << outlet << " -> " << to << ":" << inlet;
+                    Logger::log(ERROR, os.str().c_str());
+                    overall_success = false;
+                }
             }
             xmlFree(from);
             xmlFree(outlet);
@@ -248,14 +260,12 @@ bool load_graph_connections(xmlNodePtr graph_node, Graph &graph)
             ! node_name_is(connection_node, REGION_NODE) &&
             connection_node->type == XML_ELEMENT_NODE)
         {
-            if (Logger::isEnabledFor(INFO))
-            {
-                std::ostringstream os;
-                os << "Found unknown XML tag: \"" << connection_node->name << "\"";
-                Logger::log(ERROR, os.str().c_str());
-            }
+            std::ostringstream os;
+            os << "Found unknown XML tag: \"" << connection_node->name << "\"";
+            Logger::log(ERROR, os.str().c_str());
         }
     } // for each connection
+    return overall_success;
 }
 
 bool load_message(xmlNodePtr message_node, Message &message)
@@ -306,6 +316,7 @@ bool load_message(xmlNodePtr message_node, Message &message)
                 Logger::log(ERROR, os.str().c_str());
                 success = false;
             }
+            if (Logger::isEnabledFor(DEBUG))
             {
                 std::ostringstream os;
                 os << "    * atom results in " << message;
@@ -345,6 +356,7 @@ bool load_node_attributes(xmlNodePtr node_node, Node &node)
 
 bool load_graph(xmlNodePtr graph_node, Graph &graph)
 {
+    bool loaded_graph_without_error = true;
     for (xmlNode *node_node = graph_node->children;
         node_node;
         node_node = node_node->next)
@@ -365,19 +377,36 @@ bool load_graph(xmlNodePtr graph_node, Graph &graph)
             }
             if (node_type != NULL && node_name != NULL)
             { // node has name
-                graph.addNode((char *) node_type, (char *) node_name);
-                Node::ptr node = graph.getNode((char *) node_name);
-                load_node_attributes(node_node, *(node.get()));
+                bool success = graph.addNode((char *) node_type, (char *) node_name);
+                if (success)
+                {
+                    Node::ptr node = graph.getNode((char *) node_name);
+                    load_node_attributes(node_node, *(node.get()));
+                }
+                else
+                {
+                    std::ostringstream os;
+                    os << "Could not create node " << node_name << " of type " << node_type;
+                    Logger::log(ERROR, os.str().c_str());
+                    loaded_graph_without_error = false;
+                }
             } // node has name
             xmlFree(node_type);
             xmlFree(node_name);
         } // is a node
     } // for each node
 
+    if (Logger::isEnabledFor(DEBUG))
+    {
+        std::ostringstream os;
+        os << "(we will now tick the graph)";
+        Logger::log(DEBUG, os.str().c_str());
+    }
     graph.tick(); // FIXME this is annoying
 
-    load_graph_connections(graph_node, graph);
-    return true;
+    if (! load_graph_connections(graph_node, graph))
+        loaded_graph_without_error = false;
+    return loaded_graph_without_error;
 }
 
 bool load_region(xmlNodePtr region_node, sampler::Region &region)
@@ -446,7 +475,19 @@ bool load(Graph &graph, const char *filename)
         } // is a graph
     } // for each graph
 
+    if (Logger::isEnabledFor(DEBUG))
+    {
+        std::ostringstream os;
+        os << "(we will now tick the graph)";
+        Logger::log(DEBUG, os.str().c_str());
+    }
     graph.tick();
+    if (Logger::isEnabledFor(DEBUG))
+    {
+        std::ostringstream os;
+        os << "(we will now loadbang the graph)";
+        Logger::log(DEBUG, os.str().c_str());
+    }
     graph.loadBang();
 
     if (Logger::isEnabledFor(INFO))
