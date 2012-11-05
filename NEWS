@@ -12,12 +12,14 @@ New features:
 * allow to cast float to int for attributes
 * add entity methods which return right away with a message
 * midi nodes can list devices as a method
+* base.flow.split node type
 
 
 Bugs fixed:
 
 * NOTICE log message were never displayed
 * decrease verbosity of counter
+* fix segfault when node type name not found in the serializer
 
 
 Tempi 0.1.18 (2012-10-22)
