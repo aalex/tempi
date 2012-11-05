@@ -19,7 +19,11 @@
  */
 
 #include "tempi/dynamicpatching.h"
+#include "tempi/graph.h"
+#include "tempi/node.h"
+#include "tempi/utils.h"
 #include <boost/regex.hpp>
+#include <algorithm> // std::copy()
 
 namespace tempi {
 namespace dynamic {
@@ -137,6 +141,51 @@ bool split_path(const char *path, std::vector<std::string> &result)
  * - /graph0 save [s:filename]
  */
 bool handle_message(Scheduler &scheduler, const Message &message)
+{
+    std::vector<std::string> path;
+    std::string types = message.getTypes();
+    if (! utils::stringBeginsWith(types.c_str(), "s"))
+    {
+        std::ostringstream os;
+        os << __FUNCTION__ << ": first arg should be a string.";
+        Logger::log(ERROR, os);
+        return false;
+    }
+    bool ok = split_path(message.getString(0).c_str(), path);
+    unsigned int graph_name_index = 0;
+    if (path[0] == "graphs" && path.size() > 1)
+    {
+        graph_name_index = 1;
+    }
+    std::string graph_name = path[graph_name_index].c_str();
+    if (scheduler.hasGraph(graph_name.c_str()))
+    {
+        std::vector<std::string> new_path;
+        std::copy(path.begin() + graph_name_index, path.end(), new_path);
+        Message new_message = message.cloneRange(graph_name_index, message.size());
+
+        Graph::ptr graph = scheduler.getGraph();
+        return handle_message(*graph.get(), new_path, new_message);
+    }
+    else
+    {
+        std::ostringstream os;
+        os << __FUNCTION__ << ": no such graph: \"" << graph_name;
+        Logger::log(ERROR, os);
+        return false;
+    }
+    return false;
+}
+
+bool handle_message(Graph &graph, const std::vector<std::string> &path, const Message &message)
+{
+    if (path.size() == 0)
+    {
+    }
+    return false;
+}
+
+bool handle_message(Node &node, const std::vector<std::string> &path, const Message &message)
 {
     return false;
 }
