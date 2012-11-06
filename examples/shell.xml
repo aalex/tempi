@@ -2,7 +2,7 @@
 <tempi version="0.1.9">
   <graph>
     <node name="loadmess0" class="base.flow.loadmess">
-      <attribute name="value"><s>ls -l</s></attribute>
+        <attribute name="value"><s>expr</s><i>2</i><s>+</s><i>2</i></attribute>
     </node>
     <node name="shell0" class="base.os.shell">
     </node>
