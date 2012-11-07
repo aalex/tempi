@@ -22,7 +22,7 @@
 
 namespace tempi {
 
-const char * const NameValidator::DEFAULT_PATTERN = "^(\\w|-|_)+$";
+const char * const NameValidator::DEFAULT_PATTERN = "^(\\w|-|_|\\/)+$";
 
 NameValidator::NameValidator()
 {
