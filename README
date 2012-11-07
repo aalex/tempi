@@ -40,13 +40,13 @@ Authors who contributed to the base plugins for Tempi:
 
 Project URL
 -----------
-http://tempi.toonloop.com/
+http://code.sat.qc.ca/redmine/projects/tempi
 
 The source code is currently managed at http://code.sat.qc.ca/redmine/projects/tempi
 
 To clone::
 
-  git clone https://github.com/aalex/tempi.git
+  git clone git://code.sat.qc.ca/tempi.git
 
 
 Sponsors
