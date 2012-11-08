@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tempi version="0.1.17">
+  <graph>
+    <node name="editor0" class="base.edit.grapheditor"></node>
+    <node name="print0" class="base.flow.print">
+    </node>
+    <node name="loadmess0" class="base.flow.loadmess">
+        <attribute name="value">
+            <s>addNode</s><s>base.flow.counter</s><s>counter0</s>
+        </attribute>
+    </node>
+    <node name="loadmess1" class="base.flow.loadmess">
+        <attribute name="value">
+            <s>addNode</s><s>base.time.metro</s><s>metro0</s>
+        </attribute>
+    </node>
+    <node name="loadmess2" class="base.flow.loadmess">
+        <attribute name="value">
+            <s>addNode</s><s>base.flow.print</s><s>print1</s>
+        </attribute>
+    </node>
+    <node name="loadmess3" class="base.flow.loadmess">
+        <attribute name="value">
+            <s>connect</s><s>metro0</s><s>0</s><s>counter0</s><s>0</s>
+        </attribute>
+    </node>
+    <node name="loadmess4" class="base.flow.loadmess">
+        <attribute name="value">
+            <s>connect</s><s>counter0</s><s>0</s><s>print1</s><s>0</s>
+        </attribute>
+    </node>
+    <node name="loadmess5" class="base.flow.loadmess">
+        <attribute name="value">
+            <s>setNodeAttribute</s><s>metro0</s><s>running</s><b>true</b>
+        </attribute>
+    </node>
+    <connection from="loadmess0" outlet="0" to="editor0" inlet="command"/>
+    <connection from="loadmess1" outlet="0" to="editor0" inlet="command"/>
+    <connection from="loadmess2" outlet="0" to="editor0" inlet="command"/>
+    <connection from="loadmess3" outlet="0" to="editor0" inlet="command"/>
+    <connection from="loadmess4" outlet="0" to="editor0" inlet="command"/>
+    <connection from="loadmess5" outlet="0" to="editor0" inlet="command"/>
+    <connection from="editor0" outlet="success" to="print0" inlet="0"/>
+  </graph>
+</tempi>

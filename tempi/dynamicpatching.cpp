@@ -145,7 +145,26 @@ bool handle_graph_message(Graph &graph, const std::vector<std::string> &path, co
     }
 
     std::string types = message.getTypes();
-    if (utils::stringsMatch(types.c_str(), "sssss")
+    if (utils::stringBeginsWith(types.c_str(), "sss")
+        && (message.getString(0) == "setNodeAttribute"))
+    {
+        if (graph.hasNode(message.getString(1).c_str()))
+        {
+            Node::ptr node = graph.getNode(message.getString(1).c_str());
+            std::vector<std::string> new_path;
+            new_path.push_back(message.getString(2)); // attribute name
+            Message new_message = message.cloneRange(3, message.getSize() - 1);
+            return handle_node_message(*node.get(), new_path, new_message);
+        }
+        else
+        {
+            std::ostringstream os;
+            os << __FUNCTION__ << ": No node named " << path[0];
+            Logger::log(ERROR, os);
+            return false;
+        }
+    }
+    else if (utils::stringsMatch(types.c_str(), "sssss")
         && (message.getString(0) == "connect" || message.getString(0) == "disconnect"))
     {
         bool connect = message.getString(0) == "connect";
@@ -154,6 +173,17 @@ bool handle_graph_message(Graph &graph, const std::vector<std::string> &path, co
         std::string to = message.getString(3);
         std::string inlet = message.getString(4);
         std::string string0 = message.getString(0);
+
+        if (Logger::isEnabledFor(DEBUG))
+        {
+            std::ostringstream os;
+            os << __FUNCTION__ << ": ";
+            if (! connect)
+                os << "dis";
+            os << "connect";
+            os << message;
+            Logger::log(DEBUG, os);
+        }
         if (connect)
             return graph.connect(from.c_str(), outlet.c_str(),
                 to.c_str(), inlet.c_str());
