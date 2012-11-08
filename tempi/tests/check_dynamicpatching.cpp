@@ -1,5 +1,7 @@
 #include <iostream>
 #include "tempi/dynamicpatching.h"
+#include "tempi/nodefactory.h"
+#include "tempi/internals.h"
 
 using namespace tempi;
 
@@ -58,11 +60,40 @@ static bool check_split_path()
     return true;
 }
 
-
+static bool check_dynamic_patching(NodeFactory::ptr factory)
+{
+    Graph graph(factory);
+    Message message = Message("sss", "addNode", "base.flow.line", "line0");
+    std::vector<std::string> path;
+    if (! dynamic::handle_graph_message(graph, path, message))
+    {
+        std::cout << "failed calling handle_graph_message " << message;
+        return false;
+    }
+    int RATE = 100;
+    message = Message("ssi", "setAttribute", "rate", RATE);
+    path.push_back(std::string("line0"));
+    if (! dynamic::handle_graph_message(graph, path, message))
+    {
+        std::cout << "failed calling handle_graph_message" << message;
+        return false;
+    }
+    if (! graph.getNode("line0")->getAttributeValue("rate").getInt(0) == RATE)
+    {
+        std::cout << __FUNCTION__ << ": could not set value";
+        return false;
+    }
+    return true;
+}
 
 int main(int argc, char *argv[])
 {
+    NodeFactory::ptr factory;
+    factory.reset(new NodeFactory);
+    internals::loadInternals(factory); // FIXME: depends on plugins-base
     if (! check_split_path())
+        return 1;
+    if (! check_dynamic_patching(factory))
         return 1;
     return 0;
 }

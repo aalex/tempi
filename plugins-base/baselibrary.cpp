@@ -20,6 +20,7 @@
 
 #include "plugins-base/3d/3dcomparenode.h"
 #include "plugins-base/baselibrary.h"
+#include "plugins-base/edit/grapheditornode.h"
 #include "plugins-base/flow/anynode.h"
 #include "plugins-base/flow/appendnode.h"
 #include "plugins-base/flow/appsinknode.h"
@@ -85,6 +86,7 @@ void BaseLibrary::load(NodeFactory &factory, const char * /*prefix*/) const
     using utils::concatenate;
 
     static const char * const prefix = "base.";
+    factory.registerTypeT<GraphEditorNode>(concatenate(prefix, "edit.grapheditor").c_str());
     factory.registerTypeT<PrintNode>(concatenate(prefix, "flow.print").c_str());
     factory.registerTypeT<AppendNode>(concatenate(prefix, "flow.append").c_str());
     factory.registerTypeT<NopNode>(concatenate(prefix, "flow.nop").c_str());
