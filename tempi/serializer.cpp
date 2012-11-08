@@ -357,6 +357,12 @@ bool load_node_attributes(xmlNodePtr node_node, Node &node)
                 os << __FUNCTION__ << ": " << e.what() << std::endl;
                 Logger::log(ERROR, os);
             }
+            catch (const BadAtomTypeException &e)
+            {
+                std::ostringstream os;
+                os << __FUNCTION__ << ": " << e.what() << std::endl;
+                Logger::log(ERROR, os);
+            }
             xmlFree(attr_name);
         } // is an attribute
     } // each child of node
