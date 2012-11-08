@@ -29,79 +29,6 @@
 namespace tempi {
 namespace dynamic {
 
-// /**
-//  * Return true if handled.
-//  */
-// bool Graph::handleMessage(const Message &message)
-// {
-//     //std::cout << "Graph::" << __FUNCTION__ << "(" << message << ")" << std::endl;
-//     std::string types = message.getTypes();
-//     if (utils::stringBeginsWith(types.c_str(), "s")
-//         && message.getString(0) == "__tempi__")
-//     {
-//         //std::cout << __FILE__ << "::" << __FUNCTION__ << ": starts with tempi" << std::endl;
-//         return handleTempiMessage(
-//             message.cloneRange(1, message.getSize() - 1));
-//     }
-//     else if (utils::stringBeginsWith(types.c_str(), "s"))
-//     {
-//         std::string receiveSlot = message.getString(0);
-//         std::cout << "TODO: Graph::" << __FUNCTION__ << "(" << message << ")" << std::endl;
-//         return false;
-//     }
-// }
-// 
-// /**
-//  * Handles messages meant to dynamically patch the graph.
-//  * - ,ssisi: connect [from] [outlet] [to] [inlet]
-//  * - ,sss: addNode [type] [name]
-//  * - ,ss: deleteNode [name]
-//  * - ,ss...: setNodeAttribute [nodeName] [prop] ...
-//  */
-// bool Graph::handleTempiMessage(const Message &message)
-// {
-//     std::string types = message.getTypes();
-//     if (utils::stringsMatch(types.c_str(), "ssisi")
-//         && message.getString(0) == "connect")
-//     {
-//         std::string from = message.getString(1);
-//         unsigned int outlet = (unsigned) message.getInt(2);
-//         std::string to = message.getString(3);
-//         unsigned int inlet = (unsigned) message.getInt(4);
-//         std::string string0 = message.getString(0);
-//         return connect(from.c_str(), outlet,
-//             to.c_str(), inlet);
-//     }
-//     if (utils::stringsMatch(types.c_str(), "sss")
-//         && message.getString(0) == "addNode")
-//     {
-//         std::string type = message.getString(1);
-//         std::string name = message.getString(2);
-//         bool ok = addNode(type.c_str(), name.c_str());
-//         if (ok)
-//             std::cout << "did create node " << name << std::endl;
-//         return ok;
-//     }
-//     if (utils::stringsMatch(types.c_str(), "ss")
-//         && message.getString(0) == "deleteNode")
-//     {
-//         std::string name = message.getString(1);
-//         return deleteNode(name.c_str());
-//     }
-//     if (utils::stringBeginsWith(types.c_str(), "sss")
-//         && message.getString(0) == "setNodeAttribute")
-//     {
-//         std::string nodeName = message.getString(1);
-//         std::string attributeName = message.getString(2);
-//         Message value = message.cloneRange(3, message.getSize() - 1);
-//         return setNodeAttribute(nodeName.c_str(),
-//             attributeName.c_str(), value);
-//     }
-//     return false; // unhandled
-// }
-//
-
-
 bool split_path(const char *path, std::vector<std::string> &result)
 {
     std::string s(path);
@@ -248,6 +175,12 @@ bool handle_graph_message(Graph &graph, const std::vector<std::string> &path, co
                 os << "did create node " << name << std::endl;
                 Logger::log(DEBUG, os);
             }
+        }
+        else
+        {
+            std::ostringstream os;
+            os << __FUNCTION__ << ": could not create node ";
+            Logger::log(ERROR, os);
         }
         return ok;
     }
