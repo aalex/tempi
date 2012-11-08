@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tempi version="0.1.9">
+  <graph>
+    <node name="loadmess0" class="base.flow.loadmess">
+        <attribute name="value"><s>expr</s><i>2</i><s>+</s><i>2</i></attribute>
+    </node>
+    <node name="shell0" class="base.os.shell">
+    </node>
+    <node name="print_output" class="base.flow.print">
+      <attribute name="prefix"><s>output:  </s></attribute>
+    </node>
+    <connection from="loadmess0" outlet="0" to="shell0" inlet="command"/>
+    <connection from="shell0" outlet="output" to="print_output" inlet="0"/>
+  </graph>
+</tempi>

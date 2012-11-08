@@ -52,6 +52,7 @@
 #include "plugins-base/midi/midisendernode.h"
 #include "plugins-base/music/musicnearestnode.h"
 #include "plugins-base/music/monodicnode.h"
+#include "plugins-base/os/shellnode.h"
 #include "plugins-base/osc/oscreceivernode.h"
 #include "plugins-base/osc/oscsendernode.h"
 #include "plugins-base/osc/oscprependnode.h"
@@ -140,6 +141,10 @@ void BaseLibrary::load(NodeFactory &factory, const char * /*prefix*/) const
 
     factory.registerTypeT<NearestNoteNode>(concatenate(prefix, "music.nearest.note").c_str());
     factory.registerTypeT<MonodicNode>(concatenate(prefix, "music.monodic").c_str());
+
+#ifdef HAVE_GLIB
+    factory.registerTypeT<ShellNode>(concatenate(prefix, "os.shell").c_str());
+#endif // HAVE_GLIB
 
 // TODO #ifdef HAVE_LIBLO
     factory.registerTypeT<OscReceiverNode>(concatenate(prefix, "osc.receive").c_str());

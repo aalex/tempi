@@ -87,6 +87,7 @@ libtempi_@TEMPI_API_VERSION@_plugins_base_la_SOURCES = \
     midi/midisendernode.cpp \
     midi/midiutilities.cpp \
     music/monodicnode.cpp \
+    os/shellnode.cpp \
     osc/oscprependnode.cpp \
     osc/oscreceivernode.cpp \
     osc/oscroutenode.cpp \
@@ -139,6 +140,7 @@ EXTRA_DIST = \
     math/twofloatmathnode.h \
     music/musicnearestnode.h \
     music/monodicnode.h \
+    os/shellnode.h \
     midi/midireceivernode.h \
     midi/abstractmidifilter.h \
     midi/midibuildernodes.h \

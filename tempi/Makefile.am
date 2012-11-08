@@ -48,7 +48,7 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     attribute.cpp \
     documented.cpp \
     dict.cpp \
-    dynamicpatching.cpp \
+	dynamicpatching.cpp \
     entity.cpp \
     entitymethod.cpp \
     entitysignal.cpp \
@@ -96,7 +96,7 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     attribute.h \
     concurrentqueue.h \
     dict.h \
-    dynamicpatching.h \
+	dynamicpatching.h \
     documented.h \
     entity.h \
     entitymethod.h \

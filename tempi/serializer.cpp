@@ -210,6 +210,7 @@ bool save(Graph &graph, const char *filename)
 
 bool load_graph_connections(xmlNodePtr graph_node, Graph &graph)
 {
+    bool overall_success = true;
     for (xmlNode *connection_node = graph_node->children;
         connection_node; connection_node = connection_node->next)
     { // for each connection
@@ -233,9 +234,20 @@ bool load_graph_connections(xmlNodePtr graph_node, Graph &graph)
                     std::ostringstream os;
                     os << "serializer::" << __FUNCTION__ << "(): Connect "
                         << from << ":" << outlet << " -> " << to << ":" << inlet;
-                    Logger::log(INFO, os.str().c_str());
+                    Logger::log(INFO, os);
                 }
-                graph.connect((char *) from, (char *) outlet, (char *) to, (char *) inlet);
+                bool success = graph.connect((char *) from, (char *) outlet, (char *) to, (char *) inlet);
+                if (success)
+                {
+                }
+                else
+                {
+                    std::ostringstream os;
+                    os << "serializer::" << __FUNCTION__ << "(): Could not connect "
+                        << from << ":" << outlet << " -> " << to << ":" << inlet;
+                    Logger::log(ERROR, os);
+                    overall_success = false;
+                }
             }
             xmlFree(from);
             xmlFree(outlet);
@@ -248,14 +260,12 @@ bool load_graph_connections(xmlNodePtr graph_node, Graph &graph)
             ! node_name_is(connection_node, REGION_NODE) &&
             connection_node->type == XML_ELEMENT_NODE)
         {
-            if (Logger::isEnabledFor(INFO))
-            {
-                std::ostringstream os;
-                os << "Found unknown XML tag: \"" << connection_node->name << "\"";
-                Logger::log(ERROR, os.str().c_str());
-            }
+            std::ostringstream os;
+            os << "Found unknown XML tag: \"" << connection_node->name << "\"";
+            Logger::log(ERROR, os);
         }
     } // for each connection
+    return overall_success;
 }
 
 bool load_message(xmlNodePtr message_node, Message &message)
@@ -296,20 +306,21 @@ bool load_message(xmlNodePtr message_node, Message &message)
                     os << "    * atom " <<
                         (char) atom_typetag << ":" <<
                         atom_value;
-                    Logger::log(INFO, os.str().c_str());
+                    Logger::log(INFO, os);
                 }
             }
             catch (const BadAtomTypeException &e)
             {
                 std::ostringstream os;
                 os << __FILE__ << ": " << __FUNCTION__ << " " << e.what();
-                Logger::log(ERROR, os.str().c_str());
+                Logger::log(ERROR, os);
                 success = false;
             }
+            if (Logger::isEnabledFor(DEBUG))
             {
                 std::ostringstream os;
                 os << "    * atom results in " << message;
-                Logger::log(DEBUG, os.str().c_str());
+                Logger::log(DEBUG, os);
             }
         } // is atom node
     } // for each atom
@@ -332,11 +343,26 @@ bool load_node_attributes(xmlNodePtr node_node, Node &node)
             {
                 std::ostringstream os;
                 os << "   * attr \"" << attr_name << "\":";
-                Logger::log(INFO, os.str().c_str());
+                Logger::log(INFO, os);
             }
             Message attr_value;
             load_message(attribute_node, attr_value);
-            node.setAttributeValue((char *) attr_name, attr_value);
+            try
+            {
+                node.setAttributeValue((char *) attr_name, attr_value);
+            }
+            catch (const BadIndexException &e)
+            {
+                std::ostringstream os;
+                os << __FUNCTION__ << ": " << e.what() << std::endl;
+                Logger::log(ERROR, os);
+            }
+            catch (const BadAtomTypeException &e)
+            {
+                std::ostringstream os;
+                os << __FUNCTION__ << ": " << e.what() << std::endl;
+                Logger::log(ERROR, os);
+            }
             xmlFree(attr_name);
         } // is an attribute
     } // each child of node
@@ -345,6 +371,7 @@ bool load_node_attributes(xmlNodePtr node_node, Node &node)
 
 bool load_graph(xmlNodePtr graph_node, Graph &graph)
 {
+    bool loaded_graph_without_error = true;
     for (xmlNode *node_node = graph_node->children;
         node_node;
         node_node = node_node->next)
@@ -361,23 +388,40 @@ bool load_graph(xmlNodePtr graph_node, Graph &graph)
             {
                 std::ostringstream os;
                 os << "  * node " << node_name << " of type " << node_type;
-                Logger::log(INFO, os.str().c_str());
+                Logger::log(INFO, os);
             }
             if (node_type != NULL && node_name != NULL)
             { // node has name
-                graph.addNode((char *) node_type, (char *) node_name);
-                Node::ptr node = graph.getNode((char *) node_name);
-                load_node_attributes(node_node, *(node.get()));
+                bool success = graph.addNode((char *) node_type, (char *) node_name);
+                if (success)
+                {
+                    Node::ptr node = graph.getNode((char *) node_name);
+                    load_node_attributes(node_node, *(node.get()));
+                }
+                else
+                {
+                    std::ostringstream os;
+                    os << "Could not create node " << node_name << " of type " << node_type;
+                    Logger::log(ERROR, os);
+                    loaded_graph_without_error = false;
+                }
             } // node has name
             xmlFree(node_type);
             xmlFree(node_name);
         } // is a node
     } // for each node
 
+    if (Logger::isEnabledFor(DEBUG))
+    {
+        std::ostringstream os;
+        os << "(we will now tick the graph)";
+        Logger::log(DEBUG, os);
+    }
     graph.tick(); // FIXME this is annoying
 
-    load_graph_connections(graph_node, graph);
-    return true;
+    if (! load_graph_connections(graph_node, graph))
+        loaded_graph_without_error = false;
+    return loaded_graph_without_error;
 }
 
 bool load_region(xmlNodePtr region_node, sampler::Region &region)
@@ -395,7 +439,7 @@ bool load_region(xmlNodePtr region_node, sampler::Region &region)
             {
                 std::ostringstream os;
                 os << "  * event " << event_time;
-                Logger::log(DEBUG, os.str().c_str());
+                Logger::log(DEBUG, os);
             }
             if (event_time != NULL)
             { // event has time
@@ -419,14 +463,14 @@ bool load(Graph &graph, const char *filename)
     {
         std::ostringstream os;
         os << "Serializer could not parse file " <<  filename;
-        Logger::log(ERROR, os.str().c_str());
+        Logger::log(ERROR, os);
         return false;
     }
     if (Logger::isEnabledFor(INFO))
     {
         std::ostringstream os;
         os << "Loading project file " << filename;
-        Logger::log(INFO, os.str().c_str());
+        Logger::log(INFO, os);
     }
     xmlNode *root = xmlDocGetRootElement(doc);
 
@@ -446,14 +490,26 @@ bool load(Graph &graph, const char *filename)
         } // is a graph
     } // for each graph
 
+    if (Logger::isEnabledFor(DEBUG))
+    {
+        std::ostringstream os;
+        os << "(we will now tick the graph)";
+        Logger::log(DEBUG, os);
+    }
     graph.tick();
+    if (Logger::isEnabledFor(DEBUG))
+    {
+        std::ostringstream os;
+        os << "(we will now loadbang the graph)";
+        Logger::log(DEBUG, os);
+    }
     graph.loadBang();
 
     if (Logger::isEnabledFor(INFO))
     {
         std::ostringstream os;
         os << "Loaded the graph from " << filename;
-        Logger::log(INFO, os.str().c_str());
+        Logger::log(INFO, os);
     }
     if (verbose)
     {
@@ -500,7 +556,9 @@ bool save_message(xmlNodePtr message_node, const Message &value)
         }
         catch (const BadAtomTypeException &e)
         {
-            std::cerr << e.what() << std::endl;
+            std::ostringstream os;
+            os << e.what() << std::endl;
+            Logger::log(ERROR, os);
         }
     } // for atoms
 }
@@ -538,7 +596,7 @@ bool save(sampler::Region &region, const char *filename)
     {
         std::ostringstream os;
         os << "Saved the region to " << filename;
-        Logger::log(INFO, os.str().c_str());
+        Logger::log(INFO, os);
     }
     // Free the document + global variables that may have been
     // allocated by the parser.
@@ -555,13 +613,14 @@ bool load(sampler::Region &region, const char *filename)
     {
         std::ostringstream os;
         os << "Serializer could not parse file " <<  filename;
-        Logger::log(ERROR, os.str().c_str());
+        Logger::log(ERROR, os);
         return false;
     }
+    if (Logger::isEnabledFor(INFO))
     {
         std::ostringstream os;
         os << "Loading project file " << filename;
-        Logger::log(INFO, os.str().c_str());
+        Logger::log(INFO, os);
     }
     xmlNode *root = xmlDocGetRootElement(doc);
 
@@ -578,10 +637,11 @@ bool load(sampler::Region &region, const char *filename)
         } // is a Region
     } // for each Region
 
+    if (Logger::isEnabledFor(INFO))
     {
         std::ostringstream os;
         os << "Loaded the Region from " << filename;
-        Logger::log(INFO, os.str().c_str());
+        Logger::log(INFO, os);
     }
     if (verbose)
     {
