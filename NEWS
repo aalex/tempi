@@ -20,6 +20,7 @@ Bugs fixed:
 * NOTICE log message were never displayed
 * decrease verbosity of counter
 * fix segfault when node type name not found in the serializer
+* fix exception thrown when wrong attribute type in tempi-launch
 
 
 Tempi 0.1.18 (2012-10-22)
