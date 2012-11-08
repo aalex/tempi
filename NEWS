@@ -13,6 +13,9 @@ New features:
 * add entity methods which return right away with a message
 * midi nodes can list devices as a method
 * base.flow.split node type
+* base.os.shell
+* base.edit.grapheditor
+* boolean printed as text "true" of "false"
 
 
 Bugs fixed:
