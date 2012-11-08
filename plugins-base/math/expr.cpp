@@ -147,6 +147,15 @@ bool javaScriptToMessage(v8::Local<v8::Value> value, Message &result)
     }
     else if (value->IsArray())
     {
+        // disabled for now:
+        {
+            std::ostringstream os;
+            os << __FUNCTION__ << ": Unsupported type: array.";
+            Logger::log(WARNING, os);
+        }
+        return false;
+        // the code below is not executed, but it's a work in progress
+
         v8::Array *array = v8::Array::Cast(*value);
         unsigned int length = array->Length();
         std::cout << __FUNCTION__ << ": array length : " << length << std::endl;
@@ -159,7 +168,7 @@ bool javaScriptToMessage(v8::Local<v8::Value> value, Message &result)
                 std::ostringstream os;
                 os << __FUNCTION__ << ": array element is NULL";
                 Logger::log(ERROR, os);
-                //return false;
+                return false;
             }
             std::cout << __FUNCTION__ << " element: " << *element << std::endl;
             if (element->IsNumber())
@@ -177,7 +186,7 @@ bool javaScriptToMessage(v8::Local<v8::Value> value, Message &result)
                 success = false;
                 {
                     std::ostringstream os;
-                    os << __FUNCTION__ << ": Unsupported type .\n";
+                    os << __FUNCTION__ << ": Unsupported type.";
                     Logger::log(WARNING, os);
                 }
             }
@@ -188,7 +197,7 @@ bool javaScriptToMessage(v8::Local<v8::Value> value, Message &result)
         success = false;
         {
             std::ostringstream os;
-            os << __FUNCTION__ << ": Unsupported type .\n";
+            os << __FUNCTION__ << ": Unsupported type.";
             Logger::log(WARNING, os);
         }
     }
