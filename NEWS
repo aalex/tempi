@@ -1,6 +1,32 @@
 Tempi release notes
 ===================
 
+Tempi 0.1.20 (2012-11-08)
+-------------------------
+This release is a developer snapshot in the 0.1 series.
+
+New features:
+
+* pass Pad* to its triggered signal
+* fix bug with initial count in counter node
+* allow to cast float to int for attributes
+* add entity methods which return right away with a message
+* midi nodes can list devices as a method
+* base.flow.split node type
+* base.os.shell
+* base.edit.grapheditor
+* boolean printed as text "true" of "false"
+
+
+Bugs fixed:
+
+* NOTICE log message were never displayed
+* decrease verbosity of counter
+* fix segfault when node type name not found in the serializer
+* fix exception thrown when wrong attribute type in tempi-launch
+* do not segfault - but fail - when return array from base.math.expr javascript scripts
+
+
 Tempi 0.1.18 (2012-10-22)
 -------------------------
 This release is a developer snapshot in the 0.1 series.

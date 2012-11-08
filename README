@@ -40,13 +40,13 @@ Authors who contributed to the base plugins for Tempi:
 
 Project URL
 -----------
-http://tempi.toonloop.com/
+http://code.sat.qc.ca/redmine/projects/tempi
 
 The source code is currently managed at http://code.sat.qc.ca/redmine/projects/tempi
 
 To clone::
 
-  git clone https://github.com/aalex/tempi.git
+  git clone git://code.sat.qc.ca/tempi.git
 
 
 Sponsors
@@ -67,6 +67,15 @@ Here is how to build and install it on Debian GNU/Linux or Ubuntu::
   sudo make install
   sudo ldconfig
 
+
+Here is how to build and install it on MAC OSX::
+
+  sudo port install gettext libtool automake autoconf-archive autoconf bison  log4ccp boost libxml2 portmidi liblo glib2-devel
+  ./autogen.sh
+  CPPFLAGS="-I/opt/local/include -L/opt/local/lib" ./configure
+  make
+  sudo make install
+  sudo ldconfig
 
 More about dataflow programming
 -------------------------------
@@ -112,4 +121,5 @@ Known bugs
 ----------
 
 * Favours Tempi plugins from /usr/local/lib/, rather than ./ if present.
+* [base.clutter.stage]: creates segmentation faults
 

@@ -29,10 +29,10 @@
 #include "tempi/namedobjectmap.h"
 #include "tempi/documented.h"
 #include "tempi/attribute.h"
-#include "tempi/nodesignal.h"
+#include "tempi/entitysignal.h"
+#include "tempi/entitymethod.h"
 
-namespace tempi
-{
+namespace tempi {
 
 // TODO: add methods
 /**
@@ -57,12 +57,12 @@ class Entity : public Documented
         /**
          * Retrieves a Signal.
          */
-        NodeSignal* getSignal(const char *name) const
+        EntitySignal* getSignal(const char *name) const
             throw(BadIndexException);
         /**
          * Retrieves a Method.
          */
-        NodeSignal* getMethod(const char *name) const
+        EntityMethod* getMethod(const char *name) const
             throw(BadIndexException);
         /**
          * Retrieves an Attribute.
@@ -141,17 +141,24 @@ class Entity : public Documented
         /**
          * Adds a signal to this Entity.
          */
-        void addSignal(NodeSignal::ptr signal)
+        void addSignal(EntitySignal::ptr signal)
             throw(BadIndexException);
         /**
          * Adds a method to this Entity.
          */
-        void addMethod(NodeSignal::ptr method)
+        void addMethod(EntityMethod::ptr method)
             throw(BadIndexException);
+
+        /**
+         * Calls a method of this entity.
+         */
+        bool callMethod(const char * method_name, const Message &arguments, Message & return_value)
+            throw(BadIndexException);
+
     private:
         NamedObjectMap<Attribute> attributes_;
-        NamedObjectMap<NodeSignal> signals_;
-        NamedObjectMap<NodeSignal> methods_;
+        NamedObjectMap<EntitySignal> signals_;
+        NamedObjectMap<EntityMethod> methods_;
 };
 
 } // end of namespace

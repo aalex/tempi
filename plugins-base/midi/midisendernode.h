@@ -55,6 +55,7 @@ class MidiSenderNode : public Node
         static const char * const EVENTS_INLET;
         static const char * const ENUMERATE_INLET;
         static const char * const PORT_ATTR;
+        static const char * const LIST_METHOD;
 };
 
 } // end of namespace

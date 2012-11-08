@@ -31,24 +31,32 @@
 
 namespace tempi {
 
+class Node;
+
 /**
  * A Pad is something that can be connected to something else.
  */
 class Pad : public Entity
 {
     public:
-        typedef boost::signals2::signal<void (const char *, const Message&)> TriggeredSignal;
+        /**
+         * First argument: the name of the pad?
+         */
+        typedef boost::signals2::signal<void (Pad *, const Message&)> TriggeredSignal;
         Pad(const char *name,
             const char *short_documentation,
             const char *long_documentation);
         // TODO: return bool
         void trigger(const Message &message);
         TriggeredSignal &getOnTriggeredSignal();
+        bool setOwner(Node *node);
+        Node * getOwner() const;
         // TODO:
         // void setAcceptedTypes(const std::vector<std::string> &types_tags);
         // std::vector<std::string> getAcceptedTypes() const;
     protected:
         TriggeredSignal on_triggered_signal_;
+        Node *owner_;
 };
 
 } // end of namespace

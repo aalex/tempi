@@ -20,6 +20,7 @@
 
 #include "plugins-base/3d/3dcomparenode.h"
 #include "plugins-base/baselibrary.h"
+#include "plugins-base/edit/grapheditornode.h"
 #include "plugins-base/flow/anynode.h"
 #include "plugins-base/flow/appendnode.h"
 #include "plugins-base/flow/appsinknode.h"
@@ -35,12 +36,14 @@
 #include "plugins-base/flow/prependnode.h"
 #include "plugins-base/flow/print_node.h"
 #include "plugins-base/flow/routenode.h"
+#include "plugins-base/flow/splitnode.h"
 #include "plugins-base/flow/triggernode.h"
 #include "plugins-base/flow/typenode.h"
 #include "plugins-base/flow/unpacknode.h"
 #include "plugins-base/spatosc/spatoscnode.h"
 #include "plugins-base/flow/spigotnode.h"
 #include "plugins-base/mapper/mapperinputnode.h"
+#include "plugins-base/math/expr.h"
 #include "plugins-base/math/onefloatmathnode.h"
 #include "plugins-base/math/twofloatmathnode.h"
 #include "plugins-base/math/booleanoperatornode.h"
@@ -50,6 +53,7 @@
 #include "plugins-base/midi/midisendernode.h"
 #include "plugins-base/music/musicnearestnode.h"
 #include "plugins-base/music/monodicnode.h"
+#include "plugins-base/os/shellnode.h"
 #include "plugins-base/osc/oscreceivernode.h"
 #include "plugins-base/osc/oscsendernode.h"
 #include "plugins-base/osc/oscprependnode.h"
@@ -82,6 +86,7 @@ void BaseLibrary::load(NodeFactory &factory, const char * /*prefix*/) const
     using utils::concatenate;
 
     static const char * const prefix = "base.";
+    factory.registerTypeT<GraphEditorNode>(concatenate(prefix, "edit.grapheditor").c_str());
     factory.registerTypeT<PrintNode>(concatenate(prefix, "flow.print").c_str());
     factory.registerTypeT<AppendNode>(concatenate(prefix, "flow.append").c_str());
     factory.registerTypeT<NopNode>(concatenate(prefix, "flow.nop").c_str());
@@ -95,6 +100,7 @@ void BaseLibrary::load(NodeFactory &factory, const char * /*prefix*/) const
     factory.registerTypeT<SpigotNode>(concatenate(prefix, "flow.spigot").c_str());
     factory.registerTypeT<PrependNode>(concatenate(prefix, "flow.prepend").c_str());
     factory.registerTypeT<RouteNode>(concatenate(prefix, "flow.route").c_str());
+    factory.registerTypeT<SplitNode>(concatenate(prefix, "flow.split").c_str());
     factory.registerTypeT<TriggerNode>(concatenate(prefix, "flow.trigger").c_str());
     factory.registerTypeT<TypeNode>(concatenate(prefix, "flow.type").c_str());
     factory.registerTypeT<UnpackNode>(concatenate(prefix, "flow.unpack").c_str());
@@ -106,6 +112,10 @@ void BaseLibrary::load(NodeFactory &factory, const char * /*prefix*/) const
     factory.registerTypeT<SpatoscNode>(concatenate(prefix, "osc.spatosc").c_str());
     factory.registerTypeT<Angle3dNode>(concatenate(prefix, "3d.angle").c_str());
 #endif // HAVE_SPATOSC
+
+#ifdef HAVE_V8
+    factory.registerTypeT<ExprNode>(concatenate(prefix, "math.expr").c_str());
+#endif // HAVE_V8
 
     factory.registerTypeT<AddNode>(concatenate(prefix, "math.+").c_str());
     factory.registerTypeT<DivNode>(concatenate(prefix, "math./").c_str());
@@ -133,6 +143,10 @@ void BaseLibrary::load(NodeFactory &factory, const char * /*prefix*/) const
 
     factory.registerTypeT<NearestNoteNode>(concatenate(prefix, "music.nearest.note").c_str());
     factory.registerTypeT<MonodicNode>(concatenate(prefix, "music.monodic").c_str());
+
+#ifdef HAVE_GLIB
+    factory.registerTypeT<ShellNode>(concatenate(prefix, "os.shell").c_str());
+#endif // HAVE_GLIB
 
 // TODO #ifdef HAVE_LIBLO
     factory.registerTypeT<OscReceiverNode>(concatenate(prefix, "osc.receive").c_str());

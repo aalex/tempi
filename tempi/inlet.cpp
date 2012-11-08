@@ -37,12 +37,12 @@ Inlet::~Inlet()
     this->disconnectAll();
 }
 
-void Inlet::onMessageReceivedFromSource(const char *outlet_name, const Message &message)
+void Inlet::onMessageReceivedFromSource(Pad *outlet, const Message &message)
 {
     if (Logger::isEnabledFor(DEBUG))
     {
         std::ostringstream os;
-        os << "Inlet::" << __FUNCTION__ << "(" << outlet_name << ", " << message << ")";
+        os << "Inlet::" << __FUNCTION__ << "(" << outlet->getName() << ", " << message << ")";
         Logger::log(DEBUG, os);
     }
     this->trigger(message);

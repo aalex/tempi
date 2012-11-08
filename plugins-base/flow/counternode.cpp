@@ -20,6 +20,7 @@
 
 #include "plugins-base/flow/counternode.h"
 #include "tempi/utils.h"
+#include "tempi/log.h"
 #include <iostream>
 
 namespace tempi {
@@ -38,6 +39,14 @@ CounterNode::CounterNode() :
     addAttribute(Attribute::ptr(new Attribute(PROP_INCREMENT, increment)));
     Message ini_count_attr = Message("i", 0);
     addAttribute(Attribute::ptr(new Attribute(PROP_INITIAL_COUNT, ini_count_attr, "Initial count value.")));
+
+    this->count_ = 0;
+
+    {
+        std::ostringstream os;
+        os << "CounterNode::" << __FUNCTION__ << "(): count_ = " << this->count_;
+        Logger::log(DEBUG, os);
+    }
 }
 
 void CounterNode::processMessage(const char *inlet, const Message &message)
@@ -47,6 +56,11 @@ void CounterNode::processMessage(const char *inlet, const Message &message)
     if (message.getTypes() == "")
     {
         int increment = getAttributeValue(PROP_INCREMENT).getInt(0);
+        {
+            std::ostringstream os;
+            os << "CounterNode::" << __FUNCTION__ << "(" << inlet << ", " << message << "): count_ = " << this->count_;
+            Logger::log(DEBUG, os);
+        }
         output("0", Message("i", count_));
         count_ += increment;
     }
@@ -68,6 +82,11 @@ bool CounterNode::onNodeAttributeChanged(const char *name, const Message &value)
     if (utils::stringsMatch(PROP_INITIAL_COUNT, name))
     {
         count_ = value.getInt(0);
+        {
+            std::ostringstream os;
+            os << "CounterNode::" << __FUNCTION__ << "(" << name << ", " << value << "): count_ = " << this->count_;
+            Logger::log(DEBUG, os);
+        }
     }
     return true;
 }

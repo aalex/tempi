@@ -20,9 +20,9 @@
 
 #include "tempi/entity.h"
 #include "tempi/log.h"
+#include "tempi/utils.h"
 
-namespace tempi
-{
+namespace tempi {
 
 Entity::Entity(
     const char *name,
@@ -39,13 +39,13 @@ Attribute* Entity::getAttribute(const char *name) const
     return attributes_.get(name).get();
 }
 
-NodeSignal* Entity::getSignal(const char *name) const
+EntitySignal* Entity::getSignal(const char *name) const
     throw(BadIndexException)
 {
     return signals_.get(name).get();
 }
 
-NodeSignal* Entity::getMethod(const char *name) const
+EntityMethod* Entity::getMethod(const char *name) const
     throw(BadIndexException)
 {
     return methods_.get(name).get();
@@ -71,6 +71,13 @@ void Entity::setAttributeValue(const char *name, const Message &value)
         }
         else
         {
+            // XXX Special case: cast i to f is OK.
+            if (value.getTypes() == "f" && current->getValue().getTypes() == "i")
+            {
+                Message tmp("i", (int) value.getFloat(0));
+                current->setValue(tmp);
+                return;
+            }
             std::ostringstream os;
             os << "Entity::" << __FUNCTION__ << ": Attribute " << name << ": Bad type " << value.getTypes() << " while expecting " << current->getValue().getTypes();
             throw (BadAtomTypeException(os.str().c_str()));
@@ -124,7 +131,7 @@ bool Entity::hasMethod(const char *name) const
     return methods_.has(name);
 }
 
-void Entity::addSignal(NodeSignal::ptr signal) // TODO: rename to newSignal?
+void Entity::addSignal(EntitySignal::ptr signal) // TODO: rename to newSignal?
     throw(BadIndexException)
 {
     if (signal.get() == 0)
@@ -135,7 +142,7 @@ void Entity::addSignal(NodeSignal::ptr signal) // TODO: rename to newSignal?
     // deletes the NamedObject* if name is already taken
 }
 
-void Entity::addMethod(NodeSignal::ptr method) // TODO: rename to newMethod?
+void Entity::addMethod(EntityMethod::ptr method) // TODO: rename to newMethod?
     throw(BadIndexException)
 {
     if (method.get() == 0)
@@ -154,6 +161,12 @@ std::vector<std::string> Entity::listSignals() const
 std::vector<std::string> Entity::listMethods() const
 {
     return methods_.listNames();
+}
+
+bool Entity::callMethod(const char *method_name, const Message &arguments, Message & return_value)
+    throw(BadIndexException)
+{
+    return methods_.get(method_name)->call(arguments, return_value);
 }
 
 } // end of namespace

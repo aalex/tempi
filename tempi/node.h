@@ -30,8 +30,8 @@
 #include "tempi/attribute.h"
 #include "tempi/exceptions.h"
 #include "tempi/inlet.h"
+#include "tempi/pad.h"
 #include "tempi/message.h"
-#include "tempi/nodesignal.h"
 #include "tempi/outlet.h"
 #include "tempi/sharedptr.h"
 #include "tempi/entity.h"
@@ -58,6 +58,7 @@ class Node : public Entity
         static const char * const ATTRIBUTES_SET_METHOD_SELECTOR;
         static const char * const ATTRIBUTES_SET_OUTPUT_PREFIX;
         static const char * const ATTRIBUTE_LOG;
+        static const char * const ATTRIBUTE_DATA;
         static const char * const ATTRIBUTE_POSITION;
         static const char * const INLET_CREATED_SIGNAL;
         static const char * const INLET_DELETED_SIGNAL;
@@ -208,7 +209,7 @@ class Node : public Entity
          */
         void output(const char *outlet, const Message &message) const throw(BadIndexException);
         // TODO: make private:
-        void onInletTriggered(const char *inlet_name, const Message &message);
+        void onInletTriggered(Pad *inlet, const Message &message);
         // TODO: make private:
         virtual void processMessage(const char *inlet, const Message &message) = 0;
         // TODO: make private:

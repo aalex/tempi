@@ -19,9 +19,9 @@
  */
 
 #include "plugins-base/midi/midireceivernode.h"
+#include "plugins-base/midi/mididevicelistermethod.h"
 #include "tempi/utils.h"
 #include "tempi/log.h"
-#include <iostream>
 
 namespace tempi {
 namespace plugins_base {
@@ -29,15 +29,19 @@ namespace plugins_base {
 const char * const MidiReceiverNode::EVENTS_OUTLET = "0";
 const char * const MidiReceiverNode::ENUMERATE_INLET = "enumerate";
 const char * const MidiReceiverNode::PORT_ATTR = "port";
+const char * const MidiReceiverNode::LIST_METHOD = "list";
 
 MidiReceiverNode::MidiReceiverNode() :
-    Node()
+    Node(),
+    did_print_unitialized_message_(false)
 {
     midi_input_ = new midi::Midi();
     this->setShortDocumentation("Receives MIDI messages from a single device.");
     this->addOutlet(EVENTS_OUTLET, "MIDI messages (unsigned characters) flow through this outlet.");
     this->addInlet(ENUMERATE_INLET, "Prints the list of devices when any message is sent to this inlet.");
     this->addAttribute(Attribute::ptr(new Attribute(PORT_ATTR, Message("i", midi_input_->get_default_input_device_id()), "portmidi device index.")));
+    this->addMethod(EntityMethod::ptr(new MidiDeviceListerMethod(LIST_METHOD, "Lists input MIDI devices.",
+        "Returns messages with pairs of int and string.", MidiDeviceListerMethod::SOURCE)));
 }
 
 MidiReceiverNode::~MidiReceiverNode()
@@ -64,11 +68,11 @@ bool MidiReceiverNode::onNodeAttributeChanged(const char *name, const Message &v
 
 bool MidiReceiverNode::open(unsigned int port)
 {
-    if (Logger::isEnabledFor(INFO))
+    if (Logger::isEnabledFor(NOTICE))
     {
         std::ostringstream os;
         os << "MidiReceiverNode: open port " << port;
-        Logger::log(INFO, os);
+        Logger::log(NOTICE, os);
     }
     port_ = port;
     // if (midi_input_ != 0)
@@ -86,10 +90,14 @@ void MidiReceiverNode::doTick()
 {
     if (! midi_input_->is_open(port_))
     {
-        std::ostringstream os;
-        os << "MidiReceiverNode::" << __FUNCTION__ <<
-            "(): MidiInput is not initialized. Please specifiy a port number." << std::endl;
-        Logger::log(WARNING, os);
+        if (! this->did_print_unitialized_message_)
+        {
+            std::ostringstream os;
+            os << "MidiReceiverNode::" << __FUNCTION__ <<
+                "(): MidiInput is not initialized. Please specifiy a port number.";
+            Logger::log(WARNING, os);
+            this->did_print_unitialized_message_ = true;
+        }
         return;
     }
 

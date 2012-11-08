@@ -12,6 +12,7 @@ LDADD = \
     $(BOOST_PROGRAM_OPTIONS_LIBS) \
     $(BOOST_LIBS) \
     $(CLUTTER_LIBS) \
+    $(BOOST_REGEX_LIBS) \
     $(GLIB_LIBS) \
     $(LIBLO_LIBS) \
     $(top_builddir)/tempi/libtempi-@TEMPI_API_VERSION@.la

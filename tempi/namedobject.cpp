@@ -19,15 +19,21 @@
  */
 
 #include "tempi/namedobject.h"
+#include "tempi/log.h"
+#include "tempi/namevalidator.h"
 
-namespace tempi
-{
+namespace tempi {
+
+const char * const NamedObject::DEFAULT_NAME = "default";
 
 NamedObject::NamedObject(
     const char *name
-    ) :
-    name_(std::string(name))
+    )
 {
+    static const std::string EMPTY;
+    name_ = DEFAULT_NAME;
+    if (EMPTY != name)
+        this->setName(name);
 }
 
 std::string NamedObject::getName() const
@@ -35,9 +41,18 @@ std::string NamedObject::getName() const
     return name_;
 }
 
-void NamedObject::setName(const char *name)
+bool NamedObject::setName(const char *name)
 {
-    name_ = std::string(name);
+    static NameValidator validator;
+    if (! validator.matches(name))
+    {
+        std::ostringstream os;
+        os << "NamedObject::" << __FUNCTION__ << ": Name \"" << name << "\" is not valid. Leave unchanged.";
+        Logger::log(ERROR, os);
+        return false;
+    }
+    this->name_ = name;
+    return true;
 }
 
 } // end of namespace

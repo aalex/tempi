@@ -4,10 +4,12 @@ LDADD = \
 	$(top_builddir)/tempi/libtempi-@TEMPI_API_VERSION@.la
 
 check_PROGRAMS = \
+    check_dynamicpatching \
     check_graph \
     check_message \
     check_libraries \
     check_log \
+    check_namevalidator \
     check_nodefactory \
     check_osc \
     check_properties \
@@ -20,10 +22,12 @@ check_PROGRAMS = \
 
 TESTS = $(check_PROGRAMS)
 
+check_dynamicpatching_SOURCES = check_dynamicpatching.cpp
 check_graph_SOURCES = check_graph.cpp
 check_message_SOURCES = check_message.cpp
 check_libraries_SOURCES = check_libraries.cpp
 check_log_SOURCES = check_log.cpp
+check_namevalidator_SOURCES = check_namevalidator.cpp
 check_nodefactory_SOURCES = check_nodefactory.cpp
 check_osc_SOURCES = check_osc.cpp
 check_properties_SOURCES = check_properties.cpp

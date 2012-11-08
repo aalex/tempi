@@ -2,11 +2,6 @@
 <tempi version="0.1.17">
   <graph>
     <node class="base.osc.receive" name="oscreceive0">
-      <attribute name="__position__">
-        <f>294</f>
-        <f>203</f>
-        <f>0</f>
-      </attribute>
       <attribute name="listening">
         <b>true</b>
       </attribute>
@@ -14,19 +9,23 @@
         <i>10000</i>
       </attribute>
     </node>
+    <node class="base.osc.route" name="oscroute0">
+      <attribute name="paths">
+          <s>/foo/bar</s>
+      </attribute>
+    </node>
     <node class="base.flow.print" name="print_osc">
-      <attribute name="__position__">
-        <f>144</f>
-        <f>510</f>
-        <f>0</f>
-      </attribute>
-      <attribute name="enabled">
-        <b>true</b>
-      </attribute>
       <attribute name="prefix">
         <s>osc: </s>
       </attribute>
     </node>
+    <node class="base.flow.print" name="print_foo_bar">
+      <attribute name="prefix">
+          <s>/foo/bar: </s>
+      </attribute>
+    </node>
     <connection from="oscreceive0" outlet="incoming" to="print_osc" inlet="0"/>
+    <connection from="oscreceive0" outlet="incoming" to="oscroute0" inlet="incoming"/>
+    <connection from="oscroute0" outlet="/foo/bar" to="print_foo_bar" inlet="0"/>
   </graph>
 </tempi>

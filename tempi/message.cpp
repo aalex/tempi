@@ -586,7 +586,7 @@ std::ostream &operator<<(std::ostream &os, const Message &message)
         switch (type)
         {
             case BOOLEAN:
-                os << message.getBoolean(i);
+                os << (message.getBoolean(i) ? "true" : "false");
                 break;
             case CHAR:
                 os << (unsigned int) message.getChar(i);

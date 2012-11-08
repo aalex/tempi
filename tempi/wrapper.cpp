@@ -117,8 +117,8 @@ bool Wrapper::setLogLevel(const std::string &level)
         if (Logger::isEnabledFor(INFO))
         {
             std::ostringstream os;
-            os << "Wrapper." << __FUNCTION__ <<
-                "Set log level to " << level;
+            os << "Wrapper." << __FUNCTION__ << "(" << level << "): "
+                "Set log level to " << new_level;
             Logger::log(INFO, os);
         }
     }
@@ -183,7 +183,7 @@ bool Wrapper::tick()
     else
     {
         std::ostringstream os;
-        os << "Wrapper" << __FUNCTION__ << ": " <<
+        os << "Wrapper" << __FUNCTION__ << "(): " <<
             "Do not call tick if using a synchronous is false.";
         tempi::Logger::log(ERROR, os);
         return false;
@@ -470,6 +470,28 @@ bool Wrapper::getNodeAttributeValue(
     }
 }
 
+bool Wrapper::callNodeMethod(
+    const std::string &graph,
+    const std::string &node,
+    const std::string &method,
+    const Message &arguments,
+    Message &return_value)
+{
+    try
+    {
+        bool success = this->scheduler_->getGraph(graph.c_str())->
+            getNode(node.c_str())->callMethod(method.c_str(), arguments, return_value);
+        return success;
+    }
+    catch (const BaseException &e)
+    {
+        std::ostringstream os;
+        os << "Wrapper." << __FUNCTION__ << ": " << e.what();
+        Logger::log(ERROR, os);
+        return false;
+    }
+}
+
 bool Wrapper::getNodeAttributeDocumentation(
     const std::string &graph,
     const std::string &node,
@@ -587,8 +609,18 @@ std::vector<std::string> Wrapper::listNodes(const std::string &graph)
     }
 }
 
+bool Wrapper::nodeHasAttribute(const std::string &graph, const std::string &nodeName, const std::string &attributeName)
+{
+    if (! this->hasGraph(graph))
+        return false;
+    if (! this->scheduler_->getGraph(graph.c_str())->hasNode(nodeName.c_str()))
+        return false;
+    return this->scheduler_->getGraph(graph.c_str())->getNode(nodeName.c_str())->hasAttribute(attributeName.c_str());
+}
+
 bool Wrapper::getNode(const std::string &graph, const std::string &nodeName, Node::ptr &result)
 {
+    // FIXME: this might segfault!
     if (this->scheduler_->getGraph(graph.c_str())->hasNode(nodeName.c_str()))
     {
         result = this->scheduler_->getGraph(graph.c_str())->getNode(nodeName.c_str());

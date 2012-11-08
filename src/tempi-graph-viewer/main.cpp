@@ -32,6 +32,10 @@ int main(int argc, char *argv[])
 }
 #else //HAVE_CLUTTER
 
+#ifndef CLUTTER_EVENT_STOP 
+#define CLUTTER_EVENT_STOP (TRUE)
+#endif // CLUTTER_EVENT_STOP
+
 #include "miller-macros.h"
 #include "miller-command.h"
 #include "miller-draw.h"

@@ -45,6 +45,7 @@ class MidiReceiverNode : public Node
         virtual bool onNodeAttributeChanged(const char *name, const Message &value);
         virtual void onInit();
     private:
+        bool did_print_unitialized_message_;
         midi::Midi *midi_input_;
         int port_;
         /**
@@ -54,6 +55,7 @@ class MidiReceiverNode : public Node
         static const char * const EVENTS_OUTLET;
         static const char * const PORT_ATTR;
         static const char * const ENUMERATE_INLET;
+        static const char * const LIST_METHOD;
 };
 
 } // end of namespace

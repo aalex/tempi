@@ -15,6 +15,7 @@ AM_CXXFLAGS = \
 
 AM_LIBS = \
     $(BOOST_LIBS)  \
+    $(BOOST_REGEX_LIBS)  \
     $(BOOST_SYSTEM_LIBS) \
     $(BOOST_FILESYSTEM_LIBS) \
     $(BOOST_THREAD_LIBS) \
@@ -47,7 +48,10 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     attribute.cpp \
     documented.cpp \
     dict.cpp \
+	dynamicpatching.cpp \
     entity.cpp \
+    entitymethod.cpp \
+    entitysignal.cpp \
     graph.cpp \
     inlet.cpp \
     internals.cpp \
@@ -58,9 +62,9 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     midi_scheduler.cpp \
     nameallocator.cpp \
     namedobject.cpp \
+    namevalidator.cpp \
     node.cpp \
     nodefactory.cpp \
-    nodesignal.cpp \
     oscreceiver.cpp \
     oscsender.cpp \
     outlet.cpp \
@@ -92,8 +96,11 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     attribute.h \
     concurrentqueue.h \
     dict.h \
+	dynamicpatching.h \
     documented.h \
     entity.h \
+    entitymethod.h \
+    entitysignal.h \
     exceptions.h \
     graph.h \
     oscreceiver.h \
@@ -110,9 +117,9 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     nameallocator.h \
     namedobject.h \
     namedobjectmap.h \
+    namevalidator.h \
     node.h \
     nodefactory.h \
-    nodesignal.h \
     nodetype.h \
     outlet.h \
     pad.h \

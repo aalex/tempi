@@ -14,7 +14,7 @@
 # - increase tempi_interface_version to the next odd number
 m4_define([tempi_major_version], [0])
 m4_define([tempi_minor_version], [1])
-m4_define([tempi_micro_version], [18])
+m4_define([tempi_micro_version], [20])
 
 m4_define([tempi_release_status],
           [m4_if(m4_eval(tempi_micro_version % 2), [1], [git],
@@ -50,9 +50,9 @@ m4_define([tempi_binary_age], [m4_eval(100 * tempi_minor_version + tempi_micro_v
 AC_PREREQ([2.63])
 AC_INIT([tempi],
         [tempi_version],
-        [http://github.com/aalex/tempi/issues],
+        [http://code.sat.qc.cq/redmine/projects/tempi/issues],
         [tempi],
-        [http://tempi.toonloop.com])
+        [http://code.sat.qc.ca/tempi])
 AC_RUN_IFELSE([AC_LANG_PROGRAM([[ ]], [[ ]])],
     [AC_MSG_RESULT(yes)], [AC_MSG_RESULT(no)], [AC_MSG_RESULT(can not test)])
 AC_CONFIG_MACRO_DIR([m4])
@@ -94,6 +94,34 @@ if test -z "$DOXYGEN";
 fi
 AM_CONDITIONAL([HAVE_DOXYGEN], [test -n "$DOXYGEN"])
 
+# Special cases, copied from SPIN
+case "$host" in *-darwin* | *-macos10*)
+  #AC_LANG_DEFINES_PROVIDED # remove autogen.sh warnings on OSX
+  AM_CONDITIONAL([HAVE_OSX], true)
+  AC_DEFINE(HAVE_OSX,[1],[Apple Mac OS X operating system detected])
+  LIBTOOL="glibtool"
+  SRCDIR=`pwd`
+  #LIBTOOL="libtool"
+  CPPFLAGS="$CPPFLAGS -D__Darwin"
+  LDFLAGS="-undefined dynamic_lookup -Wl,-headerpad_max_install_names"
+  if test -d /opt/local ; then
+    CPPFLAGS="$CPPFLAGS -I/usr/local/include -I/opt/local/include"
+    LDFLAGS="$LDFLAGS -L/usr/local/lib -L/opt/local/lib"
+  elif test -d /sw ; then
+    CPPFLAGS="$CPPFLAGS -I/sw/include"
+    LDFLAGS="$LDFLAGS -L/sw/lib"
+  fi
+  # OSX does not include /usr/local/lib/pkgconfig path, so we export it here
+  # (for everyone, just in case)
+  # TODO: also need to add the path for linux64
+  #PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH:$SRCDIR/pkgconfig/osx
+  #export PKG_CONFIG_PATH
+  ;;
+*)
+  AM_CONDITIONAL([HAVE_OSX], false)
+  ;;
+esac
+
 # Checks for typedefs, structures, and compiler characteristics.
 AC_HEADER_STDBOOL
 AC_C_INLINE
@@ -106,6 +134,35 @@ AC_CHECK_LIB([m],[sqrt])
 # Checks for header files.
 AC_CHECK_HEADERS([arpa/inet.h stddef.h stdlib.h string.h sys/time.h])
 
+AC_CHECK_LIB([v8],[sqrt], have_v8=true, have_v8=false)
+if test "x${have_v8}" = "xfalse" ; then
+    AC_MSG_WARN([missing v8 library, install libv8-dev])
+else
+    V8_CFLAGS=""
+    AC_SUBST([V8_CFLAGS], "$V8_CFLAGS")
+    V8_LIBS="-lv8"
+    AC_SUBST([V8_LIBS], "$V8_LIBS")
+    AC_DEFINE(HAVE_V8,[1],[v8 headers successfully detected])
+fi
+
+
+dnl # v8
+dnl AC_CHECK_HEADERS([v8.h], have_v8_headers=true, have_v8_headers=false,
+dnl [#ifdef HAVE_V8_H
+dnl # include <v8.h>
+dnl #endif
+dnl ])
+dnl if test "x${have_v8_headers}" = "xfalse" ; then
+dnl     AC_MSG_WARN([missing package: libv8-dev])
+dnl else
+dnl     V8_CFLAGS=""
+dnl     AC_SUBST([V8_CFLAGS], "$V8_CFLAGS")
+dnl     V8_LIBS="-lv8"
+dnl     AC_SUBST([V8_LIBS], "$V8_LIBS")
+dnl     AC_DEFINE(HAVE_V8,[1],[v8 headers successfully detected])
+dnl fi
+
+
 # portmidi
 AC_CHECK_HEADERS([portmidi.h porttime.h], have_portmidi_headers=true, have_portmidi_headers=false)
 if test "x${have_portmidi_headers}" = "xfalse" ; then
@@ -115,21 +172,30 @@ AC_CHECK_LIB([portmidi],[Pm_Initialize], have_portmidi=true, have_portmidi=false
 if test "x${have_portmidi}" = "xfalse" ; then
     AC_MSG_ERROR([missing portmidi library, install libportmidi-dev])
 fi
-AC_CHECK_LIB([porttime],[Pt_Time], have_porttime=true, have_porttime=false)
-if test "x${have_porttime}" = "xfalse" ; then
-    AC_MSG_ERROR([missing porttime library, install libportmidi-dev])
-fi
-PORTMIDI_CFLAGS="-DPMALSA"
-AC_SUBST([PORTMIDI_CFLAGS], "$PORTMIDI_CFLAGS")
-PORTMIDI_LIBS="-lportmidi -lporttime -lpthread -lm"
-AC_SUBST([PORTMIDI_LIBS], "$PORTMIDI_LIBS")
 
+dnl PORTTIME: commented out since it doesn't work on Mac OS X
+dnl since the mac port package is missing the binary for it.
+
+dnl AC_CHECK_LIB([porttime],[Pt_Time], have_porttime=true, have_porttime=false)
+dnl if test "x${have_porttime}" = "xfalse" ; then
+dnl     AC_MSG_ERROR([missing porttime library, install libportmidi-dev])
+dnl fi
+
+if test "x${HAVE_OSX}" = "x1" ; then
+  PORTMIDI_CFLAGS=""
+else
+  PORTMIDI_CFLAGS="-DPMALSA"
+fi
+AC_SUBST([PORTMIDI_CFLAGS], "$PORTMIDI_CFLAGS")
+PORTMIDI_LIBS="-lportmidi -lm"
+dnl -lporttime -lpthread 
+AC_SUBST([PORTMIDI_LIBS], "$PORTMIDI_LIBS")
 
 # Checks for library functions.
 AC_FUNC_ERROR_AT_LINE
 AC_CHECK_FUNCS([gettimeofday memmove mkdir setenv sqrt strchr strpbrk uname])
 
-AX_PTHREAD
+dnl AX_PTHREAD
 
 # Glib
 PKG_CHECK_MODULES([GLIB], [glib-2.0 gthread-2.0], have_glib=true, have_glib=false)

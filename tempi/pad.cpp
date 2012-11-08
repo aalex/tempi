@@ -30,12 +30,22 @@ Pad::Pad(const char *name, const char *short_documentation, const char *long_doc
 
 void Pad::trigger(const Message &message)
 {
-    on_triggered_signal_(this->getName().c_str(), message);
+    on_triggered_signal_(dynamic_cast<Pad *>(this), message);
 }
 
 Pad::TriggeredSignal &Pad::getOnTriggeredSignal()
 {
     return on_triggered_signal_;
+}
+
+bool Pad::setOwner(Node *node)
+{
+    this->owner_ = node;
+}
+
+Node * Pad::getOwner() const
+{
+    return this->owner_;
 }
 
 } // end of namespace

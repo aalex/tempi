@@ -43,24 +43,26 @@ const char * const Node::OUTLET_DELETED_SIGNAL = "__delete_outlet__";
 const char * const Node::INLET_CALL = "__call__";
 const char * const Node::OUTLET_RETURN = "__return__";
 const char * const Node::ATTRIBUTE_POSITION = "__position__";
+const char * const Node::ATTRIBUTE_DATA = "__data__";
 
 Node::Node()
 {
     load_banged_ = false;
     // XXX: Add Signals BEFORE adding inlets/outlets!
-    addSignal(NodeSignal::ptr(new NodeSignal(OUTLET_DELETED_SIGNAL,
+    addSignal(EntitySignal::ptr(new EntitySignal(OUTLET_DELETED_SIGNAL,
         "Triggered when an outlet is deleted. Arguments are: the name of this node, the name of the outlet.", "TODO", "ss")));
-    addSignal(NodeSignal::ptr(new NodeSignal(INLET_DELETED_SIGNAL,
+    addSignal(EntitySignal::ptr(new EntitySignal(INLET_DELETED_SIGNAL,
         "Triggered when an inlet is deleted. Arguments are: the name of this node, the name of the inlet.", "TODO", "ss")));
-    addSignal(NodeSignal::ptr(new NodeSignal(OUTLET_CREATED_SIGNAL,
+    addSignal(EntitySignal::ptr(new EntitySignal(OUTLET_CREATED_SIGNAL,
         "Triggered when an outlet is created. Arguments are: the name of this node, the name of the outlet.", "TODO", "ss")));
-    addSignal(NodeSignal::ptr(new NodeSignal(INLET_CREATED_SIGNAL,
+    addSignal(EntitySignal::ptr(new EntitySignal(INLET_CREATED_SIGNAL,
         "Triggered when an inlet is created. Arguments are: the name of this node, the name of the inlet.", "TODO", "ss")));
     addInlet(ATTRIBUTES_INLET, "Set attribute value with (s:\"set\", s:<name>, ...) and list them via the __attr__ outlet with the (s:\"list\") message. Get attribute value with (s:\"get\", s:<name>)"); // all nodes have at least one inlet for attributes
     addOutlet(ATTRIBUTES_OUTLET, "Outputs value of each attribute, prefixed by their respective name, and also the list of all attributes name, prefixed with s:\"__list__\"."); // all nodes have at least one outlet for attributes
     addOutlet(OUTLET_RETURN, "Outputs return value for every method called, prefixed by the name of the method called.");
     addInlet(INLET_CALL, "Inlet to call methods of this node. Their return value should be output by the __return__ outlet, prefixed by the name of the method called.");
     addAttribute(Attribute::ptr(new Attribute(ATTRIBUTE_POSITION, Message("fff", 0.0f, 0.0f, 0.0f), "Position of the node, in an hypothetical GUI.")));
+    addAttribute(Attribute::ptr(new Attribute(ATTRIBUTE_DATA, Message("s", ""), "Attribute in which developers can store anything.")));
 }
 
 bool Node::isInitiated() const
@@ -73,7 +75,7 @@ bool Node::init()
     if (Logger::isEnabledFor(DEBUG))
     {
         std::ostringstream os;
-        os << "Node.init(): " << getName();
+        os << "Node(" << getName() << ").init()";
         Logger::log(DEBUG, os.str().c_str());
     }
     if (isInitiated())
@@ -91,7 +93,7 @@ void Node::loadBang()
     if (Logger::isEnabledFor(DEBUG))
     {
         std::ostringstream os;
-        os << "Node.loadBang: " << getName();
+        os << "Node(" << getName() << ").loadBang()";
         Logger::log(DEBUG, os.str().c_str());
     }
     if (! load_banged_)
@@ -104,7 +106,7 @@ void Node::loadBang()
         if (Logger::isEnabledFor(DEBUG))
         {
             std::ostringstream os;
-            os << "Node.loadBang: had already been loadBanged: " << getName();
+            os << "Node(" << getName() << ").loadBang: had already been loadBanged";
             Logger::log(DEBUG, os.str().c_str());
         }
     }
@@ -138,13 +140,15 @@ bool Node::onAttributeChanged(const char *name, const Message &value)
     return ok;
 }
 
-void Node::onInletTriggered(const char *inlet_name, const Message &message)
+void Node::onInletTriggered(Pad *inlet, const Message &message)
 {
+    std::string inlet_name = inlet->getName();
+
     static const std::string attr_inlet_name(ATTRIBUTES_INLET);
     if (Logger::isEnabledFor(DEBUG))
     {
         std::ostringstream os;
-        os << "Node." << __FUNCTION__ << "(" << inlet_name << ", " << message << ")";
+        os << "Node(" << getName() << ")." << __FUNCTION__ << "(" << inlet_name << ", " << message << ")";
         Logger::log(DEBUG, os);
     }
     if (attr_inlet_name == inlet_name)
@@ -172,7 +176,7 @@ void Node::onInletTriggered(const char *inlet_name, const Message &message)
                 else
                 {
                     std::ostringstream os;
-                    os << "Node." << __FUNCTION__ <<
+                    os << "Node(" << getName() << ")" << __FUNCTION__ <<
                         ": Wrong arguments for message " <<
                         message << " in inlet " << ATTRIBUTES_INLET;
                     Logger::log(ERROR, os);
@@ -198,7 +202,7 @@ void Node::onInletTriggered(const char *inlet_name, const Message &message)
                         else
                         {
                             std::ostringstream os;
-                            os << "Node." << __FUNCTION__ << ": " <<
+                            os << "Node(" << getName() << ")." << __FUNCTION__ << ": " <<
                                 attr_name <<
                                 " is not mutable! Cannot change it via messages.";
                             Logger::log(ERROR, os);
@@ -207,16 +211,21 @@ void Node::onInletTriggered(const char *inlet_name, const Message &message)
                     }
                     catch (const BadIndexException &e)
                     {
-                        std::cerr << "Node " << getTypeName() << " \"" <<
+
+                        std::ostringstream os;
+                        os << "Node " << getTypeName() << " \"" <<
                             getName() << "\":" << __FUNCTION__ << ": " <<
                             message << " " << e.what();
+                        Logger::log(ERROR, os);
                         return;
                     }
                     catch (const BadAtomTypeException &e)
                     {
-                        std::cerr << "Node " << getTypeName() << " \"" <<
+                        std::ostringstream os;
+                        os << "Node " << getTypeName() << " \"" <<
                             getName() << "\":" << __FUNCTION__ << ": " <<
                             message << " " << e.what();
+                        Logger::log(ERROR, os);
                         return;
                     }
                 }
@@ -252,7 +261,8 @@ void Node::onInletTriggered(const char *inlet_name, const Message &message)
         else
         {
             std::ostringstream os;
-            os << "Node." << __FUNCTION__ << ": Cannot handle message " << message << " in inlet " << ATTRIBUTES_INLET;
+            os << "Node." << __FUNCTION__ << ": Cannot handle message " << message <<
+                " in inlet " << ATTRIBUTES_INLET;
             Logger::log(ERROR, os);
         }
         return;
@@ -262,15 +272,50 @@ void Node::onInletTriggered(const char *inlet_name, const Message &message)
     {
         if (message.indexMatchesType(0, STRING))
         {
-            if (this->hasMethod(message.getString(0).c_str()))
+            std::string method_name = message.getString(0);
+            if (this->hasMethod(method_name.c_str()))
             {
-                this->getMethod(message.getString(0).c_str())->
-                    trigger(message.cloneRange(1, message.getSize()));
-                return;
+                Message return_value;
+                Message arguments = message.cloneRange(1, message.getSize());
+                if (Logger::isEnabledFor(INFO))
+                {
+                    std::ostringstream os;
+                    os << "Node::" << __FUNCTION__ << ": call method " << method_name <<
+                        " with arguments " << arguments << " on node " << this->getName();
+                    Logger::log(INFO, os);
+                }
+                bool called_ok = this->callMethod(method_name.c_str(), arguments, return_value);
+                if (called_ok)
+                {
+                    return_value.prependString(method_name.c_str());
+                    output(OUTLET_RETURN, return_value);
+                }
+                else
+                {
+                    std::ostringstream os;
+                    os << "Node::" << __FUNCTION__ << ": error calling method " << method_name <<
+                        " with arguments " << arguments << " on node " << this->getName();
+                    Logger::log(ERROR, os);
+                }
+            }
+            else
+            {
+                std::ostringstream os;
+                os << "Node." << __FUNCTION__ << ": Cannot handle message " << message <<
+                    " in inlet " << inlet_name << " since 0th arg must be a string.";
+                Logger::log(ERROR, os);
             }
         }
+        else
+        {
+            std::ostringstream os;
+            os << "Node." << __FUNCTION__ << ": Cannot handle message " << message <<
+                " in inlet " << inlet_name << " since 0th arg must be a string.";
+            Logger::log(ERROR, os);
+        }
+        return;
     }
-    processMessage(inlet_name, message);
+    processMessage(inlet_name.c_str(), message);
 }
 
 std::map<std::string, Inlet::ptr> Node::getInlets()
@@ -302,7 +347,7 @@ bool Node::addOutlet(Outlet::ptr outlet)
     {
         {
             std::ostringstream os;
-            os << "Node.addOutlet: (" << getName() << "): " << outlet->getName();
+            os << "Node(" << getName() << ").addOutlet(" << outlet->getName() << ")";
             Logger::log(DEBUG, os.str().c_str());
         }
         outlets_[outlet->getName()] = outlet;
@@ -316,6 +361,7 @@ bool Node::addOutlet(Outlet::ptr outlet)
             std::cerr << "In Node::" << __FUNCTION__ << ": already got such and outlet: " << std::endl;
             std::cerr << e.what() << std::endl;
         }
+        outlet->setOwner(this);
         return true;
     }
     return false;
@@ -328,10 +374,11 @@ bool Node::addInlet(Inlet::ptr inlet)
         inlets_[inlet->getName()] = inlet;
         {
             std::ostringstream os;
-            os << "Node.addInlet: (" << getName() << "): " << inlet->getName();
+            os << "Node(" << getName() << ").addInlet: (" << inlet->getName() << ")";
             Logger::log(DEBUG, os.str().c_str());
         }
-        inlet.get()->getOnTriggeredSignal().connect(boost::bind(&Node::onInletTriggered, this, _1, _2));
+        inlet->setOwner(this);
+        inlet->getOnTriggeredSignal().connect(boost::bind(&Node::onInletTriggered, this, _1, _2));
         try
         {
             getSignal(INLET_CREATED_SIGNAL)->trigger(
@@ -456,15 +503,21 @@ bool Node::message(const char *inlet, const Message &message)
 {
     if (inlet == 0)
     {
-        std::cerr << "Error: Called " << __FUNCTION__ << "() with null-string inlet on node of type " << getTypeName() << ": " << message << std::endl;
+        std::ostringstream os;
+        os << "Node(\"" << this->getName() << "\")::"  << __FUNCTION__ << "(" << inlet << ", " << message << ")";
+        os << " null-string inlet name on node of type " << this->getTypeName();
+        Logger::log(ERROR, os);
         return false;
     }
-    if (isInitiated())
+    if (this->isInitiated())
     {
         Inlet *inletPtr = getInlet(inlet);
         if (inletPtr == 0)
         {
-            std::cerr << "Error: Node::message(): Node of type " << getTypeName() << " has no inlet named " << inlet << "!!" << std::endl;
+            std::ostringstream os;
+            os << "Node(\"" << this->getName() << "\")::"  << __FUNCTION__ << "(" << inlet << ", " << message << ")";
+            os << " invalid inlet named \"" << inlet << "\" on node of type " << this->getTypeName();
+            Logger::log(ERROR, os);
             return false;
         }
         inletPtr->trigger(message);
@@ -472,7 +525,10 @@ bool Node::message(const char *inlet, const Message &message)
     }
     else
     {
-        std::cerr << "Warning: Called " << __FUNCTION__ << "() on null-string Node of type " << getTypeName() << " in inlet " << inlet << ": " << message << std::endl;
+        std::ostringstream os;
+        os << "Node(\"" << this->getName() << "\")::"  << __FUNCTION__ << "(" << inlet << ", " << message << ")";
+        os << ": Node is not yet initiated.";
+        Logger::log(ERROR, os);
         return false;
     }
 }
