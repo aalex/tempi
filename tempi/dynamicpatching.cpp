@@ -19,6 +19,7 @@
  */
 
 #include "tempi/dynamicpatching.h"
+#include "tempi/log.h"
 #include "tempi/graph.h"
 #include "tempi/node.h"
 #include "tempi/utils.h"
@@ -140,10 +141,18 @@ bool split_path(const char *path, std::vector<std::string> &result)
  * - /graph0/metro0/interval set [i:1000]
  * - /graph0 save [s:filename]
  */
-bool handle_message(Scheduler &scheduler, const Message &message)
+bool handle_scheduler_message(Scheduler &scheduler, const Message &message)
 {
     std::vector<std::string> path;
     std::string types = message.getTypes();
+
+    if (Logger::isEnabledFor(INFO))
+    {
+        std::ostringstream os;
+        os << __FUNCTION__ << ": " << message;
+        Logger::log(INFO, os);
+    }
+
     if (! utils::stringBeginsWith(types.c_str(), "s"))
     {
         std::ostringstream os;
@@ -161,11 +170,11 @@ bool handle_message(Scheduler &scheduler, const Message &message)
     if (scheduler.hasGraph(graph_name.c_str()))
     {
         std::vector<std::string> new_path;
-        std::copy(path.begin() + graph_name_index, path.end(), new_path);
-        Message new_message = message.cloneRange(graph_name_index, message.size());
+        std::copy(path.begin() + graph_name_index, path.end(), new_path.begin());
+        Message new_message = message.cloneRange(graph_name_index, message.getSize());
 
-        Graph::ptr graph = scheduler.getGraph();
-        return handle_message(*graph.get(), new_path, new_message);
+        Graph::ptr graph = scheduler.getGraph(graph_name.c_str());
+        return handle_graph_message(*graph.get(), new_path, new_message);
     }
     else
     {
@@ -177,16 +186,125 @@ bool handle_message(Scheduler &scheduler, const Message &message)
     return false;
 }
 
-bool handle_message(Graph &graph, const std::vector<std::string> &path, const Message &message)
+bool handle_graph_message(Graph &graph, const std::vector<std::string> &path, const Message &message)
 {
-    if (path.size() == 0)
+    if (Logger::isEnabledFor(INFO))
     {
+        std::ostringstream os;
+        os << __FUNCTION__ << ": ";
+        std::vector<std::string>::const_iterator iter;
+        for (iter = path.begin(); iter != path.end(); iter++)
+            os << (*iter) << " / ";
+        os << message;
+        Logger::log(INFO, os);
     }
-    return false;
+
+    if (path.size() >= 1)
+    {
+        if (graph.hasNode(path[0].c_str()))
+        {
+            Node::ptr node = graph.getNode(path[0].c_str());
+            std::vector<std::string> new_path;
+            std::copy(path.begin() + 1, path.end(), new_path.begin());
+            return handle_node_message(*node.get(), new_path, message);
+        }
+        else
+        {
+            std::ostringstream os;
+            os << __FUNCTION__ << ": No node named " << path[0];
+            Logger::log(ERROR, os);
+            return false;
+        }
+    }
+
+    std::string types = message.getTypes();
+    if (utils::stringsMatch(types.c_str(), "sssss")
+        && (message.getString(0) == "connect" || message.getString(0) == "disconnect"))
+    {
+        bool connect = message.getString(0) == "connect";
+        std::string from = message.getString(1);
+        std::string outlet = message.getString(2);
+        std::string to = message.getString(3);
+        std::string inlet = message.getString(4);
+        std::string string0 = message.getString(0);
+        if (connect)
+            return graph.connect(from.c_str(), outlet.c_str(),
+                to.c_str(), inlet.c_str());
+        else
+            return graph.disconnect(from.c_str(), outlet.c_str(),
+                to.c_str(), inlet.c_str());
+    }
+    if (utils::stringsMatch(types.c_str(), "sss")
+        && message.getString(0) == "addNode")
+    {
+        std::string type = message.getString(1);
+        std::string name = message.getString(2);
+        bool ok = graph.addNode(type.c_str(), name.c_str());
+        if (ok)
+        {
+            if (Logger::isEnabledFor(DEBUG))
+            {
+                std::ostringstream os;
+                os << "did create node " << name << std::endl;
+                Logger::log(DEBUG, os);
+            }
+        }
+        return ok;
+    }
+    if (utils::stringsMatch(types.c_str(), "ss")
+        && message.getString(0) == "deleteNode")
+    {
+        std::string name = message.getString(1);
+        return graph.deleteNode(name.c_str());
+    }
+    return false; // unhandled
 }
 
-bool handle_message(Node &node, const std::vector<std::string> &path, const Message &message)
+bool handle_node_message(Node &node, const std::vector<std::string> &path, const Message &message)
 {
+    std::string attributeName;
+    Message value;
+    bool method_is_setAttribute = false;
+    std::string types = message.getTypes();
+    if (path.size() == 1) // attribute name is here
+    {
+        attributeName = path[0];
+        value = message;
+        method_is_setAttribute = true;
+    }
+    else if (utils::stringBeginsWith(types.c_str(), "ss")
+        && message.getString(0) == "setAttribute")
+    {
+        attributeName = message.getString(1);
+        value = message.cloneRange(2, message.getSize() - 1);
+        method_is_setAttribute = true;
+    }
+    if (method_is_setAttribute)
+    {
+        try
+        {
+            node.setAttributeValue(attributeName.c_str(), value);
+            return true;
+        }
+        catch (const BadAtomTypeException &e)
+        {
+            std::ostringstream os;
+            os << __FUNCTION__ << ": " << e.what();
+            Logger::log(ERROR, os);
+        }
+        catch (const BadIndexException &e)
+        {
+            std::ostringstream os;
+            os << __FUNCTION__ << ": " << e.what();
+            Logger::log(ERROR, os);
+        }
+    }
+    else
+    {
+        std::ostringstream os;
+        os << __FUNCTION__ << ": No handler for " << message;
+        Logger::log(ERROR, os);
+    }
     return false;
 }
 

@@ -28,14 +28,15 @@
 #include "tempi/graph.h"
 #include "tempi/message.h"
 #include "tempi/scheduler.h"
-#include "tempi/log.h"
 #include <vector>
 #include <string>
 
 namespace tempi {
 namespace dynamic {
 
-bool handle_message(Scheduler &scheduler, const Message &message);
+bool handle_scheduler_message(Scheduler &scheduler, const Message &message);
+bool handle_graph_message(Graph &graph, const std::vector<std::string> &path, const Message &message);
+bool handle_node_message(Node &node, const std::vector<std::string> &path, const Message &message);
 bool split_path(const char *path, std::vector<std::string> &result);
 
 } // end of namespace
