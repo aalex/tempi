@@ -117,8 +117,8 @@ bool Wrapper::setLogLevel(const std::string &level)
         if (Logger::isEnabledFor(INFO))
         {
             std::ostringstream os;
-            os << "Wrapper." << __FUNCTION__ << "(" << level << "): "
-                "Set log level to " << new_level;
+            os << "Wrapper." << __FUNCTION__ << ": " <<
+                "Set log level to " << level << "(" << new_level << ")";
             Logger::log(INFO, os);
         }
     }
