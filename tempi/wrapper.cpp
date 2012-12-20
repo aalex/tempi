@@ -630,6 +630,11 @@ bool Wrapper::getNode(const std::string &graph, const std::string &nodeName, Nod
         return false;
 }
 
+bool Wrapper::sleep(double duration_ms)
+{
+    boost::posix_time::milliseconds sleepTime(duration_ms);
+    boost::this_thread::sleep(sleepTime);
+}
 
 } // end of namespace
 

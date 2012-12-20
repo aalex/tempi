@@ -167,6 +167,7 @@ class Wrapper
             const Message &arguments,
             Message &return_value);
 
+        bool sleep(double duration_ms);
     private:
         bool synchronous_;
         Scheduler *scheduler_;
