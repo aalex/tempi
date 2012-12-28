@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tempi version="0.1.9">
+  <graph>
+    <node name="loadmess0" class="base.flow.loadmess">
+      <attribute name="value"><s>hello</s><i>2</i><f>3.14159</f></attribute>
+    </node>
+    <node name="split0" class="base.flow.split">
+      <attribute name="n"><i>2</i></attribute>
+    </node>
+    <node name="print_n_first" class="base.flow.print">
+      <attribute name="prefix">
+        <s>first_n: </s>
+      </attribute>
+    </node>
+    <node name="print_leftover" class="base.flow.print">
+      <attribute name="prefix">
+        <s>leftover: </s>
+      </attribute>
+    </node>
+    <node name="print_too_short" class="base.flow.print">
+      <attribute name="prefix">
+        <s>too_short: </s>
+      </attribute>
+    </node>
+    <connection from="loadmess0" outlet="0" to="split0" inlet="input"/>
+    <connection from="split0" outlet="first_n" to="print_n_first" inlet="0"/>
+    <connection from="split0" outlet="leftover" to="print_leftover" inlet="0"/>
+    <connection from="split0" outlet="too_short" to="print_too_short" inlet="0"/>
+  </graph>
+</tempi>
