@@ -198,7 +198,7 @@ AC_CHECK_FUNCS([gettimeofday memmove mkdir setenv sqrt strchr strpbrk uname])
 dnl AX_PTHREAD
 
 # Glib
-PKG_CHECK_MODULES([GLIB], [glib-2.0 gthread-2.0], have_glib=true, have_glib=false)
+PKG_CHECK_MODULES([GLIB], [glib-2.0 gthread-2.0 gmodule-2.0], have_glib=true, have_glib=false)
 if test "x${have_glib}" = "xfalse" ; then
     AC_MSG_WARN([missing package: libglib-2.0-dev])
 else
