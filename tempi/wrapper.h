@@ -168,6 +168,7 @@ class Wrapper
             Message &return_value);
 
         bool sleep(double duration_ms);
+        bool waitUntilAllNodesAreInitiated(const std::string &graph);
     private:
         bool synchronous_;
         Scheduler *scheduler_;

@@ -636,5 +636,46 @@ bool Wrapper::sleep(double duration_ms)
     boost::this_thread::sleep(sleepTime);
 }
 
+bool Wrapper::waitUntilAllNodesAreInitiated(const std::string &graph)
+{
+    static const double SLEEP_MS = 5.0;
+    // check for graph:
+    {
+        tempi::ScopedLock::ptr lock = scheduler_->acquireLock();
+        if (scheduler_->hasGraph(graph.c_str()))
+        {
+            std::ostringstream os;
+            os << "Wrapper." << __FUNCTION__ <<
+                ": no graph \"" << graph << "\"";
+            Logger::log(ERROR, os);
+            return false;
+        }
+    }
+
+    while (true)
+    {
+        tempi::ScopedLock::ptr lock = scheduler_->acquireLock();
+        bool all_ready = true;
+        std::vector<std::string> nodes = this->listNodes(graph);
+        std::vector<std::string>::const_iterator node;
+        for (node = nodes.begin(); node != nodes.end(); node++)
+        {
+            tempi::Node::ptr nodePtr;
+            bool success = this->getNode(graph, *node, nodePtr);
+            if (success)
+            {
+                if (! nodePtr->isInitiated())
+                {
+                    all_ready = false;
+                }
+            }
+        }
+        if (all_ready)
+            break;
+        this->sleep(SLEEP_MS);
+    } // while
+    return true;
+}
+
 } // end of namespace
 
