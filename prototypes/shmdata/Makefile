@@ -1,4 +1,4 @@
-DEPS=tempi-0.1 shmdata-0.6 shmdata-any-0.6
+DEPS=tempi-0.2 shmdata-0.6 shmdata-any-0.6
 
 all: reader writer
 

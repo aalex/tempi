@@ -157,8 +157,8 @@ int main(int argc, char *argv[])
     tempi::Loader loader;
     loader.setVerbose(true);
     loader.addPath(".");
-    loader.addPath("/usr/local/lib/tempi-0.1");
-    loader.addPath("/usr/lib/tempi-0.1");
+    loader.addPath("/usr/local/lib/tempi-0.2");
+    loader.addPath("/usr/lib/tempi-0.2");
     std::cout << "Loader::load(hello)" << std::endl;
     loader.load("hello");
     return 0;

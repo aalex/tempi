@@ -12,5 +12,5 @@ clean:
 	rm -f main *.so *.o
 
 install: libtempihello.so
-	install -D libtempihello.so /usr/local/lib/tempi-0.1
+	install -D libtempihello.so /usr/local/lib/tempi-0.2
 
