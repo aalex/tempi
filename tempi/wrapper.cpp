@@ -654,9 +654,11 @@ bool Wrapper::waitUntilAllNodesAreInitiated(const std::string &graph)
 
     while (true)
     {
-        tempi::ScopedLock::ptr lock = scheduler_->acquireLock();
         bool all_ready = true;
+        // FIXME: listNodes acquires the lock so we should not acquire it here:
         std::vector<std::string> nodes = this->listNodes(graph);
+        // FIXME: getNode does not acquire the lock!!
+        tempi::ScopedLock::ptr lock = scheduler_->acquireLock();
         std::vector<std::string>::const_iterator node;
         for (node = nodes.begin(); node != nodes.end(); node++)
         {
@@ -664,16 +666,34 @@ bool Wrapper::waitUntilAllNodesAreInitiated(const std::string &graph)
             bool success = this->getNode(graph, *node, nodePtr);
             if (success)
             {
+                std::cout << "isInitiated\n";
                 if (! nodePtr->isInitiated())
                 {
                     all_ready = false;
+                    if (Logger::isEnabledFor(INFO))
+                    {
+                        std::ostringstream os;
+                        os << "Wrapper." << __FUNCTION__ <<
+                            ": Node \"" << graph << "/" << *node << "\" is not ready";
+                        Logger::log(INFO, os);
+                    }
                 }
             }
         }
         if (all_ready)
+        {
+            if (Logger::isEnabledFor(INFO))
+            {
+                std::ostringstream os;
+                os << "Wrapper." << __FUNCTION__ <<
+                    ": All nodes are ready";
+                Logger::log(INFO, os);
+            }
             break;
+        }
         this->sleep(SLEEP_MS);
     } // while
+
     return true;
 }
 
