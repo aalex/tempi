@@ -642,7 +642,7 @@ bool Wrapper::waitUntilAllNodesAreInitiated(const std::string &graph)
     // check for graph:
     {
         tempi::ScopedLock::ptr lock = scheduler_->acquireLock();
-        if (scheduler_->hasGraph(graph.c_str()))
+        if (! scheduler_->hasGraph(graph.c_str()))
         {
             std::ostringstream os;
             os << "Wrapper." << __FUNCTION__ <<
