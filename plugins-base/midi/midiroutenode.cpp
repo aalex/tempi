@@ -21,6 +21,7 @@
 #include "plugins-base/midi/midiroutenode.h"
 #include "plugins-base/midi/midiutilities.h"
 #include "tempi/utils.h"
+#include "tempi/log.h"
 #include <iostream>
 
 namespace tempi {
@@ -42,7 +43,9 @@ void MidiRouteNode::processMessage(const char *inlet, const Message &message)
     using namespace midi_utilities;
     if (! message.indexMatchesType(0, 'C'))
     {
-        std::cerr << "MidiRouteNode::" << __FUNCTION__ << ": First atom should be an unsigned char: " << message << std::endl;
+        std::ostringstream os;
+        os << "MidiRouteNode::" << __FUNCTION__ << ": First atom should be an unsigned char: " << message;
+        Logger::log(ERROR, os);
         return;
     }
     unsigned char midi_event_type = getMidiEventType(message.getUnsignedChar(0));
@@ -51,7 +54,9 @@ void MidiRouteNode::processMessage(const char *inlet, const Message &message)
     {
         case midi_utilities::MIDI_NOT_SUPPORTED:
         {
-            std::cerr << "Unsupported MIDI event type: " << message << std::endl;
+            std::ostringstream os;
+            os << "Unsupported MIDI event type: " << message;
+            Logger::log(ERROR, os);
             return;
             break;
         }
@@ -60,7 +65,9 @@ void MidiRouteNode::processMessage(const char *inlet, const Message &message)
         {
             if (! message.typesMatch("CCC"))
             {
-                std::cerr << "Note on/off messages should have 3 atoms:" << message << std::endl;
+                std::ostringstream os;
+                os << "Note on/off messages should have 3 atoms:" << message;
+                Logger::log(ERROR, os);
                 return;
             }
             int channel_number = int(getChannelNumber(message.getUnsignedChar(0)));
@@ -77,7 +84,9 @@ void MidiRouteNode::processMessage(const char *inlet, const Message &message)
         {
             if (! message.typesMatch("CCC"))
             {
-                std::cerr << "Control change messages should have 3 atoms:" << message << std::endl;
+                std::ostringstream os;
+                os << "Control change messages should have 3 atoms:" << message;
+                Logger::log(ERROR, os);
                 return;
             }
             int channel_number = int(getChannelNumber(message.getUnsignedChar(0)));
@@ -92,14 +101,19 @@ void MidiRouteNode::processMessage(const char *inlet, const Message &message)
         }
         case MIDIPROGRAMCHANGE:
         {
-            std::cerr << "Program change messages are not supported." << std::endl;
+            // TODO
+            std::ostringstream os;
+            os << "MidiRouteNode: Program change messages are not supported.";
+            Logger::log(ERROR, os);
             return;
         }
         case MIDIPITCHBEND:
         {
             if (! message.typesMatch("CCC"))
             {
-                std::cerr << "Program change messages should have 3 atoms: " << message << std::endl;
+                std::ostringstream os;
+                os << "MidiRouteNode: Pitch bend messages should have 3 atoms: " << message;
+                Logger::log(ERROR, os);
                 return;
             }
             int channel_number = int(getChannelNumber(message.getUnsignedChar(0)));
