@@ -117,8 +117,8 @@ bool Wrapper::setLogLevel(const std::string &level)
         if (Logger::isEnabledFor(INFO))
         {
             std::ostringstream os;
-            os << "Wrapper." << __FUNCTION__ << "(" << level << "): "
-                "Set log level to " << new_level;
+            os << "Wrapper." << __FUNCTION__ << ": " <<
+                "Set log level to " << level << "(" << new_level << ")";
             Logger::log(INFO, os);
         }
     }
@@ -630,6 +630,71 @@ bool Wrapper::getNode(const std::string &graph, const std::string &nodeName, Nod
         return false;
 }
 
+bool Wrapper::sleep(double duration_ms)
+{
+    boost::posix_time::milliseconds sleepTime(duration_ms);
+    boost::this_thread::sleep(sleepTime);
+}
+
+bool Wrapper::waitUntilAllNodesAreInitiated(const std::string &graph)
+{
+    static const double SLEEP_MS = 5.0;
+    // check for graph:
+    {
+        tempi::ScopedLock::ptr lock = scheduler_->acquireLock();
+        if (! scheduler_->hasGraph(graph.c_str()))
+        {
+            std::ostringstream os;
+            os << "Wrapper." << __FUNCTION__ <<
+                ": no graph \"" << graph << "\"";
+            Logger::log(ERROR, os);
+            return false;
+        }
+    }
+
+    while (true)
+    {
+        bool all_ready = true;
+        // FIXME: listNodes acquires the lock so we should not acquire it here:
+        std::vector<std::string> nodes = this->listNodes(graph);
+        // FIXME: getNode does not acquire the lock!!
+        tempi::ScopedLock::ptr lock = scheduler_->acquireLock();
+        std::vector<std::string>::const_iterator node;
+        for (node = nodes.begin(); node != nodes.end(); node++)
+        {
+            tempi::Node::ptr nodePtr;
+            bool success = this->getNode(graph, *node, nodePtr);
+            if (success)
+            {
+                if (! nodePtr->isInitiated())
+                {
+                    all_ready = false;
+                    if (Logger::isEnabledFor(DEBUG))
+                    {
+                        std::ostringstream os;
+                        os << "Wrapper." << __FUNCTION__ <<
+                            ": Node \"" << graph << "/" << *node << "\" is not ready";
+                        Logger::log(DEBUG, os);
+                    }
+                }
+            }
+        }
+        if (all_ready)
+        {
+            if (Logger::isEnabledFor(DEBUG))
+            {
+                std::ostringstream os;
+                os << "Wrapper." << __FUNCTION__ <<
+                    ": All nodes are ready";
+                Logger::log(DEBUG, os);
+            }
+            break;
+        }
+        this->sleep(SLEEP_MS);
+    } // while
+
+    return true;
+}
 
 } // end of namespace
 

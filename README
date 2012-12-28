@@ -44,6 +44,8 @@ http://code.sat.qc.ca/redmine/projects/tempi
 
 The source code is currently managed at http://code.sat.qc.ca/redmine/projects/tempi
 
+Some documentation is online at http://tempi.toonloop.com
+
 To clone::
 
   git clone git://code.sat.qc.ca/tempi.git
@@ -67,8 +69,14 @@ Here is how to build and install it on Debian GNU/Linux or Ubuntu::
   sudo make install
   sudo ldconfig
 
+Some dependencies are optional. If you can, you can install these libraries to get extra node types::
 
-Here is how to build and install it on MAC OSX::
+  sudo apt-get install libspatosc-0.4-dev
+  sudo apt-get install libv8-dev
+
+Spatosc is available from the http://code.sat.qc.ca/redmine/projects/spatosc or https://launchpad.net/~sat-metalab/+archive/metalab URL. Libmapper can be retrieved at http://www.idmil.org/software/libmapper and should be compiled from source. (and libmapper requires the latest liblo from source as well)
+
+Here is how to build and install Tempi on Mac OS X::
 
   sudo port install gettext libtool automake autoconf-archive autoconf bison  log4ccp boost libxml2 portmidi liblo glib2-devel
   ./autogen.sh
@@ -76,6 +84,7 @@ Here is how to build and install it on MAC OSX::
   make
   sudo make install
   sudo ldconfig
+
 
 More about dataflow programming
 -------------------------------
@@ -85,7 +94,7 @@ Tempi is a new dataflow programming environment inspired by Miller Puckette's Pu
 * Tempi is strongly-typed. A string "2" will no be interpreted as a float if its type is "s". (string)
 * Tempi proposes a real separation between the graphical user interface and the underlying engine. (right now, there is no graphical user interface at all, but it is usable)
 * Tempi provides named entities, not numbered ones. Inlets, outlets as well as node attributes are named, which makes the file format suitable to be be managed by revision control systems, such as Git, CVS or Subversion. 
-* Tempi provides no internal node (objetct) types. The audio engines should be written as separate external libraries, if any.
+* Tempi provides no internal node types. The audio engines should be written as separate external libraries, if any.
 * The file format is XML, which allows comments and an arbitrary order in the tags. It is easy to understand by a human.
 * Tempi (will soon) provide system-wide configuration files (for default paths for libraries) as well as per-user configuration files.
 * Being a C++ library, Tempi is easy to embed in programs written in C++, or via some of its language bindings.
@@ -97,6 +106,8 @@ How to use it
 For now, there is no graphical user interface to write your graphs. Use a text editor to edit XML files readable by Tempi. Some examples files are in the "examples" directory in Tempi's source code repository. (check out the "develop" branch if you want the bleeding edge latest version of the source code) To know which node types are available and what are their attributes, methods, inlets and outlets, use tempi-inspect. The tempi-inspect utility is located in the src/tempi-inspect directory. Once it is installed in your system, it should be available system-wide. To run your graph, use tempi-launch. (located in src/tempi-launch)
 
 Nodes' attributes can be set via each node's "__attr__" inlet. When they are changed, their new value is output via the "__attr__" outlet, prefixed by the name of the attribute. Nodes' methods can be called via the "__call__" inlet. Their return value is output via the "__return__" outlet, prefixed by the name of the method.
+
+You should check out the Nodejs addon that is located at http://code.sat.qc.ca/redmine/projects/node-tempi since it allows you to create Web user interfaces with Tempi under the hood.
 
 
 Documentation
@@ -122,4 +133,5 @@ Known bugs
 
 * Favours Tempi plugins from /usr/local/lib/, rather than ./ if present.
 * [base.clutter.stage]: creates segmentation faults
+* Loader doesn't work on Microsoft Windows
 
