@@ -666,28 +666,27 @@ bool Wrapper::waitUntilAllNodesAreInitiated(const std::string &graph)
             bool success = this->getNode(graph, *node, nodePtr);
             if (success)
             {
-                std::cout << "isInitiated\n";
                 if (! nodePtr->isInitiated())
                 {
                     all_ready = false;
-                    if (Logger::isEnabledFor(INFO))
+                    if (Logger::isEnabledFor(DEBUG))
                     {
                         std::ostringstream os;
                         os << "Wrapper." << __FUNCTION__ <<
                             ": Node \"" << graph << "/" << *node << "\" is not ready";
-                        Logger::log(INFO, os);
+                        Logger::log(DEBUG, os);
                     }
                 }
             }
         }
         if (all_ready)
         {
-            if (Logger::isEnabledFor(INFO))
+            if (Logger::isEnabledFor(DEBUG))
             {
                 std::ostringstream os;
                 os << "Wrapper." << __FUNCTION__ <<
                     ": All nodes are ready";
-                Logger::log(INFO, os);
+                Logger::log(DEBUG, os);
             }
             break;
         }
