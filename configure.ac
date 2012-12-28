@@ -13,8 +13,8 @@
 # - increase tempi_micro_version to the next odd number
 # - increase tempi_interface_version to the next odd number
 m4_define([tempi_major_version], [0])
-m4_define([tempi_minor_version], [1])
-m4_define([tempi_micro_version], [21])
+m4_define([tempi_minor_version], [2])
+m4_define([tempi_micro_version], [0])
 
 m4_define([tempi_release_status],
           [m4_if(m4_eval(tempi_micro_version % 2), [1], [git],
@@ -24,7 +24,7 @@ m4_define([tempi_release_status],
 m4_define([tempi_version], [tempi_major_version.tempi_minor_version.tempi_micro_version])
 
 # change this only when breaking the API
-m4_define([tempi_api_version], [0.1])
+m4_define([tempi_api_version], [0.2])
 
 # increase the interface age by 1 for each release; if the API changes,
 # set to 0. interface_age and binary_age are used to create the soname
@@ -236,7 +236,8 @@ PKG_CHECK_MODULES([LIBMAPPER], [libmapper-0], have_libmapper=true, have_libmappe
 if test "x${have_libmapper}" = "xfalse" ; then
     AC_MSG_WARN([missing package: libmapper-dev])
 else
-    AC_DEFINE(HAVE_LIBMAPPER,[1],[Libmapper headers successfully detected])
+    AC_MSG_NOTICE([Libmapper headers successfully detected but we will not use them for now])
+    dnl AC_DEFINE(HAVE_LIBMAPPER,[1],[Libmapper headers successfully detected])
 fi
 
 dnl # BOOST
