@@ -11,6 +11,10 @@ New features:
 * add Wrapper::waitUntilAllNodesAreInitiated()
 * add split.xml example
 
+Bugs fixed:
+
+* Temporarily disable libmapper nodes since them fail to build.
+
 
 Tempi 0.1.20 (2012-11-08)
 -------------------------
