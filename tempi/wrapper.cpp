@@ -717,5 +717,58 @@ bool Wrapper::getNodeDocumentation(
     }
 }
 
+bool Wrapper::isConnected(const std::string &graph, const std::string &node_from, const std::string &outlet, const std::string &node_to, const std::string &inlet)
+{
+    try
+    {
+        return this->scheduler_->getGraph(graph.c_str())->
+            isConnected(node_from.c_str(), outlet.c_str(), node_to.c_str(), inlet.c_str());
+    }
+    catch (const BaseException &e)
+    {
+        std::ostringstream os;
+        os << "Wrapper." << __FUNCTION__ << ": " << e.what();
+        Logger::log(ERROR, os);
+        return false;
+    }
+}
+
+bool Wrapper::listConnections(const std::string &graph, std::vector<std::string> &result)
+{
+    Graph::ptr graphPtr;
+    try
+    {
+        graphPtr = scheduler_->getGraph(graph.c_str());
+    }
+    catch (const BaseException &e)
+    {
+        std::ostringstream os;
+        os << "Wrapper." << __FUNCTION__ << ": " << e.what();
+        Logger::log(ERROR, os);
+        return false;
+    }
+    // success, now let's get the connections:
+
+    const std::vector<Graph::Connection> connections = graphPtr->getAllConnections();
+    std::vector<Graph::Connection>::const_iterator iter;
+    for (iter = connections.begin(); iter != connections.end(); ++iter)
+    {
+        std::string from = (*iter).get<0>();
+        std::string outlet = (*iter).get<1>();
+        std::string to = (*iter).get<2>();
+        std::string inlet = (*iter).get<3>();
+        std::ostringstream os;
+        os << from << ":" << outlet << ":" << to << ":" << inlet;
+        if (Logger::isEnabledFor(DEBUG))
+        {
+            std::ostringstream os2;
+            os2 << __FUNCTION__ << ": " << os.str();
+            Logger::log(DEBUG, os2);
+        }
+        result.push_back(os.str());
+    }
+    return true;
+}
+
 } // end of namespace
 

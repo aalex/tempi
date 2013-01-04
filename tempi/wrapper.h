@@ -175,6 +175,13 @@ class Wrapper
 
         bool sleep(double duration_ms);
         bool waitUntilAllNodesAreInitiated(const std::string &graph);
+
+        bool isConnected(const std::string &graph, const std::string &node_from, const std::string &outlet, const std::string &node_to, const std::string &inlet);
+        /**
+         * Result will be a list of string in the form "from:outlet:to:inlet", with semicolons between each entity name.
+         * That is possible since semicolons are forbidden in entity names.
+         */
+        bool listConnections(const std::string &graph, std::vector<std::string> &result);
     private:
         bool synchronous_;
         Scheduler *scheduler_;
