@@ -199,7 +199,7 @@ bool save(Graph &graph, const char *filename)
     if (Logger::isEnabledFor(INFO))
     {
         std::ostringstream os;
-        os << "serializer::save(): Saved the graph to " << filename;
+        os << __FUNCTION__ << ": Saved graph " << graph.getName() << " to " << filename;
         Logger::log(INFO, os.str().c_str());
     }
     // Free the document + global variables that may have been
@@ -229,12 +229,12 @@ bool load_graph_connections(xmlNodePtr graph_node, Graph &graph)
             if (from != NULL && outlet != NULL
                 && to != NULL && inlet != NULL)
             {
-                if (Logger::isEnabledFor(INFO))
+                if (Logger::isEnabledFor(DEBUG))
                 {
                     std::ostringstream os;
                     os << "serializer::" << __FUNCTION__ << "(): Connect "
                         << from << ":" << outlet << " -> " << to << ":" << inlet;
-                    Logger::log(INFO, os);
+                    Logger::log(DEBUG, os);
                 }
                 bool success = graph.connect((char *) from, (char *) outlet, (char *) to, (char *) inlet);
                 if (success)
@@ -300,13 +300,13 @@ bool load_message(xmlNodePtr message_node, Message &message)
             try
             {
                 utils::appendArgumentFromString(message, atom_value.c_str(), atom_typetag);
-                if (Logger::isEnabledFor(INFO))
+                if (Logger::isEnabledFor(DEBUG))
                 {
                     std::ostringstream os;
                     os << "    * atom " <<
                         (char) atom_typetag << ":" <<
                         atom_value;
-                    Logger::log(INFO, os);
+                    Logger::log(DEBUG, os);
                 }
             }
             catch (const BadAtomTypeException &e)
@@ -339,11 +339,11 @@ bool load_node_attributes(xmlNodePtr node_node, Node &node)
             xmlChar *attr_name = xmlGetProp(attribute_node,
                 XMLSTR ATTRIBUTE_NAME_PROPERTY);
             //std::cout << "   * attr " << attr_name << std::endl;
-            if (Logger::isEnabledFor(INFO))
+            if (Logger::isEnabledFor(DEBUG))
             {
                 std::ostringstream os;
                 os << "   * attr \"" << attr_name << "\":";
-                Logger::log(INFO, os);
+                Logger::log(DEBUG, os);
             }
             Message attr_value;
             load_message(attribute_node, attr_value);
@@ -384,11 +384,11 @@ bool load_graph(xmlNodePtr graph_node, Graph &graph)
             // TODO: check if it has the property
             xmlChar *node_name = xmlGetProp(node_node,
                 XMLSTR NODE_ID_PROPERTY);
-            if (Logger::isEnabledFor(INFO))
+            if (Logger::isEnabledFor(DEBUG))
             {
                 std::ostringstream os;
                 os << "  * node " << node_name << " of type " << node_type;
-                Logger::log(INFO, os);
+                Logger::log(DEBUG, os);
             }
             if (node_type != NULL && node_name != NULL)
             { // node has name
@@ -456,7 +456,6 @@ bool load_region(xmlNodePtr region_node, sampler::Region &region)
 
 bool load(Graph &graph, const char *filename)
 {
-    bool verbose = false;
     // parse the file and get the DOM tree
     xmlDoc *doc = xmlReadFile(filename, NULL, 0);
     if (doc == NULL)
@@ -466,11 +465,11 @@ bool load(Graph &graph, const char *filename)
         Logger::log(ERROR, os);
         return false;
     }
-    if (Logger::isEnabledFor(INFO))
+    if (Logger::isEnabledFor(DEBUG))
     {
         std::ostringstream os;
-        os << "Loading project file " << filename;
-        Logger::log(INFO, os);
+        os << "Loading a graph from file " << filename;
+        Logger::log(DEBUG, os);
     }
     xmlNode *root = xmlDocGetRootElement(doc);
 
@@ -508,13 +507,8 @@ bool load(Graph &graph, const char *filename)
     if (Logger::isEnabledFor(INFO))
     {
         std::ostringstream os;
-        os << "Loaded the graph from " << filename;
+        os << "Loaded graph " << graph.getName() << " from " << filename;
         Logger::log(INFO, os);
-    }
-    if (verbose)
-    {
-        std::cout << "The Graph is now:\n";
-        std::cout << graph << std::endl;
     }
     // Free the document + global variables that may have been allocated by the parser.
     xmlFreeDoc(doc);
@@ -606,20 +600,19 @@ bool save(sampler::Region &region, const char *filename)
 
 bool load(sampler::Region &region, const char *filename)
 {
-    bool verbose = false;
     // parse the file and get the DOM tree
     xmlDoc *doc = xmlReadFile(filename, NULL, 0);
     if (doc == NULL)
     {
         std::ostringstream os;
-        os << "Serializer could not parse file " <<  filename;
+        os << "Serializer could not parse sampler region file " <<  filename;
         Logger::log(ERROR, os);
         return false;
     }
     if (Logger::isEnabledFor(INFO))
     {
         std::ostringstream os;
-        os << "Loading project file " << filename;
+        os << "Loading sampler region file " << filename;
         Logger::log(INFO, os);
     }
     xmlNode *root = xmlDocGetRootElement(doc);
@@ -640,13 +633,8 @@ bool load(sampler::Region &region, const char *filename)
     if (Logger::isEnabledFor(INFO))
     {
         std::ostringstream os;
-        os << "Loaded the Region from " << filename;
+        os << "Loaded a sampler region from " << filename;
         Logger::log(INFO, os);
-    }
-    if (verbose)
-    {
-        // TODO: std::cout << "The Region is now:\n";
-        // TODO: std::cout << region << std::endl;
     }
     // Free the document + global variables that may have been allocated by the parser.
     xmlFreeDoc(doc);

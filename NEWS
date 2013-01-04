@@ -7,11 +7,17 @@ This release is an official version in the stable 0.2 series.
 
 New features:
 
-* (none)
+* slightly more doc aboud saving/loading graphs
+* add Wrapper::getNodeDocumentation
+* add Wrapper::isConnected
+* add Wrapper::listConnections
+* add doc string for counter's increment attribute
+* support receiving 2-char MIDI events
 
 Bugs fixed:
 
-* (none)
+* Decrease verbosity in serializer and midiroutenode
+* fix Wrapper::getNodeTypeName. It used to return the doc instead of the type name.
 
 
 Tempi 0.2.0 (2012-12-28)

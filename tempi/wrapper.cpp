@@ -158,12 +158,12 @@ bool Wrapper::loadGraph(const std::string &name, const std::string &fileName)
     // load graph
     serializer::load(*(graph.get()), fileName.c_str());
     graph->tick(); // FIXME
-    if (Logger::isEnabledFor(INFO))
+    if (Logger::isEnabledFor(DEBUG)) // There are already prints in serializer.cpp
     {
         std::ostringstream os;
-        os << "Wrapper" << __FUNCTION__ << ": " <<
+        os << "Wrapper::" << __FUNCTION__ << ": " <<
             "Loaded " << fileName << " into graph " << name;
-        tempi::Logger::log(INFO, os);
+        tempi::Logger::log(DEBUG, os);
     }
     return true;
 }
