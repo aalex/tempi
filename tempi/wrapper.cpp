@@ -696,5 +696,26 @@ bool Wrapper::waitUntilAllNodesAreInitiated(const std::string &graph)
     return true;
 }
 
+bool Wrapper::getNodeDocumentation(
+    const std::string &graph,
+    const std::string &node,
+    std::string &value) const
+{
+    try
+    {
+        value = this->scheduler_->getGraph(graph.c_str())->
+            getNode(node.c_str())->
+            getShortDocumentation();
+        return true;
+    }
+    catch (const BaseException &e)
+    {
+        std::ostringstream os;
+        os << "Wrapper." << __FUNCTION__ << ": " << e.what();
+        Logger::log(ERROR, os);
+        return false;
+    }
+}
+
 } // end of namespace
 
