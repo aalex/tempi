@@ -36,7 +36,7 @@ CounterNode::CounterNode() :
     addOutlet("0", "Count.");
     addInlet("0", "Bangs increase and output the count. Integers sets and outputs the count.");
     Message increment = Message("i", 1);
-    addAttribute(Attribute::ptr(new Attribute(PROP_INCREMENT, increment)));
+    addAttribute(Attribute::ptr(new Attribute(PROP_INCREMENT, increment, "How much to add to the count value each time the counter is triggered.")));
     Message ini_count_attr = Message("i", 0);
     addAttribute(Attribute::ptr(new Attribute(PROP_INITIAL_COUNT, ini_count_attr, "Initial count value.")));
 

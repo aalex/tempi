@@ -131,6 +131,12 @@ class Wrapper
             Message &value) const;
 
         // TODO: return string
+        bool getNodeDocumentation(
+            const std::string &graph,
+            const std::string &node,
+            std::string &value) const;
+
+        // TODO: return string
         bool getNodeAttributeDocumentation(
             const std::string &graph,
             const std::string &node,
