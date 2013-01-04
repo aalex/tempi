@@ -56,8 +56,12 @@ class Wrapper
         bool setLogLevel(const std::string &level);
         /**
          * Loads a graph from an XML file.
+         * Graph name will be created, and should not exist prior to calling this.
          */
         bool loadGraph(const std::string &name, const std::string &fileName);
+        /**
+         * save a graph to an XML file.
+         */
         bool saveGraph(const std::string &name, const std::string &fileName);
         bool getSynchronous() const;
         /**
