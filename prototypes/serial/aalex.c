@@ -30,14 +30,10 @@ int serialport_init(const char* serialport, int baud);
 int serialport_write(int fd, const char* str);
 int serialport_read_until(int fd, char* buf, char until);
 
-char GLOBAL_buf[256];
-
 void read_line(int fd)
 {
     char buf[256];
-    int i;
-    for (i = 0; i < 256; i++)
-        buf[i] = 0;
+    memset(buf, 0, 256);
     serialport_read_until(fd, buf, '\r');
     printf("read: %s\n", buf);
 }
@@ -51,9 +47,15 @@ void write_line(int fd, const char *text)
     }
 }
 
+void read_some(int fd, char *buf)
+{
+    
+}
+
 int main(int argc, char *argv[]) 
 {
     int fd = serialport_init("/dev/ttyACM0", 9600);
+    //char GLOBAL_buf[256];
 
     read_line(fd);
     int count = 0;
@@ -99,6 +101,37 @@ int serialport_read_until(int fd, char* buf, char until)
 
     buf[i] = 0;  // null terminate the string
     return 0;
+}
+
+/**
+ * Returns the number of bytes read, and put into buf.
+ * Zeroes the buffer beforehand.
+ */
+int serialport_read_some(int fd, char* buf, int max_size)
+{
+    char b[1];
+    memset(buf, 0, sizeof(buf));
+    int num_read;
+    int stop_at = sizeof(buf);
+    for (num_read = 0; num_read < stop_at; num_read++)
+    {
+        int n = read(fd, b, 1); // read a char at a time
+        if (n == -1) // could not read
+        {
+            num_read = 0;
+            break;
+        }
+        else if (n == 0)
+        {
+            if (num_read > 0)
+                num_read = num_read - 1;
+            break;
+        }
+        else
+            buf[num_read] = b[0];
+    }
+    buf[num_read + 1] = 0; // null terminate the string
+    return num_read;
 }
 
 // takes the string name of the serial port (e.g. "/dev/tty.usbserial","COM1")
