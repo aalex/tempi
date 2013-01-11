@@ -10,112 +10,19 @@
 #include <termios.h>
 #include <unistd.h>
 #include <tempi/timer.h>
+#include <iostream>
+#include "serialdevice.h"
 
-// void read_line(int fd)
-// {
-//     char buf[256];
-//     memset(buf, 0, 256);
-//     serialport_read_until(fd, buf, '\r');
-//     printf("read: %s\n", buf);
-// }
-// 
-// void write_line(int fd, const char *text)
-// {
-//     int ret = serialport_write(fd, text);
-//     if (ret == -1)
-//     {
-//         printf("Error writing %s\n", text);
-//     }
-// }
-// 
-// void read_some(int fd, char *buf)
-// {
-//     
-// }
+bool SerialDevice::writeBlob(const char* data)
+{
+    int len = strlen(data);
+    int n = write(fd_, data, len);
+    if( n != len ) 
+        return false;
+    return true;
+}
 
-//int main(int argc, char *argv[]) 
-//{
-//    int fd = serialport_init("/dev/ttyACM0", 9600);
-//    //char GLOBAL_buf[256];
-//
-//    read_line(fd);
-//    int count = 0;
-//    while (1)
-//    {
-//        count++;
-//        usleep(50 * 1000);
-//
-//        if (count > 20)
-//            write_line(fd, "ping\r");
-//
-//        read_line(fd);
-//    }
-//    exit(EXIT_SUCCESS);
-//}
-    
-// int serialport_write(int fd, const char* str)
-// {
-//     int len = strlen(str);
-//     int n = write(fd, str, len);
-//     if( n != len ) 
-//         return -1;
-//     return 0;
-// }
-
-// int serialport_read_until(int fd, char* buf, char until)
-// {
-//     char b[1];
-//     int i = 0;
-//     do { 
-//         int n = read(fd, b, 1);  // read a char at a time
-//         if ( n == -1)
-//             return -1;    // couldn't read
-//         if (n == 0)
-//         {
-//             usleep(10 * 1000); // wait 10 msec try again
-//             continue;
-//         }
-//         buf[i] = b[0];
-//         i++;
-//     }
-//     while (b[0] != until);
-// 
-//     buf[i] = 0;  // null terminate the string
-//     return 0;
-// }
-// 
-// /**
-//  * Returns the number of bytes read, and put into buf.
-//  * Zeroes the buffer beforehand.
-//  */
-// int serialport_read_some(int fd, char* buf, int max_size)
-// {
-//     char b[1];
-//     memset(buf, 0, sizeof(buf));
-//     int num_read;
-//     int stop_at = sizeof(buf);
-//     for (num_read = 0; num_read < stop_at; num_read++)
-//     {
-//         int n = read(fd, b, 1); // read a char at a time
-//         if (n == -1) // could not read
-//         {
-//             num_read = 0;
-//             break;
-//         }
-//         else if (n == 0)
-//         {
-//             if (num_read > 0)
-//                 num_read = num_read - 1;
-//             break;
-//         }
-//         else
-//             buf[num_read] = b[0];
-//     }
-//     buf[num_read + 1] = 0; // null terminate the string
-//     return num_read;
-// }
-
-void SerialDevice::sleep_ms(unsigned long long ms)
+void SerialDevice::sleep_ms(unsigned long long ms) const
 {
     usleep(ms * 1000);
 }
@@ -127,30 +34,38 @@ bool SerialDevice::readUntil(char *result, size_t max_length, size_t &total_num_
     unsigned long long elapsed;
     char b[1];
     size_t num_read = 0;
-    for (num_read = 0; num_read < max_length; num_read++)
+    while (true)
     {
+        if (num_read == max_length)
+            break;
         int n = read(fd_, b, 1); // read a char at a time
         if (n == -1) // error. TODO: see errno
         {
-            std::cout << __FUNCTION__ << ": Error!";
-            std::cout << std::endl;
-            success = false;
-            break;
+            //std::cout << __FUNCTION__ << ": Error!";
+            //std::cout << std::endl;
+            //success = false;
+            //break;
+            usleep(5 * 1000); // wait 5 msec try again
         }
         else if (n == 0) // end of file
         {
-            usleep(10 * 1000); // wait 10 msec try again
+            usleep(5 * 1000); // wait 5 msec try again
         }
         else
         {
             if (b[0] == until_char)
             {
+                result[num_read] = 0;
                 break;
             }
-            result[num_read] = b[0];
+            else
+            {
+                result[num_read] = b[0];
+                num_read++;
+            }
         }
         // check if timeout is reached
-        elapsed = tempi::timeposition:to_ms(timer.elapsed());
+        elapsed = tempi::timeposition::to_ms(timer.elapsed());
         if (elapsed > timeout_ms)
         {
             break;
@@ -209,17 +124,17 @@ bool SerialDevice::openDevice()
 {
     if (this->isOpen())
     {
-        this->close();
+        this->closeDevice();
     }
     bool ok = this->init_serialport(serial_port_filename_.c_str(), baud_rate_);
     this->is_open_ = ok;
     if (ok)
     {
-        std::cout << "Success!\n";
+        std::cout << "open: Success!\n";
     }
     else
     {
-        std::cout << "Failure!\n";
+        std::cout << "open: Failure!\n";
     }
 }
 
@@ -250,13 +165,13 @@ bool SerialDevice::init_serialport(const char* serialport, int baud)
     {
         case 4800:   brate = B4800;   break;
         case 9600:   brate = B9600;   break;
-#ifndef OSNAME_LINUX
-        case 14400:  brate = B14400;  break;
-#endif
+// #ifndef OSNAME_LINUX
+//         case 14400:  brate = B14400;  break;
+// #endif
         case 19200:  brate = B19200;  break;
-#ifndef OSNAME_LINUX
-        case 28800:  brate = B28800;  break;
-#endif
+// #ifndef OSNAME_LINUX
+//         case 28800:  brate = B28800;  break;
+// #endif
         case 38400:  brate = B38400;  break;
         case 57600:  brate = B57600;  break;
         case 115200: brate = B115200; break;
