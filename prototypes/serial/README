@@ -1,1 +1,14 @@
+Serial notes
+============
+
+Outdated
+--------
 sudo apt-get install libserial-dev
+
+See comport
+-----------
+mkdir -p ~/src
+cd ~/src
+svn co https://pure-data.svn.sourceforge.net/svnroot/pure-data
+edit ~/src/pure-data/external/iem/comport/comport/comport.c
+
