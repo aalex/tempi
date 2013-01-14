@@ -234,9 +234,7 @@ fi
 
 PKG_CHECK_MODULES([ATOM], [atom-0.2], have_atom=true, have_atom=false)
 if test "x${have_atom}" = "xfalse" ; then
-    AC_MSG_WARN([missing package: libatom-dev])
-else
-    AC_DEFINE(HAVE_ATOM,[1],[Atom headers successfully detected])
+    AC_MSG_ERROR([missing package: libatom-dev])
 fi
 
 PKG_CHECK_MODULES([LIBMAPPER], [libmapper-0], have_libmapper=true, have_libmapper=false)

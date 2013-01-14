@@ -35,9 +35,9 @@
 #include <vector>
 #include <cstdarg>
 #include "tempi/exceptions.h"
+#include <atom/blobvalue.h>
 
-namespace tempi
-{
+namespace tempi {
 
 /**
  * Type tags for Message arguments.
@@ -55,6 +55,7 @@ typedef enum
     BANG = '!',
     LONG = 'l',
     STRING = 's',
+    BLOB = 'B',
     // TODO: UNICODE = 'u',
     POINTER = 'p'
 } AtomType;
@@ -111,6 +112,7 @@ class Message
             appendStdString(std::string(value));
         }
         void appendPointer(void *value);
+        void appendBlob(atom::BlobValue::ptr value);
 
         void prependBang();
         void prependBoolean(bool value);
@@ -127,6 +129,7 @@ class Message
         }
         void prependPointer(void *value);
         void prependMessage(const Message &message);
+        void prependBlob(atom::BlobValue::ptr value);
 
         bool getBoolean(unsigned int index) const
             throw(BadAtomTypeException, BadIndexException);
@@ -150,6 +153,7 @@ class Message
         //  throw(BadAtomTypeException, BadIndexException);
         void *getPointer(unsigned int index) const
             throw(BadAtomTypeException, BadIndexException);
+        atom::BlobValue::ptr getBlob(unsigned int index) const;
 
         void setBoolean(unsigned int index, bool value)
             throw(BadAtomTypeException, BadIndexException);

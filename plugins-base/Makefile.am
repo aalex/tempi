@@ -5,6 +5,7 @@ AM_CXXFLAGS = \
     $(BOOST_CPPFLAGS) \
     $(CLUTTER_CFLAGS) \
     $(GLIB_CFLAGS) \
+    $(ATOM_CFLAGS) \
     $(LIBMAPPER_CFLAGS) \
     $(LIBLO_CFLAGS) \
     $(LIBXML_CFLAGS) \
@@ -18,6 +19,7 @@ AM_LIBS = \
     $(BOOST_LIBS)  \
     $(BOOST_REGEX_LIBS)  \
     $(BOOST_SYSTEM_LIBS) \
+    $(ATOM_LIBS) \
     $(BOOST_THREAD_LIBS) \
     $(CLUTTER_LIBS) \
     $(GLIB_LIBS) \
