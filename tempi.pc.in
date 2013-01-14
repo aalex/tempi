@@ -4,7 +4,7 @@ libdir=@libdir@
 includedir=@includedir@
 
 Name: tempi
-Description: Multimodal sampling library
+Description: Dataflow programming library aimed at multimodal sampling
 URL: @PACKAGE_URL@
 Version: @PACKAGE_VERSION@
 Requires.private: atom-0.2
