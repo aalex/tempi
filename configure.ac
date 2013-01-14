@@ -14,7 +14,7 @@
 # - increase tempi_interface_version to the next odd number
 m4_define([tempi_major_version], [0])
 m4_define([tempi_minor_version], [2])
-m4_define([tempi_micro_version], [1])
+m4_define([tempi_micro_version], [99])
 
 m4_define([tempi_release_status],
           [m4_if(m4_eval(tempi_micro_version % 2), [1], [git],
@@ -24,7 +24,7 @@ m4_define([tempi_release_status],
 m4_define([tempi_version], [tempi_major_version.tempi_minor_version.tempi_micro_version])
 
 # change this only when breaking the API
-m4_define([tempi_api_version], [0.2])
+m4_define([tempi_api_version], [0.3])
 
 # increase the interface age by 1 for each release; if the API changes,
 # set to 0. interface_age and binary_age are used to create the soname
