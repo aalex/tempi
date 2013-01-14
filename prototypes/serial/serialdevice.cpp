@@ -80,6 +80,7 @@ bool SerialDevice::readUntil(char *result, size_t max_length, size_t &total_num_
 
 SerialDevice::SerialDevice(const char *serial_port, int baud_rate)
 {
+    is_open_ = false;
     serial_port_filename_ = serial_port;
     baud_rate_ = baud_rate;
     bool ok = this->openDevice();
