@@ -14,8 +14,9 @@ bool check_message()
     m.appendInt(2);
     m.appendBang();
     m.appendUnsignedInt(20);
+    m.appendBlob(atom::BlobValue::convert(atom::BlobValue::create("hello", 6)));
 
-    if (! m.typesMatch("fsi!u"))
+    if (! m.typesMatch("fsi!uB"))
     {
         std::cout << __FUNCTION__ << ": types tag don't match what we expect\n";
         return false;
@@ -27,6 +28,7 @@ bool check_message()
         std::cout << "string: " << m.getString(1) << std::endl;
         std::cout << "int: " << m.getInt(2) << std::endl;
         std::cout << "uint: " << m.getUnsignedInt(4) << std::endl;
+        std::cout << "blob: " << m.getBlob(5) << std::endl;
         std::cout << "Message: " << m << std::endl;
     }
     return true;

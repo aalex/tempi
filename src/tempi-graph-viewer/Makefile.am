@@ -3,12 +3,14 @@ bin_PROGRAMS = \
     
 
 AM_CXXFLAGS = \
+    $(ATOM_CFLAGS) \
     $(BOOST_CPPFLAGS) \
     $(CLUTTER_CFLAGS) \
     $(GLIB_CFLAGS) \
     -I$(top_srcdir)
 
 LDADD = \
+    $(ATOM_LIBS) \
     $(BOOST_PROGRAM_OPTIONS_LIBS) \
     $(BOOST_SYSTEM_LIBS) \
     $(BOOST_REGEX_LIBS) \

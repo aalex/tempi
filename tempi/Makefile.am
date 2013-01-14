@@ -5,6 +5,7 @@ AM_CXXFLAGS = \
     $(BOOST_CPPFLAGS) \
     $(LIBXML_CFLAGS) \
     $(LIBLO_CFLAGS) \
+    $(ATOM_CFLAGS) \
     -I$(top_srcdir) \
     -I$(top_srcdir)/plugins-base \
     -I$(top_srcdir)/tempi \
@@ -21,6 +22,7 @@ AM_LIBS = \
     $(BOOST_THREAD_LIBS) \
     $(LIBLO_LIBS) \
     $(LIBXML_LIBS) \
+    $(ATOM_LIBS) \
     $(LOG4CPP_LIBS) \
     $(RTMIDI_LIBS) \
     $(PORTMIDI_LIBS)
