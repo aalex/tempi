@@ -139,7 +139,7 @@ void SerialDeviceNode::doTick()
         char result[256];
         memset(result, 0, 256);
         size_t total_num_read;
-        unsigned long long timeout_ms = 50;
+        unsigned long long timeout_ms = 150;
         // TODO: do not use until_char, but simply output it all as a blob
         static const char until_char = '\n';
         bool use_until_char = true;
