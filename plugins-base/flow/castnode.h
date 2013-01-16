@@ -44,7 +44,7 @@ class CastNode : public Node
         {
             this->setShortDocumentation("Tries to cast incoming messages to a given type");
             this->addOutlet("0", "The outlet for messages casted to the desired type, if successful.");
-            this->addOutlet("success", "Whether or not last cast was succesful.");
+            this->addOutlet("success", "Whether or not last cast was successful.");
             this->addInlet("0", "The inlet for incoming messages to cast.");
             this->addAttribute(Attribute::ptr(new Attribute("type", Message("s", ""), "The desired type tag.")));
         }
