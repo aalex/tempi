@@ -106,6 +106,8 @@ bool isValidAtomType(const char c);
 Message castMessage(const Message &message, const char *type)
     throw(BadAtomTypeException, BadIndexException);
 
+void sleep_ms(double duration_ms);
+
 } // end of namespace
 } // end of namespace
 
