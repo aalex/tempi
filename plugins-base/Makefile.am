@@ -100,6 +100,8 @@ libtempi_@TEMPI_API_VERSION@_plugins_base_la_SOURCES = \
     sampler/samplernode.cpp \
     sampler/samplerreadnode.cpp \
     sampler/samplerwritenode.cpp \
+    serial/serialdevice.cpp \
+    serial/serialdevicenode.cpp \
     string/stringcharactersnode.cpp \
     string/stringjoinnode.cpp \
     string/stringsplitnode.cpp
