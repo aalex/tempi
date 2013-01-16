@@ -143,7 +143,7 @@ void SerialDeviceNode::doTick()
         // TODO: do not use until_char, but simply output it all as a blob
         static const char until_char = '\n';
         bool use_until_char = true;
-        // TODO: use a mutex!
+        // TODO: use a mutex! (it's blocking, right now!)
         bool did_read_some = this->device_->readUntil(result, max_length, total_num_read, timeout_ms, until_char, use_until_char);
         if (did_read_some)
         {
