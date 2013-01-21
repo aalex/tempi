@@ -37,15 +37,26 @@ OneFloatMathNode::OneFloatMathNode() :
 
 void OneFloatMathNode::processMessage(const char *inlet, const Message &message)
 {
+    float operand = 0.0f;
     if (message.typesMatch("f"))
     {
-        float operand = message.getFloat(0);
-        Message result("f", this->calculate(operand));
-        this->output("0", result);
+        operand = message.getFloat(0);
+    }
+    else if (message.typesMatch("i"))
+    {
+        operand = (float) message.getInt(0);
+    }
+    else if (message.typesMatch("d"))
+    {
+        operand = (float) message.getDouble(0);
     }
     else
+    {
         std::cerr << "OneFloatMathNode::" << __FUNCTION__ <<
             "(): Bad type for message " << message << std::endl;
+    }
+    Message result("f", this->calculate(operand));
+    this->output("0", result);
 }
 
 DegToRadNode::DegToRadNode() :
