@@ -8,7 +8,7 @@
     <node name="counter0" class="base.flow.counter">
       <attribute name="increment"><i>1</i></attribute>
     </node>
-    <node name="cast0" class="base.cast">
+    <node name="cast0" class="base.flow.cast">
       <attribute name="type"><s>f</s></attribute>
     </node>
     <node name="nearest0" class="base.music.nearest.note">
@@ -22,7 +22,7 @@
         <f>11.0</f>
       </attribute>
     </node>
-    <node name="monodic0" class="base.base.music.monodic">
+    <node name="monodic0" class="base.music.monodic">
     </node>
     <node name="print0" class="base.flow.print">
       <attribute name="prefix"><s>note: </s></attribute>
