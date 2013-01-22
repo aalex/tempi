@@ -31,30 +31,13 @@ namespace plugins_base {
 OneFloatMathNode::OneFloatMathNode() :
     Node()
 {
-    addInlet("0", "Incoming float.");
+    addInlet("0", "Incoming float.", "", "f");
     addOutlet("0", "Resulting float.");
 }
 
 void OneFloatMathNode::processMessage(const char *inlet, const Message &message)
 {
-    float operand = 0.0f;
-    if (message.typesMatch("f"))
-    {
-        operand = message.getFloat(0);
-    }
-    else if (message.typesMatch("i"))
-    {
-        operand = (float) message.getInt(0);
-    }
-    else if (message.typesMatch("d"))
-    {
-        operand = (float) message.getDouble(0);
-    }
-    else
-    {
-        std::cerr << "OneFloatMathNode::" << __FUNCTION__ <<
-            "(): Bad type for message " << message << std::endl;
-    }
+    float operand = operand = message.getFloat(0);
     Message result("f", this->calculate(operand));
     this->output("0", result);
 }

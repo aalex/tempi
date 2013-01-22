@@ -394,14 +394,14 @@ bool Node::addInlet(Inlet::ptr inlet)
     return false;
 }
 
-bool Node::addInlet(const char *name, const char *documentation)
+bool Node::addInlet(const char *name, const char *documentation, const char *long_documentation, const char *types_filter)
 {
-    return addInlet(Inlet::ptr(new Inlet(name, documentation)));
+    return addInlet(Inlet::ptr(new Inlet(name, documentation, long_documentation, types_filter)));
 }
 
-bool Node::addOutlet(const char *name, const char *documentation)
+bool Node::addOutlet(const char *name, const char *documentation, const char * long_documentation)
 {
-    return addOutlet(Outlet::ptr(new Outlet(name, documentation)));
+    return addOutlet(Outlet::ptr(new Outlet(name, documentation, long_documentation)));
 }
 
 bool Node::hasInlet(Inlet *inlet)

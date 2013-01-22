@@ -48,14 +48,14 @@ class Pad : public Entity
             const char *long_documentation);
         // TODO: return bool
         void trigger(const Message &message);
-        TriggeredSignal &getOnTriggeredSignal();
+        TriggeredSignal &getOnPadTriggeredSignal();
         bool setOwner(Node *node);
         Node * getOwner() const;
         // TODO:
         // void setAcceptedTypes(const std::vector<std::string> &types_tags);
         // std::vector<std::string> getAcceptedTypes() const;
     protected:
-        TriggeredSignal on_triggered_signal_;
+        TriggeredSignal on_pad_triggered_signal_;
         Node *owner_;
 };
 
