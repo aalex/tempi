@@ -57,6 +57,79 @@ const Message &Entity::getAttributeValue(const char *name) const
     return getAttribute(name)->getValue();
 }
 
+// TODO: move to message.{h,cpp}
+static bool tryAutoCast(const Message &source, Message &result, const std::string &expected_type_tags)
+{
+    unsigned int size = expected_type_tags.size();
+    if (source.getSize() != size)
+        return false;
+    for (unsigned int i = 0; i < size; i++)
+    {
+        AtomType source_type;
+        source.getAtomType(i, source_type);
+        AtomType desired_type = (AtomType) expected_type_tags[i]; // FIXME: We should not cast like this
+
+        switch (desired_type)
+        {
+            case INT:
+            {
+                switch (source_type)
+                {
+                    case INT: result.appendInt((int) source.getInt(i)); break;
+                    case FLOAT: result.appendInt((int) source.getFloat(i)); break;
+                    case DOUBLE: result.appendInt((int) source.getDouble(i)); break;
+                    default: return false; break;
+                }
+                break;
+            }
+            case DOUBLE:
+            {
+                switch (source_type)
+                {
+                    case INT: result.appendDouble((double) source.getInt(i)); break;
+                    case FLOAT: result.appendDouble((double) source.getFloat(i)); break;
+                    case DOUBLE: result.appendDouble((double) source.getDouble(i)); break;
+                    default: return false; break;
+                }
+                break;
+            }
+            case FLOAT:
+            {
+                switch (source_type)
+                {
+                    case INT: result.appendFloat((float) source.getInt(i)); break;
+                    case FLOAT: result.appendFloat((float) source.getFloat(i)); break;
+                    case DOUBLE: result.appendFloat((float) source.getDouble(i)); break;
+                    default: return false; break;
+                }
+                break;
+            }
+            case STRING:
+            {
+                switch (source_type)
+                {
+                    case STRING: result.appendString(source.getString(i).c_str()); break;
+                    default: return false; break;
+                }
+                break;
+            }
+            case BOOLEAN:
+            {
+                switch (source_type)
+                {
+                    case BOOLEAN: result.appendBoolean(source.getBoolean(i)); break;
+                    default: return false; break;
+                }
+                break;
+            }
+            default: // the other types are not automatically convertible for now
+                return false;
+                break;
+        }
+    }
+    return true;
+}
+
 void Entity::setAttributeValue(const char *name, const Message &value)
     throw(BadIndexException, BadAtomTypeException)
 {
@@ -71,13 +144,13 @@ void Entity::setAttributeValue(const char *name, const Message &value)
         }
         else
         {
-            // XXX Special case: cast i to f is OK.
-            if (value.getTypes() == "f" && current->getValue().getTypes() == "i")
+            Message casted_message;
+            if (tryAutoCast(value, casted_message, current->getValue().getTypes()))
             {
-                Message tmp("i", (int) value.getFloat(0));
-                current->setValue(tmp);
+                current->setValue(casted_message);
                 return;
             }
+            // else
             std::ostringstream os;
             os << "Entity::" << __FUNCTION__ << ": Attribute " << name << ": Bad type " << value.getTypes() << " while expecting " << current->getValue().getTypes();
             throw (BadAtomTypeException(os.str().c_str()));
