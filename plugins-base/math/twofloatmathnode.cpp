@@ -27,8 +27,8 @@ namespace plugins_base {
 TwoFloatMathNode::TwoFloatMathNode() :
     Node()
 {
-    addInlet("0", "Incoming left float operand. (hot)");
-    addInlet("1", "Incoming right float operand. (cold)");
+    addInlet("0", "Incoming left float operand. (hot)", "", "f");
+    addInlet("1", "Incoming right float operand. (cold)", "", "f");
     addOutlet("0", "Resulting float.");
 
     Message operand = Message("f", 0.0f);
@@ -39,16 +39,12 @@ void TwoFloatMathNode::processMessage(const char *inlet, const Message &message)
 {
     if (utils::stringsMatch(inlet, "1"))
     {
-        if (message.typesMatch("f"))
-            this->setAttributeValue("operand", message);
-        else
-            std::cerr << "TwoFloatMathNode::" << __FUNCTION__ << "(): Bad type for message " << message << std::endl;
+        this->setAttributeValue("operand", message);
     }
     else if (message.typesMatch("f"))
     {
         float left_operand = message.getFloat(0);
-        float right_operand = getAttribute("operand")->
-            getValue().getFloat(0);
+        float right_operand = getAttribute("operand")->getValue().getFloat(0);
         Message result("f", this->calculate(left_operand, right_operand));
         this->output("0", result);
     }

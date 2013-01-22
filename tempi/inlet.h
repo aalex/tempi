@@ -46,6 +46,7 @@ class Inlet : public Pad
         Inlet(const char *name, const char *short_documentation="",
             const char *long_documentation="", const char *types_filter="*");
         ~Inlet();
+        Pad::TriggeredSignal &getOnTriggeredSignal();
         /**
          * Connects this given Outlet to this Inlet.
          * @param source The Outlet to connect from.
@@ -71,7 +72,9 @@ class Inlet : public Pad
         typedef std::vector<Outlet::ptr> OutletsVec;
         OutletsVec sources_;
         TypesFilter filter_;
+        Pad::TriggeredSignal on_triggered_signal_;
         void onMessageReceivedFromSource(Pad *outlet, const Message &message);
+        void triggerInlet(const Message &message);
 };
 
 } // end of namespace

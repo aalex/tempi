@@ -33,6 +33,12 @@ Inlet::Inlet(const char *name, const char *short_documentation,
 }
 bool Inlet::setTypesFilter(const char *types_filter)
 {
+    if (Logger::isEnabledFor(INFO))
+    {
+        std::ostringstream os;
+        os << "Inlet." << __FUNCTION__ << "(" << types_filter << ") for inlet " << this->getName();
+        Logger::log(INFO, os);
+    }
     return this->filter_.setFilter(types_filter);
 }
 
@@ -45,6 +51,11 @@ Inlet::~Inlet()
 {
     // just in case.
     this->disconnectAll();
+}
+
+Pad::TriggeredSignal &Inlet::getOnTriggeredSignal()
+{
+    return on_triggered_signal_;
 }
 
 void Inlet::onMessageReceivedFromSource(Pad *outlet, const Message &message)
@@ -61,12 +72,30 @@ void Inlet::onMessageReceivedFromSource(Pad *outlet, const Message &message)
     else if (this->filter_.matchesFilter(message))
         type_ok = true;
     if (type_ok)
-        this->trigger(message);
+    {
+        if (Logger::isEnabledFor(DEBUG))
+        {
+            std::ostringstream os;
+            os << "Inlet." << __FUNCTION__ << ": type is ok.";
+            Logger::log(DEBUG, os);
+        }
+        // FIXME: this is confusin
+        this->triggerInlet(message);
+    }
     else
     {
         Message casted;
         if (this->filter_.tryCast(message, casted))
-            this->trigger(casted);
+        {
+            if (Logger::isEnabledFor(DEBUG))
+            {
+                std::ostringstream os;
+                os << "Inlet." << __FUNCTION__ << ": did cast to desired type.";
+                Logger::log(DEBUG, os);
+            }
+            // FIXME: this is confusing
+            this->triggerInlet(casted);
+        }
         else
         {
             std::ostringstream os;
@@ -78,12 +107,17 @@ void Inlet::onMessageReceivedFromSource(Pad *outlet, const Message &message)
     // TODO: return true;
 }
 
+void Inlet::triggerInlet(const Message &message)
+{
+    on_triggered_signal_(dynamic_cast<Pad *>(this), message);
+}
+
 bool Inlet::connect(Outlet::ptr source)
 {
     if (! this->isConnected(source))
     {
         this->sources_.push_back(source);
-        source.get()->getOnTriggeredSignal().connect(boost::bind(&Inlet::onMessageReceivedFromSource, this, _1, _2));
+        source.get()->getOnPadTriggeredSignal().connect(boost::bind(&Inlet::onMessageReceivedFromSource, this, _1, _2));
         return true;
     }
     return false;
@@ -99,7 +133,7 @@ bool Inlet::disconnect(Outlet::ptr source)
 {
     if (isConnected(source))
     {
-        source.get()->getOnTriggeredSignal().disconnect(boost::bind(&Inlet::onMessageReceivedFromSource, this, _1, _2));
+        source.get()->getOnPadTriggeredSignal().disconnect(boost::bind(&Inlet::onMessageReceivedFromSource, this, _1, _2));
         sources_.erase(std::find(sources_.begin(), sources_.end(), source));
         return true;
     }

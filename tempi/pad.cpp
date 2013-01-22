@@ -20,8 +20,7 @@
 
 #include "tempi/pad.h"
 
-namespace tempi
-{
+namespace tempi {
 
 Pad::Pad(const char *name, const char *short_documentation, const char *long_documentation) :
     Entity(name, short_documentation, long_documentation)
@@ -30,12 +29,12 @@ Pad::Pad(const char *name, const char *short_documentation, const char *long_doc
 
 void Pad::trigger(const Message &message)
 {
-    on_triggered_signal_(dynamic_cast<Pad *>(this), message);
+    on_pad_triggered_signal_(dynamic_cast<Pad *>(this), message);
 }
 
-Pad::TriggeredSignal &Pad::getOnTriggeredSignal()
+Pad::TriggeredSignal &Pad::getOnPadTriggeredSignal()
 {
-    return on_triggered_signal_;
+    return on_pad_triggered_signal_;
 }
 
 bool Pad::setOwner(Node *node)
