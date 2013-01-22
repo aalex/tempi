@@ -124,22 +124,15 @@ class Node : public Entity
          * Gets the type name for this Node.
          */
         const std::string &getTypeName() const;
-        ///**
-        // * Sets the instance name for this Node.
-        // * WARNING: Should only be called by its parent Graph.
-        // */
-        //void setInstanceName(const char *instanceName) // TODO:deprecate
-        //{
-        //    setName(instanceName);
-        //}
-        ///**
-        // * Gets the instance name for this Node.
-        // */
-        //std::string getInstanceName() const // TODO:deprecate
-        //{
-        //    return getName();
-        //}
+        /**
+         * Returns whether or not a given identifier for a message is handled.
+         * See handleReceive
+         */
         bool handlesReceiveSymbol(const char *selector) const;
+        /**
+         * Handles - or not - a named message.
+         * See handlesReceiveSymbol
+         */
         bool handleReceive(const char *selector, const Message &message)
         {
             if (! handlesReceiveSymbol(selector))
@@ -159,6 +152,9 @@ class Node : public Entity
          * @return True if it has it.
          */
         bool hasOutlet(const char *name) const;
+        /**
+         * Returns whether or not this node has been load banged.
+         */
         bool isLoadBanged() const;
         /**
          * Children of Node should not override this method.
@@ -178,32 +174,16 @@ class Node : public Entity
         /**
          * Adds an outlet.
          */
-        bool addOutlet(const char *name, const char *documentation="");
+        bool addOutlet(const char *name, const char *documentation="", const char *long_documentation="");
         /**
          * Adds an inlet.
          */
-        bool addInlet(const char *name, const char *documentation="");
-        /**
-         * Adds an outlet.
-         */
-        bool addOutlet(Outlet::ptr outlet);
+        bool addInlet(const char *name, const char *documentation="", const char *long_documentation="", const char *types_filter="*");
         /**
          * Removes an outlet.
          */
         bool removeOutlet(const char *name);
         bool removeInlet(const char *name);
-        /**
-         * Adds an inlet.
-         */
-        bool addInlet(Inlet::ptr inlet);
-        /**
-         * Adds an attribute.
-         * TODO: remove this
-         */
-        // void addAttribute(const char *name, const Message &value, const char *doc="", bool type_strict=true) throw(BadIndexException)
-        // {
-        //     addAttribute(Attribute::ptr(new Attribute(name, value, doc, type_strict)));
-        // }
         /**
          * Outputs a Message through the given outlet.
          */
@@ -237,6 +217,15 @@ class Node : public Entity
         // TODO: return success
         // TODO: add unsigned int inlet_number
         Graph *graph_;
+
+        /**
+         * Adds an outlet.
+         */
+        bool addOutlet(Outlet::ptr outlet);
+        /**
+         * Adds an inlet.
+         */
+        bool addInlet(Inlet::ptr inlet);
 };
 
 } // end of namespace

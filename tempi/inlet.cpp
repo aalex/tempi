@@ -26,9 +26,19 @@
 namespace tempi {
 
 Inlet::Inlet(const char *name, const char *short_documentation,
-    const char * long_documentation) :
+    const char * long_documentation, const char *types_filter) :
         Pad(name, short_documentation, long_documentation)
 {
+    this->setTypesFilter(types_filter);
+}
+bool Inlet::setTypesFilter(const char *types_filter)
+{
+    return this->filter_.setFilter(types_filter);
+}
+
+std::string Inlet::getTypesFilter() const
+{
+    return this->filter_.getFilter();
 }
 
 Inlet::~Inlet()
@@ -42,10 +52,30 @@ void Inlet::onMessageReceivedFromSource(Pad *outlet, const Message &message)
     if (Logger::isEnabledFor(DEBUG))
     {
         std::ostringstream os;
-        os << "Inlet::" << __FUNCTION__ << "(" << outlet->getName() << ", " << message << ")";
+        os << "Inlet." << __FUNCTION__ << "(" << outlet->getName() << ", " << message << ")";
         Logger::log(DEBUG, os);
     }
-    this->trigger(message);
+    bool type_ok = false;
+    if (this->filter_.isWildcard())
+        type_ok = true;
+    else if (this->filter_.matchesFilter(message))
+        type_ok = true;
+    if (type_ok)
+        this->trigger(message);
+    else
+    {
+        Message casted;
+        if (this->filter_.tryCast(message, casted))
+            this->trigger(casted);
+        else
+        {
+            std::ostringstream os;
+            os << "Inlet." << __FUNCTION__ << ": Could not handle message of wrong type " << message.getTypes() << ": " << message;
+            Logger::log(ERROR, os);
+            // TODO: return false
+        }
+    }
+    // TODO: return true;
 }
 
 bool Inlet::connect(Outlet::ptr source)

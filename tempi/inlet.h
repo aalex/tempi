@@ -31,6 +31,7 @@
 #include "tempi/message.h"
 #include "tempi/outlet.h"
 #include "tempi/pad.h"
+#include "tempi/typesfilter.h"
 #include <string>
 
 namespace tempi {
@@ -43,7 +44,7 @@ class Inlet : public Pad
     public:
         typedef std::tr1::shared_ptr<Inlet> ptr;
         Inlet(const char *name, const char *short_documentation="",
-            const char *long_documentation="");
+            const char *long_documentation="", const char *types_filter="*");
         ~Inlet();
         /**
          * Connects this given Outlet to this Inlet.
@@ -64,9 +65,12 @@ class Inlet : public Pad
          * Disconnects all Outlets connected to this Inlet.
          */
         void disconnectAll();
+        bool setTypesFilter(const char *types_filter);
+        std::string getTypesFilter() const;
     private:
         typedef std::vector<Outlet::ptr> OutletsVec;
         OutletsVec sources_;
+        TypesFilter filter_;
         void onMessageReceivedFromSource(Pad *outlet, const Message &message);
 };
 
