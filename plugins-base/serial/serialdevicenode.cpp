@@ -25,6 +25,7 @@
 #include <algorithm> // std::erase
 #include <boost/algorithm/string/classification.hpp> // for tokenizer
 #include <boost/algorithm/string/split.hpp> // for tokenizer
+#include <boost/algorithm/string.hpp> // for trim
 #include <boost/foreach.hpp> // for tokenizer
 #include <boost/lexical_cast.hpp>
 
@@ -91,8 +92,10 @@ std::vector<std::string> tokenize(const std::string &text)
 Message stringToFudi(const std::string &text)
 {
     Message ret;
-    std::string tmp = stripTrailingCharacter(text, '\n');
-    tmp = stripTrailingCharacter(tmp, ';');
+    //stripTrailingCharacter(text, '\n');
+    //tmp = stripTrailingCharacter(tmp, ';');
+    std::string tmp = text;
+    //boost::algorithm::trim(tmp);
     std::vector<std::string> tokens = tokenize(tmp);
     BOOST_FOREACH(const std::string& token, tokens)
     {
@@ -259,8 +262,14 @@ void SerialDeviceNode::doTick()
             // TODO: output a blob, not a string
             // we remove the trailing new line
             std::string tmp_string = std::string(result);
+            tmp_string = tmp_string.substr(0, tmp_string.size() - 1); // remove last char
             Message to_output_message = stringToFudi(tmp_string);
-
+            if (Logger::isEnabledFor(INFO))
+            {
+                std::ostringstream os;
+                os << "SerialDeviceNode." << __FUNCTION__ << " did read " << to_output_message;
+                Logger::log(INFO, os);
+            }
             // TODO: stringToFudi
             //to_output_message.appendString(tmp_string.c_str()); //tmp_string.substr(0, total_num_read - 1).c_str());
             //output(DATA_OUTLET, to_output_message);
