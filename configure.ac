@@ -213,6 +213,14 @@ else
     AC_DEFINE(HAVE_CLUTTER,[1],[Clutter headers successfully detected])
 fi
 
+# Lua
+PKG_CHECK_MODULES([LUA], [lua5.2], have_lua=true, have_lua=false)
+if test "x${have_lua}" = "xfalse" ; then
+    AC_MSG_WARN([missing package: liblua5.2-dev])
+else
+    AC_DEFINE(HAVE_LUA,[1],[Lua headers successfully detected])
+fi
+
 # libxml2
 PKG_CHECK_MODULES([LIBXML], [libxml-2.0], have_libxml=true, have_libxml=false)
 if test "x${have_libxml}" = "xfalse" ; then
@@ -287,7 +295,7 @@ AC_MSG_NOTICE([BOOST_SIGNALS_LIBS:         ${BOOST_SIGNALS_LIBS}])
 AC_MSG_NOTICE([BOOST_SYSTEM_LIBS:          ${BOOST_SYSTEM_LIBS}])
 AC_MSG_NOTICE([BOOST_THREAD_LIBS:         ${BOOST_THREAD_LIBS}])
 
-CFLAGS+=" -Wall -g3 -O0" dnl -Wextra -Wfatal-errors -Werror "
+CFLAGS+=" fPIC -Wall -g3 -O0" dnl -Wextra -Wfatal-errors -Werror "
 
 # GNU help2man creates man pages from --help output; in many cases, this
 # is sufficient, and obviates the need to maintain man pages separately.

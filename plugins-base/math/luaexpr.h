@@ -22,12 +22,12 @@
  * @file
  * The ExprNode class.
  */
-#ifndef __TEMPI_BASE_EXPR_NODE_H__
-#define __TEMPI_BASE_EXPR_NODE_H__
+#ifndef __TEMPI_BASE_LUAEXPR_NODE_H__
+#define __TEMPI_BASE_LUAEXPR_NODE_H__
 
-#include "tempi/config.h" // include before check for HAVE_V8
+#include "tempi/config.h" // include before check for HAVE_LUA
 
-#ifdef HAVE_V8
+#ifdef HAVE_LUA
 
 #include "tempi/node.h"
 #include <v8.h>
@@ -38,10 +38,10 @@ namespace plugins_base {
 /**
  * Runs a javascript snippet and return the output
  */
-class ExprNode : public Node
+class LuaExprNode : public Node
 {
     public:
-        ExprNode();
+        LuaExprNode();
     protected:
         virtual void processMessage(const char *inlet, const Message &message);
         virtual bool onNodeAttributeChanged(const char *name, const Message &value);
@@ -57,6 +57,6 @@ bool runJavaScript(const char *source, const Message &args, Message &result);
 } // end of namespace
 } // end of namespace
 
-#endif // HAVE_V8
+#endif // HAVE_LUA
 #endif // ifndef
 

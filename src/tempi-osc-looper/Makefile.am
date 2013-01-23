@@ -12,6 +12,7 @@ LDADD = \
     $(ATOM_LIBS) \
     $(BOOST_FILESYSTEM_LIBS) \
     $(BOOST_LIBS) \
+    $(LUA_LIBS) \
     $(BOOST_PROGRAM_OPTIONS_LIBS) \
     $(BOOST_REGEX_LIBS) \
     $(BOOST_SYSTEM_LIBS) \
