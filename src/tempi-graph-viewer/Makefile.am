@@ -16,6 +16,7 @@ LDADD = \
     $(BOOST_REGEX_LIBS) \
     $(BOOST_FILESYSTEM_LIBS) \
     $(BOOST_THREAD_LIBS) \
+    $(LUA_LIBS) \
     $(BOOST_LIBS) \
     $(CLUTTER_LIBS) \
     $(GLIB_LIBS) \

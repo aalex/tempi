@@ -2,15 +2,24 @@
 <tempi version="0.1.9">
   <graph>
     <node name="loadmess0" class="base.flow.loadmess">
-      <attribute name="value"><s>hello</s><i>2</i><f>3.14159</f></attribute>
+      <attribute name="value"><f>3.14159</f></attribute>
     </node>
-    <node name="expr0" class="base.math.expr">
+    <node name="expr0" class="base.math.jsexpr">
       <!-- <attribute name="script"><s>return [args[2], args[1] * 10, args[0]]</s></attribute> -->
-      <attribute name="script"><s>return args[1] * args[2]</s></attribute>
+      <attribute name="script"><s>return args[0] * args[0]</s></attribute>
     </node>
     <node name="print0" class="base.flow.print">
+        <attribute name="prefix"><s>js:  </s></attribute>
+    </node>
+    <node name="expr1" class="base.math.luaexpr">
+      <attribute name="expression"><s>f0 * f0</s></attribute>
+    </node>
+    <node name="print1" class="base.flow.print">
+        <attribute name="prefix"><s>lua: </s></attribute>
     </node>
     <connection from="loadmess0" outlet="0" to="expr0" inlet="input"/>
+    <connection from="loadmess0" outlet="0" to="expr1" inlet="in"/>
     <connection from="expr0" outlet="output" to="print0" inlet="0"/>
+    <connection from="expr1" outlet="out" to="print1" inlet="0"/>
   </graph>
 </tempi>
