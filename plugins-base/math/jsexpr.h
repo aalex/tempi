@@ -38,7 +38,7 @@ namespace plugins_base {
 /**
  * Runs a javascript snippet and return the output
  */
-class ExprNode : public Node
+class JsExprNode : public Node
 {
     public:
         ExprNode();

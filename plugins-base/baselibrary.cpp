@@ -43,7 +43,7 @@
 #include "plugins-base/flow/unpacknode.h"
 #include "plugins-base/mapper/mapperinputnode.h"
 #include "plugins-base/math/booleanoperatornode.h"
-#include "plugins-base/math/expr.h"
+#include "plugins-base/math/jsexpr.h"
 #include "plugins-base/math/onefloatmathnode.h"
 #include "plugins-base/math/twofloatmathnode.h"
 #include "plugins-base/midi/midibuildernodes.h"
@@ -115,7 +115,7 @@ void BaseLibrary::load(NodeFactory &factory, const char * /*prefix*/) const
 #endif // HAVE_SPATOSC
 
 #ifdef HAVE_V8
-    factory.registerTypeT<ExprNode>(concatenate(prefix, "math.expr").c_str());
+    factory.registerTypeT<JsExprNode>(concatenate(prefix, "math.expr").c_str());
 #endif // HAVE_V8
 
     factory.registerTypeT<AddNode>(concatenate(prefix, "math.+").c_str());

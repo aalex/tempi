@@ -27,18 +27,18 @@
 #include <vector>
 #include <sstream>
 #include <stdexcept>
-#include "plugins-base/math/expr.h"
+#include "plugins-base/math/jsexpr.h"
 #include "tempi/utils.h"
 #include "tempi/log.h"
 
 namespace tempi {
 namespace plugins_base {
 
-const char * const ExprNode::INPUT_INLET = "input";
-const char * const ExprNode::OUTPUT_OUTLET = "output";
-const char * const ExprNode::SCRIPT_ATTR = "script";
+const char * const JsExprNode::INPUT_INLET = "input";
+const char * const JsExprNode::OUTPUT_OUTLET = "output";
+const char * const JsExprNode::SCRIPT_ATTR = "script";
 
-ExprNode::ExprNode() :
+JsExprNode::JsExprNode() :
     Node()
 {
     addAttribute(Attribute::ptr(new Attribute(SCRIPT_ATTR, Message("s", "args"), "Javascript expression to run and get its return value as a result.")));
@@ -48,7 +48,7 @@ ExprNode::ExprNode() :
     setShortDocumentation("Runs a javascript expression and outputs the result.");
 }
 
-void ExprNode::processMessage(const char *inlet, const Message &message)
+void JsExprNode::processMessage(const char *inlet, const Message &message)
 {
     if (! utils::stringsMatch(inlet, INPUT_INLET))
         return;
@@ -67,7 +67,7 @@ void ExprNode::processMessage(const char *inlet, const Message &message)
     }
 }
 
-bool ExprNode::onNodeAttributeChanged(const char *name, const Message &value)
+bool JsExprNode::onNodeAttributeChanged(const char *name, const Message &value)
 {
     if (Logger::isEnabledFor(DEBUG))
     {
