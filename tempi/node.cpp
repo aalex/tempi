@@ -148,7 +148,7 @@ void Node::onInletTriggered(Pad *inlet, const Message &message)
     if (Logger::isEnabledFor(DEBUG))
     {
         std::ostringstream os;
-        os << "Node(" << getName() << ")." << __FUNCTION__ << "(" << inlet_name << ", " << message << ")";
+        os << "Node." << __FUNCTION__ << "[" << getName() << "](" << inlet_name << ", " << message << ")";
         Logger::log(DEBUG, os);
     }
     if (attr_inlet_name == inlet_name)
@@ -520,7 +520,17 @@ bool Node::message(const char *inlet, const Message &message)
             Logger::log(ERROR, os);
             return false;
         }
-        inletPtr->trigger(message);
+        else
+        {
+            if (Logger::isEnabledFor(DEBUG))
+            {
+                std::ostringstream os;
+                os << "Node.";
+                os << __FUNCTION__ << "[\"" << this->getName() << "\"](" << inlet << ", " << message << ")";
+                Logger::log(DEBUG, os);
+            }
+        }
+        inletPtr->triggerInlet(message); // call Pad::trigger(message)
         return true;
     }
     else

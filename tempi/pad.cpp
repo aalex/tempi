@@ -19,6 +19,7 @@
  */
 
 #include "tempi/pad.h"
+#include "tempi/log.h"
 
 namespace tempi {
 
@@ -29,6 +30,12 @@ Pad::Pad(const char *name, const char *short_documentation, const char *long_doc
 
 void Pad::trigger(const Message &message)
 {
+    if (Logger::isEnabledFor(DEBUG))
+    {
+        std::ostringstream os;
+        os << "Pad." << __FUNCTION__ << "(" << message << ")";
+        Logger::log(DEBUG, os);
+    }
     on_pad_triggered_signal_(dynamic_cast<Pad *>(this), message);
 }
 

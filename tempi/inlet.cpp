@@ -31,6 +31,7 @@ Inlet::Inlet(const char *name, const char *short_documentation,
 {
     this->setTypesFilter(types_filter);
 }
+
 bool Inlet::setTypesFilter(const char *types_filter)
 {
     if (Logger::isEnabledFor(INFO))
@@ -87,11 +88,11 @@ void Inlet::onMessageReceivedFromSource(Pad *outlet, const Message &message)
         Message casted;
         if (this->filter_.tryCast(message, casted))
         {
-            if (Logger::isEnabledFor(DEBUG))
+            if (Logger::isEnabledFor(INFO))
             {
                 std::ostringstream os;
-                os << "Inlet." << __FUNCTION__ << ": did cast to desired type.";
-                Logger::log(DEBUG, os);
+                os << "Inlet." << __FUNCTION__ << ": did cast message to desired type:" << casted;
+                Logger::log(INFO, os);
             }
             // FIXME: this is confusing
             this->triggerInlet(casted);
@@ -114,6 +115,12 @@ void Inlet::triggerInlet(const Message &message)
 
 bool Inlet::connect(Outlet::ptr source)
 {
+    if (Logger::isEnabledFor(DEBUG))
+    {
+        std::ostringstream os;
+        os << "Inlet." << __FUNCTION__ << "(" << source->getName() << ")";
+        Logger::log(DEBUG, os);
+    }
     if (! this->isConnected(source))
     {
         this->sources_.push_back(source);

@@ -135,6 +135,13 @@ bool Graph::message(const char *node, const char *inlet, const Message &message)
         Logger::log(ERROR, os.str().c_str());
         return false;
     }
+    if (Logger::isEnabledFor(DEBUG))
+    {
+        std::ostringstream os;
+        os << "Graph.";
+        os << __FUNCTION__ << "(" << node << ", " << inlet << ", " << message << ")";
+        Logger::log(DEBUG, os);
+    }
     return nodePtr->message(inlet, message);
 }
 
