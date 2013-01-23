@@ -20,6 +20,7 @@
 
 #include "plugins-base/math/onefloatmathnode.h"
 #include "tempi/utils.h"
+#include "tempi/log.h"
 #include <iostream>
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
@@ -37,6 +38,13 @@ OneFloatMathNode::OneFloatMathNode() :
 
 void OneFloatMathNode::processMessage(const char *inlet, const Message &message)
 {
+    if (message.getTypes() != "f")
+    {
+        std::ostringstream os;
+        os << "OneFloatMathNode." << __FUNCTION__ << "(" << inlet << ", " << message << ")";
+        os << ": type should be f";
+        Logger::log(ERROR, os);
+    }
     float operand = operand = message.getFloat(0);
     Message result("f", this->calculate(operand));
     this->output("0", result);

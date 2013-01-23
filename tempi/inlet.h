@@ -69,12 +69,13 @@ class Inlet : public Pad
         bool setTypesFilter(const char *types_filter);
         std::string getTypesFilter() const;
         void triggerInlet(const Message &message);
+        // FIXME
+        void onMessageReceivedFromSource(Pad *outlet, const Message &message);
     private:
         typedef std::vector<Outlet::ptr> OutletsVec;
         OutletsVec sources_;
         TypesFilter filter_;
         Pad::TriggeredSignal on_triggered_signal_;
-        void onMessageReceivedFromSource(Pad *outlet, const Message &message);
 };
 
 } // end of namespace

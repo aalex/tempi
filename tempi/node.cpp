@@ -315,7 +315,30 @@ void Node::onInletTriggered(Pad *inlet, const Message &message)
         }
         return;
     }
-    processMessage(inlet_name.c_str(), message);
+    // FIXME: should apply inlet's types filter
+    {
+        Inlet *inlet = this->getInlet(inlet_name.c_str());
+        if (inlet == 0)
+        {
+            std::ostringstream os;
+            os << "Node." << __FUNCTION__;
+            os << "... NULL INLET?";
+            Logger::log(ERROR, os);
+        }
+        else
+        {
+            if (Logger::isEnabledFor(DEBUG))
+            {
+                std::ostringstream os;
+                os << "Node." << __FUNCTION__;
+                os << " Inlet " << inlet->getName() << " exists. ";
+                os << " Calling processMessage(" << inlet_name << ", " << message << ")";
+                Logger::log(DEBUG, os);
+            }
+            // inlet->triggerInlet(message); // that would create an infinite loop!
+            processMessage(inlet_name.c_str(), message);
+        }
+    }
 }
 
 std::map<std::string, Inlet::ptr> Node::getInlets()
@@ -530,7 +553,9 @@ bool Node::message(const char *inlet, const Message &message)
                 Logger::log(DEBUG, os);
             }
         }
-        inletPtr->triggerInlet(message); // call Pad::trigger(message)
+        // XXX: NOOOOO: inletPtr->triggerInlet(message); // call Pad::trigger(message)
+        // Did not filter the message...
+        inletPtr->onMessageReceivedFromSource(NULL, message);
         return true;
     }
     else

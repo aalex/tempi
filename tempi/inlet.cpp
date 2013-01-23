@@ -61,10 +61,19 @@ Pad::TriggeredSignal &Inlet::getOnTriggeredSignal()
 
 void Inlet::onMessageReceivedFromSource(Pad *outlet, const Message &message)
 {
+    std::string outlet_name;
+    if (outlet == 0)
+    {
+        outlet_name = "NULL";
+    }
+    else
+    {
+        outlet_name = outlet->getName();
+    }
     if (Logger::isEnabledFor(DEBUG))
     {
         std::ostringstream os;
-        os << "Inlet." << __FUNCTION__ << "(" << outlet->getName() << ", " << message << ")";
+        os << "Inlet." << __FUNCTION__ << "(" << outlet_name << ", " << message << ")";
         Logger::log(DEBUG, os);
     }
     bool type_ok = false;

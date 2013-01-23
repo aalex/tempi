@@ -239,7 +239,7 @@ class Message
                 else
                 {
                     std::ostringstream os;
-                    os << "Message::" << __FUNCTION__ << ": Bad argument type " << index << " " << typeid(value).name();
+                    os << "Message::" << __FUNCTION__ << "<" << typeid(T).name() << ">(" << index << "): Bad template parameter type. Expeceted " << typeid(value).name() << ". Current value is " << value << ". Throwing an exception.";
                     throw BadAtomTypeException(os.str().c_str());
                 }
             else
