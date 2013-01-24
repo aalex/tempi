@@ -6,6 +6,8 @@
 * This code is hereby placed in the public domain.
 */
 
+// Taken from http://www.tecgraf.puc-rio.br/~lhf/ftp/lua/#ae
+
 extern "C" {
 
 void		ae_open		(void);
