@@ -20,6 +20,7 @@
 
 #include "plugins-base/osc/oscsendernode.h"
 #include "tempi/utils.h"
+#include "tempi/log.h"
 #include <iostream>
 
 namespace tempi {
@@ -40,7 +41,11 @@ void OscSenderNode::processMessage(const char *inlet, const Message &message)
 {
     // TODO: send osc message
     if (osc_sender_.get() == 0)
-        std::cerr << "OscSenderNode::" << __FUNCTION__ << ": OscSender has no address nor port specified." << std::endl;
+    {
+        std::ostringstream os;
+        os << "OscSenderNode::" << __FUNCTION__ << ": OscSender has no address nor port specified." << std::endl;
+        Logger::log(ERROR, os);
+    }
     else
         osc_sender_->sendMessage(message);
 }
