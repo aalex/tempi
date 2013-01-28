@@ -23,6 +23,8 @@
 #include <boost/lexical_cast.hpp>
 #include <iostream>
 #include <boost/lexical_cast.hpp>
+#include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/thread.hpp>
 #include <string.h>
 
 namespace tempi {
@@ -520,6 +522,12 @@ Message castMessage(const Message &message, const char *type)
         } // switch current
     }
     return result;
+}
+
+void sleep_ms(double duration_ms)
+{
+    boost::posix_time::milliseconds sleepTime(duration_ms);
+    boost::this_thread::sleep(sleepTime);
 }
 
 } // end of namespace

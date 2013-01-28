@@ -26,6 +26,12 @@
 namespace tempi {
 namespace plugins_base {
 
+// TODO: improve isValidPath
+static bool isValidPath(const std::string &path)
+{
+    return path.size() >= 1 && path[0] == '/'; // FIXME
+}
+
 OscRouteNode::OscRouteNode() :
     Node()
 {
@@ -165,13 +171,22 @@ bool OscRouteNode::onNodeAttributeChanged(const char *name, const Message &value
             }
             else
             {
-                if (Logger::isEnabledFor(DEBUG))
+                if (isValidPath(s))
+                {
+                    if (Logger::isEnabledFor(DEBUG))
+                    {
+                        std::ostringstream os;
+                        os << "[osc.route] " << __FUNCTION__ << ": new_outlets_list.push_back(" << s << ")";
+                        Logger::log(DEBUG, os.str().c_str());
+                    }
+                    new_outlets_list.push_back(s);
+                }
+                else
                 {
                     std::ostringstream os;
-                    os << "[osc.route] " << __FUNCTION__ << ": new_outlets_list.push_back(" << s << ")";
-                    Logger::log(DEBUG, os.str().c_str());
+                    os << "[osc.route] " << __FUNCTION__ << ": Invalid OSC path " << s;
+                    Logger::log(ERROR, os.str().c_str());
                 }
-                new_outlets_list.push_back(s);
             }
         }
     }

@@ -81,6 +81,8 @@ bool SerialDevice::readUntil(char *result, size_t max_length, size_t &total_num_
     //    buf[num_read + 1] = 0;  // null terminate the string
 
     total_num_read = num_read;
+    if (total_num_read == 0)
+        return false;
     return success;
 }
 

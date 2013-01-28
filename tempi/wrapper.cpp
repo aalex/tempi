@@ -632,8 +632,7 @@ bool Wrapper::getNode(const std::string &graph, const std::string &nodeName, Nod
 
 bool Wrapper::sleep(double duration_ms)
 {
-    boost::posix_time::milliseconds sleepTime(duration_ms);
-    boost::this_thread::sleep(sleepTime);
+    utils::sleep_ms(duration_ms);
 }
 
 bool Wrapper::waitUntilAllNodesAreInitiated(const std::string &graph)

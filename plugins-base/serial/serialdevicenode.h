@@ -32,6 +32,17 @@
 namespace tempi {
 namespace plugins_base {
 
+atom::BlobValue::ptr stringToBlob(const std::string &text);
+// Converts a message to FUDI-like string.
+// only supports int and string.
+// doesn't append a semi-colon
+std::string fudiToString(const Message &message);
+// Converts a FUDI-like string to a message.
+// only works with int and strings for now
+Message stringToFudi(const std::string &text);
+// Removes a trailing character from a string, if found.
+std::string stripTrailingCharacter(const std::string &text, char character = '\n');
+
 /**
  * Node that communicates with a serial device.
  */
@@ -44,6 +55,8 @@ class SerialDeviceNode : public Node
         static const char * const IS_OPEN_ATTR;
         static const char * const BAUD_RATE_ATTR;
         static const char * const DEVICE_FILE_ATTR;
+        static const char * const FUDI_INLET;
+        static const char * const FUDI_OUTLET;
     protected:
         virtual void processMessage(const char *inlet, const Message &message);
         virtual void doTick();

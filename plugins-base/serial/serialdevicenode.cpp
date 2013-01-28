@@ -22,6 +22,12 @@
 #include "tempi/utils.h"
 #include "tempi/log.h"
 #include <iostream>
+#include <algorithm> // std::erase
+#include <boost/algorithm/string/classification.hpp> // for tokenizer
+#include <boost/algorithm/string/split.hpp> // for tokenizer
+#include <boost/algorithm/string.hpp> // for trim
+#include <boost/foreach.hpp> // for tokenizer
+#include <boost/lexical_cast.hpp>
 
 namespace tempi {
 namespace plugins_base {
@@ -31,6 +37,8 @@ const char * const SerialDeviceNode::DATA_OUTLET = "data";
 const char * const SerialDeviceNode::IS_OPEN_ATTR = "is_open";
 const char * const SerialDeviceNode::BAUD_RATE_ATTR = "baud_rate";
 const char * const SerialDeviceNode::DEVICE_FILE_ATTR = "device";
+const char * const SerialDeviceNode::FUDI_INLET = "fudi";
+const char * const SerialDeviceNode::FUDI_OUTLET = "fudi";
 
 SerialDeviceNode::SerialDeviceNode() :
     Node()
@@ -47,19 +55,112 @@ SerialDeviceNode::SerialDeviceNode() :
 
     addInlet(DATA_INLET, "Messages to send to the device. Must be a single blob.");
     addOutlet(DATA_OUTLET, "Messages received from the device. Single blobs.");
+    addInlet(FUDI_INLET, "Messages to send to the device. Must be a single blob.");
+    addOutlet(FUDI_OUTLET, "Messages received from the device. Single blobs.");
+}
+
+atom::BlobValue::ptr stringToBlob(const std::string &text)
+{
+    size_t size = text.size() + 1;
+    atom::BlobValue::ptr blob = atom::BlobValue::convert(atom::BlobValue::create(text.c_str(), size));
+    // atom::BlobValue::ptr(new atom::BlobValue(size));
+    return blob;
+}
+
+std::string stripTrailingCharacter(const std::string &text, char character)
+{
+    std::string tmp = text;
+    tmp.erase(std::remove(tmp.begin(), tmp.end(), character), tmp.end());
+    return tmp;
+}
+
+std::vector<std::string> tokenize(const std::string &text)
+{
+    std::vector<std::string> result;
+    typedef std::vector<std::string> Tokens;
+    Tokens tokens;
+    boost::split(tokens, text, boost::is_any_of(" "));
+    return tokens;
+    //std::cout << tokens.size() << " tokens" << std::endl;
+    //BOOST_FOREACH(const std::string& i, tokens)
+    //{
+    //    result.push_back(i);
+    //}
+    //return result;
+}
+
+Message stringToFudi(const std::string &text)
+{
+    Message ret;
+    //stripTrailingCharacter(text, '\n');
+    //tmp = stripTrailingCharacter(tmp, ';');
+    std::string tmp = text;
+    //boost::algorithm::trim(tmp);
+    std::vector<std::string> tokens = tokenize(tmp);
+    BOOST_FOREACH(const std::string& token, tokens)
+    {
+        try
+        {
+            ret.appendInt(boost::lexical_cast<int>(token));
+        }
+        catch (...)
+        {
+            ret.appendString(token.c_str());
+        }
+    }
+    return ret;
+}
+
+std::string fudiToString(const Message &message)
+{
+    std::string result;
+    if (message.getSize() == 0)
+        return result;
+
+    std::ostringstream os;
+    for (unsigned int i = 0; i < message.getSize(); i++)
+    {
+        bool did_append = true;
+        AtomType type;
+        message.getAtomType(i, type);
+        switch (type)
+        {
+            case INT:
+                os << message.getInt(i);
+                break;
+            case STRING:
+                os << message.getString(i);
+                break;
+            default:
+            {
+                std::ostringstream os2;
+                os2 << __FUNCTION__ << ": Unsupported atom type: " << type;
+                Logger::log(ERROR, os2);
+                did_append = false;
+                break;
+            }
+        }
+        // message size if not 0 for sure
+        if (did_append && i != (message.getSize() - 1))
+        {
+            os << " ";
+        }
+        return os.str();
+    }
 }
 
 void SerialDeviceNode::processMessage(const char *inlet, const Message &message)
 {
+    if (device_.get() == 0)
+    {
+        std::ostringstream os;
+        os << "SerialDeviceNode::" << __FUNCTION__ << ": Device file has not been specified.";
+        Logger::log(ERROR, os);
+        return;
+    }
     if (utils::stringsMatch(DATA_INLET, inlet))
     {
-        if (device_.get() == 0)
-        {
-            std::ostringstream os;
-            os << "SerialDeviceNode::" << __FUNCTION__ << ": Device file has not been specified.";
-            Logger::log(ERROR, os);
-        }
-        else if (message.typesMatch("B"))
+        if (message.typesMatch("B"))
         {
             atom::BlobValue::ptr blob = message.getBlob(0);
             device_->writeBlob(blob->getValue(), blob->getSize());
@@ -75,6 +176,20 @@ void SerialDeviceNode::processMessage(const char *inlet, const Message &message)
             os << "SerialDeviceNode::" << __FUNCTION__ << ": Message must be a blob."; // or a string for now
             Logger::log(ERROR, os);
         }
+    }
+    else if (utils::stringsMatch(FUDI_INLET, inlet))
+    {
+        std::string text = fudiToString(message);
+        std::ostringstream os;
+        os << text << "\n";
+        if (Logger::isEnabledFor(NOTICE))
+        {
+            std::ostringstream os;
+            os << "SerialDeviceNode: send string \"\"\"" << os.str() << "\"\"\"";
+            Logger::log(NOTICE, os);
+        }
+        atom::BlobValue::ptr blob = stringToBlob(os.str());
+        device_->writeBlob(blob->getValue(), blob->getSize());
     }
 }
 
@@ -139,7 +254,7 @@ void SerialDeviceNode::doTick()
         char result[256];
         memset(result, 0, 256);
         size_t total_num_read;
-        unsigned long long timeout_ms = 50;
+        unsigned long long timeout_ms = 150;
         // TODO: do not use until_char, but simply output it all as a blob
         static const char until_char = '\n';
         bool use_until_char = true;
@@ -150,9 +265,18 @@ void SerialDeviceNode::doTick()
             // TODO: output a blob, not a string
             // we remove the trailing new line
             std::string tmp_string = std::string(result);
-            Message to_output_message;
-            to_output_message.appendString(tmp_string.c_str()); //tmp_string.substr(0, total_num_read - 1).c_str());
-            output(DATA_OUTLET, to_output_message);
+            tmp_string = tmp_string.substr(0, tmp_string.size() - 1); // remove last char
+            Message to_output_message = stringToFudi(tmp_string);
+            if (Logger::isEnabledFor(INFO))
+            {
+                std::ostringstream os;
+                os << "SerialDeviceNode." << __FUNCTION__ << " did read " << to_output_message;
+                Logger::log(INFO, os);
+            }
+            // TODO: stringToFudi
+            //to_output_message.appendString(tmp_string.c_str()); //tmp_string.substr(0, total_num_read - 1).c_str());
+            //output(DATA_OUTLET, to_output_message);
+            output(FUDI_OUTLET, to_output_message);
         }
     }
 }
