@@ -17,6 +17,7 @@ LDADD = \
     $(CLUTTER_LIBS) \
     $(GLIB_LIBS) \
     $(LIBLO_LIBS) \
+    $(LUA_LIBS) \
     $(top_builddir)/tempi/libtempi-@TEMPI_API_VERSION@.la
 
 tempi_draw_CXXFLAGS = $(AM_CXXFLAGS)

@@ -2,6 +2,7 @@ SUBDIRS = tests
 
 AM_CXXFLAGS = \
     $(LOG4CPP_CFLAGS) \
+    $(LUA_CFLAGS) \
     $(BOOST_CPPFLAGS) \
     $(CLUTTER_CFLAGS) \
     $(GLIB_CFLAGS) \
@@ -15,6 +16,7 @@ AM_CXXFLAGS = \
     -I$(top_srcdir)
 
 AM_LIBS = \
+    $(LUA_LIBS) -L/usr/lib/xb86_64-linux-gnu \
     $(BOOST_FILESYSTEM_LIBS) \
     $(BOOST_LIBS)  \
     $(BOOST_REGEX_LIBS)  \
@@ -79,7 +81,10 @@ libtempi_@TEMPI_API_VERSION@_plugins_base_la_SOURCES = \
     mapping/slide.cpp \
     mapping/slidefilter.cpp \
     math/booleanoperatornode.cpp \
-    math/expr.cpp \
+    math/jsexpr.cpp \
+    math/luaexpr.cpp \
+    math/lmathx.cpp \
+    math/ae.cpp \
     math/onefloatmathnode.cpp \
     math/twofloatmathnode.cpp \
     midi/abstractmidifilter.cpp \
@@ -141,7 +146,10 @@ EXTRA_DIST = \
     mapping/slide.h \
     mapping/slidefilter.h \
     math/booleanoperatornode.h \
-    math/expr.h \
+    math/jsexpr.h \
+    math/luaexpr.h \
+    math/lmathx.h \
+    math/ae.h \
     math/onefloatmathnode.h \
     math/twofloatmathnode.h \
     music/musicnearestnode.h \

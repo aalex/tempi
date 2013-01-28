@@ -14,6 +14,7 @@ LDADD = \
     $(BOOST_PROGRAM_OPTIONS_LIBS) \
     $(BOOST_LIBS) \
     $(CLUTTER_LIBS) \
+    $(LUA_LIBS) \
     $(BOOST_REGEX_LIBS) \
     $(GLIB_LIBS) \
     $(LIBLO_LIBS) \

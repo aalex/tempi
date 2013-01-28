@@ -17,6 +17,7 @@ LDADD = \
     $(BOOST_FILESYSTEM_LIBS) \
     $(BOOST_THREAD_LIBS) \
     $(BOOST_LIBS) \
+    $(LUA_LIBS) \
     $(CLUTTER_LIBS) \
     $(GLIB_LIBS) \
     $(top_builddir)/tempi/libtempi-@TEMPI_API_VERSION@.la

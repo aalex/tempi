@@ -20,6 +20,7 @@
 
 #include "plugins-base/math/onefloatmathnode.h"
 #include "tempi/utils.h"
+#include "tempi/log.h"
 #include <iostream>
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
@@ -31,21 +32,22 @@ namespace plugins_base {
 OneFloatMathNode::OneFloatMathNode() :
     Node()
 {
-    addInlet("0", "Incoming float.");
+    addInlet("0", "Incoming float.", "", "f");
     addOutlet("0", "Resulting float.");
 }
 
 void OneFloatMathNode::processMessage(const char *inlet, const Message &message)
 {
-    if (message.typesMatch("f"))
+    if (message.getTypes() != "f")
     {
-        float operand = message.getFloat(0);
-        Message result("f", this->calculate(operand));
-        this->output("0", result);
+        std::ostringstream os;
+        os << "OneFloatMathNode." << __FUNCTION__ << "(" << inlet << ", " << message << ")";
+        os << ": type should be f";
+        Logger::log(ERROR, os);
     }
-    else
-        std::cerr << "OneFloatMathNode::" << __FUNCTION__ <<
-            "(): Bad type for message " << message << std::endl;
+    float operand = operand = message.getFloat(0);
+    Message result("f", this->calculate(operand));
+    this->output("0", result);
 }
 
 DegToRadNode::DegToRadNode() :

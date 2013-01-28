@@ -19,6 +19,7 @@
  */
 
 #include "tempi/attribute.h"
+#include "tempi/log.h"
 #include <iostream>
 
 namespace tempi {
@@ -39,6 +40,12 @@ const Message &Attribute::getValue()
 bool Attribute::setValue(const Message &value)
 {
     // TODO: check here if same type or not
+    if (Logger::isEnabledFor(DEBUG))
+    {
+        std::ostringstream os;
+        os << "Attribute." << __FUNCTION__ << "(" << value << "): Current value is " << value_;
+        Logger::log(DEBUG, os);
+    }
     value_ = value;
     return true;
 }

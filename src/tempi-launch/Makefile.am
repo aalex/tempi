@@ -10,6 +10,7 @@ AM_CXXFLAGS = \
 
 LDADD = \
     $(ATOM_LIBS) \
+    $(LUA_LIBS) \
     $(BOOST_PROGRAM_OPTIONS_LIBS) \
     $(BOOST_SYSTEM_LIBS) \
     $(BOOST_REGEX_LIBS) \

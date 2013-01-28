@@ -90,6 +90,7 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     threadedscheduler.cpp \
     timeposition.cpp \
     timer.cpp \
+	typesfilter.cpp \
     utils.cpp \
     wrapper.cpp
 
@@ -147,6 +148,7 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     threadedscheduler.h \
     timeposition.h \
     timer.h \
+	typesfilter.h \
     utils.h \
     wrapper.h
 

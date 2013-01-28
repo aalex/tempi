@@ -34,6 +34,15 @@ GraphEditorNode::GraphEditorNode() :
     Node()
 {
     this->setShortDocumentation("Edits the current graph.");
+    this->setLongDocumentation("This node allows one to edit the graph it belongs to.\n"
+        "It does so by calling the tempi::dynamic::handle_graph_message function.\n"
+        "\n"
+        "* <node> setAttribute <attr> ...\n"
+        "* connect <from> <outlet> <to> <inlet>\n"
+        "* disconnect <from> <outlet> <to> <inlet>\n"
+        "* addNode <type> <name>\n" // FIXME: rename to createNode
+        "* deleteNode <name>\n" // FIXME: rename to destroyNode
+        );
     this->addInlet(COMMAND_INLET, "Command to execute.");
     this->addOutlet(SUCCESS_OUTLET, "Success or not of the last command. Outputs a boolean.");
 }

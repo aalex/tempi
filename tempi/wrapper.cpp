@@ -637,7 +637,7 @@ bool Wrapper::sleep(double duration_ms)
 
 bool Wrapper::waitUntilAllNodesAreInitiated(const std::string &graph)
 {
-    static const double SLEEP_MS = 5.0;
+    static const double SLEEP_MS = 15.0;
     // check for graph:
     {
         tempi::ScopedLock::ptr lock = scheduler_->acquireLock();
@@ -659,6 +659,7 @@ bool Wrapper::waitUntilAllNodesAreInitiated(const std::string &graph)
         // FIXME: getNode does not acquire the lock!!
         tempi::ScopedLock::ptr lock = scheduler_->acquireLock();
         std::vector<std::string>::const_iterator node;
+        std::vector<std::string> not_ready_nodes;
         for (node = nodes.begin(); node != nodes.end(); node++)
         {
             tempi::Node::ptr nodePtr;
@@ -670,13 +671,22 @@ bool Wrapper::waitUntilAllNodesAreInitiated(const std::string &graph)
                     all_ready = false;
                     if (Logger::isEnabledFor(DEBUG))
                     {
-                        std::ostringstream os;
-                        os << "Wrapper." << __FUNCTION__ <<
-                            ": Node \"" << graph << "/" << *node << "\" is not ready";
-                        Logger::log(DEBUG, os);
+                        not_ready_nodes.push_back(*node);
                     }
                 }
             }
+        }
+
+        if (Logger::isEnabledFor(DEBUG))
+        {
+            std::ostringstream os;
+            os << "Wrapper." << __FUNCTION__ <<
+                "(" << graph << ") Not ready: ";
+            for (node = not_ready_nodes.begin(); node != not_ready_nodes.end(); node++)
+            {
+                os << *node << " ";
+            }
+            Logger::log(DEBUG, os);
         }
         if (all_ready)
         {
