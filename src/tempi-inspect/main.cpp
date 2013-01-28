@@ -53,10 +53,14 @@ typedef enum
 
 // static functions:
 static void print_n_times(unsigned int num, const char *text);
-static void print_title(const std::string &text, TitleLevel level);
+static void print_rst_title(const std::string &text, TitleLevel level);
 static void print_line_if_not_empty(const std::string &text);
 static void print_bullet_line_if_not_empty(const std::string &text);
-static bool stringInVector(const std::string &text, const std::vector<std::string> &vec);
+static bool stringIsInVector(const std::string &text, const std::vector<std::string> &vec);
+
+static std::vector<std::string> getUndesiredInlets();
+static std::vector<std::string> getUndesiredOutlets();
+static std::vector<std::string> getUndesiredAttributes();
 
 static gboolean help = FALSE;
 static gboolean version = FALSE;
@@ -76,6 +80,178 @@ static GOptionEntry entries[] =
 };
 
 // classes:
+//
+
+class Printer
+{
+    public:
+        virtual void printAllClassInfo(Node::ptr &node) = 0;
+};
+
+class RstPrinter: public Printer
+{
+    public:
+        virtual void printAllClassInfo(Node::ptr &node);
+};
+
+// class CsvPrinter: public Printer
+// {
+//     public:
+//         virtual void printAllClassInfo(Node::ptr &node);
+// };
+//
+
+std::vector<std::string> getUndesiredInlets()
+{
+    std::vector<std::string> ret;
+    ret.push_back(std::string("__attr__"));
+    ret.push_back(std::string("__call__"));
+    return ret;
+}
+
+std::vector<std::string> getUndesiredOutlets()
+{
+    std::vector<std::string> ret;
+    ret.push_back(std::string("__attr__"));
+    ret.push_back(std::string("__return__"));
+    return ret;
+}
+
+std::vector<std::string> getUndesiredAttributes()
+{
+    std::vector<std::string> ret;
+    ret.push_back(std::string("__position__"));
+    ret.push_back(std::string("__data__"));
+    return ret;
+}
+
+void RstPrinter::printAllClassInfo(Node::ptr &node)
+{
+    using std::cout;
+    using std::endl;
+    using std::vector;
+    using std::map;
+    using std::string;
+
+    std::vector<std::string> undesired_inlets = getUndesiredInlets();
+    std::vector<std::string> undesired_outlets = getUndesiredOutlets();
+    std::vector<std::string> undesired_attributes = getUndesiredAttributes();
+
+    cout << "[" << node->getTypeName() << "]" << endl;
+    cout << "=";
+    print_n_times(node->getTypeName().size(), "=");
+    cout << "=";
+    cout << endl;
+    cout << endl;
+    if (node->getShortDocumentation() != "")
+        cout << node->getShortDocumentation(); // << endl;
+    else
+        cout << "(node type not documented)"; // << endl;
+    if (node->getLongDocumentation() != "")
+    {
+        cout << endl;
+        cout << endl;
+        cout << node->getLongDocumentation(); // << endl;
+        cout << endl;
+    }
+    cout << endl;
+    cout << endl;
+    // ATTRIBUTES:
+    {
+        if (node->listAttributes().size() == 0)
+            cout << "* (No attributes)" << endl; // << endl;
+        else
+        {
+            vector<string> attributes = node->listAttributes();
+            vector<string>::const_iterator iter;
+            for (iter = attributes.begin(); iter != attributes.end(); ++iter)
+            {
+                if (! stringIsInVector((*iter), undesired_attributes))
+                {
+                    Attribute* attr = node->getAttribute((*iter).c_str());
+                    cout << "* Attribute \"" << attr->getName() << "\" : ";
+                    if (attr->isTypeStrict())
+                        cout << "(Type: " << attr->getValue().getTypes() << ")";
+                    else
+                        cout << "(variable type)";
+                    cout << " ";
+                    if (attr->getShortDocumentation() != "")
+                        cout << attr->getShortDocumentation();
+                    else
+                        cout << "(attribute not documented)";
+                    cout << " ";
+                    cout << "Default value: " << attr->getValue();
+                    cout << endl;
+                }
+            }
+        }
+    }
+    // METHODS:
+    {
+        if (node->listMethods().size() == 0)
+        {
+            // cout << "* (No methods)" << endl;
+        }
+        else
+        {
+            vector<string> methods = node->listMethods();
+            vector<string>::const_iterator iter;
+            for (iter = methods.begin(); iter != methods.end(); ++iter)
+            {
+                EntityMethod* method = node->getMethod((*iter).c_str());
+                cout << "* Method \"" << method->getName() << "\" : ";
+                cout << "(Arguments types: " << method->getArgumentsType() << ")";
+                cout << "(Return types: " << method->getReturnType() << ")";
+                cout << " ";
+                if (method->getShortDocumentation() != "")
+                    cout << method->getShortDocumentation();
+                else
+                    cout << "(method not documented)";
+                cout << " ";
+                cout << endl;
+            }
+        }
+    }
+    // INLETS:
+    if (node->getInlets().size() == 0)
+        cout << "* (No inlet)" << endl;
+    else
+    {
+        map<string, Inlet::ptr> inlets = node->getInlets();
+        map<string, Inlet::ptr>::const_iterator iter;
+        for (iter = inlets.begin(); iter != inlets.end(); ++iter)
+        {
+            if (! stringIsInVector((*iter).first, undesired_inlets))
+            {
+                cout << "* Inlet \"" << (*iter).first << "\" : ";
+                if (((*iter).second).get()->getShortDocumentation() != "")
+                    cout << ((*iter).second).get()->getShortDocumentation() << endl;
+                else
+                    cout << "(Not documented)" << endl;
+            }
+        }
+    }
+    // OUTLETS:
+    if (node->getOutlets().size() == 0)
+        cout << "* (No outlet)" << endl;
+    else
+    {
+        map<string, Outlet::ptr> outlets = node->getOutlets();
+        map<string, Outlet::ptr>::const_iterator iter;
+        for (iter = outlets.begin(); iter != outlets.end(); ++iter)
+        {
+            if (! stringIsInVector((*iter).first, undesired_outlets))
+            {
+                cout << "* Outlet \"" << (*iter).first << "\" : ";
+                if (((*iter).second).get()->getShortDocumentation() != "")
+                    cout << ((*iter).second).get()->getShortDocumentation() << endl;
+                else
+                    cout << "(Not documented)" << endl;
+            }
+        }
+    }
+    cout << endl;
+}
 
 /**
  * The TempiInspect class helps navigating in Tempi's doc.
@@ -84,6 +260,7 @@ class TempiInspect
 {
     public:
         TempiInspect();
+
         /**
          * Return -1 if it's ok to run the program, or retuns 0 or 1 if we should terminate it.
          * Call this begore launching the app.
@@ -98,11 +275,12 @@ class TempiInspect
         bool all_;
         std::vector<std::string> keywords_;
         tempi::NodeFactory factory_;
+        std::tr1::shared_ptr<Printer> printer_;
         void printAll();
         void printListOfTypes();
 };
 
-bool stringInVector(const std::string &text, const std::vector<std::string> &vec)
+bool stringIsInVector(const std::string &text, const std::vector<std::string> &vec)
 {
     // FIXME: optimize this
     std::vector<std::string>::const_iterator iter;
@@ -114,7 +292,7 @@ bool stringInVector(const std::string &text, const std::vector<std::string> &vec
     return false;
 }
 
-void print_title(const std::string &text, TitleLevel level)
+void print_rst_title(const std::string &text, TitleLevel level)
 {
     using std::cout;
     using std::endl;
@@ -162,6 +340,7 @@ TempiInspect::TempiInspect() :
     debug_(false),
     all_(false)
 {
+    this->printer_ = std::tr1::shared_ptr<Printer>(new RstPrinter);
 }
 
 bool TempiInspect::getVerbose() const
@@ -183,134 +362,12 @@ bool TempiInspect::printClass(const std::string &name)
     using std::map;
     using std::string;
 
-    std::vector<std::string> undesired_inlets;
-    std::vector<std::string> undesired_outlets;
-    std::vector<std::string> undesired_attributes;
-    undesired_inlets.push_back(std::string("__attr__"));
-    undesired_inlets.push_back(std::string("__call__"));
-    undesired_outlets.push_back(std::string("__attr__"));
-    undesired_outlets.push_back(std::string("__return__"));
-    undesired_attributes.push_back(std::string("__position__"));
-    undesired_attributes.push_back(std::string("__data__"));
 
     if (factory_.hasType(name.c_str()))
     {
         Node::ptr node = factory_.create(name.c_str());
         node->init();
-        cout << "[" << name << "]" << endl;
-        cout << "=";
-        print_n_times(node->getTypeName().size(), "=");
-        cout << "=";
-        cout << endl;
-        cout << endl;
-        if (node->getShortDocumentation() != "")
-            cout << node->getShortDocumentation(); // << endl;
-        else
-            cout << "(node type not documented)"; // << endl;
-        if (node->getLongDocumentation() != "")
-        {
-            cout << endl;
-            cout << endl;
-            cout << node->getLongDocumentation(); // << endl;
-            cout << endl;
-        }
-        cout << endl;
-        cout << endl;
-        // ATTRIBUTES:
-        {
-            if (node->listAttributes().size() == 0)
-                cout << "* (No attributes)" << endl; // << endl;
-            else
-            {
-                vector<string> attributes = node->listAttributes();
-                vector<string>::const_iterator iter;
-                for (iter = attributes.begin(); iter != attributes.end(); ++iter)
-                {
-                    if (! stringInVector((*iter), undesired_attributes))
-                    {
-                        Attribute* attr = node->getAttribute((*iter).c_str());
-                        cout << "* Attribute \"" << attr->getName() << "\" : ";
-                        if (attr->isTypeStrict())
-                            cout << "(Type: " << attr->getValue().getTypes() << ")";
-                        else
-                            cout << "(variable type)";
-                        cout << " ";
-                        if (attr->getShortDocumentation() != "")
-                            cout << attr->getShortDocumentation();
-                        else
-                            cout << "(attribute not documented)";
-                        cout << " ";
-                        cout << "Default value: " << attr->getValue();
-                        cout << endl;
-                    }
-                }
-            }
-        }
-        // METHODS:
-        {
-            if (node->listMethods().size() == 0)
-            {
-                // cout << "* (No methods)" << endl;
-            }
-            else
-            {
-                vector<string> methods = node->listMethods();
-                vector<string>::const_iterator iter;
-                for (iter = methods.begin(); iter != methods.end(); ++iter)
-                {
-                    EntityMethod* method = node->getMethod((*iter).c_str());
-                    cout << "* Method \"" << method->getName() << "\" : ";
-                    cout << "(Arguments types: " << method->getArgumentsType() << ")";
-                    cout << "(Return types: " << method->getReturnType() << ")";
-                    cout << " ";
-                    if (method->getShortDocumentation() != "")
-                        cout << method->getShortDocumentation();
-                    else
-                        cout << "(method not documented)";
-                    cout << " ";
-                    cout << endl;
-                }
-            }
-        }
-        // INLETS:
-        if (node->getInlets().size() == 0)
-            cout << "* (No inlet)" << endl;
-        else
-        {
-            map<string, Inlet::ptr> inlets = node->getInlets();
-            map<string, Inlet::ptr>::const_iterator iter;
-            for (iter = inlets.begin(); iter != inlets.end(); ++iter)
-            {
-                if (! stringInVector((*iter).first, undesired_inlets))
-                {
-                    cout << "* Inlet \"" << (*iter).first << "\" : ";
-                    if (((*iter).second).get()->getShortDocumentation() != "")
-                        cout << ((*iter).second).get()->getShortDocumentation() << endl;
-                    else
-                        cout << "(Not documented)" << endl;
-                }
-            }
-        }
-        // OUTLETS:
-        if (node->getOutlets().size() == 0)
-            cout << "* (No outlet)" << endl;
-        else
-        {
-            map<string, Outlet::ptr> outlets = node->getOutlets();
-            map<string, Outlet::ptr>::const_iterator iter;
-            for (iter = outlets.begin(); iter != outlets.end(); ++iter)
-            {
-                if (! stringInVector((*iter).first, undesired_outlets))
-                {
-                    cout << "* Outlet \"" << (*iter).first << "\" : ";
-                    if (((*iter).second).get()->getShortDocumentation() != "")
-                        cout << ((*iter).second).get()->getShortDocumentation() << endl;
-                    else
-                        cout << "(Not documented)" << endl;
-                }
-            }
-        }
-        cout << endl;
+        this->printer_->printAllClassInfo(node);
     }
     else
         std::cerr << "No such node type: \"" << name << "\"" << std::endl;
@@ -318,7 +375,7 @@ bool TempiInspect::printClass(const std::string &name)
 
 void TempiInspect::printListOfTypes()
 {
-    print_title(std::string("Tempi types:"), FIRST);
+    print_rst_title(std::string("Tempi types:"), FIRST);
     std::map<std::string, AbstractNodeType::ptr>::const_iterator iter;
     std::map<std::string, AbstractNodeType::ptr> entries = factory_.getEntries();
     for (iter = entries.begin(); iter != entries.end(); ++iter)
@@ -329,7 +386,7 @@ void TempiInspect::printListOfTypes()
 
 void TempiInspect::printAll()
 {
-    // print_title(std::string("Tempi types:"), FIRST);
+    // print_rst_title(std::string("Tempi types:"), FIRST);
     std::cout << "Tempi base plugins version " << PACKAGE_VERSION << std::endl << std::endl;
     std::map<std::string, AbstractNodeType::ptr>::const_iterator iter;
     std::map<std::string, AbstractNodeType::ptr> entries = factory_.getEntries();
