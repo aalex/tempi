@@ -1,9 +1,9 @@
 Tempi release notes
 ===================
 
-Tempi 0.2.2 (20??-??-??)
+Tempi 0.3.0
 -------------------------
-This release is an official version in the stable 0.2 series.
+This release is a developer snapshot in the experimental 0.3 series.
 
 New features:
 
@@ -26,6 +26,7 @@ Bugs fixed:
 * Inlets can cast ints to floats, and floats to ints
 * Attributes can cast ints to floats, and floats to ints
 * Fix node types in some example xml files
+* Node.message was not casting the messages
 
 
 Tempi 0.2.0 (2012-12-28)
