@@ -28,6 +28,8 @@
 namespace tempi
 {
 
+static std::vector<Graph::Connection>::iterator find_connection(std::vector<Graph::Connection> &connections, const char *from, const char *outlet, const char *to, const char *inlet);
+
 Graph::Graph(NodeFactory::ptr factory) :
     factory_(factory)
 {
@@ -185,6 +187,15 @@ bool Graph::connect(const char *from, const char *outlet, const char *to, const 
         Logger::log(ERROR, os.str().c_str());
         return false;
     }
+    if (this->isConnected(from, outlet, to, inlet))
+    {
+        std::ostringstream os;
+        os << "Graph." << __FUNCTION__ << ": Already connected " <<
+            from << ":" << outlet << "->" <<
+            to << ":" << inlet;
+        Logger::log(ERROR, os.str().c_str());
+        return false;
+    }
     try
     {
         toNode->getInlet(inlet)->connect(fromNode->getOutletSharedPtr(outlet));
@@ -246,11 +257,46 @@ bool Graph::disconnect(const char *from, const char *outlet, const char *to, con
         // no need to catch BadIndexException sinze already tested it
         Outlet::ptr source = fromNode->getOutletSharedPtr(outlet);
         Inlet *inletPtr = toNode->getInlet(inlet);
-        return inletPtr->disconnect(source);
+
+
+        bool success = inletPtr->disconnect(source);
+
+        //for (iter = connections_.begin(); iter != connections_.end(); ++iter)
+        //{
+        //}
+        //
+        //
+        std::vector<Connection>::iterator iter = find_connection(this->connections_, from, outlet, to, inlet);
+        if (iter == this->connections_.end())
+        {
+            // item not anymore in vector!
+        }
+        else
+        {
+            this->connections_.erase(iter);
+        }
+        return success;
     }
     else
         return false;
 }
+
+std::vector<Graph::Connection>::iterator find_connection(std::vector<Graph::Connection> &connections, const char *from, const char *outlet, const char *to, const char *inlet)
+{
+    std::vector<Graph::Connection>::iterator iter;
+    for (iter = connections.begin(); iter != connections.end(); ++iter)
+    {
+        if ((*iter).get<0>() == from && 
+            (*iter).get<1>() == outlet && 
+            (*iter).get<2>() == to && 
+            (*iter).get<3>() == inlet)
+        {
+            return iter;
+        }
+    }
+    return connections.end();
+}
+
 
 Node::ptr Graph::getNode(const char *name) const
 {
