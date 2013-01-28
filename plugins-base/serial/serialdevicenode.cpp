@@ -179,14 +179,17 @@ void SerialDeviceNode::processMessage(const char *inlet, const Message &message)
     }
     else if (utils::stringsMatch(FUDI_INLET, inlet))
     {
-        if (device_.get() == 0)
+        std::string text = fudiToString(message);
+        std::ostringstream os;
+        os << text << "\n";
+        if (Logger::isEnabledFor(NOTICE))
         {
-            std::string text = fudiToString(message);
             std::ostringstream os;
-            os << text << "\n";
-            atom::BlobValue::ptr blob = stringToBlob(os.str());
-            device_->writeBlob(blob->getValue(), blob->getSize());
+            os << "SerialDeviceNode: send string \"\"\"" << os.str() << "\"\"\"";
+            Logger::log(NOTICE, os);
         }
+        atom::BlobValue::ptr blob = stringToBlob(os.str());
+        device_->writeBlob(blob->getValue(), blob->getSize());
     }
 }
 
