@@ -2,6 +2,7 @@ bin_PROGRAMS = \
     tempi-draw
 
 AM_CXXFLAGS = \
+    $(ATOM_CFLAGS) \
     $(BOOST_CPPFLAGS) \
     $(CLUTTER_CFLAGS) \
     $(GLIB_CFLAGS) \
@@ -9,12 +10,14 @@ AM_CXXFLAGS = \
     -I$(top_srcdir)
 
 LDADD = \
+    $(ATOM_LIBS) \
     $(BOOST_PROGRAM_OPTIONS_LIBS) \
     $(BOOST_LIBS) \
     $(BOOST_REGEX_LIBS) \
     $(CLUTTER_LIBS) \
     $(GLIB_LIBS) \
     $(LIBLO_LIBS) \
+    $(LUA_LIBS) \
     $(top_builddir)/tempi/libtempi-@TEMPI_API_VERSION@.la
 
 tempi_draw_CXXFLAGS = $(AM_CXXFLAGS)

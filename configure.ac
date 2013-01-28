@@ -13,7 +13,7 @@
 # - increase tempi_micro_version to the next odd number
 # - increase tempi_interface_version to the next odd number
 m4_define([tempi_major_version], [0])
-m4_define([tempi_minor_version], [2])
+m4_define([tempi_minor_version], [3])
 m4_define([tempi_micro_version], [0])
 
 m4_define([tempi_release_status],
@@ -24,7 +24,7 @@ m4_define([tempi_release_status],
 m4_define([tempi_version], [tempi_major_version.tempi_minor_version.tempi_micro_version])
 
 # change this only when breaking the API
-m4_define([tempi_api_version], [0.2])
+m4_define([tempi_api_version], [0.3])
 
 # increase the interface age by 1 for each release; if the API changes,
 # set to 0. interface_age and binary_age are used to create the soname
@@ -213,6 +213,14 @@ else
     AC_DEFINE(HAVE_CLUTTER,[1],[Clutter headers successfully detected])
 fi
 
+# Lua
+PKG_CHECK_MODULES([LUA], [lua5.2], have_lua=true, have_lua=false)
+if test "x${have_lua}" = "xfalse" ; then
+    AC_MSG_WARN([missing package: liblua5.2-dev])
+else
+    AC_DEFINE(HAVE_LUA,[1],[Lua headers successfully detected])
+fi
+
 # libxml2
 PKG_CHECK_MODULES([LIBXML], [libxml-2.0], have_libxml=true, have_libxml=false)
 if test "x${have_libxml}" = "xfalse" ; then
@@ -230,6 +238,11 @@ if test "x${have_spatosc}" = "xfalse" ; then
     AC_MSG_WARN([missing package: libspatosc-dev])
 else
     AC_DEFINE(HAVE_SPATOSC,[1],[SpatOSC headers successfully detected])
+fi
+
+PKG_CHECK_MODULES([ATOM], [atom-0.2], have_atom=true, have_atom=false)
+if test "x${have_atom}" = "xfalse" ; then
+    AC_MSG_ERROR([missing package: libatom-dev])
 fi
 
 PKG_CHECK_MODULES([LIBMAPPER], [libmapper-0], have_libmapper=true, have_libmapper=false)
@@ -282,7 +295,7 @@ AC_MSG_NOTICE([BOOST_SIGNALS_LIBS:         ${BOOST_SIGNALS_LIBS}])
 AC_MSG_NOTICE([BOOST_SYSTEM_LIBS:          ${BOOST_SYSTEM_LIBS}])
 AC_MSG_NOTICE([BOOST_THREAD_LIBS:         ${BOOST_THREAD_LIBS}])
 
-CFLAGS+=" -Wall -g3 -O0" dnl -Wextra -Wfatal-errors -Werror "
+CFLAGS+=" fPIC -Wall -g3 -O0" dnl -Wextra -Wfatal-errors -Werror "
 
 # GNU help2man creates man pages from --help output; in many cases, this
 # is sufficient, and obviates the need to maintain man pages separately.

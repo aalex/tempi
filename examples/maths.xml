@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tempi version="0.2.1">
+  <graph>
+    <node class="base.flow.counter" name="counter0">
+    </node>
+    <node class="base.time.metro" name="metro0">
+      <attribute name="interval">
+        <i>1000</i>
+      </attribute>
+      <attribute name="running">
+        <b>true</b>
+      </attribute>
+    </node>
+    <node class="base.flow.print" name="print_n">
+      <attribute name="prefix"> <s>n = </s> </attribute>
+    </node>
+    <node class="base.math.+" name="plus">
+      <attribute name="operand"><f>10</f></attribute>
+    </node>
+    <node class="base.flow.print" name="print_n_plus_10">
+      <attribute name="prefix"> <s>n + 10 = </s> </attribute>
+    </node>
+    <connection from="metro0" outlet="0" to="counter0" inlet="0"/>
+    <connection from="counter0" outlet="0" to="plus" inlet="0"/>
+    <connection from="counter0" outlet="0" to="print_n" inlet="0"/>
+    <connection from="plus" outlet="0" to="print_n_plus_10" inlet="0"/>
+  </graph>
+</tempi>

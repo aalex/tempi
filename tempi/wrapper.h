@@ -56,8 +56,12 @@ class Wrapper
         bool setLogLevel(const std::string &level);
         /**
          * Loads a graph from an XML file.
+         * Graph name will be created, and should not exist prior to calling this.
          */
         bool loadGraph(const std::string &name, const std::string &fileName);
+        /**
+         * save a graph to an XML file.
+         */
         bool saveGraph(const std::string &name, const std::string &fileName);
         bool getSynchronous() const;
         /**
@@ -131,6 +135,12 @@ class Wrapper
             Message &value) const;
 
         // TODO: return string
+        bool getNodeDocumentation(
+            const std::string &graph,
+            const std::string &node,
+            std::string &value) const;
+
+        // TODO: return string
         bool getNodeAttributeDocumentation(
             const std::string &graph,
             const std::string &node,
@@ -169,6 +179,13 @@ class Wrapper
 
         bool sleep(double duration_ms);
         bool waitUntilAllNodesAreInitiated(const std::string &graph);
+
+        bool isConnected(const std::string &graph, const std::string &node_from, const std::string &outlet, const std::string &node_to, const std::string &inlet);
+        /**
+         * Result will be a list of string in the form "from:outlet:to:inlet", with semicolons between each entity name.
+         * That is possible since semicolons are forbidden in entity names.
+         */
+        bool listConnections(const std::string &graph, std::vector<std::string> &result);
     private:
         bool synchronous_;
         Scheduler *scheduler_;

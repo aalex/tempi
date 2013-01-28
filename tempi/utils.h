@@ -100,12 +100,14 @@ bool isValidType(const char *type);
  */
 bool isValidAtomType(const char c);
 
+// FIXME: castMessage and tryAutoCast are duplicates
 /**
  * Tries to cast a Message arguments to some other type tags.
  */
 Message castMessage(const Message &message, const char *type)
     throw(BadAtomTypeException, BadIndexException);
 
+bool tryAutoCast(const Message &source, Message &result, const std::string &expected_type_tags);
 } // end of namespace
 } // end of namespace
 

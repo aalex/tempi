@@ -1,6 +1,34 @@
 Tempi release notes
 ===================
 
+Tempi 0.3.0
+-------------------------
+This release is a developer snapshot in the experimental 0.3 series.
+
+New features:
+
+* Slightly more doc aboud saving/loading graphs
+* Add Wrapper::getNodeDocumentation
+* Add Wrapper::isConnected
+* Add Wrapper::listConnections
+* Add doc string for counter's increment attribute
+* Support receiving 2-char MIDI events
+* Add base.serial.device node type
+* Supports Blob atoms, thanks to libatom
+* Add TypesFilter so that inlets can filter message by their types
+* Rename base.math.expr to base.math.jsexpr
+* Add base.math.luaexpr
+
+Bugs fixed:
+
+* Decrease verbosity in serializer and midiroutenode
+* fix Wrapper::getNodeTypeName. It used to return the doc instead of the type name.
+* Inlets can cast ints to floats, and floats to ints
+* Attributes can cast ints to floats, and floats to ints
+* Fix node types in some example xml files
+* Node.message was not casting the messages
+
+
 Tempi 0.2.0 (2012-12-28)
 -------------------------
 This release is an official version in the stable 0.2 series.

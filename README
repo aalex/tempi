@@ -63,6 +63,7 @@ Here is how to build and install it on Debian GNU/Linux or Ubuntu::
 
   sudo apt-get install help2man gettext automake bison build-essential flex libtool 
   sudo apt-get install libxml2-dev libclutter-1.0-dev libglib2.0-dev libboost-all-dev libportmidi-dev liblo0-dev liblog4cpp5-dev
+  sudo apt-get install libatom-dev
   ./autogen.sh
   ./configure
   make
@@ -73,6 +74,7 @@ Some dependencies are optional. If you can, you can install these libraries to g
 
   sudo apt-get install libspatosc-0.4-dev
   sudo apt-get install libv8-dev
+  sudo apt-get install liblua5.2-dev
 
 Spatosc is available from the http://code.sat.qc.ca/redmine/projects/spatosc or https://launchpad.net/~sat-metalab/+archive/metalab URL. Libmapper can be retrieved at http://www.idmil.org/software/libmapper and should be compiled from source. (and libmapper requires the latest liblo from source as well)
 

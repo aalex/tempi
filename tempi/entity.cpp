@@ -57,6 +57,7 @@ const Message &Entity::getAttributeValue(const char *name) const
     return getAttribute(name)->getValue();
 }
 
+
 void Entity::setAttributeValue(const char *name, const Message &value)
     throw(BadIndexException, BadAtomTypeException)
 {
@@ -71,13 +72,19 @@ void Entity::setAttributeValue(const char *name, const Message &value)
         }
         else
         {
-            // XXX Special case: cast i to f is OK.
-            if (value.getTypes() == "f" && current->getValue().getTypes() == "i")
+            Message casted_message;
+            if (utils::tryAutoCast(value, casted_message, current->getValue().getTypes()))
             {
-                Message tmp("i", (int) value.getFloat(0));
-                current->setValue(tmp);
+                if (Logger::isEnabledFor(DEBUG))
+                {
+                    std::ostringstream os;
+                    os << "Entity." << __FUNCTION__ << ": (" << this->getName() << ") \"" << name << "\"=" << casted_message;
+                    Logger::log(DEBUG, os);
+                }
+                current->setValue(casted_message);
                 return;
             }
+            // else
             std::ostringstream os;
             os << "Entity::" << __FUNCTION__ << ": Attribute " << name << ": Bad type " << value.getTypes() << " while expecting " << current->getValue().getTypes();
             throw (BadAtomTypeException(os.str().c_str()));

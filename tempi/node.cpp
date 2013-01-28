@@ -148,7 +148,7 @@ void Node::onInletTriggered(Pad *inlet, const Message &message)
     if (Logger::isEnabledFor(DEBUG))
     {
         std::ostringstream os;
-        os << "Node(" << getName() << ")." << __FUNCTION__ << "(" << inlet_name << ", " << message << ")";
+        os << "Node." << __FUNCTION__ << "[" << getName() << "](" << inlet_name << ", " << message << ")";
         Logger::log(DEBUG, os);
     }
     if (attr_inlet_name == inlet_name)
@@ -315,7 +315,30 @@ void Node::onInletTriggered(Pad *inlet, const Message &message)
         }
         return;
     }
-    processMessage(inlet_name.c_str(), message);
+    // FIXME: should apply inlet's types filter
+    {
+        Inlet *inlet = this->getInlet(inlet_name.c_str());
+        if (inlet == 0)
+        {
+            std::ostringstream os;
+            os << "Node." << __FUNCTION__;
+            os << "... NULL INLET?";
+            Logger::log(ERROR, os);
+        }
+        else
+        {
+            if (Logger::isEnabledFor(DEBUG))
+            {
+                std::ostringstream os;
+                os << "Node." << __FUNCTION__;
+                os << " Inlet " << inlet->getName() << " exists. ";
+                os << " Calling processMessage(" << inlet_name << ", " << message << ")";
+                Logger::log(DEBUG, os);
+            }
+            // inlet->triggerInlet(message); // that would create an infinite loop!
+            processMessage(inlet_name.c_str(), message);
+        }
+    }
 }
 
 std::map<std::string, Inlet::ptr> Node::getInlets()
@@ -394,14 +417,14 @@ bool Node::addInlet(Inlet::ptr inlet)
     return false;
 }
 
-bool Node::addInlet(const char *name, const char *documentation)
+bool Node::addInlet(const char *name, const char *documentation, const char *long_documentation, const char *types_filter)
 {
-    return addInlet(Inlet::ptr(new Inlet(name, documentation)));
+    return addInlet(Inlet::ptr(new Inlet(name, documentation, long_documentation, types_filter)));
 }
 
-bool Node::addOutlet(const char *name, const char *documentation)
+bool Node::addOutlet(const char *name, const char *documentation, const char * long_documentation)
 {
-    return addOutlet(Outlet::ptr(new Outlet(name, documentation)));
+    return addOutlet(Outlet::ptr(new Outlet(name, documentation, long_documentation)));
 }
 
 bool Node::hasInlet(Inlet *inlet)
@@ -520,7 +543,19 @@ bool Node::message(const char *inlet, const Message &message)
             Logger::log(ERROR, os);
             return false;
         }
-        inletPtr->trigger(message);
+        else
+        {
+            if (Logger::isEnabledFor(DEBUG))
+            {
+                std::ostringstream os;
+                os << "Node.";
+                os << __FUNCTION__ << "[\"" << this->getName() << "\"](" << inlet << ", " << message << ")";
+                Logger::log(DEBUG, os);
+            }
+        }
+        // XXX: NOOOOO: inletPtr->triggerInlet(message); // call Pad::trigger(message)
+        // Did not filter the message...
+        inletPtr->onMessageReceivedFromSource(NULL, message);
         return true;
     }
     else

@@ -4,6 +4,9 @@
 #include <iostream>
 #include <vector>
 
+static const std::string TRUE = "true";
+static const std::string FALSE = "false";
+
 // parse_first_int: 
 // on success returns the ftp response code, and fills 
 // msg with the ftp response message. 
@@ -146,8 +149,32 @@ bool check_validator()
     std::vector<std::string>::const_iterator iter;
     for (iter = strings.begin(); iter != strings.end(); ++iter)
     {
-        std::cout << "Check " << (*iter) << " against " << a.getPattern() << ": " << a.matches((*iter).c_str()) << std::endl;
-        std::cout << "Check " << (*iter) << " against " << b.getPattern() << ": " << b.matches((*iter).c_str()) << std::endl;
+        std::cout << "Check " << (*iter) << " against " << a.getPattern() << ": " <<
+            (a.matches((*iter).c_str()) ? TRUE : FALSE) << std::endl;
+        std::cout << "Check " << (*iter) << " against " << b.getPattern() << ": " <<
+            (b.matches((*iter).c_str()) ? TRUE : FALSE) << std::endl;
+    }
+    return true;
+}
+
+bool check_typenames()
+{
+    std::cout << __FUNCTION__ << std::endl;
+
+    std::vector<std::string> strings;
+    strings.push_back(std::string("sss"));
+    strings.push_back(std::string("sif"));
+    strings.push_back(std::string("if"));
+    strings.push_back(std::string("s"));
+    strings.push_back(std::string(""));
+
+    NameValidator a("^(s)*$");
+    
+    std::vector<std::string>::const_iterator iter;
+    for (iter = strings.begin(); iter != strings.end(); ++iter)
+    {
+        std::cout << "Check \"" << (*iter) << "\" against " << a.getPattern() << ": " <<
+            (a.matches((*iter).c_str()) ? TRUE : FALSE) << std::endl;
     }
     return true;
 }
@@ -159,6 +186,8 @@ int main(int argc, char * argv[])
     if (! check_int())
         return 1;
     if (! check_validator())
+        return 1;
+    if (! check_typenames())
         return 1;
     return 0;
 }

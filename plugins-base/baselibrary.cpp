@@ -38,30 +38,32 @@
 #include "plugins-base/flow/routenode.h"
 #include "plugins-base/flow/splitnode.h"
 #include "plugins-base/flow/triggernode.h"
+#include "plugins-base/flow/spigotnode.h"
 #include "plugins-base/flow/typenode.h"
 #include "plugins-base/flow/unpacknode.h"
-#include "plugins-base/spatosc/spatoscnode.h"
-#include "plugins-base/flow/spigotnode.h"
 #include "plugins-base/mapper/mapperinputnode.h"
-#include "plugins-base/math/expr.h"
+#include "plugins-base/math/booleanoperatornode.h"
+#include "plugins-base/math/jsexpr.h"
+#include "plugins-base/math/luaexpr.h"
 #include "plugins-base/math/onefloatmathnode.h"
 #include "plugins-base/math/twofloatmathnode.h"
-#include "plugins-base/math/booleanoperatornode.h"
 #include "plugins-base/midi/midibuildernodes.h"
 #include "plugins-base/midi/midireceivernode.h"
 #include "plugins-base/midi/midiroutenode.h"
 #include "plugins-base/midi/midisendernode.h"
-#include "plugins-base/music/musicnearestnode.h"
 #include "plugins-base/music/monodicnode.h"
+#include "plugins-base/music/musicnearestnode.h"
 #include "plugins-base/os/shellnode.h"
-#include "plugins-base/osc/oscreceivernode.h"
-#include "plugins-base/osc/oscsendernode.h"
 #include "plugins-base/osc/oscprependnode.h"
+#include "plugins-base/osc/oscreceivernode.h"
 #include "plugins-base/osc/oscroutenode.h"
-#include "plugins-base/sampler/samplernode.h"
+#include "plugins-base/osc/oscsendernode.h"
 #include "plugins-base/sampler/samplenode.h"
-#include "plugins-base/sampler/samplerwritenode.h"
+#include "plugins-base/sampler/samplernode.h"
 #include "plugins-base/sampler/samplerreadnode.h"
+#include "plugins-base/sampler/samplerwritenode.h"
+#include "plugins-base/serial/serialdevicenode.h"
+#include "plugins-base/spatosc/spatoscnode.h"
 #include "plugins-base/string/stringcharactersnode.h"
 #include "plugins-base/string/stringjoinnode.h"
 #include "plugins-base/string/stringsplitnode.h"
@@ -114,8 +116,11 @@ void BaseLibrary::load(NodeFactory &factory, const char * /*prefix*/) const
 #endif // HAVE_SPATOSC
 
 #ifdef HAVE_V8
-    factory.registerTypeT<ExprNode>(concatenate(prefix, "math.expr").c_str());
+    factory.registerTypeT<JsExprNode>(concatenate(prefix, "math.jsexpr").c_str());
 #endif // HAVE_V8
+#ifdef HAVE_LUA
+    factory.registerTypeT<LuaExprNode>(concatenate(prefix, "math.luaexpr").c_str());
+#endif // HAVE_LUA
 
     factory.registerTypeT<AddNode>(concatenate(prefix, "math.+").c_str());
     factory.registerTypeT<DivNode>(concatenate(prefix, "math./").c_str());
@@ -176,6 +181,8 @@ void BaseLibrary::load(NodeFactory &factory, const char * /*prefix*/) const
 #ifdef HAVE_LIBMAPPER
     factory.registerTypeT<MapperInputNode>(concatenate(prefix, "osc.libmapper.input").c_str());
 #endif // HAVE_LIBMAPPER
+
+    factory.registerTypeT<SerialDeviceNode>(concatenate(prefix, "serial.device").c_str());
 }
 
 } // end of namespace

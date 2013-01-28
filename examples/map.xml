@@ -7,7 +7,7 @@
     </node>
     <node name="counter0" class="base.flow.counter">
     </node>
-    <node name="cast0" class="base.cast">
+    <node name="cast0" class="base.flow.cast">
       <attribute name="type"><s>f</s></attribute>
     </node>
     <node name="map0" class="base.math.map">

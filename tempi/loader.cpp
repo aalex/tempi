@@ -161,6 +161,12 @@ bool Loader::load(NodeFactory &factory, const char *name)
                 os << "Loader." << __FUNCTION__ << ": Successfully called " << functionName << " from " << fileName;
                 Logger::log(DEBUG, os);
             }
+            if (Logger::isEnabledFor(NOTICE))
+            {
+                std::ostringstream os;
+                os << "Loader." << __FUNCTION__ << ": Loaded " << fileName;
+                Logger::log(NOTICE, os);
+            }
             return true;
         }
         else

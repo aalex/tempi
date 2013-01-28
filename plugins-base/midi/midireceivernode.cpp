@@ -111,6 +111,11 @@ void MidiReceiverNode::doTick()
             to_output_message.appendUnsignedChar((unsigned char) midi_message[1]);
             to_output_message.appendUnsignedChar((unsigned char) midi_message[2]);
         }
+        else if (midi_message.size() == 2)
+        {
+            to_output_message.appendUnsignedChar((unsigned char) midi_message[0]);
+            to_output_message.appendUnsignedChar((unsigned char) midi_message[1]);
+        }
         output(EVENTS_OUTLET, to_output_message);
     }
 }

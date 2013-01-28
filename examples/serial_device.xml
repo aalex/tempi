@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tempi version="0.3.0">
+  <graph>
+    <node name="loadmess0" class="base.flow.loadmess">
+      <attribute name="value">
+        <s>ping
+</s> <!-- there is a new line character in the value of the string -->
+      </attribute>
+    </node>
+    <node name="delay0" class="base.time.delay">
+      <attribute name="delay">
+        <l>3000</l>
+      </attribute>
+    </node>
+    <node name="serial0" class="base.serial.device">
+      <attribute name="baud_rate">
+        <i>9600</i>
+      </attribute>
+      <attribute name="device">
+        <s>/dev/ttyUSB0</s>
+      </attribute>
+    </node>
+    <node name="print0" class="base.flow.print">
+      <attribute name="prefix">
+        <s>recv: </s>
+      </attribute>
+    </node>
+    <node name="print1" class="base.flow.print">
+      <attribute name="prefix">
+        <s>send: </s>
+      </attribute>
+    </node>
+    <connection from="loadmess0" outlet="0" to="delay0" inlet="0" />
+    <connection from="delay0" outlet="0" to="serial0" inlet="data" />
+    <connection from="serial0" outlet="data" to="print0" inlet="0" />
+    <connection from="delay0" outlet="0" to="print1" inlet="0" />
+  </graph>
+</tempi>

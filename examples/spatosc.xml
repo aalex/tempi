@@ -9,7 +9,7 @@
     <node name="counter0" class="base.flow.counter">
       <attribute name="increment"><i>10</i></attribute>
     </node>
-    <node name="cast0" class="base.cast">
+    <node name="cast0" class="base.flow.cast">
       <attribute name="type"><s>f</s></attribute>
     </node>
     <node name="deg2rad0" class="base.math.deg2rad">

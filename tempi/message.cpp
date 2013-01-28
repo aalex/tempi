@@ -151,6 +151,13 @@ void Message::appendVaList(const char *types, va_list arguments)
                 appendPointer(value);
                 break;
             }
+            // case BLOB:
+            // {
+            //     atom::BlobValue::ptr value = va_arg(arguments, atom::BlobValue::ptr);
+            //     //std::cout << "Caught a blob :" << value;
+            //     appendBlob(value);
+            //     break;
+            // }
             default:
                 {
                     std::ostringstream os;
@@ -193,6 +200,23 @@ const boost::any *Message::getArgument(unsigned int index) const // throw(BadInd
     {
         return &arguments_[index];
     }
+}
+
+void Message::prependBlob(atom::BlobValue::ptr value)
+{
+    prepend(boost::any(value));
+}
+
+void Message::appendBlob(atom::BlobValue::ptr value)
+{
+    append(boost::any(value));
+}
+
+atom::BlobValue::ptr Message::getBlob(unsigned int index) const
+{
+    atom::BlobValue::ptr value;
+    get<atom::BlobValue::ptr>(index, value);
+    return value;
 }
 
 void Message::prependFloat(float value)
@@ -449,9 +473,12 @@ bool getAtomTypeForAny(const boost::any &value, AtomType &type)
         type = BANG;
     else if (actual == typeid(void *))
         type = POINTER;
+    else if (actual == typeid(atom::BlobValue::ptr))
+        type = BLOB;
     else
     {
         std::cerr << __FUNCTION__ << ": Could not figure out type of value. It's " << actual.name() << std::endl;
+        std::cerr << __FUNCTION__ << ": By comparison, BLOB type id is " << typeid(atom::BlobValue::ptr).name() << std::endl;
         return false;
     }
     return true;
@@ -567,6 +594,14 @@ bool Message::operator==(const Message &other) const
                 if (getPointer(i) != other.getPointer(i))
                     return false;
                 break;
+            case BLOB:
+                {
+                    const char *left = getBlob(i)->getValue();
+                    const char *right = other.getBlob(i)->getValue();
+                    if (&left == &right) // XXX compare the two pointers?
+                        return false;
+                    break;
+                }
             defaut:
                 std::cerr << "Message" << __FUNCTION__ << ": Unsupported type." << std::endl;
                 break;
@@ -609,6 +644,12 @@ std::ostream &operator<<(std::ostream &os, const Message &message)
             case STRING:
                 os << "\"" << message.getString(i) << "\"";
                 break;
+            case BLOB:
+                {
+                    const char * blob_value = message.getBlob(i)->getValue();
+                    os << &blob_value;
+                    break;
+                }
             defaut:
                 std::cerr << "std::ostream &operator<<(std::ostream &os, const Message &message): Unsupported type." << std::endl;
                 break;
@@ -680,6 +721,9 @@ void Message::prependMessage(const Message &message)
                 break;
             case STRING:
                 prependString(message.getString(i).c_str());
+                break;
+            case BLOB:
+                prependBlob(message.getBlob(i));
                 break;
             default:
                 std::cerr << "Message::" << __FUNCTION__ << "(): Unknow type of atom: " << type << std::endl;
