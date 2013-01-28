@@ -196,7 +196,7 @@ void Node::onInletTriggered(Pad *inlet, const Message &message)
                         std::string attr_name = message.getString(1);
                         if (this->getAttribute(attr_name.c_str())->getMutable())
                         {
-                            setAttributeValue(attr_name.c_str(), attribute);
+                            this->setAttributeValue(attr_name.c_str(), attribute);
                             return;
                         }
                         else
