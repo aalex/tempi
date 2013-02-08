@@ -80,7 +80,7 @@ Spatosc is available from the http://code.sat.qc.ca/redmine/projects/spatosc or 
 
 Here is how to build and install Tempi on Mac OS X::
 
-  sudo port install gettext libtool automake autoconf-archive autoconf bison  log4ccp boost libxml2 portmidi liblo glib2-devel
+  sudo port install gettext libtool automake autoconf-archive autoconf bison log4cpp boost libxml2 portmidi liblo glib2-devel pkgconfig
   ./autogen.sh
   CPPFLAGS="-I/opt/local/include -L/opt/local/lib" ./configure
   make
