@@ -87,6 +87,8 @@ Here is how to build and install Tempi on Mac OS X::
   sudo make install
   sudo ldconfig
 
+Note: actually, there is a missing library that is called "atom". It can be found at http://code.sat.qc.ca/redmine/projects/libatom and you first need to compile and install it, since Tempi relies on it.
+
 
 More about dataflow programming
 -------------------------------
