@@ -357,6 +357,7 @@ bool tryAutoCast(const Message &source, Message &result, const std::string &expe
 }
 
 // FIXME: duplicate for tryAutoCast
+// FIXME: this is a total mess. To be replaced by atom's class-to-class casts
 Message castMessage(const Message &message, const char *type)
     throw(BadAtomTypeException, BadIndexException)
 {
@@ -385,6 +386,26 @@ Message castMessage(const Message &message, const char *type)
         bool success = true;
         switch (desired)
         {
+            case INT: // desired is INT
+                switch (current)
+                {
+                    case FLOAT:
+                        result.appendInt((int) message.getFloat(i));
+                        break;
+                    case DOUBLE:
+                        result.appendInt((int) message.getDouble(i));
+                        break;
+                    case INT:
+                        result.appendInt((int) message.getInt(i));
+                        break;
+                    case LONG:
+                        result.appendInt((int) message.getLong(i));
+                        break;
+                    default:
+                        success = false;
+                        break;
+                } // switch current
+                break; // case FLOAT
             case FLOAT: // desired is FLOAT
                 switch (current)
                 {
