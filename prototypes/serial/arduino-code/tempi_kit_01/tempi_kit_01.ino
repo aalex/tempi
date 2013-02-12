@@ -4,6 +4,8 @@
 Messenger message = Messenger();
 TKPotentiometer pot_I0(I0);
 TKLed led_O0(O0);
+TKLed led_O1(O1);
+TKLed led_O2(O2);
 static const unsigned long interval_hello = 2000;
 unsigned long last_hello_time = 0;
 
@@ -16,19 +18,23 @@ void handleMessage()
       Serial.print(pot_I0.get(), DEC); // [0-1023]
       Serial.println();
   }
-  else if (message.checkString("w"))
+  else if (message.checkString("led0"))
   {
-    if (message.checkString("O0"))
-    {
-      int value = message.readInt();
-      led_O0.brightness(value); // [0-1023]
-    }
-    else
-    {
-      Serial.println("error no such led");
-    }
+    int value = message.readInt();
+    led_O0.brightness(value); // [0-1023]
+    Serial.println("success");
   }
-  else if ( message.checkString("ping")) // ping
+  else if (message.checkString("led1"))
+  {
+    int value = message.readInt();
+    led_O1.brightness(value); // [0-1023]
+  }
+  else if (message.checkString("led2"))
+  {
+    int value = message.readInt();
+    led_O2.brightness(value); // [0-1023]
+  }
+  else if (message.checkString("ping")) // ping
   {
     Serial.println("pong");
   }
