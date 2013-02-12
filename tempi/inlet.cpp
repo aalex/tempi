@@ -34,11 +34,11 @@ Inlet::Inlet(const char *name, const char *short_documentation,
 
 bool Inlet::setTypesFilter(const char *types_filter)
 {
-    if (Logger::isEnabledFor(INFO))
+    if (Logger::isEnabledFor(DEBUG))
     {
         std::ostringstream os;
         os << "Inlet." << __FUNCTION__ << "(" << types_filter << ") for inlet " << this->getName();
-        Logger::log(INFO, os);
+        Logger::log(DEBUG, os);
     }
     return this->filter_.setFilter(types_filter);
 }

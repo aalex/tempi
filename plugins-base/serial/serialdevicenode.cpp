@@ -145,8 +145,8 @@ std::string fudiToString(const Message &message)
         {
             os << " ";
         }
-        return os.str();
     }
+    return os.str();
 }
 
 void SerialDeviceNode::processMessage(const char *inlet, const Message &message)
@@ -184,9 +184,9 @@ void SerialDeviceNode::processMessage(const char *inlet, const Message &message)
         os << text << "\n";
         if (Logger::isEnabledFor(NOTICE))
         {
-            std::ostringstream os;
-            os << "SerialDeviceNode: send string \"\"\"" << os.str() << "\"\"\"";
-            Logger::log(NOTICE, os);
+            std::ostringstream os2;
+            os2 << "SerialDeviceNode: send string \"\"\"" << os.str() << "\"\"\"";
+            Logger::log(NOTICE, os2);
         }
         atom::BlobValue::ptr blob = stringToBlob(os.str());
         device_->writeBlob(blob->getValue(), blob->getSize());
