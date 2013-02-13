@@ -43,20 +43,25 @@ const char * const SerialDeviceNode::FUDI_OUTLET = "fudi";
 SerialDeviceNode::SerialDeviceNode() :
     Node()
 {
-    setShortDocumentation("Communicates with serial devices.");
-    setLongDocumentation("Right now, it only supports 8N1 without flow control. It opens the device when you set it to a valid file name.");
+    this->thread_should_be_running_ = false;
+
+    this->setShortDocumentation("Communicates with serial devices.");
+    this->setLongDocumentation("Right now, it only supports 8N1 without flow control. It opens the device when you set it to a valid file name.");
 
     // File name
-    addAttribute(Attribute::ptr(new Attribute(DEVICE_FILE_ATTR, Message("s", ""), "UNIX-like device file name. example: /dev/ttyUSB0")));
+    this->addAttribute(Attribute::ptr(new Attribute(DEVICE_FILE_ATTR, Message("s", ""), "UNIX-like device file name. example: /dev/ttyUSB0")));
     // Baud rate
-    addAttribute(Attribute::ptr(new Attribute(BAUD_RATE_ATTR, Message("i", 9600), "Baud rate. Valid values are 4800, 9600, 19200, 38400, 57600, 115200.")));
-    addAttribute(Attribute::ptr(new Attribute(IS_OPEN_ATTR, Message("b", false), "Tells you whether the communication is open or not.")));
-    getAttribute(IS_OPEN_ATTR)->setMutable(false);
+    // FIXME: right now, it opens the device when you set the device attribute.
+    // FIXME: when you set the baud_rate attribute, it doesn't actually change it if the device has already been open.
+    this->addAttribute(Attribute::ptr(new Attribute(BAUD_RATE_ATTR, Message("i", 9600), "Baud rate. Valid values are 4800, 9600, 19200, 38400, 57600, 115200.")));
+    this->addAttribute(Attribute::ptr(new Attribute(IS_OPEN_ATTR, Message("b", false), "Tells you whether the communication is open or not.")));
+    this->getAttribute(IS_OPEN_ATTR)->setMutable(false);
 
-    addInlet(DATA_INLET, "Messages to send to the device. Must be a single blob.");
-    addOutlet(DATA_OUTLET, "Messages received from the device. Single blobs.");
-    addInlet(FUDI_INLET, "Messages to send to the device. Must be a single blob.");
-    addOutlet(FUDI_OUTLET, "Messages received from the device. Single blobs.");
+    this->addInlet(DATA_INLET, "Messages to send to the device. Must be a single blob.");
+    this->addOutlet(DATA_OUTLET, "Messages received from the device. Single blobs.");
+    this->addInlet(FUDI_INLET, "Messages to send to the device. Must be a single blob.");
+    this->addOutlet(FUDI_OUTLET, "Messages received from the device. Single blobs.");
+
 }
 
 atom::BlobValue::ptr stringToBlob(const std::string &text)
@@ -202,6 +207,7 @@ bool SerialDeviceNode::onNodeAttributeChanged(const char *name, const Message &v
         std::string device = value.getString(0);
         if (device == "")
         {
+            this->stop_thread();
             this->device_.reset();
             this->setAttributeValue(IS_OPEN_ATTR, Message("b", false));
             return true;
@@ -213,9 +219,11 @@ bool SerialDeviceNode::onNodeAttributeChanged(const char *name, const Message &v
             Logger::log(NOTICE, os);
         }
         // TODO: validate that file name exists
+        this->stop_thread();
         this->device_.reset(new SerialDevice(
             device.c_str(),
             this->getAttributeValue(BAUD_RATE_ATTR).getInt(0)));
+        this->start_thread();
         bool success = this->device_->openDevice();
         this->setAttributeValue(IS_OPEN_ATTR, Message("b", success));
         return true;
@@ -248,6 +256,26 @@ bool SerialDeviceNode::onNodeAttributeChanged(const char *name, const Message &v
 
 void SerialDeviceNode::doTick()
 {
+    // TODO: try pop from asyc queue
+    // TODO: output
+    bool some_to_output = false;
+    if (this->thread_should_be_running_)
+    {
+        do // begin do-while
+        {
+            Message to_output_message;
+            some_to_output = this->queue_.try_pop(to_output_message);
+            if (some_to_output)
+            {
+                this->output(FUDI_OUTLET, to_output_message);
+            }
+        }
+        while (some_to_output); // end of do-while
+    }
+}
+
+void SerialDeviceNode::try_to_read()
+{
     if (this->device_ && this->device_->isOpen())
     {
         size_t max_length = 256;
@@ -267,17 +295,53 @@ void SerialDeviceNode::doTick()
             std::string tmp_string = std::string(result);
             tmp_string = tmp_string.substr(0, tmp_string.size() - 1); // remove last char
             Message to_output_message = stringToFudi(tmp_string);
-            if (Logger::isEnabledFor(INFO))
+            if (Logger::isEnabledFor(DEBUG))
             {
                 std::ostringstream os;
                 os << "SerialDeviceNode." << __FUNCTION__ << " did read " << to_output_message;
-                Logger::log(INFO, os);
+                Logger::log(DEBUG, os);
             }
             // TODO: stringToFudi
             //to_output_message.appendString(tmp_string.c_str()); //tmp_string.substr(0, total_num_read - 1).c_str());
             //output(DATA_OUTLET, to_output_message);
-            output(FUDI_OUTLET, to_output_message);
+            //this->output(FUDI_OUTLET, to_output_message);
+            this->queue_.push(to_output_message);
         }
+    }
+}
+
+void SerialDeviceNode::start_thread()
+{
+    if (this->thread_should_be_running_)
+    {
+        std::ostringstream os;
+        os << "SerialDeviceNode::" << __FUNCTION__ << ": " << "Thread is already running!";
+        Logger::log(ERROR, os);
+    }
+    else
+    {
+        this->thread_ = boost::thread(&SerialDeviceNode::run_thread, this);
+    }
+}
+
+void SerialDeviceNode::run_thread()
+{
+    // The thread's main
+    boost::posix_time::milliseconds sleep_ms(15);
+    this->thread_should_be_running_ = true;
+    while (this->thread_should_be_running_)
+    {
+        this->try_to_read();
+        boost::this_thread::sleep(sleep_ms);
+    }
+}
+
+void SerialDeviceNode::stop_thread()
+{
+    if (this->thread_should_be_running_)
+    {
+        this->thread_should_be_running_ = false;
+        this->thread_.join();
     }
 }
 

@@ -27,7 +27,9 @@
 
 #include "tempi/node.h"
 #include "plugins-base/serial/serialdevice.h"
+#include "tempi/concurrentqueue.h"
 #include <tr1/memory>
+#include <boost/thread.hpp>
 
 namespace tempi {
 namespace plugins_base {
@@ -63,6 +65,16 @@ class SerialDeviceNode : public Node
         virtual bool onNodeAttributeChanged(const char *name, const Message &value);
     private:
         std::tr1::shared_ptr<SerialDevice> device_;
+        bool thread_should_be_running_;
+        ConcurrentQueue<Message> queue_;
+        boost::thread thread_;
+        // the thread's main
+        void run_thread();
+        // stop polling
+        void stop_thread();
+        // start polling
+        void start_thread();
+        void try_to_read();
 };
 
 } // end of namespace
