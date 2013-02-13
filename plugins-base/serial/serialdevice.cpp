@@ -171,12 +171,16 @@ bool SerialDevice::init_serialport(const char* serialport, int baud)
     fd_ = open(serialport, O_RDWR | O_NOCTTY | O_NDELAY);
     if (fd_ == -1)
     {
-        perror("init_serialport: Unable to open port ");
+        std::ostringstream os;
+        os << "SerialDevice." << __FUNCTION__ << ": Unable to open port ";
+        tempi::Logger::log(tempi::ERROR, os);
         return false;
     }
     if (tcgetattr(fd_, &toptions) < 0)
     {
-        perror("init_serialport: Couldn't get term attributes");
+        std::ostringstream os;
+        os << "SerialDevice." << __FUNCTION__ << ": Couldn't get term attributes";
+        tempi::Logger::log(tempi::ERROR, os);
         return false;
     }
     speed_t brate = baud; // let you override switch below if needed
@@ -218,7 +222,9 @@ bool SerialDevice::init_serialport(const char* serialport, int baud)
     
     if (tcsetattr(fd_, TCSANOW, &toptions) < 0)
     {
-        perror("init_serialport: Couldn't set term attributes");
+        std::ostringstream os;
+        os << "SerialDevice." << __FUNCTION__ << ": Couldn't set term attributes";
+        tempi::Logger::log(tempi::ERROR, os);
         return false;
     }
     return true;
