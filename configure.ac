@@ -168,10 +168,11 @@ AC_CHECK_HEADERS([portmidi.h porttime.h], have_portmidi_headers=true, have_portm
 if test "x${have_portmidi_headers}" = "xfalse" ; then
     AC_MSG_ERROR([missing portmidi headers, install libportmidi-dev])
 fi
-AC_CHECK_LIB([portmidi],[Pm_Initialize], have_portmidi=true, have_portmidi=false)
-if test "x${have_portmidi}" = "xfalse" ; then
-    AC_MSG_ERROR([missing portmidi library, install libportmidi-dev])
-fi
+dnl PORTMIDI: commented out since it doesn't work on GNU/Linux!
+dnl AC_CHECK_LIB([portmidi],[Pm_Initialize], have_portmidi=true, have_portmidi=false)
+dnl if test "x${have_portmidi}" = "xfalse" ; then
+dnl     AC_MSG_ERROR([missing portmidi library, install libportmidi-dev])
+dnl fi
 
 dnl PORTTIME: commented out since it doesn't work on Mac OS X
 dnl since the mac port package is missing the binary for it.
@@ -187,7 +188,7 @@ else
   PORTMIDI_CFLAGS="-DPMALSA"
 fi
 AC_SUBST([PORTMIDI_CFLAGS], "$PORTMIDI_CFLAGS")
-PORTMIDI_LIBS="-lportmidi -lm"
+PORTMIDI_LIBS="-lportmidi -lm -lasound"
 dnl -lporttime -lpthread 
 AC_SUBST([PORTMIDI_LIBS], "$PORTMIDI_LIBS")
 
