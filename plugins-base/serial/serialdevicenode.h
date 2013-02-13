@@ -52,6 +52,7 @@ class SerialDeviceNode : public Node
 {
     public:
         SerialDeviceNode();
+        ~SerialDeviceNode();
         static const char * const DATA_INLET;
         static const char * const DATA_OUTLET;
         static const char * const IS_OPEN_ATTR;

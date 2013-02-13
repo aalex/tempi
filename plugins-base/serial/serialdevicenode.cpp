@@ -64,6 +64,11 @@ SerialDeviceNode::SerialDeviceNode() :
 
 }
 
+SerialDeviceNode::~SerialDeviceNode()
+{
+    this->stop_thread();
+}
+
 atom::BlobValue::ptr stringToBlob(const std::string &text)
 {
     size_t size = text.size() + 1;
