@@ -102,9 +102,7 @@ std::vector<std::string> tokenize(const std::string &text)
 Message stringToFudi(const std::string &text)
 {
     Message ret;
-    //stripTrailingCharacter(text, '\n');
-    //tmp = stripTrailingCharacter(tmp, ';');
-    std::string tmp = text;
+    std::string tmp = stripTrailingCharacter(text, '\n');
     //boost::algorithm::trim(tmp);
     std::vector<std::string> tokens = tokenize(tmp);
     BOOST_FOREACH(const std::string& token, tokens)
@@ -189,15 +187,23 @@ void SerialDeviceNode::processMessage(const char *inlet, const Message &message)
     }
     else if (utils::stringsMatch(FUDI_INLET, inlet))
     {
-        std::string text = fudiToString(message);
-        std::ostringstream os;
-        os << text << "\n";
-        if (Logger::isEnabledFor(NOTICE))
+        if (Logger::isEnabledFor(DEBUG))
         {
             std::ostringstream os2;
-            os2 << "SerialDeviceNode: send string \"\"\"" << os.str() << "\"\"\"";
-            Logger::log(NOTICE, os2);
+            os2 << "SerialDeviceNode::" << __FUNCTION__ << ": Will convert to FUDI " << message;;
+            Logger::log(DEBUG, os2);
         }
+        std::string text = fudiToString(message);
+        std::ostringstream os;
+        os << text;
+        if (Logger::isEnabledFor(DEBUG))
+        {
+            std::ostringstream os2;
+            os2 << "SerialDeviceNode: send string \"" << os.str(); // << "\\n\"";
+            os2 << "\".";
+            Logger::log(DEBUG, os2);
+        }
+        os << "\n"; // append newline
         atom::BlobValue::ptr blob = stringToBlob(os.str());
         device_->writeBlob(blob->getValue(), blob->getSize());
     }
@@ -287,7 +293,7 @@ void SerialDeviceNode::try_to_read()
         char result[256];
         memset(result, 0, 256);
         size_t total_num_read;
-        unsigned long long timeout_ms = 30;
+        unsigned long long timeout_ms = 1000;
         // TODO: do not use until_char, but simply output it all as a blob
         static const char until_char = '\n';
         bool use_until_char = true;
@@ -298,7 +304,11 @@ void SerialDeviceNode::try_to_read()
             // TODO: output a blob, not a string
             // we remove the trailing new line
             std::string tmp_string = std::string(result);
-            tmp_string = tmp_string.substr(0, tmp_string.size() - 1); // remove last char
+            int last_char_pos = tmp_string.size() - 2;
+            if (last_char_pos >= 0)
+                tmp_string = tmp_string.substr(0, last_char_pos); // remove last char
+            else
+                tmp_string = tmp_string.substr(0, tmp_string.size() - 1); // remove last char
             Message to_output_message = stringToFudi(tmp_string);
             if (Logger::isEnabledFor(DEBUG))
             {
