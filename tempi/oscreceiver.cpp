@@ -186,8 +186,12 @@ int OscReceiver::generic_handler(const char *path, const char *types, lo_arg **a
                 message.appendBoolean(false);
                 break;
             default:
-                std::cerr << "OscReceiver::" << __FUNCTION__ << ": cannot handle lo arg type " << types[i] << std::endl;
-                break;
+                {
+                    std::ostringstream os;
+                    os << "OscReceiver::" << __FUNCTION__ << ": cannot handle lo arg type " << types[i] << std::endl;
+                    Logger::log(ERROR, os);
+                    break;
+                }
         }
     }
     // TODO: time OSC messages so that timing be exact.
@@ -206,7 +210,9 @@ std::vector<Message> OscReceiver::poll()
     }
     else
     {
-        std::cerr << "OscReceiver::" << __FUNCTION__ << ": Not running" << std::endl;
+        std::ostringstream os;
+        os << "OscReceiver::" << __FUNCTION__ << ": Not running" << std::endl;
+        Logger::log(ERROR, os);
         std::vector<Message> ret;
         return ret;
     }
