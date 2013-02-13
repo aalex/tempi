@@ -62,6 +62,7 @@ Installation
 Here is how to build and install it on Debian GNU/Linux or Ubuntu::
 
   sudo apt-get install help2man gettext automake bison build-essential flex libtool 
+  sudo apt-get install doxygen
   sudo apt-get install libxml2-dev libclutter-1.0-dev libglib2.0-dev libboost-all-dev libportmidi-dev libasound2-dev liblo0-dev liblog4cpp5-dev
   sudo apt-get install libatom-dev
   ./autogen.sh
@@ -88,6 +89,11 @@ Here is how to build and install Tempi on Mac OS X::
   sudo ldconfig
 
 Note: actually, there is a missing library that is called "atom". It can be found at http://code.sat.qc.ca/redmine/projects/libatom and you first need to compile and install it, since Tempi relies on it.
+
+Also, if you want to write to serial devices, you will need to make sure your UNIX user can write to the serial device. Add it to the tty and dialout groups, if it's not already a member of them.
+
+  sudo addgroup <username> tty
+  sudo addgroup <username> dialout
 
 
 More about dataflow programming
