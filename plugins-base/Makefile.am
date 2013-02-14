@@ -105,6 +105,7 @@ libtempi_@TEMPI_API_VERSION@_plugins_base_la_SOURCES = \
     sampler/samplernode.cpp \
     sampler/samplerreadnode.cpp \
     sampler/samplerwritenode.cpp \
+    serial/bytestoblobnode.cpp \
     serial/serialdevice.cpp \
     serial/serialdevicenode.cpp \
     string/stringcharactersnode.cpp \
@@ -173,6 +174,9 @@ EXTRA_DIST = \
     sampler/samplernode.h \
     sampler/samplerreadnode.h \
     sampler/samplerwritenode.h \
+    serial/bytestoblobnode.h \
+    serial/serialdevicenode.h \
+    serial/serialdevice.h \
     spatosc/spatoscnode.h \
     string/stringcharactersnode.h \
     string/stringjoinnode.h \
