@@ -24,6 +24,7 @@
 #ifdef HAVE_GLIB
 #include <glib.h>
 #endif
+#include "tempi/log.h"
 
 namespace tempi {
 namespace plugins_base {
@@ -37,6 +38,7 @@ DrunkInt::DrunkInt() :
 {
     // pass
 }
+
 bool DrunkInt::setRange(int from, int to)
 {
     if (from <= to)
@@ -51,23 +53,30 @@ bool DrunkInt::setRange(int from, int to)
     }
     else
     {
-        std::cerr << "DrunkInt: range from must be smaller or equal than range to." << std::endl;
+        std::ostringstream os;
+        os << "DrunkInt: range from must be smaller or equal than range to.";
+        tempi::Logger::log(tempi::ERROR, os);
         return false;
     }
 }
+
 bool DrunkInt::setStepRange(int min_step, int max_step)
 {
     if (min_step <= max_step)
     {
         min_step_ = min_step;
         max_step_ = max_step;
+        return true;
     }
     else
     {
-        std::cerr << "DrunkInt: step range from must be smaller or equal than step range to." << std::endl;
+        std::ostringstream os;
+        os << "DrunkInt: step range from must be smaller or equal than step range to.";
+        tempi::Logger::log(tempi::ERROR, os);
         return false;
     }
 }
+
 bool DrunkInt::setCurrent(int value)
 {
     if (value >= from_ || value <= to_)
@@ -77,10 +86,13 @@ bool DrunkInt::setCurrent(int value)
     }
     else
     {
-        std::cerr << "Trying to jump to value " << value << " outside of range [" << from_ << "," << to_ << "]" << std::endl;
+        std::ostringstream os;
+        os << "Trying to jump to value " << value << " outside of range [" << from_ << "," << to_ << "]";
+        tempi::Logger::log(tempi::ERROR, os);
         return false;
     }
 }
+
 int DrunkInt::step()
 {
 #ifdef HAVE_GLIB
@@ -95,26 +107,33 @@ int DrunkInt::step()
         current_ = to_;
     return current_;
 #else
-    std::cerr << "DrunkInt: disabled since compiled without glib support." << std::endl;
+    std::ostringstream os;
+    os << "DrunkInt: disabled since compiled without glib support.";
+    tempi::Logger::log(tempi::ERROR, os);
     return current_;
 #endif
 }
+
 int DrunkInt::getRangeFrom() const
 {
     return from_;
 }
+
 int DrunkInt::getRangeTo() const
 {
     return to_;
 }
+
 int DrunkInt::getCurrent() const
 {
     return current_;
 }
+
 int DrunkInt::getStepRangeMin() const
 {
     return min_step_;
 }
+
 int DrunkInt::getStepRangeMax() const
 {
     return max_step_;
