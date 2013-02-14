@@ -15,7 +15,7 @@ class SerialDevice
     public:
         SerialDevice(const char *serial_port, int baud_rate);
         ~SerialDevice();
-        bool writeBlob(const char *data, size_t legnth); // TODO: add length arg?
+        bool writeBlob(const char *data, size_t length);
         //bool readUntil(char *result, size_t max_length, int timeout_ms, char until_char);
         // max_length must be in the range [0, 255] on UNIX
         bool readUntil(char *result, size_t max_length, size_t &total_num_read, unsigned long long timeout_ms, char until_char, bool use_until_char=true);

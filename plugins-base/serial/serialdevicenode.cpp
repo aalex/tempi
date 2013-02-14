@@ -59,9 +59,8 @@ SerialDeviceNode::SerialDeviceNode() :
 
     this->addInlet(DATA_INLET, "Messages to send to the device. Must be a single blob.");
     this->addOutlet(DATA_OUTLET, "Messages received from the device. Single blobs.");
-    this->addInlet(FUDI_INLET, "Messages to send to the device. Must be a single blob.");
-    this->addOutlet(FUDI_OUTLET, "Messages received from the device. Single blobs.");
-
+    this->addInlet(FUDI_INLET, "Messages to send to the device. Can contain strings and integers.");
+    this->addOutlet(FUDI_OUTLET, "Messages received from the device. Can contain strings and integers.");
 }
 
 SerialDeviceNode::~SerialDeviceNode()
