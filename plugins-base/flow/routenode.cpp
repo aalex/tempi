@@ -64,11 +64,11 @@ void RouteNode::processMessage(const char *inlet, const Message &message)
         output(selector.c_str(), ret);
     else
     {
-        if (Logger::isEnabledFor(WARNING))
+        if (Logger::isEnabledFor(NOTICE))
         {
             std::ostringstream os;
             os << "[route] processMessage: No selector named like first atom:  " << message;
-            Logger::log(WARNING, os.str().c_str());
+            Logger::log(NOTICE, os.str().c_str());
         }
     }
 }
