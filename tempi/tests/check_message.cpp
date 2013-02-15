@@ -14,7 +14,7 @@ bool check_message()
     m.appendInt(2);
     m.appendBang();
     m.appendUnsignedInt(20);
-    m.appendBlob(atom::BlobValue::convert(atom::BlobValue::create("hello", 6)));
+    m.appendBlob(atom::BlobValue::convert(atom::BlobValue::create((atom::Byte*) "hello", 6)));
 
     if (! m.typesMatch("fsi!uB"))
     {

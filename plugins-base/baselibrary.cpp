@@ -62,7 +62,10 @@
 #include "plugins-base/sampler/samplernode.h"
 #include "plugins-base/sampler/samplerreadnode.h"
 #include "plugins-base/sampler/samplerwritenode.h"
+#include "plugins-base/serial/todmxusbpro.h"
 #include "plugins-base/serial/serialdevicenode.h"
+#include "plugins-base/serial/bytestoblobnode.h"
+#include "plugins-base/serial/blobtobytes.h"
 #include "plugins-base/spatosc/spatoscnode.h"
 #include "plugins-base/string/stringcharactersnode.h"
 #include "plugins-base/string/stringjoinnode.h"
@@ -183,6 +186,9 @@ void BaseLibrary::load(NodeFactory &factory, const char * /*prefix*/) const
 #endif // HAVE_LIBMAPPER
 
     factory.registerTypeT<SerialDeviceNode>(concatenate(prefix, "serial.device").c_str());
+    factory.registerTypeT<ToDmxUsbProNode>(concatenate(prefix, "serial.todmxusbpro").c_str());
+    factory.registerTypeT<BytesToBlobNode>(concatenate(prefix, "serial.bytestoblob").c_str());
+    factory.registerTypeT<BlobToBytesNode>(concatenate(prefix, "serial.blobtobytes").c_str());
 }
 
 } // end of namespace

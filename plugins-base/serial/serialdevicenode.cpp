@@ -53,15 +53,14 @@ SerialDeviceNode::SerialDeviceNode() :
     // Baud rate
     // FIXME: right now, it opens the device when you set the device attribute.
     // FIXME: when you set the baud_rate attribute, it doesn't actually change it if the device has already been open.
-    this->addAttribute(Attribute::ptr(new Attribute(BAUD_RATE_ATTR, Message("i", 9600), "Baud rate. Valid values are 4800, 9600, 19200, 38400, 57600, 115200.")));
+    this->addAttribute(Attribute::ptr(new Attribute(BAUD_RATE_ATTR, Message("i", 9600), "Baud rate. Valid values are 4800, 9600, 19200, 38400, 57600, 115200, 230400, 460800.")));
     this->addAttribute(Attribute::ptr(new Attribute(IS_OPEN_ATTR, Message("b", false), "Tells you whether the communication is open or not.")));
     this->getAttribute(IS_OPEN_ATTR)->setMutable(false);
 
     this->addInlet(DATA_INLET, "Messages to send to the device. Must be a single blob.");
     this->addOutlet(DATA_OUTLET, "Messages received from the device. Single blobs.");
-    this->addInlet(FUDI_INLET, "Messages to send to the device. Must be a single blob.");
-    this->addOutlet(FUDI_OUTLET, "Messages received from the device. Single blobs.");
-
+    this->addInlet(FUDI_INLET, "Messages to send to the device. Can contain strings and integers.");
+    this->addOutlet(FUDI_OUTLET, "Messages received from the device. Can contain strings and integers.");
 }
 
 SerialDeviceNode::~SerialDeviceNode()
@@ -72,7 +71,7 @@ SerialDeviceNode::~SerialDeviceNode()
 atom::BlobValue::ptr stringToBlob(const std::string &text)
 {
     size_t size = text.size() + 1;
-    atom::BlobValue::ptr blob = atom::BlobValue::convert(atom::BlobValue::create(text.c_str(), size));
+    atom::BlobValue::ptr blob = atom::BlobValue::convert(atom::BlobValue::create((atom::Byte*) text.c_str(), size));
     // atom::BlobValue::ptr(new atom::BlobValue(size));
     return blob;
 }
@@ -171,12 +170,18 @@ void SerialDeviceNode::processMessage(const char *inlet, const Message &message)
         if (message.typesMatch("B"))
         {
             atom::BlobValue::ptr blob = message.getBlob(0);
+            if (Logger::isEnabledFor(INFO))
+            {
+                std::ostringstream os;
+                os << "SerialDeviceNode::" << __FUNCTION__ << ": Writing " << blob->getSize() << " bytes to serial device";
+                Logger::log(INFO, os);
+            }
             device_->writeBlob(blob->getValue(), blob->getSize());
         }
         else if (message.typesMatch("s"))
         {
             std::string string = message.getString(0);
-            device_->writeBlob(string.c_str(), string.size() + 1);
+            device_->writeBlob((atom::Byte*) string.c_str(), string.size() + 1);
         }
         else
         {
@@ -251,6 +256,8 @@ bool SerialDeviceNode::onNodeAttributeChanged(const char *name, const Message &v
             case 38400:
             case 57600:
             case 115200:
+            case 230400:
+            case 460800:
                 break;
             default:
                 return false;
@@ -290,7 +297,7 @@ void SerialDeviceNode::try_to_read()
     if (this->device_ && this->device_->isOpen())
     {
         size_t max_length = 256;
-        char result[256];
+        atom::Byte result[256];
         memset(result, 0, 256);
         size_t total_num_read;
         unsigned long long timeout_ms = 1000;
@@ -303,7 +310,7 @@ void SerialDeviceNode::try_to_read()
         {
             // TODO: output a blob, not a string
             // we remove the trailing new line
-            std::string tmp_string = std::string(result);
+            std::string tmp_string = std::string((const char *) result);
             int last_char_pos = tmp_string.size() - 2;
             if (last_char_pos >= 0)
                 tmp_string = tmp_string.substr(0, last_char_pos); // remove last char
