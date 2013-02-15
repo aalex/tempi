@@ -646,8 +646,10 @@ std::ostream &operator<<(std::ostream &os, const Message &message)
                 break;
             case BLOB:
                 {
-                    const char * blob_value = message.getBlob(i)->getValue();
-                    os << &blob_value;
+                    // Used to print pointer address:
+                    // const char * blob_value = message.getBlob(i)->getValue();
+                    // os << &blob_value;
+                    os << message.getBlob(i)->getHex();
                     break;
                 }
             defaut:

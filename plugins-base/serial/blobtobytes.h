@@ -20,10 +20,10 @@
 
 /**
  * @file
- * The BytesToBlobNode class.
+ * The BlobToBytesNode class.
  */
-#ifndef __TEMPI_SERIAL_BYTESTOBLOBNODE_H__
-#define __TEMPI_SERIAL_BYTESTOBLOBNODE_H__
+#ifndef __TEMPI_SERIAL_BLOBTOBYTESNODE_H__
+#define __TEMPI_SERIAL_BLOBTOBYTESNODE_H__
 
 #include "tempi/node.h"
 #include <vector>
@@ -31,18 +31,17 @@
 namespace tempi {
 namespace plugins_base {
 
-atom::BlobValue::ptr bytesToBlob(const std::vector<int> &bytes);
-bool messageToBytes(std::vector<int> &bytes, const Message &message);
+std::vector<int> blobToBytes(atom::BlobValue::ptr &blob); // FIXME: should be const
 
 /**
- * Node that converts a list of bytes to a blob.
+ * Node that converts a blob message to a list of bytes message.
  */
-class BytesToBlobNode : public Node
+class BlobToBytesNode : public Node
 {
     public:
-        BytesToBlobNode();
-        static const char * const BYTES_INLET;
-        static const char * const BLOB_OUTLET;
+        BlobToBytesNode();
+        static const char * const BLOB_INLET;
+        static const char * const BYTES_OUTLET;
     protected:
         virtual void processMessage(const char *inlet, const Message &message);
 };

@@ -45,10 +45,10 @@ static atom::BlobValue::ptr createEmptyBlob()
     return atom::BlobValue::convert(value);
 }
 
-atom::BlobValue::ptr bytesToBlob(const std::vector<char> &bytes)
+atom::BlobValue::ptr bytesToBlob(const std::vector<int> &bytes)
 {
     atom::BlobValue::ptr blob = createEmptyBlob();
-    std::vector<char>::const_iterator iter;
+    std::vector<int>::const_iterator iter;
     for (iter = bytes.begin(); iter != bytes.end(); iter++)
     {
         char byte = (char) *iter;
@@ -57,7 +57,7 @@ atom::BlobValue::ptr bytesToBlob(const std::vector<char> &bytes)
     return blob;
 }
 
-bool messageToBytes(std::vector<char> &bytes, const Message &message)
+bool messageToBytes(std::vector<int> &bytes, const Message &message)
 {
     bool ok = true;
     for (unsigned int i = 0; i < message.getSize(); i++)
@@ -66,7 +66,7 @@ bool messageToBytes(std::vector<char> &bytes, const Message &message)
         message.getAtomType(i, type);
         if (type == INT)
         {
-            bytes.push_back((char) message.getInt(i));
+            bytes.push_back((int) (message.getInt(i) & 0xff));
         }
         else
         {
@@ -83,7 +83,7 @@ void BytesToBlobNode::processMessage(const char *inlet, const Message &message)
 {
     if (utils::stringsMatch(BYTES_INLET, inlet))
     {
-        std::vector<char> bytes;
+        std::vector<int> bytes;
         bool ok = messageToBytes(bytes, message);
         if (! ok)
         {

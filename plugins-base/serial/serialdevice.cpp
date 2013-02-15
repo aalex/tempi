@@ -198,6 +198,8 @@ bool SerialDevice::init_serialport(const char* serialport, int baud)
         case 38400:  brate = B38400;  break;
         case 57600:  brate = B57600;  break;
         case 115200: brate = B115200; break;
+        case 230400: brate = B230400; break;
+        case 460800: brate = B460800; break;
     }
     cfsetispeed(&toptions, brate);
     cfsetospeed(&toptions, brate);

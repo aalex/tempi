@@ -53,7 +53,7 @@ SerialDeviceNode::SerialDeviceNode() :
     // Baud rate
     // FIXME: right now, it opens the device when you set the device attribute.
     // FIXME: when you set the baud_rate attribute, it doesn't actually change it if the device has already been open.
-    this->addAttribute(Attribute::ptr(new Attribute(BAUD_RATE_ATTR, Message("i", 9600), "Baud rate. Valid values are 4800, 9600, 19200, 38400, 57600, 115200.")));
+    this->addAttribute(Attribute::ptr(new Attribute(BAUD_RATE_ATTR, Message("i", 9600), "Baud rate. Valid values are 4800, 9600, 19200, 38400, 57600, 115200, 230400, 460800.")));
     this->addAttribute(Attribute::ptr(new Attribute(IS_OPEN_ATTR, Message("b", false), "Tells you whether the communication is open or not.")));
     this->getAttribute(IS_OPEN_ATTR)->setMutable(false);
 
@@ -250,6 +250,8 @@ bool SerialDeviceNode::onNodeAttributeChanged(const char *name, const Message &v
             case 38400:
             case 57600:
             case 115200:
+            case 230400:
+            case 460800:
                 break;
             default:
                 return false;

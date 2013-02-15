@@ -20,29 +20,25 @@
 
 /**
  * @file
- * The BytesToBlobNode class.
+ * The ToDmxUsbProNode class.
  */
-#ifndef __TEMPI_SERIAL_BYTESTOBLOBNODE_H__
-#define __TEMPI_SERIAL_BYTESTOBLOBNODE_H__
+#ifndef __TEMPI_SERIAL_TODMXUSBPRONODE_H__
+#define __TEMPI_SERIAL_TODMXUSBPRONODE_H__
 
 #include "tempi/node.h"
-#include <vector>
 
 namespace tempi {
 namespace plugins_base {
 
-atom::BlobValue::ptr bytesToBlob(const std::vector<int> &bytes);
-bool messageToBytes(std::vector<int> &bytes, const Message &message);
-
 /**
- * Node that converts a list of bytes to a blob.
+ * Node that converts a list of bytes to a list of bytes for the Enttec DMX USB Pro.
  */
-class BytesToBlobNode : public Node
+class ToDmxUsbProNode : public Node
 {
     public:
-        BytesToBlobNode();
-        static const char * const BYTES_INLET;
-        static const char * const BLOB_OUTLET;
+        ToDmxUsbProNode();
+        static const char * const NUMBERS_INLET;
+        static const char * const BYTES_OUTLET;
     protected:
         virtual void processMessage(const char *inlet, const Message &message);
 };
