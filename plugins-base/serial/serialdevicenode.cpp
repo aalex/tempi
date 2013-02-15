@@ -71,7 +71,7 @@ SerialDeviceNode::~SerialDeviceNode()
 atom::BlobValue::ptr stringToBlob(const std::string &text)
 {
     size_t size = text.size() + 1;
-    atom::BlobValue::ptr blob = atom::BlobValue::convert(atom::BlobValue::create(text.c_str(), size));
+    atom::BlobValue::ptr blob = atom::BlobValue::convert(atom::BlobValue::create((atom::Byte*) text.c_str(), size));
     // atom::BlobValue::ptr(new atom::BlobValue(size));
     return blob;
 }
@@ -175,7 +175,7 @@ void SerialDeviceNode::processMessage(const char *inlet, const Message &message)
         else if (message.typesMatch("s"))
         {
             std::string string = message.getString(0);
-            device_->writeBlob(string.c_str(), string.size() + 1);
+            device_->writeBlob((atom::Byte*) string.c_str(), string.size() + 1);
         }
         else
         {
@@ -291,7 +291,7 @@ void SerialDeviceNode::try_to_read()
     if (this->device_ && this->device_->isOpen())
     {
         size_t max_length = 256;
-        char result[256];
+        atom::Byte result[256];
         memset(result, 0, 256);
         size_t total_num_read;
         unsigned long long timeout_ms = 1000;
@@ -304,7 +304,7 @@ void SerialDeviceNode::try_to_read()
         {
             // TODO: output a blob, not a string
             // we remove the trailing new line
-            std::string tmp_string = std::string(result);
+            std::string tmp_string = std::string((const char *) result);
             int last_char_pos = tmp_string.size() - 2;
             if (last_char_pos >= 0)
                 tmp_string = tmp_string.substr(0, last_char_pos); // remove last char

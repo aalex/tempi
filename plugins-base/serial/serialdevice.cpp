@@ -18,7 +18,7 @@
 
 using namespace tempi;
 
-bool SerialDevice::writeBlob(const char* data, size_t length)
+bool SerialDevice::writeBlob(const atom::Byte* data, size_t length)
 {
     size_t written = write(fd_, data, length);
     if (written != length) 
@@ -33,12 +33,12 @@ void SerialDevice::sleep_ms(unsigned long long ms) const
     boost::this_thread::sleep(sleepTime);
 }
 
-bool SerialDevice::readUntil(char *result, size_t max_length, size_t &total_num_read, unsigned long long timeout_ms, char until_char, bool use_until_char)
+bool SerialDevice::readUntil(atom::Byte *result, size_t max_length, size_t &total_num_read, unsigned long long timeout_ms, char until_char, bool use_until_char)
 {
     bool success = true;
     tempi::Timer timer;
     unsigned long long elapsed;
-    char b[1];
+    atom::Byte b[1];
     size_t num_read = 0;
     while (true)
     {

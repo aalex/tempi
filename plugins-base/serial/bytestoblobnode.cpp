@@ -40,7 +40,7 @@ BytesToBlobNode::BytesToBlobNode() :
 
 static atom::BlobValue::ptr createEmptyBlob()
 {
-    char empty = 0;
+    atom::Byte empty = 0;
     atom::Value::ptr value = atom::BlobValue::create(&empty, 0);
     return atom::BlobValue::convert(value);
 }
@@ -51,7 +51,7 @@ atom::BlobValue::ptr bytesToBlob(const std::vector<int> &bytes)
     std::vector<int>::const_iterator iter;
     for (iter = bytes.begin(); iter != bytes.end(); iter++)
     {
-        char byte = (char) *iter;
+        atom::Byte byte = (char) *iter;
         blob->append(&byte, 1);
     }
     return blob;
