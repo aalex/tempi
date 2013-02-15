@@ -134,7 +134,9 @@ static void toEnttecDMX(atom::BlobValue::ptr &blob, int flag, const std::vector<
     blob->append(&flag_char, 1);
     
     // Data size
+    // least significant byte
     atom::Byte size_first_char = (atom::Byte) (data.size() & 0xff);
+    // most significant byte
     atom::Byte size_second_char = (atom::Byte) ((data.size() >> 8) & 0xff);
     blob->append(&size_first_char, 1);
     blob->append(&size_second_char, 1);
@@ -148,8 +150,8 @@ static void toEnttecDMX(atom::BlobValue::ptr &blob, int flag, const std::vector<
     }
 
     // End
-    //static const atom::Byte END_CHAR = 0xe7;
-    //blob->append(&END_CHAR, 1);
+    static const atom::Byte END_CHAR = 0xe7;
+    blob->append(&END_CHAR, 1);
 }
 
 /**
