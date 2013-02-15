@@ -19,6 +19,7 @@
  */
 
 #include "plugins-base/serial/bytestoblobnode.h"
+#include "plugins-base/serial/blobutils.h"
 #include "tempi/utils.h"
 #include "tempi/log.h"
 
@@ -38,16 +39,9 @@ BytesToBlobNode::BytesToBlobNode() :
     this->addOutlet(BLOB_OUTLET, "Resulting blobs.");
 }
 
-static atom::BlobValue::ptr createEmptyBlob()
-{
-    atom::Byte empty = 0;
-    atom::Value::ptr value = atom::BlobValue::create(&empty, 0);
-    return atom::BlobValue::convert(value);
-}
-
 atom::BlobValue::ptr bytesToBlob(const std::vector<int> &bytes)
 {
-    atom::BlobValue::ptr blob = createEmptyBlob();
+    atom::BlobValue::ptr blob = blobutils::createEmptyBlob();
     std::vector<int>::const_iterator iter;
     for (iter = bytes.begin(); iter != bytes.end(); iter++)
     {

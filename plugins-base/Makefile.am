@@ -105,10 +105,12 @@ libtempi_@TEMPI_API_VERSION@_plugins_base_la_SOURCES = \
     sampler/samplernode.cpp \
     sampler/samplerreadnode.cpp \
     sampler/samplerwritenode.cpp \
+    serial/blobutils.cpp \
     serial/bytestoblobnode.cpp \
     serial/blobtobytes.cpp \
     serial/serialdevice.cpp \
     serial/serialdevicenode.cpp \
+    serial/todmxusbpro.cpp \
     string/stringcharactersnode.cpp \
     string/stringjoinnode.cpp \
     string/stringsplitnode.cpp
@@ -175,10 +177,12 @@ EXTRA_DIST = \
     sampler/samplernode.h \
     sampler/samplerreadnode.h \
     sampler/samplerwritenode.h \
+    serial/blobutils.h \
     serial/bytestoblobnode.h \
     serial/blobtobytes.h \
     serial/serialdevicenode.h \
     serial/serialdevice.h \
+    serial/todmxusbpro.h \
     spatosc/spatoscnode.h \
     string/stringcharactersnode.h \
     string/stringjoinnode.h \

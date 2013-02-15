@@ -26,6 +26,7 @@
 #define __TEMPI_SERIAL_TODMXUSBPRONODE_H__
 
 #include "tempi/node.h"
+#include <vector>
 
 namespace tempi {
 namespace plugins_base {
@@ -37,10 +38,18 @@ class ToDmxUsbProNode : public Node
 {
     public:
         ToDmxUsbProNode();
-        static const char * const NUMBERS_INLET;
-        static const char * const BYTES_OUTLET;
+        static const char * const CHANNELS_INLET;
+        static const char * const INIT_INLET;
+        static const char * const BLOB_OUTLET;
+        static const char * const NUM_CHANNELS_ATTR;
+        static const int MAX_NUM_CHANNELS;
     protected:
         virtual void processMessage(const char *inlet, const Message &message);
+        bool onNodeAttributeChanged(const char *name, const Message &value);
+        virtual void doTick();
+    private:
+        std::vector<int> channel_values_;
+        bool channel_values_has_changed_;
 };
 
 } // end of namespace

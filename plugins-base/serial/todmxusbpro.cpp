@@ -19,48 +19,91 @@
  */
 
 #include "plugins-base/serial/todmxusbpro.h"
+#include "plugins-base/serial/blobutils.h"
 #include "tempi/utils.h"
 #include "tempi/log.h"
 #include <atom/blobvalue.h>
+#include <algorithm> // std::copy
 
 namespace tempi {
 namespace plugins_base {
 
-const char * const ToDmxUsbProNode::NUMBERS_INLET = "in";
-const char * const ToDmxUsbProNode::BYTES_OUTLET = "out";
+const char * const ToDmxUsbProNode::CHANNELS_INLET = "channels";
+const char * const ToDmxUsbProNode::INIT_INLET = "init";
+const char * const ToDmxUsbProNode::BLOB_OUTLET = "out";
+const char * const ToDmxUsbProNode::NUM_CHANNELS_ATTR = "num_channels";
+const int ToDmxUsbProNode::MAX_NUM_CHANNELS = 512;
 
 ToDmxUsbProNode::ToDmxUsbProNode() :
     Node()
 {
-    this->setShortDocumentation("Cook lists of numbers for the Enttec DMX USB Pro device.");
-    this->setLongDocumentation("Send messages containing a list of integers to its \"in\" input. It will output a message containing a list of integers so that you can convert it to a blob and then send it to the serial device that is the Enttec DMX USB Pro.");
+    this->setShortDocumentation("Cook control data for the Enttec DMX USB Pro device.");
+    this->setLongDocumentation("Send messages to its channels or init inlets, containing a list of integers to its \"in\" input. It will output a message containing a list of integers so that you can convert it to a blob and then send it to the serial device that is the Enttec DMX USB Pro.");
 
-    this->addInlet(NUMBERS_INLET, "Messages to cook. Must be only integers.");
+    this->addInlet(CHANNELS_INLET, "Channel messages to cook. Must be two ints: i:<channel> i:<value>", "The first number is the channel, the second the value. Both are clipped within the range [0, 255]", "ii");
     this->addInlet(INIT_INLET, "Send anything to this inlet to output an initialization message for the DMX USB Pro.");
-    this->addOutlet(BYTES_OUTLET, "Resulting lists of bytes.");
+    this->addOutlet(BLOB_OUTLET, "Resulting blobs to send to the serial device.");
+    this->addAttribute(Attribute::ptr(new Attribute(NUM_CHANNELS_ATTR, Message("i", 64), "Number of DMX channels to control. Can be up to 512.")));
+
+    for (int i = 0; i < MAX_NUM_CHANNELS; i++)
+    {
+        this->channel_values_.push_back(0);
+    }
+    this->channel_values_has_changed_ = false;
 }
 
-bool messageToInts(std::vector<int> &ints, const Message &message)
+bool ToDmxUsbProNode::onNodeAttributeChanged(const char *name, const Message &value)
 {
-    bool ok = true;
-    for (unsigned int i = 0; i < message.getSize(); i++)
+    if (utils::stringsMatch(NUM_CHANNELS_ATTR, name))
     {
-        AtomType type;
-        message.getAtomType(i, type);
-        if (type == INT)
+        static const int MIN_NUM = 64;
+        int num = value.getInt(0);
+        bool range_ok = true;
+        if (num < MIN_NUM)
         {
-            bytes.push_back((char) message.getInt(i));
+            // TODO: clip it: num = MIN_NUM;
+            range_ok = false;
+        }
+        else if (num > MAX_NUM_CHANNELS)
+        {
+            // TODO: clip it: num = MAX_NUM_CHANNELS;
+            range_ok = false;
+        }
+        if (range_ok)
+        {
+            return true;
         }
         else
         {
             std::ostringstream os;
-            os << "Unsuported type tag: " << type;
-            Logger::log(WARNING, os);
-            ok = false;
+            os << "ToDmxUsbProNode::" << __FUNCTION__ << ": " << name << ": " << "Number must be within the range [0, 512]. Got " << value.getInt(0) << ".";
+            Logger::log(ERROR, os);
+            return false;
         }
     }
-    return ok;
 }
+
+// bool messageToInts(std::vector<int> &ints, const Message &message)
+// {
+//     bool ok = true;
+//     for (unsigned int i = 0; i < message.getSize(); i++)
+//     {
+//         AtomType type;
+//         message.getAtomType(i, type);
+//         if (type == INT)
+//         {
+//             bytes.push_back((char) message.getInt(i));
+//         }
+//         else
+//         {
+//             std::ostringstream os;
+//             os << "Unsuported type tag: " << type;
+//             Logger::log(WARNING, os);
+//             ok = false;
+//         }
+//     }
+//     return ok;
+// }
 
 /**
  * DMX output break time in 10.67 microsend units.
@@ -75,6 +118,43 @@ static const int DMX_MARK = 1;
  */
 static const int DMX_RATE = 40;
 
+/**
+ * Prepares some data to send to the Enttec DMX USB Pro.
+ * Fills the blob with bytes of data.
+ * flag and the contents of data must be in the range that fits into a byte.
+ */
+static void toEnttecDMX(atom::BlobValue::ptr &blob, int flag, const std::vector<int> &data)
+{   
+    // Begin
+    static const atom::Byte BEGIN_CHAR = 0x7e;
+    blob->append(&BEGIN_CHAR, 1);
+    
+    // Flag
+    atom::Byte flag_char = (atom::Byte) flag;
+    blob->append(&flag_char, 1);
+    
+    // Data size
+    atom::Byte size_first_char = (atom::Byte) (data.size() & 0xff);
+    atom::Byte size_second_char = (atom::Byte) ((data.size() >> 8) & 0xff);
+    blob->append(&size_first_char, 1);
+    blob->append(&size_second_char, 1);
+    
+    // Data
+    std::vector<int>::const_iterator iter;
+    for (iter = data.begin(); iter != data.end(); ++iter)
+    {   
+        atom::Byte data_char = (atom::Byte) *iter;
+        blob->append(&data_char, 1);
+    }
+
+    // End
+    //static const atom::Byte END_CHAR = 0xe7;
+    //blob->append(&END_CHAR, 1);
+}
+
+/**
+ * Prepares the initialization message for the DMX USB Pro.
+ */
 static void initEnttecDMX(atom::BlobValue::ptr &blob)
 {   
     static const int FLAG = 4;
@@ -88,57 +168,69 @@ static void initEnttecDMX(atom::BlobValue::ptr &blob)
     toEnttecDMX(blob, FLAG, data);
 }
 
-/**
- * Prepares some data to send to the Enttec DMX USB Pro.
- * Fills the blob with bytes of data.
- * flag and the contents of data must be in the range that fits into a byte.
- */
-static void toEnttecDMX(atom::BlobValue::ptr &blob, int flag, const std::vector<int> &data)
-{   
-    // Begin
-    char begin_char = 0x7e;
-    blob->append(&begin_char, 1);
-    
-    // Flag
-    char flag_char = (char) flag;
-    blob->append(&flag_char, 1);
-    
-    // Data size
-    char size_first_char = (char) (data.size() & 0xff);
-    char size_second_char = (char) ((data.size() >> 8) & 0xff);
-    blob->append(&size_first_char, 1);
-    blob->append(&size_second_char, 1);
-    
-    // Data
-    std::vector<int>::const_iterator iter;
-    for (iter = data.begin(); iter != data.end(); ++iter)
-    {   
-        char data_char = (char) *iter;
-        blob->append(&data_char, 1);
+void ToDmxUsbProNode::processMessage(const char *inlet, const Message &message)
+{
+    if (utils::stringsMatch(INIT_INLET, inlet))
+    {
+        atom::BlobValue::ptr blob = blobutils::createEmptyBlob();
+        initEnttecDMX(blob);
+        Message result;
+        result.appendBlob(blob);
+        this->output(BLOB_OUTLET, result);
+        return;
+    }
+    else if (utils::stringsMatch(CHANNELS_INLET, inlet))
+    {
+        // type tag is "ii"
+        int channel = message.getInt(0);
+        int value = message.getInt(1);
+        int num_channels = this->getAttributeValue(NUM_CHANNELS_ATTR).getInt(0);
+        int max_channel_index = num_channels - 1; // FIXME: is this right?
+        if (channel < 0 || channel > max_channel_index)
+        {
+            std::ostringstream os;
+            os << "ToDmxUsbProNode::" << __FUNCTION__ << ": " << inlet << " " << message;
+            os << ": " << "Channel is out or range!";
+            Logger::log(ERROR, os);
+            return;
+        }
+        if (value < 0 || value > 511)
+        {
+            std::ostringstream os;
+            os << "ToDmxUsbProNode::" << __FUNCTION__ << ": " << inlet << " " << message;
+            os << ": " << "Value is out or range!";
+            Logger::log(ERROR, os);
+            return;
+        }
+
+        this->channel_values_[channel] = value;
+        this->channel_values_has_changed_ = true;
     }
 }
 
-
-void ToDmxUsbProNode::processMessage(const char *inlet, const Message &message)
+void ToDmxUsbProNode::doTick()
 {
-    if (utils::stringsMatch(NUMBERS_INLET, inlet))
+    static const int CHANNELS_DATA_FLAG = 6;
+
+    if (this->channel_values_has_changed_)
     {
-        std::vector<int> ints;
-        bool ok = messageToInts(ints, message);
-        if (! ok)
+        if (Logger::isEnabledFor(INFO))
         {
             std::ostringstream os;
-            os << "ToDmxUsbProNode::" << __FUNCTION__ << ": Could not convert all atoms to ints." << message.getTypes();
-            Logger::log(ERROR, os);
-            return; // XXX
+            os << "ToDmxUsbProNode::" << __FUNCTION__ << ": channel_values_has_changed_ is true. Now output channels data blob.";
+            Logger::log(INFO, os);
         }
+        this->channel_values_has_changed_ = false;
+
+        atom::BlobValue::ptr blob = blobutils::createEmptyBlob();
+        int num_channels = this->getAttributeValue(NUM_CHANNELS_ATTR).getInt(0);
+        std::vector<int> channels_to_send(num_channels);
+        std::copy(this->channel_values_.begin(), this->channel_values_.begin() + num_channels, channels_to_send.begin());
+        toEnttecDMX(blob, CHANNELS_DATA_FLAG, channels_to_send);
+
         Message result;
-        std::vector<int>::const_iterator iter;
-        for (iter = ints.begin(); iter != ints.end(); ++iter)
-        {
-            result.appendInt(*iter);
-        }
-        this->output(BYTES_OUTLET, result);
+        result.appendBlob(blob);
+        this->output(BLOB_OUTLET, result);
     }
 }
 

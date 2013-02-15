@@ -113,6 +113,13 @@ bool SerialDevice::closeDevice()
         int result = close(fd_);
         if (result == 0)
         {
+            if (Logger::isEnabledFor(NOTICE))
+            {
+                std::ostringstream os;
+                os << "SerialDevice." << __FUNCTION__ << ": successfully closed serial device.";
+                tempi::Logger::log(NOTICE, os);
+                return false;
+            }
             return true;
         }
         else

@@ -170,6 +170,12 @@ void SerialDeviceNode::processMessage(const char *inlet, const Message &message)
         if (message.typesMatch("B"))
         {
             atom::BlobValue::ptr blob = message.getBlob(0);
+            if (Logger::isEnabledFor(INFO))
+            {
+                std::ostringstream os;
+                os << "SerialDeviceNode::" << __FUNCTION__ << ": Writing " << blob->getSize() << " bytes to serial device";
+                Logger::log(INFO, os);
+            }
             device_->writeBlob(blob->getValue(), blob->getSize());
         }
         else if (message.typesMatch("s"))
