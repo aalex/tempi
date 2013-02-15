@@ -42,7 +42,7 @@ std::vector<int> blobToBytes(atom::BlobValue::ptr &blob) // FIXME: const
 {
     std::vector<int> result;
     size_t size = blob->getSize();
-    char *value = blob->getValue();
+    atom::Byte *value = blob->getValue();
     for (size_t i = 0; i < size; i++)
     {
         result.push_back((int) value[i]);

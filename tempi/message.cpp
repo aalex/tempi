@@ -596,8 +596,8 @@ bool Message::operator==(const Message &other) const
                 break;
             case BLOB:
                 {
-                    const char *left = getBlob(i)->getValue();
-                    const char *right = other.getBlob(i)->getValue();
+                    const atom::Byte *left = getBlob(i)->getValue();
+                    const atom::Byte *right = other.getBlob(i)->getValue();
                     if (&left == &right) // XXX compare the two pointers?
                         return false;
                     break;
