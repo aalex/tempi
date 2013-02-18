@@ -30,7 +30,6 @@
 #ifdef HAVE_LUA
 
 #include "tempi/node.h"
-#include <v8.h>
 
 namespace tempi {
 namespace plugins_base {
