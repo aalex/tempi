@@ -70,6 +70,28 @@ class MapNode : public OneFloatMathNode
         virtual float calculate(float operand);
 };
 
+/**
+ * Outputs the sin of the input
+ */
+class SinNode : public OneFloatMathNode
+{
+    public:
+        SinNode();
+    private:
+        virtual float calculate(float operand);
+};
+
+/**
+ * Outputs the cos of the input
+ */
+class CosNode : public OneFloatMathNode
+{
+    public:
+        CosNode();
+    private:
+        virtual float calculate(float operand);
+};
+
 } // end of namespace
 } // end of namespace
 

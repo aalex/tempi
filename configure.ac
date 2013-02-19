@@ -320,7 +320,6 @@ AC_CONFIG_FILES([
         plugins-base/tests/Makefile
         python_module/Makefile
         src/Makefile
-        src/tempi-graph-viewer/Makefile
         src/tempi-midi-looper/Makefile
         src/tempi-osc-forward/Makefile
         src/tempi-draw/Makefile

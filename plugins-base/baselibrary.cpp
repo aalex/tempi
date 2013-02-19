@@ -132,6 +132,8 @@ void BaseLibrary::load(NodeFactory &factory, const char * /*prefix*/) const
 #endif // HAVE_LUA
 
     factory.registerTypeT<AddNode>(concatenate(prefix, "math.+").c_str());
+    factory.registerTypeT<CosNode>(concatenate(prefix, "math.cos").c_str());
+    factory.registerTypeT<SinNode>(concatenate(prefix, "math.sin").c_str());
     factory.registerTypeT<DivNode>(concatenate(prefix, "math./").c_str());
     factory.registerTypeT<EqualsNotNode>(concatenate(prefix, "math.!=").c_str());
     factory.registerTypeT<IsEqualNode>(concatenate(prefix, "math.==").c_str());

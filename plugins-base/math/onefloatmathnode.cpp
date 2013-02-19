@@ -25,6 +25,7 @@
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
 #endif
+#include <cmath>
 
 namespace tempi { 
 namespace plugins_base {
@@ -76,6 +77,28 @@ float MapNode::calculate(float operand)
     return utils::map_float(operand,
         input.getFloat(0), input.getFloat(1),
         output.getFloat(0), output.getFloat(1));
+}
+
+CosNode::CosNode() :
+    OneFloatMathNode()
+{
+    this->setShortDocumentation("Outputs the cosine of what you provide it.");
+}
+
+float CosNode::calculate(float operand)
+{
+    return std::cos(operand);
+}
+
+SinNode::SinNode() :
+    OneFloatMathNode()
+{
+    this->setShortDocumentation("Outputs the sine of what you provide it.");
+}
+
+float SinNode::calculate(float operand)
+{
+    return std::sin(operand);
 }
 
 } // end of namespace

@@ -135,7 +135,7 @@ bool Node::onAttributeChanged(const char *name, const Message &value)
         Message mess = value;
         mess.prependString(name);
         mess.prependString(ATTRIBUTES_SET_OUTPUT_PREFIX);
-        output(ATTRIBUTES_OUTLET, mess);
+        this->output(ATTRIBUTES_OUTLET, mess);
     }
     return ok;
 }
@@ -288,7 +288,7 @@ void Node::onInletTriggered(Pad *inlet, const Message &message)
                 if (called_ok)
                 {
                     return_value.prependString(method_name.c_str());
-                    output(OUTLET_RETURN, return_value);
+                    this->output(OUTLET_RETURN, return_value);
                 }
                 else
                 {
@@ -571,6 +571,13 @@ bool Node::message(const char *inlet, const Message &message)
 void Node::output(const char *outlet, const Message &message) const
     throw(BadIndexException)
 {
+    if (Logger::isEnabledFor(DEBUG))
+    {
+        std::ostringstream os;
+        os << "Node." << __FUNCTION__ << "[" << this->getName() << "](" <<
+            outlet << ", " << message << ")";
+        Logger::log(DEBUG, os);
+    }
     Outlet::ptr outlet_ptr = getOutletSharedPtr(outlet);
     outlet_ptr->trigger(message);
 }
