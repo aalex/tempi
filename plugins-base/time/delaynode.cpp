@@ -18,7 +18,7 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "plugins-base/flow/delaynode.h"
+#include "plugins-base/time/delaynode.h"
 #include "tempi/utils.h"
 
 namespace tempi {
