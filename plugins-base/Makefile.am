@@ -113,6 +113,8 @@ libtempi_@TEMPI_API_VERSION@_plugins_base_la_SOURCES = \
     string/stringjoinnode.cpp \
     string/stringsplitnode.cpp \
     time/clock_node.cpp \
+    time/cron.cpp \
+    time/cron_node.cpp \
     time/date_node.cpp \
     time/delaynode.cpp \
     time/metro_node.cpp
@@ -188,6 +190,8 @@ EXTRA_DIST = \
     string/stringjoinnode.h \
     string/stringsplitnode.h \
     time/clock_node.h \
+    time/cron.h \
+    time/cron_node.h \
     time/date_node.h \
     time/delaynode.h \
     time/metro_node.h
