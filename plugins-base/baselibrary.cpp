@@ -31,6 +31,7 @@
 #include "plugins-base/flow/linenode.h"
 #include "plugins-base/flow/loadmessnode.h"
 #include "plugins-base/time/metro_node.h"
+#include "plugins-base/time/clock_node.h"
 #include "plugins-base/time/date_node.h"
 #include "plugins-base/flow/nop_node.h"
 #include "plugins-base/flow/packnode.h"
@@ -98,6 +99,7 @@ void BaseLibrary::load(NodeFactory &factory, const char * /*prefix*/) const
     factory.registerTypeT<NopNode>(concatenate(prefix, "flow.nop").c_str());
     factory.registerTypeT<PackNode>(concatenate(prefix, "flow.pack").c_str());
     factory.registerTypeT<MetroNode>(concatenate(prefix, "time.metro").c_str());
+    factory.registerTypeT<ClockNode>(concatenate(prefix, "time.clock").c_str());
     factory.registerTypeT<DateNode>(concatenate(prefix, "time.date").c_str());
     factory.registerTypeT<AnyNode>(concatenate(prefix, "flow.any").c_str());
     factory.registerTypeT<CounterNode>(concatenate(prefix, "flow.counter").c_str());

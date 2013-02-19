@@ -39,7 +39,7 @@ const char * const DateNode::TRIGGER_INLET = "trigger";
 DateNode::DateNode() :
     Node()
 {
-    this->setShortDocumentation("Provides the current date and time information.");
+    this->setShortDocumentation("Provides the current date information.");
     this->addAttribute(Attribute::ptr(new Attribute(USE_UTC_NOT_LOCAL_ATTR, Message("b", false), "Use the Universal Time Clock. Uses the local time if set to false.")));
 
     //this->addOutlet(HOUR_OUTLET);
