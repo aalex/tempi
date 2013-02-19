@@ -19,45 +19,36 @@
  */
 
 /**
- * The DateNode class.
+ * The ClockNode class.
  */
 
-#ifndef __TEMPI_TIME_DATE_NODE_H__
-#define __TEMPI_TIME_DATE_NODE_H__
+#ifndef __TEMPI_TIME_CLOCK_NODE_H__
+#define __TEMPI_TIME_CLOCK_NODE_H__
 
-#include "tempi/timer.h"
-#include "tempi/timeposition.h"
 #include "tempi/node.h"
 
 namespace tempi {
 namespace plugins_base {
 
 /**
- * Get the current date.
+ * Get the current time.
  */
-class DateNode : public Node
+class ClockNode : public Node
 {
     public:
         // date
-        static const char * const YEAR_OUTLET;
-        static const char * const MONTH_OUTLET;
-        static const char * const DAY_OF_MONTH_OUTLET;
-        // week day
-        static const char * const DAY_OF_WEEK_OUTLET;
-        // misc info
-        static const char * const END_OF_MONTH_OUTLET;
-        static const char * const WEEK_NUMBER_OUTLET;
-        static const char * const IS_LEAP_YEAR_OUTLET;
+        static const char * const HOURS_OUTLET;
+        static const char * const MINUTES_OUTLET;
+        static const char * const SECONDS_OUTLET;
+        //static const char * const MILLISECONDS_OUTLET;
         // options
         static const char * const USE_UTC_NOT_LOCAL_ATTR;
         // controls
         static const char * const TRIGGER_INLET;
 
-        DateNode();
+        ClockNode();
     protected:
         virtual void processMessage(const char *inlet, const Message &message);
-    //private:
-    //   virtual void doTick();
 };
 
 } // end of namespace
