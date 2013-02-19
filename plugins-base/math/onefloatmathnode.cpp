@@ -101,6 +101,39 @@ float SinNode::calculate(float operand)
     return std::sin(operand);
 }
 
+static double cint(double x)
+{
+    if (std::fmod(x, 0) >= 0.5) // FIXME: should be modf?
+        return x >= 0 ? std::ceil(x) : std::floor(x);
+    else
+        return x < 0 ? std::ceil(x) : std::floor(x);
+}
+
+static double round(double r, unsigned int places)
+{
+    if (places == 0)
+    {
+        return cint(r);
+    }
+    else
+    {
+        double off = std::pow(10, places);
+        return cint(r * off) / off;
+    }
+}
+
+RoundNode::RoundNode() :
+    OneFloatMathNode()
+{
+    this->setShortDocumentation("Rounds floats to a given precision.");
+    this->addAttribute(Attribute::ptr(new Attribute("precision", Message("i", 0), "How much float precision you want to keep.")));
+}
+
+float RoundNode::calculate(float operand)
+{
+    return round(operand, std::abs(this->getAttributeValue("precision").getInt(0)));
+}
+
 } // end of namespace
 } // end of namespace
 

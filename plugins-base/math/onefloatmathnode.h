@@ -82,12 +82,23 @@ class SinNode : public OneFloatMathNode
 };
 
 /**
- * Outputs the cos of the input
+ * outputs the cos of the input
  */
 class CosNode : public OneFloatMathNode
 {
     public:
         CosNode();
+    private:
+        virtual float calculate(float operand);
+};
+
+/**
+ * rounds float to a given precision
+ */
+class RoundNode : public OneFloatMathNode
+{
+    public:
+        RoundNode();
     private:
         virtual float calculate(float operand);
 };
