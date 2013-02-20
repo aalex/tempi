@@ -75,6 +75,7 @@
 #include "plugins-base/string/stringjoinnode.h"
 #include "plugins-base/string/stringsplitnode.h"
 #include "plugins-base/time/clock_node.h"
+#include "plugins-base/time/timernode.h"
 #include "plugins-base/time/cron_node.h"
 #include "plugins-base/time/date_node.h"
 #include "plugins-base/time/delaynode.h"
@@ -104,6 +105,7 @@ void BaseLibrary::load(NodeFactory &factory, const char * /*prefix*/) const
     factory.registerTypeT<ClockNode>(concatenate(prefix, "time.clock").c_str());
     factory.registerTypeT<DateNode>(concatenate(prefix, "time.date").c_str());
     factory.registerTypeT<CronNode>(concatenate(prefix, "time.cron").c_str());
+    factory.registerTypeT<TimerNode>(concatenate(prefix, "time.timer").c_str());
     factory.registerTypeT<AnyNode>(concatenate(prefix, "flow.any").c_str());
     factory.registerTypeT<CounterNode>(concatenate(prefix, "flow.counter").c_str());
     factory.registerTypeT<DelayNode>(concatenate(prefix, "time.delay").c_str());
