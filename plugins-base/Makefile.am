@@ -61,6 +61,7 @@ libtempi_@TEMPI_API_VERSION@_plugins_base_la_SOURCES = \
     edit/grapheditornode.cpp \
     flow/anynode.cpp \
     flow/appsinknode.cpp \
+    flow/changenode.cpp \
     flow/counternode.cpp \
     flow/linenode.cpp \
     flow/loadmessnode.cpp \
@@ -131,6 +132,7 @@ EXTRA_DIST = \
     flow/appendnode.h \
     flow/appsinknode.h \
     flow/castnode.h \
+    flow/changenode.h \
     flow/counternode.h \
     flow/dictnode.h \
     flow/linenode.h \

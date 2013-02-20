@@ -28,6 +28,7 @@
 #include "plugins-base/flow/appendnode.h"
 #include "plugins-base/flow/appsinknode.h"
 #include "plugins-base/flow/castnode.h"
+#include "plugins-base/flow/changenode.h"
 #include "plugins-base/flow/counternode.h"
 #include "plugins-base/flow/dictnode.h"
 #include "plugins-base/flow/linenode.h"
@@ -118,6 +119,7 @@ void BaseLibrary::load(NodeFactory &factory, const char * /*prefix*/) const
     factory.registerTypeT<LineNode>(concatenate(prefix, "flow.line").c_str());
     factory.registerTypeT<LoadMessNode>(concatenate(prefix, "flow.loadmess").c_str());
     factory.registerTypeT<CastNode>(concatenate(prefix, "flow.cast").c_str());
+    factory.registerTypeT<ChangeNode>(concatenate(prefix, "flow.change").c_str());
 
 #ifdef HAVE_SPATOSC
     factory.registerTypeT<SpatoscNode>(concatenate(prefix, "osc.spatosc").c_str());
