@@ -99,17 +99,11 @@ bool messageToJavascript(const Message &message, std::string &result)
                 else
                     os << "false";
                 break;
-            case tempi::DOUBLE:
-                os << message.getDouble(i);
-                break;
             case tempi::FLOAT:
                 os << message.getFloat(i);
                 break;
             case tempi::INT:
                 os << message.getInt(i);
-                break;
-            case tempi::UNSIGNED_INT:
-                os << message.getUnsignedInt(i);
                 break;
             case tempi::STRING:
                 os << "\"" << message.getString(i) << "\"";

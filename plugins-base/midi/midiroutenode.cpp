@@ -48,7 +48,7 @@ void MidiRouteNode::processMessage(const char *inlet, const Message &message)
         Logger::log(ERROR, os);
         return;
     }
-    unsigned char midi_event_type = getMidiEventType(message.getUnsignedChar(0));
+    unsigned char midi_event_type = getMidiEventType(message.getInt(0));
     Message result;
     switch (midi_event_type)
     {
@@ -70,9 +70,9 @@ void MidiRouteNode::processMessage(const char *inlet, const Message &message)
                 Logger::log(ERROR, os);
                 return;
             }
-            int channel_number = int(getChannelNumber(message.getUnsignedChar(0)));
-            int note_pitch = int(message.getUnsignedChar(1));
-            int velocity = int(message.getUnsignedChar(2));
+            Int channel_number = getChannelNumber(message.getInt(0));
+            Int note_pitch = message.getInt(1);
+            Int velocity = message.getInt(2);
 
             result.appendString("note");
             result.appendInt(channel_number);
@@ -89,9 +89,9 @@ void MidiRouteNode::processMessage(const char *inlet, const Message &message)
                 Logger::log(ERROR, os);
                 return;
             }
-            int channel_number = int(getChannelNumber(message.getUnsignedChar(0)));
-            int controller_number = int(message.getUnsignedChar(1));
-            int control_value = int(message.getUnsignedChar(2));
+            Int channel_number = getChannelNumber(message.getInt(0));
+            Int controller_number = message.getInt(1);
+            Int control_value = message.getInt(2);
 
             result.appendString("control");
             result.appendInt(channel_number);
@@ -116,8 +116,8 @@ void MidiRouteNode::processMessage(const char *inlet, const Message &message)
                 Logger::log(ERROR, os);
                 return;
             }
-            int channel_number = int(getChannelNumber(message.getUnsignedChar(0)));
-            int bend = int(message.getUnsignedChar(2));
+            Int channel_number = getChannelNumber(message.getInt(0));
+            Int bend = message.getInt(2);
 
             result.appendString("pitch_bend");
             result.appendInt(channel_number);

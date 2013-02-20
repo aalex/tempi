@@ -28,7 +28,7 @@ DelayNode::DelayNode() :
     Node()
 {
     setShortDocumentation("Delays incoming messages by a given time interval.");
-    addAttribute(Attribute::ptr(new Attribute("delay", Message("l", 0), "Delay in milliseconds. All messages will be delayed by that much.")));
+    addAttribute(Attribute::ptr(new Attribute("delay", Message("i", 0), "Delay in milliseconds. All messages will be delayed by that much.")));
     addInlet("0", "Any message will be sent from outlet 0 after a given delay.");
     addInlet("clear", "Clears all the stored messages.");
     addOutlet("0", "Delayed messages. Save as those received from inlet 0, but later.");
@@ -38,7 +38,7 @@ void DelayNode::processMessage(const char *inlet, const Message &message)
 {
     if (utils::stringsMatch(inlet, "0"))
     {
-        if (getAttributeValue("delay").getLong(0) == 0)
+        if (getAttributeValue("delay").getInt(0) == 0)
         {
             output("0", message);
         }
@@ -62,7 +62,7 @@ void DelayNode::doTick()
     TimePosition now = timer_.now();
     // std::cout << "delay " << getAttributeValue("delay").getLong(0) << std::endl;
     TimePosition delay = from_ms(
-        (unsigned long long) getAttributeValue("delay").getLong(0));
+        (unsigned long long) getAttributeValue("delay").getInt(0));
     TimePosition thresh = now - delay;
 
     // std::cout << "delay =  " << to_ms(delay) << std::endl;

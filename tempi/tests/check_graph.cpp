@@ -1,5 +1,6 @@
 #include <iostream>
 #include "tempi/graph.h"
+#include "tempi/log.h"
 #include "tempi/node.h"
 #include "tempi/nodefactory.h"
 
@@ -104,8 +105,11 @@ bool check_disconnect()
         os << "Step 2: Expected " << 2 << " connection(s), got " << graph.getAllConnections().size();
         return fail(os.str().c_str());
     }
+    Logger& logger = Logger::getInstance();
+    logger.setLevel(CRITICAL); // make the following ERROR quiet
     if (graph.connect("dummy0", "out", "dummy2", "in"))
         return fail("Should not be able to connect twice dummy0 to dummy2");
+    logger.setLevel(NOTICE); // back to normal
 
     if (! graph.disconnect("dummy0", "out", "dummy2", "in"))
         return fail("Could not dicconnect dummy0 from dummy2");

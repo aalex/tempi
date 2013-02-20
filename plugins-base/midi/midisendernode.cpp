@@ -103,12 +103,8 @@ void MidiSenderNode::processMessage(const char *inlet, const Message &message)
         {
             AtomType type;
             message.getAtomType(i, type);
-            if (type == UNSIGNED_CHAR)
-                event.push_back(message.getUnsignedChar(i));
             if (type == INT)
-                event.push_back((unsigned char)message.getInt(i));
-            if (type == UNSIGNED_INT)
-                event.push_back((unsigned char)message.getUnsignedInt(i));
+                event.push_back(message.getInt(i));
         }
         if (event.size() == 3)
         {

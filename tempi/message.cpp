@@ -25,6 +25,8 @@
 #include <sstream>
 #include <ostream>
 #include <cstring>
+#include <limits> // numeric_limits::epsilon
+#include <cmath> // fabs
 
 namespace tempi {
 
@@ -75,21 +77,21 @@ void Message::appendVaList(const char *types, va_list arguments)
     {
         switch (types[i])
         {
-            case BANG:
+            case NONE:
             {
-                appendBang();
+                appendNone();
                 break;
             }
             case FLOAT:
             {
-                float value = va_arg(arguments, double);
+                Float value = va_arg(arguments, double);
                 //std::cout << "Caught a float : " << value;
                 appendFloat(value);
                 break;
             }
             case INT:
             {
-                int value = va_arg(arguments, int);
+                Int value = va_arg(arguments, Int);
                 //std::cout << "Caught an integer : " << value;
                 appendInt(value);
                 break;
@@ -107,41 +109,6 @@ void Message::appendVaList(const char *types, va_list arguments)
                 // FIXME: does this memleak?
                 //std::cout << "Caught a string : " << value;
                 appendString(value);
-                break;
-            }
-            case DOUBLE:
-            {
-                double value = va_arg(arguments, double);
-                std::cout << "Caught a double : " << value;
-                appendDouble(value);
-                break;
-            }
-            case CHAR:
-            {
-                char value = (char) va_arg(arguments, int);
-                //std::cout << "Caught a char : " <<  value;
-                appendChar(value);
-                break;
-            }
-            case UNSIGNED_CHAR:
-            {
-                unsigned char value = (unsigned char) va_arg(arguments, int);
-                //std::cout << "Caught a char : " <<  value;
-                appendChar(value);
-                break;
-            }
-            case UNSIGNED_INT:
-            {
-                unsigned int value = (unsigned int) va_arg(arguments, int);
-                //std::cout << "Caught an unsigned int: " <<  value;
-                appendUnsignedInt(value);
-                break;
-            }
-            case LONG:
-            {
-                long long int value = va_arg(arguments, long long int);
-                //std::cout << "Caught a long long :" << value;
-                appendLong(value);
                 break;
             }
             case POINTER:
@@ -182,12 +149,12 @@ bool Message::prepend(boost::any value)
     return true;
 }
 
-unsigned int Message::getSize() const
+Index Message::getSize() const
 {
     return arguments_.size();
 }
 
-const boost::any *Message::getArgument(unsigned int index) const // throw(BadIndexException)
+const boost::any *Message::getArgument(Index index) const // throw(BadIndexException)
 {
     if (index >= getSize())
     {
@@ -212,41 +179,31 @@ void Message::appendBlob(atom::BlobValue::ptr value)
     append(boost::any(value));
 }
 
-atom::BlobValue::ptr Message::getBlob(unsigned int index) const
+atom::BlobValue::ptr Message::getBlob(Index index) const
 {
     atom::BlobValue::ptr value;
     get<atom::BlobValue::ptr>(index, value);
     return value;
 }
 
-void Message::prependFloat(float value)
+void Message::prependFloat(Float value)
 {
     prepend(boost::any(value));
 }
 
-void Message::prependInt(int value)
+void Message::prependInt(Int value)
 {
     prepend(boost::any(value));
 }
 
-void Message::prependUnsignedInt(unsigned int value)
+void Message::prependNone()
 {
-    prepend(boost::any(value));
+    prepend(boost::any(None()));
 }
 
-void Message::prependBang()
+void Message::appendNone()
 {
-    prepend(boost::any(Bang()));
-}
-
-void Message::appendBang()
-{
-    append(boost::any(Bang()));
-}
-
-void Message::prependLong(long long int value)
-{
-    prepend(boost::any(value));
+    append(boost::any(None()));
 }
 
 void Message::prependStdString(std::string value)
@@ -259,37 +216,17 @@ void Message::prependBoolean(bool value)
     prepend(boost::any(value));
 }
 
-void Message::prependChar(char value)
-{
-    prepend(boost::any(value));
-}
-
-void Message::prependDouble(double value)
-{
-    prepend(boost::any(value));
-}
-
 void Message::prependPointer(void *value)
 {
     prepend(boost::any(value));
 }
 
-void Message::appendFloat(float value)
+void Message::appendFloat(Float value)
 {
     append(boost::any(value));
 }
 
-void Message::appendInt(int value)
-{
-    append(boost::any(value));
-}
-
-void Message::appendUnsignedInt(unsigned int value)
-{
-    append(boost::any(value));
-}
-
-void Message::appendLong(long long int value)
+void Message::appendInt(Int value)
 {
     append(boost::any(value));
 }
@@ -304,147 +241,72 @@ void Message::appendBoolean(bool value)
     append(boost::any(value));
 }
 
-void Message::appendChar(char value)
-{
-    append(boost::any(value));
-}
-
-void Message::appendUnsignedChar(unsigned char value)
-{
-    append(boost::any(value));
-}
-
-void Message::appendDouble(double value)
-{
-    append(boost::any(value));
-}
-
 void Message::appendPointer(void *value)
 {
     append(boost::any(value));
 }
 
-int Message::getInt(unsigned int index) const throw(BadAtomTypeException, BadIndexException)
+Int Message::getInt(Index index) const throw(BadAtomTypeException, BadIndexException)
 {
-    int value;
-    get<int>(index, value);
+    Int value;
+    get<Int>(index, value);
     return value;
 }
 
-unsigned int Message::getUnsignedInt(unsigned int index) const throw(BadAtomTypeException, BadIndexException)
-{
-    unsigned int value;
-    get<unsigned int>(index, value);
-    return value;
-}
-
-long long int Message::getLong(unsigned int index) const throw(BadAtomTypeException, BadIndexException)
-{
-    long long int value;
-    get<long long int>(index, value);
-    return value;
-}
-
-double Message::getDouble(unsigned int index) const throw(BadAtomTypeException, BadIndexException)
-{
-    double value;
-    get<double>(index, value);
-    return value;
-}
-
-std::string Message::getString(unsigned int index) const throw(BadAtomTypeException, BadIndexException)
+std::string Message::getString(Index index) const throw(BadAtomTypeException, BadIndexException)
 {
     std::string value;
     get<std::string>(index, value);
     return value;
 }
 
-float Message::getFloat(unsigned int index) const throw(BadAtomTypeException, BadIndexException)
+Float Message::getFloat(Index index) const throw(BadAtomTypeException, BadIndexException)
 {
-    float value;
-    get<float>(index, value);
+    Float value;
+    get<Float>(index, value);
     return value;
 }
 
-char Message::getChar(unsigned int index) const throw(BadAtomTypeException, BadIndexException)
-{
-    char value;
-    get<char>(index, value);
-    return value;
-}
-
-unsigned char Message::getUnsignedChar(unsigned int index) const throw(BadAtomTypeException, BadIndexException)
-{
-    unsigned char value;
-    get<unsigned char>(index, value);
-    return value;
-}
-
-bool Message::getBoolean(unsigned int index) const throw(BadAtomTypeException, BadIndexException)
+bool Message::getBoolean(Index index) const throw(BadAtomTypeException, BadIndexException)
 {
     bool value;
     get<bool>(index, value);
     return value;
 }
 
-void *Message::getPointer(unsigned int index) const throw(BadAtomTypeException, BadIndexException)
+void *Message::getPointer(Index index) const throw(BadAtomTypeException, BadIndexException)
 {
     void *value;
     get<void *>(index, value);
     return value;
 }
 
-void Message::setBoolean(unsigned int index, bool value) throw(BadAtomTypeException, BadIndexException)
+void Message::setBoolean(Index index, bool value) throw(BadAtomTypeException, BadIndexException)
 {
     set<bool>(index, value);
 }
 
-void Message::setChar(unsigned int index, char value) throw(BadAtomTypeException, BadIndexException)
+void Message::setFloat(Index index, Float value) throw(BadAtomTypeException, BadIndexException)
 {
-    set<char>(index, value);
+    set<Float>(index, value);
 }
 
-void Message::setUnsignedChar(unsigned int index, unsigned char value) throw(BadAtomTypeException, BadIndexException)
+void Message::setInt(Index index, Int value) throw(BadAtomTypeException, BadIndexException)
 {
-    set<unsigned char>(index, value);
+    set<Int>(index, value);
 }
 
-void Message::setDouble(unsigned int index, double value) throw(BadAtomTypeException, BadIndexException)
-{
-    set<double>(index, value);
-}
-
-void Message::setFloat(unsigned int index, float value) throw(BadAtomTypeException, BadIndexException)
-{
-    set<float>(index, value);
-}
-
-void Message::setInt(unsigned int index, int value) throw(BadAtomTypeException, BadIndexException)
-{
-    set<int>(index, value);
-}
-void Message::setUnsignedInt(unsigned int index, unsigned int value) throw(BadAtomTypeException, BadIndexException)
-{
-    set<unsigned int>(index, value);
-}
-
-void Message::setLong(unsigned int index, long long int value) throw(BadAtomTypeException, BadIndexException)
-{
-    set<long long int>(index, value);
-}
-
-void Message::setString(unsigned int index, std::string value) throw(BadAtomTypeException, BadIndexException)
+void Message::setString(Index index, std::string value) throw(BadAtomTypeException, BadIndexException)
 {
     set<std::string>(index, value);
 }
 
-void Message::setPointer(unsigned int index, void *value) throw(BadAtomTypeException, BadIndexException)
+void Message::setPointer(Index index, void *value) throw(BadAtomTypeException, BadIndexException)
 {
     set<void *>(index, value);
 }
 
-namespace types
-{
+namespace types {
 
 bool getAtomTypeForAny(const boost::any &value, AtomType &type)
 {
@@ -453,24 +315,14 @@ bool getAtomTypeForAny(const boost::any &value, AtomType &type)
         return false;
     if (actual == typeid(bool))
         type = BOOLEAN;
-    else if (actual == typeid(char))
-        type = CHAR;
-    else if (actual == typeid(unsigned char))
-        type = UNSIGNED_CHAR;
-    else if (actual == typeid(unsigned int))
-        type = UNSIGNED_INT;
-    else if (actual == typeid(double))
-        type = DOUBLE;
-    else if (actual == typeid(float))
+    else if (actual == typeid(Float))
         type = FLOAT;
-    else if (actual == typeid(int))
+    else if (actual == typeid(Int))
         type = INT;
-    else if (actual == typeid(long long int))
-        type = LONG;
     else if (actual == typeid(std::string))
         type = STRING;
-    else if (actual == typeid(Bang))
-        type = BANG;
+    else if (actual == typeid(None))
+        type = NONE;
     else if (actual == typeid(void *))
         type = POINTER;
     else if (actual == typeid(atom::BlobValue::ptr))
@@ -486,7 +338,7 @@ bool getAtomTypeForAny(const boost::any &value, AtomType &type)
 
 } // end of namespace
 
-bool Message::getAtomType(unsigned int index, AtomType &type) const
+bool Message::getAtomType(Index index, AtomType &type) const
 {
     const boost::any *tmp = getArgument(index);
     if (tmp)
@@ -499,7 +351,7 @@ bool Message::typesMatch(std::string &types) const
 {
     if (types.size() != getSize())
         return false;
-    unsigned int index = 0;
+    Index index = 0;
     AtomType actual;
     std::string::iterator iter;
     for (iter = types.begin(); iter < types.end(); ++iter)
@@ -512,7 +364,7 @@ bool Message::typesMatch(std::string &types) const
     return true;
 }
 
-bool Message::indexMatchesType(unsigned int index, char type) const
+bool Message::indexMatchesType(Index index, char type) const
 {
     AtomType actual;
     if ( ! getAtomType(index, actual))
@@ -523,7 +375,7 @@ bool Message::indexMatchesType(unsigned int index, char type) const
 std::string Message::getTypes() const
 {
     std::string ret;
-    for (unsigned int i = 0; i < getSize(); ++i)
+    for (Index i = 0; i < getSize(); ++i)
     {
         AtomType type;
         if (! getAtomType(i, type))
@@ -539,13 +391,18 @@ bool Message::operator!=(const Message &other) const
     return ! (*this == other);
 }
 
+static bool doublesMatch(double left, double right)
+{
+    return std::fabs(left - right) > std::numeric_limits<double>::epsilon();
+}
+
 bool Message::operator==(const Message &other) const
 {
     if (getTypes() != other.getTypes())
     {
         return false;
     }
-    for (unsigned int i = 1; i < getSize(); ++i)
+    for (Index i = 1; i < getSize(); ++i)
     {
         AtomType type;
         getAtomType(i, type);
@@ -555,35 +412,15 @@ bool Message::operator==(const Message &other) const
                 if (getBoolean(i) != other.getBoolean(i))
                     return false;
                 break;
-            case CHAR:
-                if (getChar(i) != other.getChar(i))
-                    return false;
-                break;
-            case UNSIGNED_CHAR:
-                if (getUnsignedChar(i) != other.getUnsignedChar(i))
-                    return false;
-                break;
-            case UNSIGNED_INT:
-                if (getUnsignedInt(i) != other.getUnsignedInt(i))
-                    return false;
-                break;
-            case BANG:
+            case NONE:
                 // always matches
                 break;
-            case DOUBLE:
-                if (getDouble(i) != other.getDouble(i))
-                    return false;
-                break;
             case FLOAT:
-                if (getFloat(i) != other.getFloat(i))
+                if (! doublesMatch(getFloat(i), other.getFloat(i)))
                     return false;
                 break;
             case INT:
                 if (getInt(i) != other.getInt(i))
-                    return false;
-                break;
-            case LONG:
-                if (getLong(i) != other.getLong(i))
                     return false;
                 break;
             case STRING:
@@ -623,23 +460,11 @@ std::ostream &operator<<(std::ostream &os, const Message &message)
             case BOOLEAN:
                 os << (message.getBoolean(i) ? "true" : "false");
                 break;
-            case CHAR:
-                os << (unsigned int) message.getChar(i);
-                break;
-            case UNSIGNED_CHAR:
-                os << (unsigned int) message.getUnsignedChar(i);
-                break;
-            case DOUBLE:
-                os << message.getDouble(i);
-                break;
             case FLOAT:
                 os << message.getFloat(i);
                 break;
             case INT:
                 os << message.getInt(i);
-                break;
-            case LONG:
-                os << message.getLong(i);
                 break;
             case STRING:
                 os << "\"" << message.getString(i) << "\"";
@@ -676,7 +501,7 @@ void Message::prependMessage(const Message &message)
         //std::cout << __FUNCTION__ << " empty message. nothing to append\n";
         return;
     }
-    for (int i = (unsigned int) message.getSize() - 1; i >= 0; --i)
+    for (Index i = message.getSize() - 1; i >= 0; --i)
     {
         AtomType type;
         //std::cout << __FUNCTION__ << " " << i << std::endl;
@@ -700,26 +525,14 @@ void Message::prependMessage(const Message &message)
             case BOOLEAN:
                 prependBoolean(message.getBoolean(i));
                 break;
-            case CHAR:
-                prependChar(message.getChar(i));
-                break;
-            case DOUBLE:
-                prependDouble(message.getDouble(i));
-                break;
             case FLOAT:
                 prependFloat(message.getFloat(i));
                 break;
             case INT:
                 prependInt(message.getInt(i));
                 break;
-            case UNSIGNED_INT:
-                prependUnsignedInt(message.getUnsignedInt(i));
-                break;
-            case BANG:
-                prependBang();
-                break;
-            case LONG:
-                prependLong(message.getLong(i));
+            case NONE:
+                prependNone();
                 break;
             case STRING:
                 prependString(message.getString(i).c_str());

@@ -29,6 +29,7 @@ Filter::Filter() :
     Node()
 {
     addInlet("0");
+    // TODO: filter by type
     addOutlet("0");
 }
 
