@@ -28,6 +28,7 @@
 #include "plugins-base/flow/appendnode.h"
 #include "plugins-base/flow/appsinknode.h"
 #include "plugins-base/flow/castnode.h"
+#include "plugins-base/flow/changenode.h"
 #include "plugins-base/flow/counternode.h"
 #include "plugins-base/flow/dictnode.h"
 #include "plugins-base/flow/linenode.h"
@@ -74,6 +75,7 @@
 #include "plugins-base/string/stringjoinnode.h"
 #include "plugins-base/string/stringsplitnode.h"
 #include "plugins-base/time/clock_node.h"
+#include "plugins-base/time/timernode.h"
 #include "plugins-base/time/cron_node.h"
 #include "plugins-base/time/date_node.h"
 #include "plugins-base/time/delaynode.h"
@@ -103,6 +105,7 @@ void BaseLibrary::load(NodeFactory &factory, const char * /*prefix*/) const
     factory.registerTypeT<ClockNode>(concatenate(prefix, "time.clock").c_str());
     factory.registerTypeT<DateNode>(concatenate(prefix, "time.date").c_str());
     factory.registerTypeT<CronNode>(concatenate(prefix, "time.cron").c_str());
+    factory.registerTypeT<TimerNode>(concatenate(prefix, "time.timer").c_str());
     factory.registerTypeT<AnyNode>(concatenate(prefix, "flow.any").c_str());
     factory.registerTypeT<CounterNode>(concatenate(prefix, "flow.counter").c_str());
     factory.registerTypeT<DelayNode>(concatenate(prefix, "time.delay").c_str());
@@ -118,6 +121,7 @@ void BaseLibrary::load(NodeFactory &factory, const char * /*prefix*/) const
     factory.registerTypeT<LineNode>(concatenate(prefix, "flow.line").c_str());
     factory.registerTypeT<LoadMessNode>(concatenate(prefix, "flow.loadmess").c_str());
     factory.registerTypeT<CastNode>(concatenate(prefix, "flow.cast").c_str());
+    factory.registerTypeT<ChangeNode>(concatenate(prefix, "flow.change").c_str());
 
 #ifdef HAVE_SPATOSC
     factory.registerTypeT<SpatoscNode>(concatenate(prefix, "osc.spatosc").c_str());
@@ -143,6 +147,7 @@ void BaseLibrary::load(NodeFactory &factory, const char * /*prefix*/) const
     factory.registerTypeT<SubtractNode>(concatenate(prefix, "math.-").c_str());
     factory.registerTypeT<MapNode>(concatenate(prefix, "math.map").c_str());
     factory.registerTypeT<MultNode>(concatenate(prefix, "math.*").c_str());
+    factory.registerTypeT<ModuloNode>(concatenate(prefix, "math.%").c_str());
     factory.registerTypeT<DegToRadNode>(concatenate(prefix, "math.deg2rad").c_str());
 
 #ifdef HAVE_CLUTTER

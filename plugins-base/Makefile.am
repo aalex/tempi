@@ -61,6 +61,7 @@ libtempi_@TEMPI_API_VERSION@_plugins_base_la_SOURCES = \
     edit/grapheditornode.cpp \
     flow/anynode.cpp \
     flow/appsinknode.cpp \
+    flow/changenode.cpp \
     flow/counternode.cpp \
     flow/linenode.cpp \
     flow/loadmessnode.cpp \
@@ -113,6 +114,7 @@ libtempi_@TEMPI_API_VERSION@_plugins_base_la_SOURCES = \
     string/stringjoinnode.cpp \
     string/stringsplitnode.cpp \
     time/clock_node.cpp \
+    time/timernode.cpp \
     time/cron.cpp \
     time/cron_node.cpp \
     time/date_node.cpp \
@@ -131,6 +133,7 @@ EXTRA_DIST = \
     flow/appendnode.h \
     flow/appsinknode.h \
     flow/castnode.h \
+    flow/changenode.h \
     flow/counternode.h \
     flow/dictnode.h \
     flow/linenode.h \
@@ -190,6 +193,7 @@ EXTRA_DIST = \
     string/stringjoinnode.h \
     string/stringsplitnode.h \
     time/clock_node.h \
+    time/timernode.h \
     time/cron.h \
     time/cron_node.h \
     time/date_node.h \
