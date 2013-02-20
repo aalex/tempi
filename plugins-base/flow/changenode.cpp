@@ -47,12 +47,12 @@ void ChangeNode::processMessage(const char *inlet, const Message &message)
         }
         else
         {
-            if (Logger::isEnabledFor(INFO))
+            if (Logger::isEnabledFor(DEBUG))
             {
                 std::ostringstream os;
                 os << "ChangeNode::" << __FUNCTION__ << ": Same message as before. No output. " <<
                     message;
-                Logger::log(INFO, os);
+                Logger::log(DEBUG, os);
             }
         }
     }
