@@ -79,18 +79,18 @@ bool OscSender::sendMessage(const Message &message)
             {
                 Float val = message.getFloat(i);
                 if (val > FLT_MAX)
-                    lo_message_add_double(loMess, val);
+                    lo_message_add_double(loMess, (double) val);
                 else
-                    lo_message_add_float(loMess, val);
+                    lo_message_add_float(loMess, (float) val);
                 break;
             }
             case INT:
             {
                 Int val = message.getInt(i);
                 if (val > INT_MAX)
-                    lo_message_add_int64(loMess, val);
+                    lo_message_add_int64(loMess, (int64_t) val);
                 else
-                    lo_message_add_int32(loMess, val);
+                    lo_message_add_int32(loMess, (int32_t) val);
                 break;
             }
             case STRING:
