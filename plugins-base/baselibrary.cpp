@@ -143,6 +143,7 @@ void BaseLibrary::load(NodeFactory &factory, const char * /*prefix*/) const
     factory.registerTypeT<SubtractNode>(concatenate(prefix, "math.-").c_str());
     factory.registerTypeT<MapNode>(concatenate(prefix, "math.map").c_str());
     factory.registerTypeT<MultNode>(concatenate(prefix, "math.*").c_str());
+    factory.registerTypeT<ModuloNode>(concatenate(prefix, "math.%").c_str());
     factory.registerTypeT<DegToRadNode>(concatenate(prefix, "math.deg2rad").c_str());
 
 #ifdef HAVE_CLUTTER

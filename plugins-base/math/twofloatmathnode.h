@@ -90,6 +90,17 @@ class SubtractNode : public TwoFloatMathNode
         virtual float calculate(float first, float second);
 };
 
+/**
+ * The ModuloNode outputs the leftover of the 
+ */
+class ModuloNode : public TwoFloatMathNode
+{
+    public:
+        ModuloNode();
+    private:
+        virtual float calculate(float first, float second);
+};
+
 } // end of namespace
 } // end of namespace
 

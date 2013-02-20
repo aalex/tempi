@@ -19,7 +19,9 @@
  */
 
 #include "plugins-base/math/twofloatmathnode.h"
+#include "tempi/log.h"
 #include <iostream>
+#include <cmath>
 
 namespace tempi { 
 namespace plugins_base {
@@ -99,6 +101,27 @@ SubtractNode::SubtractNode() :
 float SubtractNode::calculate(float first, float second)
 {
     return first - second;
+}
+
+ModuloNode::ModuloNode() :
+    TwoFloatMathNode()
+{
+    this->setShortDocumentation("Outputs the remainder of a division of an incoming number by another number.");
+    this->setLongDocumentation("Do not use zero as a denominator.");
+}
+
+float ModuloNode::calculate(float first, float second)
+{
+    float operand = second;
+    if (operand == 0.0f)
+    {
+        std::ostringstream os;
+        os << "ModuloNode::" << __FUNCTION__ << ": Second operand cannot be zero, but it is " <<
+            second;
+        Logger::log(WARNING, os);
+        operand = 1.0f;
+    }
+    return std::fmod(first, operand);
 }
 
 } // end of namespace
