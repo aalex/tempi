@@ -433,9 +433,9 @@ bool Message::operator==(const Message &other) const
                 break;
             case BLOB:
                 {
-                    const atom::Byte *left = getBlob(i)->getValue();
-                    const atom::Byte *right = other.getBlob(i)->getValue();
-                    if (&left == &right) // XXX compare the two pointers?
+                    atom::BlobValue::ptr left = getBlob(i);
+                    atom::BlobValue::ptr right = other.getBlob(i);
+                    if (left != right)
                         return false;
                     break;
                 }
