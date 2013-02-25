@@ -56,6 +56,7 @@ Features
 * Scheduler: should provide a map of config options. (messages) Default path for externals should be in /etc/tempi
 * Scheduler: support OSC messages in the form /graph0/node0/__attr__ s:foo i:2 f:3.14159
 * tempi-looper: multitrack GUI configured with an XML Graph
+* [base.flow.route]: Allow to auto-create outlets according received messages.
 
 Node types
 ~~~~~~~~~~
