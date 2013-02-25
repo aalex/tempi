@@ -53,13 +53,13 @@ void MapperInputNode::processMessage(const char *inlet, const Message &message)
     Logger::log(DEBUG, "MapperInputNode::processMessage()");
     if (utils::stringsMatch(inlet, "add_input"))
     {
-        if (message.getTypes() == "sci") // name, type, length
+        if (message.getTypes() == "ssi") // name, (one-char) type, length
         {
-            if (message.getChar(1) == 'f')
+            if (message.getString(1) == "f")
             {
                 device_.addFloatInput(message.getString(0).c_str(), message.getInt(2));
             }
-            else if (message.getChar(1) == 'i')
+            else if (message.getChar(1) == "i")
             {
                 device_.addIntInput(message.getString(0).c_str(), message.getInt(2));
             }

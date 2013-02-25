@@ -56,7 +56,7 @@ bool MidiReceiverNode::onNodeAttributeChanged(const char *name, const Message &v
     //std::cout << "MidiReceiverNode::" << __FUNCTION__ << "(" << name << ", " << value << ")" << std::endl;
     if (utils::stringsMatch(name, PORT_ATTR))
     {
-        bool success = open((unsigned int) value.getInt(0));
+        bool success = open(value.getInt(0));
         // TODO: if (! success) { this->setAttribute(PORT_ATTR, Message("i", 0))); return false; }
         return success;
     }
@@ -107,14 +107,14 @@ void MidiReceiverNode::doTick()
         Message to_output_message;
         if (midi_message.size() == 3)
         {
-            to_output_message.appendUnsignedChar((unsigned char) midi_message[0]);
-            to_output_message.appendUnsignedChar((unsigned char) midi_message[1]);
-            to_output_message.appendUnsignedChar((unsigned char) midi_message[2]);
+            to_output_message.appendInt(midi_message[0]);
+            to_output_message.appendInt(midi_message[1]);
+            to_output_message.appendInt(midi_message[2]);
         }
         else if (midi_message.size() == 2)
         {
-            to_output_message.appendUnsignedChar((unsigned char) midi_message[0]);
-            to_output_message.appendUnsignedChar((unsigned char) midi_message[1]);
+            to_output_message.appendInt(midi_message[0]);
+            to_output_message.appendInt(midi_message[1]);
         }
         output(EVENTS_OUTLET, to_output_message);
     }

@@ -8,7 +8,7 @@
     </node>
     <node name="delay0" class="base.time.delay">
       <attribute name="delay">
-        <l>3000</l>
+        <i>3000</i>
       </attribute>
     </node>
     <node name="serial0" class="base.serial.device">

@@ -5,7 +5,7 @@
       <attribute name="value"><s>hello</s><i>2</i><f>3.14159</f></attribute>
     </node>
     <node name="trigger0" class="base.flow.trigger">
-      <attribute name="types"><s>baba</s></attribute>
+      <attribute name="types"><s>nana</s></attribute>
     </node>
     <node name="print0" class="base.flow.print">
       <attribute name="prefix"><s>0th: </s></attribute>

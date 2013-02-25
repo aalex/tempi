@@ -119,34 +119,34 @@ void appendArgumentFromString(Message &message, const char *atom_value, AtomType
                 else
                     message.appendBoolean(false);
                 break;
-            case CHAR:
-                message.appendChar(
-                    boost::lexical_cast<char>(atom_value));
-                break;
-            case UNSIGNED_CHAR:
-                message.appendUnsignedChar(
-                    boost::lexical_cast<unsigned char>(atom_value));
-                break;
-            case DOUBLE:
-                message.appendDouble(
-                    boost::lexical_cast<double>(atom_value));
-                break;
+            //case CHAR:
+            //    message.appendChar(
+            //        boost::lexical_cast<char>(atom_value));
+            //    break;
+            //case UNSIGNED_CHAR:
+            //    message.appendUnsignedChar(
+            //        boost::lexical_cast<unsigned char>(atom_value));
+            //    break;
+            //case DOUBLE:
+            //    message.appendDouble(
+            //        boost::lexical_cast<double>(atom_value));
+            //    break;
             case FLOAT:
                 message.appendFloat(
-                    boost::lexical_cast<float>(atom_value));
+                    boost::lexical_cast<Float>(atom_value));
                 break;
             case INT:
                 message.appendInt(
-                    boost::lexical_cast<int>(atom_value));
+                    boost::lexical_cast<Int>(atom_value));
                 break;
-            case UNSIGNED_INT:
-                message.appendUnsignedInt(
-                    boost::lexical_cast<unsigned int>(atom_value));
-                break;
-            case LONG:
-                message.appendLong(
-                    boost::lexical_cast<unsigned long long>(atom_value));
-                break;
+            // case UNSIGNED_INT:
+            //     message.appendUnsignedInt(
+            //         boost::lexical_cast<unsigned int>(atom_value));
+            //     break;
+            // case LONG:
+            //     message.appendLong(
+            //         boost::lexical_cast<unsigned long long>(atom_value));
+            //     break;
             case STRING:
                 message.appendString(atom_value);
                 break;
@@ -192,18 +192,18 @@ std::string argumentToString(const Message &message, unsigned int index)
             //return boost::lexical_cast<std::string>(
             //    message.getBoolean(index));
             break;
-        case CHAR:
-            return boost::lexical_cast<std::string>(
-                message.getChar(index));
-            break;
-        case UNSIGNED_CHAR:
-            return boost::lexical_cast<std::string>(
-                message.getUnsignedChar(index));
-            break;
-        case DOUBLE:
-            return boost::lexical_cast<std::string>(
-                message.getDouble(index));
-            break;
+        // case CHAR:
+        //     return boost::lexical_cast<std::string>(
+        //         message.getChar(index));
+        //     break;
+        // case UNSIGNED_CHAR:
+        //     return boost::lexical_cast<std::string>(
+        //         message.getUnsignedChar(index));
+        //     break;
+        // case DOUBLE:
+        //     return boost::lexical_cast<std::string>(
+        //         message.getDouble(index));
+        //     break;
         case FLOAT:
             return boost::lexical_cast<std::string>(
                 message.getFloat(index));
@@ -212,14 +212,14 @@ std::string argumentToString(const Message &message, unsigned int index)
             return boost::lexical_cast<std::string>(
                 message.getInt(index));
             break;
-        case UNSIGNED_INT:
-            return boost::lexical_cast<std::string>(
-                message.getUnsignedInt(index));
-            break;
-        case LONG:
-            return boost::lexical_cast<std::string>(
-                message.getLong(index));
-            break;
+        //case UNSIGNED_INT:
+        //    return boost::lexical_cast<std::string>(
+        //        message.getUnsignedInt(index));
+        //    break;
+        //case LONG:
+        //    return boost::lexical_cast<std::string>(
+        //        message.getLong(index));
+        //    break;
         case STRING:
             return message.getString(index);
             break;
@@ -247,14 +247,14 @@ bool isValidAtomType(const char c)
     switch (c)
     {
         case BOOLEAN:
-        case CHAR:
-        case UNSIGNED_CHAR:
-        case UNSIGNED_INT:
-        case BANG:
-        case DOUBLE:
+        //jcase CHAR:
+        //jcase UNSIGNED_CHAR:
+        //jcase UNSIGNED_INT:
+        case NONE:
+        //case DOUBLE:
         case FLOAT:
         case INT:
-        case LONG:
+        //case LONG:
         case STRING:
         case POINTER:
             return true;
@@ -301,20 +301,8 @@ bool tryAutoCast(const Message &source, Message &result, const std::string &expe
             {
                 switch (source_type)
                 {
-                    case INT: result.appendInt((int) source.getInt(i)); break;
-                    case FLOAT: result.appendInt((int) source.getFloat(i)); break;
-                    case DOUBLE: result.appendInt((int) source.getDouble(i)); break;
-                    default: return false; break;
-                }
-                break;
-            }
-            case DOUBLE:
-            {
-                switch (source_type)
-                {
-                    case INT: result.appendDouble((double) source.getInt(i)); break;
-                    case FLOAT: result.appendDouble((double) source.getFloat(i)); break;
-                    case DOUBLE: result.appendDouble((double) source.getDouble(i)); break;
+                    case INT: result.appendInt((Int) source.getInt(i)); break;
+                    case FLOAT: result.appendInt((Int) source.getFloat(i)); break;
                     default: return false; break;
                 }
                 break;
@@ -323,9 +311,8 @@ bool tryAutoCast(const Message &source, Message &result, const std::string &expe
             {
                 switch (source_type)
                 {
-                    case INT: result.appendFloat((float) source.getInt(i)); break;
-                    case FLOAT: result.appendFloat((float) source.getFloat(i)); break;
-                    case DOUBLE: result.appendFloat((float) source.getDouble(i)); break;
+                    case INT: result.appendFloat((Float) source.getInt(i)); break;
+                    case FLOAT: result.appendFloat(source.getFloat(i)); break;
                     default: return false; break;
                 }
                 break;
@@ -343,6 +330,12 @@ bool tryAutoCast(const Message &source, Message &result, const std::string &expe
             {
                 switch (source_type)
                 {
+                    case INT:
+                        if (source.getInt(i) == 0)
+                            result.appendBoolean(false);
+                        else
+                            result.appendBoolean(true);
+                        break;
                     case BOOLEAN: result.appendBoolean(source.getBoolean(i)); break;
                     default: return false; break;
                 }
@@ -390,16 +383,10 @@ Message castMessage(const Message &message, const char *type)
                 switch (current)
                 {
                     case FLOAT:
-                        result.appendInt((int) message.getFloat(i));
-                        break;
-                    case DOUBLE:
-                        result.appendInt((int) message.getDouble(i));
+                        result.appendInt((Int) message.getFloat(i));
                         break;
                     case INT:
-                        result.appendInt((int) message.getInt(i));
-                        break;
-                    case LONG:
-                        result.appendInt((int) message.getLong(i));
+                        result.appendInt((Int) message.getInt(i));
                         break;
                     default:
                         success = false;
@@ -413,28 +400,13 @@ Message castMessage(const Message &message, const char *type)
                         result.appendFloat(message.getFloat(i));
                         break;
                     case BOOLEAN:
-                        result.appendFloat((float) message.getBoolean(i));
+                        result.appendFloat((Float) message.getBoolean(i));
                         break;
-                    case CHAR:
-                        result.appendFloat((float) message.getChar(i));
-                        break;
-                    case UNSIGNED_CHAR:
-                        result.appendFloat((float) message.getUnsignedChar(i));
-                        break;
-                    case UNSIGNED_INT:
-                        result.appendFloat((float) message.getUnsignedInt(i));
-                        break;
-                    case BANG:
+                    case NONE:
                         result.appendFloat(0.0f);
                         break;
-                    case DOUBLE:
-                        result.appendFloat((float) message.getDouble(i));
-                        break;
                     case INT:
-                        result.appendFloat((float) message.getInt(i));
-                        break;
-                    case LONG:
-                        result.appendFloat((float) message.getLong(i));
+                        result.appendFloat((Float) message.getInt(i));
                         break;
                     case STRING:
                         try
@@ -473,62 +445,8 @@ Message castMessage(const Message &message, const char *type)
                     success = false;
                 }
                 break; // case STRING
-            case UNSIGNED_CHAR: // desired is UNSIGNED_CHAR
-                switch (current)
-                {
-                    case FLOAT:
-                        result.appendUnsignedChar((unsigned char) message.getFloat(i));
-                        break;
-                    case BOOLEAN:
-                        result.appendUnsignedChar((unsigned char) message.getBoolean(i));
-                        break;
-                    case CHAR:
-                        result.appendUnsignedChar((unsigned char) message.getChar(i));
-                        break;
-                    case UNSIGNED_CHAR:
-                        result.appendUnsignedChar(message.getUnsignedChar(i));
-                        break;
-                    case UNSIGNED_INT:
-                        result.appendUnsignedChar((unsigned char) message.getUnsignedInt(i));
-                        break;
-                    case BANG:
-                        result.appendUnsignedChar(' ');
-                        break;
-                    case DOUBLE:
-                        result.appendUnsignedChar((unsigned char) message.getDouble(i));
-                        break;
-                    case INT:
-                        result.appendUnsignedChar((unsigned char) message.getInt(i));
-                        break;
-                    case LONG:
-                        result.appendUnsignedChar((unsigned char) message.getLong(i));
-                        break;
-                    case STRING:
-                        try
-                        {
-                            appendArgumentFromString(result,
-                                message.getString(i).c_str(), UNSIGNED_CHAR);
-                        }
-                        catch(const BadAtomTypeException &e)
-                        {
-                            std::cerr << e.what() << std::endl;
-                            success = false;
-                        }
-                        break;
-                    case POINTER:
-                        result.appendUnsignedChar((unsigned char) (long) message.getPointer(i));
-                        break;
-                    case INVALID:
-                    default:
-                        success = false;
-                        break;
-                } // switch desired
-                break; // case UNSIGNED_CHAR
             // TODO: support casting to BOOLEAN
-            // TODO: support casting to CHAR
-            // TODO: support casting to DOUBLE
             // TODO: support casting to INT
-            // TODO: support casting to LONG
             default:
                 success = false;
             // boost::lexical_cast<char>(atom_value));

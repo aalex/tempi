@@ -34,7 +34,7 @@ StringCharactersNode::StringCharactersNode() :
 {
     this->setShortDocumentation("Splits a string into its characters.");
     this->addInlet(STRING_INLET, "String to split.");
-    this->addOutlet(CHARACTERS_OUTLET, "Message containing all the characters of the strings, as chars.");
+    this->addOutlet(CHARACTERS_OUTLET, "Message containing all the characters of the strings, as integers.");
 }
 
 void StringCharactersNode::processMessage(const char *inlet, const Message &message)
@@ -53,7 +53,7 @@ void StringCharactersNode::processMessage(const char *inlet, const Message &mess
     std::string s = message.getString(0);
     for (unsigned int i = 0; i < s.size(); ++i)
     {
-        ret.appendChar(s[i]);
+        ret.appendInt(s[i]);
     }
     this->output(CHARACTERS_OUTLET, ret);
 }

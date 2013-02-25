@@ -12,13 +12,14 @@ bool check_message()
     m.appendFloat(3.14159);
     m.appendString("hello");
     m.appendInt(2);
-    m.appendBang();
-    m.appendUnsignedInt(20);
+    m.appendNone();
     m.appendBlob(atom::BlobValue::convert(atom::BlobValue::create((atom::Byte*) "hello", 6)));
 
-    if (! m.typesMatch("fsi!uB"))
+    if (! m.typesMatch("fsinB"))
     {
-        std::cout << __FUNCTION__ << ": types tag don't match what we expect\n";
+        std::cout << __FUNCTION__ << ": types tag don't match what we expect. " <<
+            "Expect fsiNB, got " << m.getTypes() <<
+            std::endl;
         return false;
     }
 
@@ -27,7 +28,6 @@ bool check_message()
         std::cout << "float: " << m.getFloat(0) << std::endl;
         std::cout << "string: " << m.getString(1) << std::endl;
         std::cout << "int: " << m.getInt(2) << std::endl;
-        std::cout << "uint: " << m.getUnsignedInt(4) << std::endl;
         std::cout << "blob: " << m.getBlob(5) << std::endl;
         std::cout << "Message: " << m << std::endl;
     }
@@ -42,7 +42,7 @@ static bool fail(const char *message)
 
 bool check_valist()
 {
-    Message m = Message("sif", "blah", 2, 3.14159f);
+    Message m = Message("sif", "blah", 2, 3.14159);
     if (m.getString(0) != "blah")
     {
         return fail("expected blah");
@@ -51,9 +51,9 @@ bool check_valist()
     {
         return fail("expected 2");
     }
-    if (m.getFloat(2) != 3.14159f)
+    if (m.getFloat(2) != 3.14159)
     {
-        return fail("expected 3.14159f");
+        return fail("expected 3.14159");
     }
     return true;
 }

@@ -39,6 +39,10 @@
 
 namespace tempi {
 
+typedef long long Int;
+typedef double Float;
+typedef unsigned int Index;
+
 /**
  * Type tags for Message arguments.
  */
@@ -46,24 +50,19 @@ typedef enum
 {
     INVALID = 0,
     BOOLEAN = 'b',
-    CHAR = 'c',
-    UNSIGNED_CHAR = 'C',
-    DOUBLE = 'd',
     FLOAT = 'f',
     INT = 'i',
-    UNSIGNED_INT = 'u',
-    BANG = '!',
-    LONG = 'l',
+    NONE = 'n',
     STRING = 's',
     BLOB = 'B',
     // TODO: UNICODE = 'u',
     POINTER = 'p'
 } AtomType;
 
-class Bang
+class None
 {
     public:
-        Bang() {}
+        None() {}
 };
 
 namespace types
@@ -93,20 +92,15 @@ class Message
          * TODO: avoid segfault if types do not match
          */
         void append(const char* types, ...);
-        //const std::type_info *getType(unsigned int index) const;
-        bool getAtomType(unsigned int index, AtomType &type) const;
-        //bool setArgument(unsigned int index, boost::any &value);
-        unsigned int getSize() const;
+        //const std::type_info *getType(Index index) const;
+        bool getAtomType(Index index, AtomType &type) const;
+        //bool setArgument(Index index, boost::any &value);
+        Index getSize() const;
 
-        void appendBang();
+        void appendNone();
         void appendBoolean(bool value);
-        void appendChar(char value);
-        void appendUnsignedChar(unsigned char value);
-        void appendUnsignedInt(unsigned int value);
-        void appendDouble(double value);
-        void appendFloat(float value);
-        void appendInt(int value);
-        void appendLong(long long int value);
+        void appendFloat(Float value);
+        void appendInt(Int value);
         void appendString(const char *value)
         {
             appendStdString(std::string(value));
@@ -114,15 +108,10 @@ class Message
         void appendPointer(void *value);
         void appendBlob(atom::BlobValue::ptr value);
 
-        void prependBang();
+        void prependNone();
         void prependBoolean(bool value);
-        void prependChar(char value);
-        void prependUnsignedChar(unsigned char value);
-        void prependUnsignedInt(unsigned int value);
-        void prependDouble(double value);
-        void prependFloat(float value);
-        void prependInt(int value);
-        void prependLong(long long int value);
+        void prependFloat(Float value);
+        void prependInt(Int value);
         void prependString(const char *value)
         {
             prependStdString(std::string(value));
@@ -131,54 +120,34 @@ class Message
         void prependMessage(const Message &message);
         void prependBlob(atom::BlobValue::ptr value);
 
-        bool getBoolean(unsigned int index) const
+        bool getBoolean(Index index) const
             throw(BadAtomTypeException, BadIndexException);
-        char getChar(unsigned int index) const
+        Float getFloat(Index index) const
             throw(BadAtomTypeException, BadIndexException);
-        unsigned char getUnsignedChar(unsigned int index) const
+        Int getInt(Index index) const
             throw(BadAtomTypeException, BadIndexException);
-        unsigned int getUnsignedInt(unsigned int index) const
+        std::string getString(Index index) const
             throw(BadAtomTypeException, BadIndexException);
-        double getDouble(unsigned int index) const
-            throw(BadAtomTypeException, BadIndexException);
-        float getFloat(unsigned int index) const
-            throw(BadAtomTypeException, BadIndexException);
-        int getInt(unsigned int index) const
-            throw(BadAtomTypeException, BadIndexException);
-        long long int getLong(unsigned int index) const
-            throw(BadAtomTypeException, BadIndexException);
-        std::string getString(unsigned int index) const
-            throw(BadAtomTypeException, BadIndexException);
-        //void getString(unsigned int index, std::string &value) const
+        //void getString(Index index, std::string &value) const
         //  throw(BadAtomTypeException, BadIndexException);
-        void *getPointer(unsigned int index) const
+        void *getPointer(Index index) const
             throw(BadAtomTypeException, BadIndexException);
-        atom::BlobValue::ptr getBlob(unsigned int index) const;
+        atom::BlobValue::ptr getBlob(Index index) const;
 
-        void setBoolean(unsigned int index, bool value)
+        void setBoolean(Index index, bool value)
             throw(BadAtomTypeException, BadIndexException);
-        void setChar(unsigned int index, char value)
+        void setFloat(Index index, Float value)
             throw(BadAtomTypeException, BadIndexException);
-        void setUnsignedChar(unsigned int index, unsigned char value)
+        void setInt(Index index, Int value)
             throw(BadAtomTypeException, BadIndexException);
-        void setUnsignedInt(unsigned int index, unsigned int value)
+        void setString(Index index, std::string value)
             throw(BadAtomTypeException, BadIndexException);
-        void setDouble(unsigned int index, double value)
-            throw(BadAtomTypeException, BadIndexException);
-        void setFloat(unsigned int index, float value)
-            throw(BadAtomTypeException, BadIndexException);
-        void setInt(unsigned int index, int value)
-            throw(BadAtomTypeException, BadIndexException);
-        void setLong(unsigned int index, long long int value)
-            throw(BadAtomTypeException, BadIndexException);
-        void setString(unsigned int index, std::string value)
-            throw(BadAtomTypeException, BadIndexException);
-        void setString(unsigned int index, const char *value)
+        void setString(Index index, const char *value)
             throw(BadAtomTypeException, BadIndexException)
         {
             setString(index, std::string(value));
         }
-        void setPointer(unsigned int index, void *value)
+        void setPointer(Index index, void *value)
             throw(BadAtomTypeException, BadIndexException);
 
         // TODO: deprecate the string version
@@ -189,7 +158,7 @@ class Message
             return typesMatch(s);
         }
 
-        bool indexMatchesType(unsigned int index, char type) const;
+        bool indexMatchesType(Index index, char type) const;
 
         std::string getTypes() const;
 
@@ -205,10 +174,10 @@ class Message
         bool operator==(const Message &other) const;
         bool operator!=(const Message &other) const;
 
-        Message cloneRange(unsigned int from_index, unsigned int to_index) const
+        Message cloneRange(Index from_index, Index to_index) const
         {
             Message ret;
-            for (unsigned int i = 0; i < getSize(); ++i)
+            for (Index i = 0; i < getSize(); ++i)
             {
                 if (i >= from_index && i <= to_index)
                     ret.arguments_.push_back(arguments_[i]);
@@ -221,13 +190,13 @@ class Message
         void prependStdString(std::string value);
         // Message(std::vector<boost::any> arguments);
         // std::vector<boost::any> &getArguments();
-        const boost::any *getArgument(unsigned int index) const; // throw(BadIndexException);
+        const boost::any *getArgument(Index index) const; // throw(BadIndexException);
         std::vector<boost::any> arguments_;
         bool append(boost::any value);
         bool prepend(boost::any value);
 
         template <typename T>
-        void get(unsigned int index, T &value) const
+        void get(Index index, T &value) const
             throw(BadAtomTypeException, BadIndexException)
         {
             const boost::any *tmp = getArgument(index);
@@ -251,7 +220,7 @@ class Message
         }
 
         template <typename T>
-        void set(unsigned int index, T value)
+        void set(Index index, T value)
             throw(BadAtomTypeException, BadIndexException)
         {
             if (index >= getSize())

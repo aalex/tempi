@@ -174,10 +174,17 @@ int OscReceiver::generic_handler(const char *path, const char *types, lo_arg **a
                 message.appendString(static_cast<const char *>(&argv[i]->s));
                 break;
             case 'c':
-                message.appendChar(argv[i]->c);
+                if (Logger::isEnabledFor(NOTICE))
+                {
+                    std::ostringstream os;
+                    os << "OscReceiver::" << __FUNCTION__ << ": ";
+                    os << "Tempi does not support char values, so we cast the incoming char to int.";
+                    Logger::log(NOTICE, os);
+                }
+                message.appendInt((Int) argv[i]->c);
                 break;
             case 'd':
-                message.appendChar(argv[i]->d);
+                message.appendFloat(argv[i]->d);
                 break;
             case 'T':
                 message.appendBoolean(true);

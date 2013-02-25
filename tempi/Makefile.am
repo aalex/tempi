@@ -48,6 +48,7 @@ libtempi_@TEMPI_API_VERSION@_la_includedir = $(includedir)/tempi-$(TEMPI_API_VER
 ## PLEASE KEEP THEM IN ALPHABETICAL ORDER
 libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     attribute.cpp \
+    message.cpp \
     documented.cpp \
     dict.cpp \
 	dynamicpatching.cpp \
@@ -59,7 +60,6 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
     internals.cpp \
     loader.cpp \
     log.cpp \
-    message.cpp \
     midi.cpp \
     midi_scheduler.cpp \
     nameallocator.cpp \
@@ -97,6 +97,7 @@ libtempi_@TEMPI_API_VERSION@_la_SOURCES = \
 ## PLEASE KEEP THEM IN ALPHABETICAL ORDER
 libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     attribute.h \
+    message.h \
     concurrentqueue.h \
     dict.h \
 	dynamicpatching.h \
@@ -114,7 +115,6 @@ libtempi_@TEMPI_API_VERSION@_la_include_HEADERS = \
     library.h \
     loader.h \
     log.h \
-    message.h \
     midi.h \
     midi_scheduler.h \
     nameallocator.h \

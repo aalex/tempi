@@ -177,28 +177,28 @@ void SpatoscNode::processMessage(const char *inlet, const Message &message)
     // TODO else if (messageMatches(message, "setDefaultDopplerFactor", ""))
     // TODO else if (messageMatches(message, "setDefaultRolloffFactor", ""))
     // TODO else if (messageMatches(message, "setDistanceFactor", ""))
-    // TODO     success = wrapper_->setDistanceFactor(message.getString(1), message.getFloat(2));
+    // TODO     success = wrapper_->setDistanceFactor(message.getString(1), (float) message.getFloat(2));
     else if (messageMatches(message, "setDopplerFactor", "ssf"))
-        success = wrapper_->setDopplerFactor(message.getString(1), message.getString(2), message.getFloat(3));
+        success = wrapper_->setDopplerFactor(message.getString(1), message.getString(2), (float) message.getFloat(3));
     else if (messageMatches(message, "setNodeActive", "sb"))
         success = wrapper_->setNodeActive(message.getString(1), message.getBoolean(2));
     else if (messageMatches(message, "setNodeFloatProperty", "ssf"))
-        success = wrapper_->setNodeFloatProperty(message.getString(1), message.getString(2), message.getFloat(3));
+        success = wrapper_->setNodeFloatProperty(message.getString(1), message.getString(2), (float) message.getFloat(3));
     else if (messageMatches(message, "setNodeIntProperty", "ssi"))
         success = wrapper_->setNodeIntProperty(message.getString(1), message.getString(2), message.getInt(3));
     else if (messageMatches(message, "setNodeOrientation", "sfff"))
-        success = wrapper_->setNodeOrientation(message.getString(1), message.getFloat(2), message.getFloat(3), message.getFloat(4));
+        success = wrapper_->setNodeOrientation(message.getString(1), (float) message.getFloat(2), (float) message.getFloat(3), (float) message.getFloat(4));
     else if (messageMatches(message, "setNodeStringProperty", "sss"))
         success = wrapper_->setNodeStringProperty(message.getString(1), message.getString(2), message.getString(3));
     else if (messageMatches(message, "setPosition", "sfff"))
-        success = wrapper_->setPosition(message.getString(1), message.getFloat(2), message.getFloat(3), message.getFloat(4));
+        success = wrapper_->setPosition(message.getString(1), (float) message.getFloat(2), (float) message.getFloat(3), (float) message.getFloat(4));
     else if (messageMatches(message, "setPositionAED", "sfff"))
-        success = wrapper_->setPositionAED(message.getString(1), message.getFloat(2), message.getFloat(3), message.getFloat(4));
+        success = wrapper_->setPositionAED(message.getString(1), (float) message.getFloat(2), (float) message.getFloat(3), (float) message.getFloat(4));
     else if (messageMatches(message, "setRadius", "sf"))
-        success = wrapper_->setRadius(message.getString(1), message.getFloat(2));
+        success = wrapper_->setRadius(message.getString(1), (float) message.getFloat(2));
     else if (messageMatches(message, "setScale", "fff"))
     {
-        wrapper_->setScale(message.getFloat(1), message.getFloat(2), message.getFloat(3));
+        wrapper_->setScale((float) message.getFloat(1), (float) message.getFloat(2), (float) message.getFloat(3));
         success = true;
     }
     else if (messageMatches(message, "setSynchronous", "b"))
@@ -208,7 +208,7 @@ void SpatoscNode::processMessage(const char *inlet, const Message &message)
     }
     else if (messageMatches(message, "setTranslation", "fff"))
     {
-        wrapper_->setTranslation(message.getFloat(1), message.getFloat(2), message.getFloat(3));
+        wrapper_->setTranslation((float) message.getFloat(1), (float) message.getFloat(2), (float) message.getFloat(3));
         success = true;
     }
     else if (messageMatches(message, "setTranslatorVerbose", "sb"))

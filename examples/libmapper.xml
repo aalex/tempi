@@ -4,7 +4,7 @@
     <node name="loadmess0" class="base.flow.loadmess">
       <attribute name="value">
         <s>/f</s> <!-- name -->
-        <c>f</c> <!-- type -->
+        <s>f</s> <!-- type -->
         <i>1</i> <!-- length -->
       </attribute>
     </node>

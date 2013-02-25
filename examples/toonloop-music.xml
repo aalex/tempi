@@ -59,7 +59,7 @@
     </node>
 
     <node name="cast_CCC" class="base.flow.cast">
-      <attribute name="type"><s>CCC</s></attribute>
+      <attribute name="type"><s>iii</s></attribute>
     </node>
     <connection from="close0" outlet="0" to="prepend_channel" inlet="0"/>
     <connection from="prepend_channel" outlet="0" to="cast_CCC" inlet="0"/>

@@ -6,7 +6,7 @@
       <attribute name="running"><b>1</b></attribute>
     </node>
     <node name="delay0" class="base.time.delay">
-      <attribute name="delay"><l>500</l></attribute>
+      <attribute name="delay"><i>500</i></attribute>
     </node>
     <node name="print0" class="base.flow.print">
       <attribute name="prefix"><s>normal:  </s></attribute>

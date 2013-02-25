@@ -12,11 +12,11 @@
     </node>
 
     <node name="pack0" class="base.flow.pack">
-      <attribute name="number"><u>3</u></attribute>
+      <attribute name="number"><i>3</i></attribute>
       <attribute name="all-hot"><b>false</b></attribute>
     </node>
     <node name="pack1" class="base.flow.pack">
-      <attribute name="number"><u>4</u></attribute>
+      <attribute name="number"><i>4</i></attribute>
       <attribute name="all-hot"><b>true</b></attribute>
     </node>
 

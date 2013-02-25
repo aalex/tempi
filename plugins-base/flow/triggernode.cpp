@@ -49,17 +49,17 @@ void TriggerNode::processMessage(const char *inlet, const Message &message)
         os << "[trigger]: current types are " << types;
         Logger::log(INFO, os);
     }
-    Message empty;
+    Message none = Message("n");
     for (int i = (int) types.size() - 1; i >= 0; --i)
     {
         // output last atom first. (to last outlet)
-        bool is_bang = types[(unsigned int) i] == 'b';
+        bool is_none = types[(unsigned int) i] == 'n';
         if (Logger::isEnabledFor(INFO))
         {
             std::ostringstream os;
             os << "[trigger] " << __FUNCTION__ << ": output ";
-            if (is_bang)
-                os << empty;
+            if (is_none)
+                os << none;
             else
                 os << message;
             os << " to " << i << "th outlet.";
@@ -67,8 +67,8 @@ void TriggerNode::processMessage(const char *inlet, const Message &message)
         }
         std::ostringstream name_os;
         name_os << i;
-        if (is_bang)
-            output(name_os.str().c_str(), empty);
+        if (is_none)
+            output(name_os.str().c_str(), none);
         else
             output(name_os.str().c_str(), message);
     }
@@ -95,7 +95,7 @@ bool TriggerNode::onNodeAttributeChanged(const char *name, const Message &value)
     for (int i = 0; i < new_size; ++i)
     {
         char c = types[(unsigned int) i];
-        if (c != 'b' && c != 'a')
+        if (c != 'n' && c != 'a')
         {
             std::ostringstream os;
             os << "[trigger] " << __FUNCTION__ << ": Invalid types: " << value;
