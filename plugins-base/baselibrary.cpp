@@ -31,6 +31,7 @@
 #include "plugins-base/flow/castnode.h"
 #include "plugins-base/flow/changenode.h"
 #include "plugins-base/flow/counternode.h"
+#include "plugins-base/flow/demuxnode.h"
 #include "plugins-base/flow/dictnode.h"
 #include "plugins-base/flow/linenode.h"
 #include "plugins-base/flow/loadmessnode.h"
@@ -110,6 +111,7 @@ void BaseLibrary::load(NodeFactory &factory, const char * /*prefix*/) const
     factory.registerTypeT<TimerNode>(concatenate(prefix, "time.timer").c_str());
     factory.registerTypeT<AnyNode>(concatenate(prefix, "flow.any").c_str());
     factory.registerTypeT<CounterNode>(concatenate(prefix, "flow.counter").c_str());
+    factory.registerTypeT<DemuxNode>(concatenate(prefix, "flow.demux").c_str());
     factory.registerTypeT<DelayNode>(concatenate(prefix, "time.delay").c_str());
     factory.registerTypeT<DictNode>(concatenate(prefix, "data.dict").c_str());
     //factory.registerTypeT<AppSinkNode>(concatenate("base.", "data.appsink").c_str());
