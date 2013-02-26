@@ -46,7 +46,7 @@ void RouteNode::processMessage(const char *inlet, const Message &message)
         if (Logger::isEnabledFor(WARNING))
         {
             std::ostringstream os;
-            os << "[route] processMessage: First atom is not a string: " << message;
+            os << "[route] processMessage: (node \"" << this->getName() << "\") First atom is not a string: " << message;
             Logger::log(WARNING, os);
         }
         return;
