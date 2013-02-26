@@ -143,7 +143,9 @@ void BaseLibrary::load(NodeFactory &factory, const char * /*prefix*/) const
     factory.registerTypeT<EqualsNotNode>(concatenate(prefix, "math.!=").c_str());
     factory.registerTypeT<IsEqualNode>(concatenate(prefix, "math.==").c_str());
     factory.registerTypeT<IsGreaterNode>(concatenate(prefix, "math.>").c_str());
+    factory.registerTypeT<IsGreaterOrEqualNode>(concatenate(prefix, "math.>=").c_str());
     factory.registerTypeT<IsLessNode>(concatenate(prefix, "math.<").c_str());
+    factory.registerTypeT<IsLessOrEqualNode>(concatenate(prefix, "math.<=").c_str());
     factory.registerTypeT<SubtractNode>(concatenate(prefix, "math.-").c_str());
     factory.registerTypeT<MapNode>(concatenate(prefix, "math.map").c_str());
     factory.registerTypeT<MultNode>(concatenate(prefix, "math.*").c_str());

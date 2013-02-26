@@ -62,6 +62,17 @@ class IsGreaterNode : public BooleanMathNode
 };
 
 /**
+ * The IsGreaterOrEqualNode checks if one float is greater or equal than another. 
+ */
+class IsGreaterOrEqualNode : public BooleanMathNode
+{
+    public:
+        IsGreaterOrEqualNode();
+    private:
+        virtual bool compare(float first, float second);
+};
+
+/**
  * The IsEqualNode checks if 2 floats have the same value.
  */
 class IsEqualNode : public BooleanMathNode
@@ -83,6 +94,16 @@ class IsLessNode : public BooleanMathNode
         virtual bool compare(float first, float second);
 };
 
+/**
+ * The IsLessNode checks if one float is lesser or equal than another. 
+ */
+class IsLessOrEqualNode : public BooleanMathNode
+{
+    public:
+        IsLessOrEqualNode();
+    private:
+        virtual bool compare(float first, float second);
+};
 
 } // end of namespace
 } // end of namespace

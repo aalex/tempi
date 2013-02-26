@@ -20,6 +20,7 @@
 
 #include "plugins-base/math/booleanoperatornode.h"
 #include "tempi/utils.h"
+#include "tempi/log.h"
 
 namespace tempi { 
 namespace plugins_base {
@@ -42,7 +43,11 @@ void BooleanMathNode::processMessage(const char *inlet, const Message &message)
         if (message.typesMatch("f"))
             this->setAttributeValue("operand", message);
         else
-            std::cerr << "BooleanMathNode::" << __FUNCTION__ << "(): Bad type for message " << message << std::endl;
+        {
+            std::ostringstream os;
+            os << "BooleanMathNode::" << __FUNCTION__ << "(): Bad type for message " << message;
+            Logger::log(ERROR, os);
+        }
     }
     else if (message.typesMatch("f"))
     {
@@ -53,8 +58,12 @@ void BooleanMathNode::processMessage(const char *inlet, const Message &message)
         this->output("0", result);
     }
     else
-        std::cerr << "BooleanMathNode::" << __FUNCTION__ <<
-            "(): Bad type for message " << message << std::endl;
+    {
+        std::ostringstream os;
+        os << "BooleanMathNode::" << __FUNCTION__ <<
+            "(): Bad type for message " << message;
+        Logger::log(ERROR, os);
+    }
 }
 
 EqualsNotNode::EqualsNotNode() :
@@ -79,6 +88,17 @@ bool IsGreaterNode::compare(float left_operand, float right_operand)
     return left_operand > right_operand;
 }
 
+IsGreaterOrEqualNode::IsGreaterOrEqualNode() :
+    BooleanMathNode()
+{
+    setShortDocumentation("Outputs true if the incoming float is greather or equal than the right operand.");
+}
+
+bool IsGreaterOrEqualNode::compare(float left_operand, float right_operand)
+{
+    return left_operand >= right_operand;
+}
+
 IsEqualNode::IsEqualNode() :
     BooleanMathNode()
 {
@@ -99,6 +119,17 @@ IsLessNode::IsLessNode() :
 bool IsLessNode::compare(float left_operand, float right_operand)
 {
     return left_operand < right_operand;
+}
+
+IsLessOrEqualNode::IsLessOrEqualNode() :
+    BooleanMathNode()
+{
+    setShortDocumentation("Outputs true if the incoming float is smaller or equal than the right operand.");
+}
+
+bool IsLessOrEqualNode::compare(float left_operand, float right_operand)
+{
+    return left_operand <= right_operand;
 }
 
 } // end of namespace
