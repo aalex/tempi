@@ -33,6 +33,10 @@ class BooleanMathNode : public Node
 {
     public:
         BooleanMathNode();
+        static const char * const HOT_NUMBER_INLET;
+        static const char * const COLD_NUMBER_INLET;
+        static const char * const BOOL_OUTLET;
+        static const char * const OPERAND_ATTR;
     protected:
         virtual void processMessage(const char *inlet, const Message &message);
     private:

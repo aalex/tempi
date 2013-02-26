@@ -57,6 +57,7 @@ libtempi_@TEMPI_API_VERSION@_plugins_base_la_SOURCES = \
     abstraction/inletnode.cpp \
     abstraction/outletnode.cpp \
     baselibrary.cpp \
+    convert/booltointnode.cpp \
     clutter/clutterstagenode.cpp \
     edit/grapheditornode.cpp \
     flow/anynode.cpp \
@@ -127,6 +128,7 @@ EXTRA_DIST = \
     abstraction/inletnode.h \
     abstraction/outletnode.h \
     baselibrary.h \
+    convert/booltointnode.h \
     clutter/clutterstagenode.h \
     edit/grapheditornode.h \
     flow/anynode.h \

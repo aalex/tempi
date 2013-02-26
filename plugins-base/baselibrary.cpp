@@ -23,6 +23,7 @@
 #include "plugins-base/abstraction/inletnode.h"
 #include "plugins-base/abstraction/outletnode.h"
 #include "plugins-base/baselibrary.h"
+#include "plugins-base/convert/booltointnode.h"
 #include "plugins-base/edit/grapheditornode.h"
 #include "plugins-base/flow/anynode.h"
 #include "plugins-base/flow/appendnode.h"
@@ -96,6 +97,7 @@ void BaseLibrary::load(NodeFactory &factory, const char * /*prefix*/) const
     using utils::concatenate;
 
     static const char * const prefix = "base.";
+    factory.registerTypeT<BoolToIntNode>(concatenate(prefix, "convert.booltoint").c_str());
     factory.registerTypeT<GraphEditorNode>(concatenate(prefix, "edit.grapheditor").c_str());
     factory.registerTypeT<PrintNode>(concatenate(prefix, "flow.print").c_str());
     factory.registerTypeT<AppendNode>(concatenate(prefix, "flow.append").c_str());
