@@ -296,7 +296,7 @@ AC_MSG_NOTICE([BOOST_SIGNALS_LIBS:         ${BOOST_SIGNALS_LIBS}])
 AC_MSG_NOTICE([BOOST_SYSTEM_LIBS:          ${BOOST_SYSTEM_LIBS}])
 AC_MSG_NOTICE([BOOST_THREAD_LIBS:         ${BOOST_THREAD_LIBS}])
 
-CFLAGS+=" fPIC -Wall -g3 -O0" dnl -Wextra -Wfatal-errors -Werror "
+CFLAGS+=" -fPIC -Wall -g3 -O0" dnl -Wextra -Wfatal-errors -Werror "
 
 # GNU help2man creates man pages from --help output; in many cases, this
 # is sufficient, and obviates the need to maintain man pages separately.
