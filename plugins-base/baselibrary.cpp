@@ -38,6 +38,7 @@
 #include "plugins-base/flow/prependnode.h"
 #include "plugins-base/flow/print_node.h"
 #include "plugins-base/flow/routenode.h"
+#include "plugins-base/flow/speedlimnode.h"
 #include "plugins-base/flow/spigotnode.h"
 #include "plugins-base/flow/splitnode.h"
 #include "plugins-base/flow/triggernode.h"
@@ -114,6 +115,7 @@ void BaseLibrary::load(NodeFactory &factory, const char * /*prefix*/) const
     factory.registerTypeT<SpigotNode>(concatenate(prefix, "flow.spigot").c_str());
     factory.registerTypeT<PrependNode>(concatenate(prefix, "flow.prepend").c_str());
     factory.registerTypeT<RouteNode>(concatenate(prefix, "flow.route").c_str());
+    factory.registerTypeT<SpeedLimNode>(concatenate(prefix, "flow.speedlim").c_str());
     factory.registerTypeT<SplitNode>(concatenate(prefix, "flow.split").c_str());
     factory.registerTypeT<TriggerNode>(concatenate(prefix, "flow.trigger").c_str());
     factory.registerTypeT<TypeNode>(concatenate(prefix, "flow.type").c_str());

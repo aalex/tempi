@@ -70,6 +70,7 @@ libtempi_@TEMPI_API_VERSION@_plugins_base_la_SOURCES = \
     flow/prependnode.cpp \
     flow/print_node.cpp \
     flow/routenode.cpp \
+    flow/speedlimnode.cpp \
     flow/spigotnode.cpp \
     flow/splitnode.cpp \
     flow/triggernode.cpp \
@@ -143,6 +144,7 @@ EXTRA_DIST = \
     flow/prependnode.h \
     flow/print_node.h \
     flow/routenode.h \
+    flow/speedlimnode.h \
     flow/spigotnode.h \
     flow/splitnode.h \
     flow/triggernode.h \
