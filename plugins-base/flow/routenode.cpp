@@ -46,7 +46,7 @@ void RouteNode::processMessage(const char *inlet, const Message &message)
         if (Logger::isEnabledFor(WARNING))
         {
             std::ostringstream os;
-            os << "[route] processMessage: First atom is not a string: " << message;
+            os << "[route] processMessage: (node \"" << this->getName() << "\") First atom is not a string: " << message;
             Logger::log(WARNING, os);
         }
         return;
@@ -82,7 +82,7 @@ void RouteNode::printOutletsInfo() const
         std::vector<std::string>::const_iterator iter;
         for (iter = selectors_.begin(); iter != selectors_.end(); ++iter)
             os << " " << (*iter);
-        Logger::log(DEBUG, os.str().c_str());
+        Logger::log(DEBUG, os);
     }
     if (Logger::isEnabledFor(DEBUG))
     {
@@ -92,7 +92,7 @@ void RouteNode::printOutletsInfo() const
         std::vector<std::string>::const_iterator iter;
         for (iter = outlets.begin(); iter != outlets.end(); ++iter)
             os << " " << (*iter);
-        Logger::log(DEBUG, os.str().c_str());
+        Logger::log(DEBUG, os);
     }
 }
 
@@ -104,7 +104,7 @@ bool RouteNode::onNodeAttributeChanged(const char *name, const Message &value)
     {
         std::ostringstream os;
         os << "[route] " << __FUNCTION__ << ": name=\"" << name << "\" value=" << value;
-        Logger::log(DEBUG, os.str().c_str());
+        Logger::log(DEBUG, os);
     }
     this->printOutletsInfo();
 
@@ -122,7 +122,7 @@ bool RouteNode::onNodeAttributeChanged(const char *name, const Message &value)
                 {
                     std::ostringstream os;
                     os << "[route] " << __FUNCTION__ << ": Already have selector named " << s;
-                    Logger::log(DEBUG, os.str().c_str());
+                    Logger::log(DEBUG, os);
                 }
                 new_outlets_list.push_back(s);
             }
@@ -132,7 +132,7 @@ bool RouteNode::onNodeAttributeChanged(const char *name, const Message &value)
                 {
                     std::ostringstream os;
                     os << "[route] " << __FUNCTION__ << ": new_outlets_list.push_back(" << s << ")";
-                    Logger::log(DEBUG, os.str().c_str());
+                    Logger::log(DEBUG, os);
                 }
                 new_outlets_list.push_back(s);
             }
@@ -152,7 +152,7 @@ bool RouteNode::onNodeAttributeChanged(const char *name, const Message &value)
             }
 
             selectors_.erase(std::find(selectors_.begin(), selectors_.end(), (*iter)));
-            removeOutlet((*iter).c_str());
+            this->removeOutlet((*iter).c_str());
         }
     }
     // add outlets that should be there:
@@ -164,7 +164,7 @@ bool RouteNode::onNodeAttributeChanged(const char *name, const Message &value)
             {
                 std::ostringstream os;
                 os << "[route]: add outlet " << (*iter) << std::endl;
-                Logger::log(DEBUG, os.str().c_str());
+                Logger::log(DEBUG, os);
             }
 
             selectors_.push_back((*iter));

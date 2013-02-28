@@ -1,28 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tempi version="0.2.1">
+<tempi version="0.1.11">
   <graph>
-    <node class="base.flow.counter" name="counter0">
+    <node name="loadmess0" class="base.flow.loadmess">
+      <attribute name="value"><f>2</f></attribute>
     </node>
-    <node class="base.time.metro" name="metro0">
-      <attribute name="interval">
-        <i>1000</i>
-      </attribute>
-      <attribute name="running">
-        <b>true</b>
-      </attribute>
+    <node name="get" class="base.math.>=">
+      <attribute name="operand"><f>1.0</f></attribute>
     </node>
-    <node class="base.flow.print" name="print_n">
-      <attribute name="prefix"> <s>n = </s> </attribute>
+    <node name="print0" class="base.flow.print">
+      <attribute name="prefix"><s>>= 1.0:  </s></attribute>
     </node>
-    <node class="base.math.+" name="plus">
-      <attribute name="operand"><f>10</f></attribute>
-    </node>
-    <node class="base.flow.print" name="print_n_plus_10">
-      <attribute name="prefix"> <s>n + 10 = </s> </attribute>
-    </node>
-    <connection from="metro0" outlet="0" to="counter0" inlet="0"/>
-    <connection from="counter0" outlet="0" to="plus" inlet="0"/>
-    <connection from="counter0" outlet="0" to="print_n" inlet="0"/>
-    <connection from="plus" outlet="0" to="print_n_plus_10" inlet="0"/>
+    <connection from="loadmess0" outlet="0" to="get" inlet="0"/>
+    <connection from="get" outlet="0" to="print0" inlet="0"/>
   </graph>
 </tempi>

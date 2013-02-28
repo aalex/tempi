@@ -666,6 +666,9 @@ bool Wrapper::waitUntilAllNodesAreInitiated(const std::string &graph)
             bool success = this->getNode(graph, *node, nodePtr);
             if (success)
             {
+                // alleyoop warning: 
+                // Conditional move depends on unitialised value(s)
+                // (nodePtr below)
                 if (! nodePtr->isInitiated())
                 {
                     all_ready = false;

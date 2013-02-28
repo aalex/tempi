@@ -23,6 +23,7 @@
 #include "plugins-base/abstraction/inletnode.h"
 #include "plugins-base/abstraction/outletnode.h"
 #include "plugins-base/baselibrary.h"
+#include "plugins-base/convert/booltointnode.h"
 #include "plugins-base/edit/grapheditornode.h"
 #include "plugins-base/flow/anynode.h"
 #include "plugins-base/flow/appendnode.h"
@@ -30,6 +31,7 @@
 #include "plugins-base/flow/castnode.h"
 #include "plugins-base/flow/changenode.h"
 #include "plugins-base/flow/counternode.h"
+#include "plugins-base/flow/demuxnode.h"
 #include "plugins-base/flow/dictnode.h"
 #include "plugins-base/flow/linenode.h"
 #include "plugins-base/flow/loadmessnode.h"
@@ -97,6 +99,7 @@ void BaseLibrary::load(NodeFactory &factory, const char * /*prefix*/) const
     using utils::concatenate;
 
     static const char * const prefix = "base.";
+    factory.registerTypeT<BoolToIntNode>(concatenate(prefix, "convert.booltoint").c_str());
     factory.registerTypeT<GraphEditorNode>(concatenate(prefix, "edit.grapheditor").c_str());
     factory.registerTypeT<PrintNode>(concatenate(prefix, "flow.print").c_str());
     factory.registerTypeT<AppendNode>(concatenate(prefix, "flow.append").c_str());
@@ -109,6 +112,7 @@ void BaseLibrary::load(NodeFactory &factory, const char * /*prefix*/) const
     factory.registerTypeT<TimerNode>(concatenate(prefix, "time.timer").c_str());
     factory.registerTypeT<AnyNode>(concatenate(prefix, "flow.any").c_str());
     factory.registerTypeT<CounterNode>(concatenate(prefix, "flow.counter").c_str());
+    factory.registerTypeT<DemuxNode>(concatenate(prefix, "flow.demux").c_str());
     factory.registerTypeT<DelayNode>(concatenate(prefix, "time.delay").c_str());
     factory.registerTypeT<DictNode>(concatenate(prefix, "data.dict").c_str());
     //factory.registerTypeT<AppSinkNode>(concatenate("base.", "data.appsink").c_str());
@@ -145,7 +149,9 @@ void BaseLibrary::load(NodeFactory &factory, const char * /*prefix*/) const
     factory.registerTypeT<EqualsNotNode>(concatenate(prefix, "math.!=").c_str());
     factory.registerTypeT<IsEqualNode>(concatenate(prefix, "math.==").c_str());
     factory.registerTypeT<IsGreaterNode>(concatenate(prefix, "math.>").c_str());
+    factory.registerTypeT<IsGreaterOrEqualNode>(concatenate(prefix, "math.>=").c_str());
     factory.registerTypeT<IsLessNode>(concatenate(prefix, "math.<").c_str());
+    factory.registerTypeT<IsLessOrEqualNode>(concatenate(prefix, "math.<=").c_str());
     factory.registerTypeT<SubtractNode>(concatenate(prefix, "math.-").c_str());
     factory.registerTypeT<MapNode>(concatenate(prefix, "math.map").c_str());
     factory.registerTypeT<MultNode>(concatenate(prefix, "math.*").c_str());

@@ -152,7 +152,7 @@ bool javaScriptToMessage(v8::Local<v8::Value> value, Message &result)
 
         v8::Array *array = v8::Array::Cast(*value);
         unsigned int length = array->Length();
-        std::cout << __FUNCTION__ << ": array length : " << length << std::endl;
+        //std::cout << __FUNCTION__ << ": array length : " << length << std::endl;
 
         for (unsigned int i = 0; i < array->Length(); i++)
         {
@@ -164,7 +164,7 @@ bool javaScriptToMessage(v8::Local<v8::Value> value, Message &result)
                 Logger::log(ERROR, os);
                 return false;
             }
-            std::cout << __FUNCTION__ << " element: " << *element << std::endl;
+            //std::cout << __FUNCTION__ << " element: " << *element << std::endl;
             if (element->IsNumber())
             {
                 double number = v8::NumberObject::Cast(*element)->NumberValue();
