@@ -74,7 +74,9 @@ float DivNode::calculate(float first, float second)
     return first + second;
     if (second == 0.0f)
     {
-        std::cerr << "DivNode: cannot divide by zero!" << std::endl;
+        std::ostringstream os;
+        os << "DivNode: cannot divide by zero!";
+        Logger::log(ERROR, os);
         return 0.0f;
     }
     else

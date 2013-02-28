@@ -57,12 +57,14 @@ libtempi_@TEMPI_API_VERSION@_plugins_base_la_SOURCES = \
     abstraction/inletnode.cpp \
     abstraction/outletnode.cpp \
     baselibrary.cpp \
+    convert/booltointnode.cpp \
     clutter/clutterstagenode.cpp \
     edit/grapheditornode.cpp \
     flow/anynode.cpp \
     flow/appsinknode.cpp \
     flow/changenode.cpp \
     flow/counternode.cpp \
+    flow/demuxnode.cpp \
     flow/linenode.cpp \
     flow/loadmessnode.cpp \
     flow/nop_node.cpp \
@@ -70,6 +72,7 @@ libtempi_@TEMPI_API_VERSION@_plugins_base_la_SOURCES = \
     flow/prependnode.cpp \
     flow/print_node.cpp \
     flow/routenode.cpp \
+    flow/speedlimnode.cpp \
     flow/spigotnode.cpp \
     flow/splitnode.cpp \
     flow/triggernode.cpp \
@@ -127,6 +130,7 @@ EXTRA_DIST = \
     abstraction/inletnode.h \
     abstraction/outletnode.h \
     baselibrary.h \
+    convert/booltointnode.h \
     clutter/clutterstagenode.h \
     edit/grapheditornode.h \
     flow/anynode.h \
@@ -135,6 +139,7 @@ EXTRA_DIST = \
     flow/castnode.h \
     flow/changenode.h \
     flow/counternode.h \
+    flow/demuxnode.h \
     flow/dictnode.h \
     flow/linenode.h \
     flow/loadmessnode.h \
@@ -143,6 +148,7 @@ EXTRA_DIST = \
     flow/prependnode.h \
     flow/print_node.h \
     flow/routenode.h \
+    flow/speedlimnode.h \
     flow/spigotnode.h \
     flow/splitnode.h \
     flow/triggernode.h \

@@ -45,7 +45,7 @@ bool OscReceiverNode::onNodeAttributeChanged(const char *name, const Message &va
     {
         std::ostringstream os;
         os << "OscReceiverNode::" << __FUNCTION__ << "(\"" << name << "\", " << value << ")";
-        Logger::log(DEBUG, os.str().c_str());
+        Logger::log(DEBUG, os);
     }
     if (utils::stringsMatch("port", name))
     {
@@ -54,26 +54,26 @@ bool OscReceiverNode::onNodeAttributeChanged(const char *name, const Message &va
         {
             std::ostringstream os;
             os << "OscReceiverNode::" << __FUNCTION__ << ": Negative port numbers are not supported: " << tmp;
-            Logger::log(ERROR, os.str().c_str());
+            Logger::log(ERROR, os);
             return false;
         }
         unsigned int portNumber = (unsigned int) tmp;
         if (portNumber == port_number_)
         {
-            if (Logger::isEnabledFor(DEBUG))
+            if (Logger::isEnabledFor(INFO))
             {
                 std::ostringstream os;
                 os << "OscReceiver::" << __FUNCTION__ << " already listening on port " << portNumber;
-                Logger::log(DEBUG, os.str().c_str());
+                Logger::log(INFO, os);
             }
             return false;
         }
         port_number_ = portNumber;
-        if (Logger::isEnabledFor(INFO))
+        if (Logger::isEnabledFor(NOTICE))
         {
             std::ostringstream os;
             os << "OscReceiver::" << __FUNCTION__ << " listen on port " << portNumber;
-            Logger::log(INFO, os.str().c_str());
+            Logger::log(NOTICE, os);
         }
         if (portNumber == 0)
         {
@@ -83,7 +83,17 @@ bool OscReceiverNode::onNodeAttributeChanged(const char *name, const Message &va
         else
         {
             osc_receiver_.reset(new osc::OscReceiver(portNumber));
-            this->getAttribute("listening")->setValue(Message("b", true));
+            if (this->osc_receiver_->isRunning())
+                this->getAttribute("listening")->setValue(Message("b", true));
+            else
+            {
+                std::ostringstream os;
+                os << "OscReceiverNode: " << "Could not start OSC receiver on port " << portNumber;
+                Logger::log(ERROR, os);
+                this->getAttribute("listening")->setValue(Message("b", false));
+                osc_receiver_.reset();
+                return false;
+            }
         }
         return true;
     }
@@ -99,8 +109,8 @@ void OscReceiverNode::doTick()
         if (! printed_no_port_warning)
         {
             std::ostringstream os;
-            os << "OscReceiverNode." << __FUNCTION__ << ": Please specifiy a port number.";
-            Logger::log(WARNING, os.str().c_str());
+            os << "OscReceiverNode." << __FUNCTION__ << ": Please specifiy a valid port number. This OSC receiver is not (yet) running.";
+            Logger::log(NOTICE, os);
             printed_no_port_warning = true;
         }
         return;

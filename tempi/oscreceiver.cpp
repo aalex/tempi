@@ -78,10 +78,10 @@ OscReceiver::OscReceiver(unsigned int port) :
     running_(false),
     debug_(false)
 {
-    if (port_ != 0)
+    if (this->port_ != 0)
     {
-        if (portNumberIsOK())
-            start();
+        if (this->portNumberIsOK())
+            this->start();
     }
 }
 
@@ -114,14 +114,21 @@ bool OscReceiver::start()
     {
         std::ostringstream os;
         os << "OscReceive.start(): calling lo_server_new(" << port_ << ", " << onError << ")";
-        Logger::log(INFO, os.str().c_str());
+        Logger::log(INFO, os);
     }
     server_ = lo_server_new(boost::lexical_cast<std::string>(port_).c_str(), onError);
+    if (! server_)
+    {
+        std::ostringstream os;
+        os << "OscReceive.start(): aborting OSC receiver.";
+        Logger::log(WARNING, os);
+        return false;
+    }
     if (Logger::isEnabledFor(INFO))
     {
         std::ostringstream os;
         os << "OscReceive.start(): calling lo_server_add_method(" << server_ << ", NULL, NULL, " << generic_handler << ", this)";
-        Logger::log(INFO, os.str().c_str());
+        Logger::log(INFO, os);
     }
     /* add method that will match any path and args */
     lo_server_add_method(server_, NULL, NULL, generic_handler, this);
@@ -131,7 +138,9 @@ bool OscReceiver::start()
 
 void OscReceiver::onError(int num, const char *msg, const char *path)
 {
-    std::cout << "liblo server error " << num << " in path " << path << ":"<< msg << std::endl;
+    std::ostringstream os;
+    os << "OscReceiver: liblo server error #" << num << " " << path << " "<< msg;
+    Logger::log(ERROR, os);
 }
 
 OscReceiver::~OscReceiver()

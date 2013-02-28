@@ -20,41 +20,40 @@
 
 #include "plugins-base/math/booleanoperatornode.h"
 #include "tempi/utils.h"
+#include "tempi/log.h"
 
 namespace tempi { 
 namespace plugins_base {
 
+const char * const BooleanMathNode::HOT_NUMBER_INLET = "0";
+const char * const BooleanMathNode::COLD_NUMBER_INLET = "1";
+const char * const BooleanMathNode::BOOL_OUTLET = "0";
+const char * const BooleanMathNode::OPERAND_ATTR = "operand";
+
 BooleanMathNode::BooleanMathNode() :
     Node()
 {
-    addInlet("0", "Incoming left float operand. (hot)");
-    addInlet("1", "Incoming right float operand. (cold)");
-    addOutlet("0", "Resulting float.");
+    addInlet(HOT_NUMBER_INLET, "Incoming left float operand. (hot)", "Expects a single float value.", "f");
+    addInlet(COLD_NUMBER_INLET, "Incoming right float operand. (cold)", "Expects a single float value", "f");
+    addOutlet(BOOL_OUTLET, "Resulting boolean.");
 
-    Message operand = Message("f", 0.0f);
-    addAttribute(Attribute::ptr(new Attribute("operand", operand, "Right operand to compare incoming float values with.")));
+    addAttribute(Attribute::ptr(new Attribute(OPERAND_ATTR, Message("f", 0.0f), "Right operand to compare incoming float values with.")));
 }
 
 void BooleanMathNode::processMessage(const char *inlet, const Message &message)
 {
-    if (utils::stringsMatch(inlet, "1"))
+    if (utils::stringsMatch(inlet, COLD_NUMBER_INLET))
     {
-        if (message.typesMatch("f"))
-            this->setAttributeValue("operand", message);
-        else
-            std::cerr << "BooleanMathNode::" << __FUNCTION__ << "(): Bad type for message " << message << std::endl;
+        this->setAttributeValue("operand", message);
     }
-    else if (message.typesMatch("f"))
+    else if (utils::stringsMatch(inlet, HOT_NUMBER_INLET))
     {
         float left_operand = message.getFloat(0);
         float right_operand = getAttribute("operand")->
             getValue().getFloat(0);
         Message result("b", this->compare(left_operand, right_operand));
-        this->output("0", result);
+        this->output(BOOL_OUTLET, result);
     }
-    else
-        std::cerr << "BooleanMathNode::" << __FUNCTION__ <<
-            "(): Bad type for message " << message << std::endl;
 }
 
 EqualsNotNode::EqualsNotNode() :
@@ -79,6 +78,17 @@ bool IsGreaterNode::compare(float left_operand, float right_operand)
     return left_operand > right_operand;
 }
 
+IsGreaterOrEqualNode::IsGreaterOrEqualNode() :
+    BooleanMathNode()
+{
+    setShortDocumentation("Outputs true if the incoming float is greather or equal than the right operand.");
+}
+
+bool IsGreaterOrEqualNode::compare(float left_operand, float right_operand)
+{
+    return left_operand >= right_operand;
+}
+
 IsEqualNode::IsEqualNode() :
     BooleanMathNode()
 {
@@ -99,6 +109,17 @@ IsLessNode::IsLessNode() :
 bool IsLessNode::compare(float left_operand, float right_operand)
 {
     return left_operand < right_operand;
+}
+
+IsLessOrEqualNode::IsLessOrEqualNode() :
+    BooleanMathNode()
+{
+    setShortDocumentation("Outputs true if the incoming float is smaller or equal than the right operand.");
+}
+
+bool IsLessOrEqualNode::compare(float left_operand, float right_operand)
+{
+    return left_operand <= right_operand;
 }
 
 } // end of namespace
