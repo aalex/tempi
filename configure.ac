@@ -121,7 +121,9 @@ case "$host" in *-darwin* | *-macos10*)
   ;;
 *)
   AM_CONDITIONAL([HAVE_OSX], false)
-  AC_DEFINE(HAVE_OSX,[0],[Apple Mac OS X operating system not detected])
+  dnl : evil:
+  dnl AC_DEFINE(HAVE_OSX,[0],[Apple Mac OS X operating system not detected])
+  AC_MSG_NOTICE([You are not on Apple Mac OS X.])
   ;;
 esac
 
