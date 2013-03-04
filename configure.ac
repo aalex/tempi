@@ -97,8 +97,10 @@ AM_CONDITIONAL([HAVE_DOXYGEN], [test -n "$DOXYGEN"])
 # Special cases, copied from SPIN
 case "$host" in *-darwin* | *-macos10*)
   #AC_LANG_DEFINES_PROVIDED # remove autogen.sh warnings on OSX
+  have_osx=true
   AM_CONDITIONAL([HAVE_OSX], true)
   AC_DEFINE(HAVE_OSX,[1],[Apple Mac OS X operating system detected])
+  AC_MSG_NOTICE([Apple Mac OS X operating system detected])
   LIBTOOL="glibtool"
   SRCDIR=`pwd`
   #LIBTOOL="libtool"
@@ -114,11 +116,12 @@ case "$host" in *-darwin* | *-macos10*)
   # OSX does not include /usr/local/lib/pkgconfig path, so we export it here
   # (for everyone, just in case)
   # TODO: also need to add the path for linux64
-  #PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH:$SRCDIR/pkgconfig/osx
-  #export PKG_CONFIG_PATH
+  PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH
+  export PKG_CONFIG_PATH
   ;;
 *)
   AM_CONDITIONAL([HAVE_OSX], false)
+  AC_DEFINE(HAVE_OSX,[0],[Apple Mac OS X operating system not detected])
   ;;
 esac
 
@@ -182,13 +185,16 @@ dnl if test "x${have_porttime}" = "xfalse" ; then
 dnl     AC_MSG_ERROR([missing porttime library, install libportmidi-dev])
 dnl fi
 
-if test "x${HAVE_OSX}" = "x1" ; then
+if test "x${have_osx}" = "xtrue" ; then
   PORTMIDI_CFLAGS=""
+  PORTMIDI_LIBS=""
 else
   PORTMIDI_CFLAGS="-DPMALSA"
+  PORTMIDI_LIBS="-lasound"
 fi
 AC_SUBST([PORTMIDI_CFLAGS], "$PORTMIDI_CFLAGS")
-PORTMIDI_LIBS="-lportmidi -lm -lasound"
+#PORTMIDI_LIBS="-lportmidi -lm -lasound"
+PORTMIDI_LIBS="$PORTMIDI_LIBS -lportmidi -lm"
 dnl -lporttime -lpthread 
 AC_SUBST([PORTMIDI_LIBS], "$PORTMIDI_LIBS")
 

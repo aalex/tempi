@@ -11,6 +11,7 @@
 #include <unistd.h>
 #include <tempi/timer.h>
 #include <iostream>
+#include "tempi/config.h"
 #include "plugins-base/serial/serialdevice.h"
 #include "tempi/log.h"
 #include <boost/date_time/posix_time/posix_time.hpp>
@@ -206,7 +207,9 @@ bool SerialDevice::init_serialport(const char* serialport, int baud)
         case 57600:  brate = B57600;  break;
         case 115200: brate = B115200; break;
         case 230400: brate = B230400; break;
+#ifndef HAVE_OSX
         case 460800: brate = B460800; break;
+#endif // HAVE_OSX
     }
     cfsetispeed(&toptions, brate);
     cfsetospeed(&toptions, brate);
