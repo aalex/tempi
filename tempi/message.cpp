@@ -393,7 +393,7 @@ bool Message::operator!=(const Message &other) const
 
 static bool doublesMatch(double left, double right)
 {
-    return std::fabs(left - right) > std::numeric_limits<double>::epsilon();
+    return std::fabs(left - right) < std::numeric_limits<double>::epsilon();
 }
 
 bool Message::operator==(const Message &other) const
