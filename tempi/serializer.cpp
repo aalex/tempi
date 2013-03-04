@@ -200,7 +200,7 @@ bool save(Graph &graph, const char *filename)
     {
         std::ostringstream os;
         os << __FUNCTION__ << ": Saved graph " << graph.getName() << " to " << filename;
-        Logger::log(INFO, os.str().c_str());
+        Logger::log(INFO, os);
     }
     // Free the document + global variables that may have been
     // allocated by the parser.
