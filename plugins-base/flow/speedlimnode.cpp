@@ -106,7 +106,6 @@ void SpeedLimNode::doTick()
     if (this->isTimeToOutput())
     {
         this->outputLastMessageIfNeeded();
-        timer_.reset();
     }
 }
 
