@@ -164,12 +164,33 @@ bool save_nodes(xmlNodePtr graph_node, Graph &graph)
         std::vector<std::string>::const_iterator iter2;
         for (iter2 = attribute_names.begin(); iter2 != attribute_names.end(); ++iter2)
         {
-            xmlNodePtr attr_node = xmlNewChild(node_node, NULL,
-                XMLSTR ATTRIBUTE_NODE, NULL);
-            xmlNewProp(attr_node, XMLSTR ATTRIBUTE_NAME_PROPERTY,
-                XMLSTR (*iter2).c_str());
+            bool save_it = true;
             Message attr_value = node->getAttributeValue((*iter2).c_str());
-            save_message(attr_node, attr_value);
+            static const Message default_pos_attr = Message("fff", 0.0, 0.0, 0.0);
+            static const Message default_data_attr = Message("s", "");
+            // Do not save if __data__ == "" || __position__ == (0.0, 0.0, 0.0)
+            if ((*iter2) == Node::ATTRIBUTE_DATA &&
+                attr_value == default_data_attr)
+            {
+                save_it = false;
+            }
+            else if ((*iter2) == Node::ATTRIBUTE_POSITION &&
+                attr_value == default_pos_attr
+                //attr_value.getFloat(0) == default_pos_attr.getFloat(0)
+                //&& attr_value.getFloat(1) == default_pos_attr.getFloat(1)
+                //&& attr_value.getFloat(2) == default_pos_attr.getFloat(2)
+                )
+            {
+                save_it = false;
+            }
+            if (save_it)
+            {
+                xmlNodePtr attr_node = xmlNewChild(node_node, NULL,
+                    XMLSTR ATTRIBUTE_NODE, NULL);
+                xmlNewProp(attr_node, XMLSTR ATTRIBUTE_NAME_PROPERTY,
+                    XMLSTR (*iter2).c_str());
+                save_message(attr_node, attr_value);
+            }
         } // for attributes
     } // for nodes
     return true;
