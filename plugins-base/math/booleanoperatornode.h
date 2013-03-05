@@ -40,7 +40,7 @@ class BooleanMathNode : public Node
     protected:
         virtual void processMessage(const char *inlet, const Message &message);
     private:
-        virtual bool compare(float first, float second) = 0;
+        virtual bool compare(Float first, Float second) = 0;
 };
 
 /**
@@ -51,7 +51,7 @@ class EqualsNotNode : public BooleanMathNode
     public:
         EqualsNotNode();
     private:
-        virtual bool compare(float first, float second);
+        virtual bool compare(Float first, Float second);
 };
 
 /**
@@ -62,7 +62,7 @@ class IsGreaterNode : public BooleanMathNode
     public:
         IsGreaterNode();
     private:
-        virtual bool compare(float first, float second);
+        virtual bool compare(Float first, Float second);
 };
 
 /**
@@ -73,7 +73,7 @@ class IsGreaterOrEqualNode : public BooleanMathNode
     public:
         IsGreaterOrEqualNode();
     private:
-        virtual bool compare(float first, float second);
+        virtual bool compare(Float first, Float second);
 };
 
 /**
@@ -84,7 +84,7 @@ class IsEqualNode : public BooleanMathNode
     public:
         IsEqualNode();
     private:
-        virtual bool compare(float first, float second);
+        virtual bool compare(Float first, Float second);
 };
 
 /**
@@ -95,7 +95,7 @@ class IsLessNode : public BooleanMathNode
     public:
         IsLessNode();
     private:
-        virtual bool compare(float first, float second);
+        virtual bool compare(Float first, Float second);
 };
 
 /**
@@ -106,7 +106,7 @@ class IsLessOrEqualNode : public BooleanMathNode
     public:
         IsLessOrEqualNode();
     private:
-        virtual bool compare(float first, float second);
+        virtual bool compare(Float first, Float second);
 };
 
 } // end of namespace
