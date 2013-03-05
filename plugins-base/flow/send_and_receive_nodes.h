@@ -20,27 +20,46 @@
 
 /**
  * @file
- * The Node class.
+ * The SendNode and ReceiveNode classes.
  */
-#ifndef __TEMPI_BASE_RECEIVENODE_H__
-#define __TEMPI_BASE_RECEIVENODE_H__
+#ifndef __TEMPI_BASE_SEND_AND_RECEIVE_NODES_H__
+#define __TEMPI_BASE_SEND_AND_RECEIVE_NODES_H__
 
 #include "tempi/node.h"
 
 namespace tempi {
 namespace plugins_base {
 
+
 /**
- * The ReceiveNode receives messages.
+ * Sends messages.
+ */
+class SendNode : public Node
+{
+    public:
+        SendNode();
+        static const char * const IN_INLET;
+        static const char * const IDENTIFIER_ATTR;
+        static const char * const IS_GLOBAL_ATTR;
+    private:
+        virtual void processMessage(const char *inlet, const Message &message);
+        void send(const Message &message);
+};
+
+/**
+ * Receives messages.
  */
 class ReceiveNode : public Node
 {
     public:
         ReceiveNode();
-    protected:
-        virtual void processMessage(const char *inlet, const Message &message);
+        static const char * const IDENTIFIER_ATTR;
+        static const char * const OUT_OUTLET;
+        static const char * const IS_GLOBAL_ATTR;
+        static const char * const NODE_TYPE_NAME;
+        void receive(const Message &message);
     private:
-        std::string getReceiveSymbol() const;
+        virtual void processMessage(const char *inlet, const Message &message);
 };
 
 } // end of namespace
