@@ -31,24 +31,8 @@ namespace tempi {
 namespace plugins_base {
 
 OneFloatMathNode::OneFloatMathNode() :
-    Node()
+    AbstractMathNode()
 {
-    addInlet("0", "Incoming float.", "", "f");
-    addOutlet("0", "Resulting float.");
-}
-
-void OneFloatMathNode::processMessage(const char *inlet, const Message &message)
-{
-    if (message.getTypes() != "f")
-    {
-        std::ostringstream os;
-        os << "OneFloatMathNode." << __FUNCTION__ << "(" << inlet << ", " << message << ")";
-        os << ": type should be f";
-        Logger::log(ERROR, os);
-    }
-    float operand = operand = message.getFloat(0);
-    Message result("f", this->calculate(operand));
-    this->output("0", result);
 }
 
 DegToRadNode::DegToRadNode() :
@@ -57,7 +41,7 @@ DegToRadNode::DegToRadNode() :
     this->setShortDocumentation("Convert degrees to radians.");
 }
 
-float DegToRadNode::calculate(float operand)
+Float DegToRadNode::calculate(Float operand)
 {
     return operand * (M_PI / 180.0f);
 }
@@ -70,7 +54,7 @@ MapNode::MapNode() :
     this->addAttribute(Attribute::ptr(new Attribute("output_range", Message("ff", 0.0f, 1.0f), "Output range to map to.")));
 }
 
-float MapNode::calculate(float operand)
+Float MapNode::calculate(Float operand)
 {
     Message input = this->getAttributeValue("input_range");
     Message output = this->getAttributeValue("output_range");
@@ -85,7 +69,7 @@ CosNode::CosNode() :
     this->setShortDocumentation("Outputs the cosine of what you provide it.");
 }
 
-float CosNode::calculate(float operand)
+Float CosNode::calculate(Float operand)
 {
     return std::cos(operand);
 }
@@ -96,7 +80,7 @@ SinNode::SinNode() :
     this->setShortDocumentation("Outputs the sine of what you provide it.");
 }
 
-float SinNode::calculate(float operand)
+Float SinNode::calculate(Float operand)
 {
     return std::sin(operand);
 }
@@ -129,7 +113,7 @@ RoundNode::RoundNode() :
     this->addAttribute(Attribute::ptr(new Attribute("precision", Message("i", 0), "How much float precision you want to keep.")));
 }
 
-float RoundNode::calculate(float operand)
+Float RoundNode::calculate(Float operand)
 {
     return round(operand, std::abs(this->getAttributeValue("precision").getInt(0)));
 }

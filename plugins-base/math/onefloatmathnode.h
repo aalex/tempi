@@ -26,6 +26,7 @@
 #define __TEMPI_ONE_FLOAT_MATH_NODE_H__
 
 #include "tempi/message.h"
+#include "plugins-base/math/abstract_math_node.h"
 #include "tempi/node.h"
 #include "tempi/utils.h"
 #ifndef M_PI
@@ -38,14 +39,12 @@ namespace plugins_base {
 /**
  * OneFloatMathNode is an abstract class for nodes that accept one float and output a float.
  */
-class OneFloatMathNode : public Node
+class OneFloatMathNode : public AbstractMathNode
 {
     public:
         OneFloatMathNode();
-    protected:
-        virtual void processMessage(const char *inlet, const Message &message);
     private:
-        virtual float calculate(float operand) = 0;
+        virtual void processUnhandledMessage(const char *inlet, const Message &message) {}
 };
 
 /**
@@ -56,7 +55,7 @@ class DegToRadNode : public OneFloatMathNode
     public:
         DegToRadNode();
     private:
-        virtual float calculate(float operand);
+        virtual Float calculate(Float operand);
 };
 
 /**
@@ -67,7 +66,7 @@ class MapNode : public OneFloatMathNode
     public:
         MapNode();
     private:
-        virtual float calculate(float operand);
+        virtual Float calculate(Float operand);
 };
 
 /**
@@ -78,7 +77,7 @@ class SinNode : public OneFloatMathNode
     public:
         SinNode();
     private:
-        virtual float calculate(float operand);
+        virtual Float calculate(Float operand);
 };
 
 /**
@@ -89,7 +88,7 @@ class CosNode : public OneFloatMathNode
     public:
         CosNode();
     private:
-        virtual float calculate(float operand);
+        virtual Float calculate(Float operand);
 };
 
 /**
@@ -100,7 +99,7 @@ class RoundNode : public OneFloatMathNode
     public:
         RoundNode();
     private:
-        virtual float calculate(float operand);
+        virtual Float calculate(Float operand);
 };
 
 } // end of namespace

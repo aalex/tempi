@@ -89,6 +89,7 @@ libtempi_@TEMPI_API_VERSION@_plugins_base_la_SOURCES = \
     math/jsexpr.cpp \
     math/lmathx.cpp \
     math/luaexpr.cpp \
+    math/abstract_math_node.cpp \
     math/onefloatmathnode.cpp \
     math/twofloatmathnode.cpp \
     midi/abstractmidifilter.cpp \
@@ -169,6 +170,7 @@ EXTRA_DIST = \
     math/jsexpr.h \
     math/lmathx.h \
     math/luaexpr.h \
+    math/abstract_math_node.h \
     math/onefloatmathnode.h \
     math/twofloatmathnode.h \
     midi/abstractmidifilter.h \

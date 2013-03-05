@@ -25,6 +25,7 @@
 #ifndef __TEMPI_TWO_FLOAT_MATH_NODE_H__
 #define __TEMPI_TWO_FLOAT_MATH_NODE_H__
 
+#include "plugins-base/math/abstract_math_node.h"
 #include "tempi/message.h"
 #include "tempi/node.h"
 #include "tempi/utils.h"
@@ -35,14 +36,18 @@ namespace plugins_base {
 /**
  * TwoFloatMathNode is an abstract class for nodes that accept two floats and output a float.
  */
-class TwoFloatMathNode : public Node
+class TwoFloatMathNode : public AbstractMathNode
 {
     public:
         TwoFloatMathNode();
-    protected:
-        virtual void processMessage(const char *inlet, const Message &message);
+        static const char * const RIGHT_OPERAND_ATTR;
+        static const char * const RIGHT_OPERAND_INLET;
     private:
-        virtual float calculate(float first, float second) = 0;
+        // inherited from AbstractMathNode
+        virtual Float calculate(Float first);
+        // New method
+        virtual Float calculate(Float first, Float second) = 0;
+        virtual void processUnhandledMessage(const char *inlet, const Message &message);
 };
 
 /**
@@ -53,7 +58,7 @@ class AddNode : public TwoFloatMathNode
     public:
         AddNode();
     protected:
-        virtual float calculate(float first, float second);
+        virtual Float calculate(Float first, Float second);
 };
 
 /**
@@ -64,7 +69,7 @@ class DivNode : public TwoFloatMathNode
     public:
         DivNode();
     private:
-        virtual float calculate(float first, float second);
+        virtual Float calculate(Float first, Float second);
 };
 
 
@@ -76,7 +81,7 @@ class MultNode : public TwoFloatMathNode
     public:
         MultNode();
     private:
-        virtual float calculate(float first, float second);
+        virtual Float calculate(Float first, Float second);
 };
 
 /**
@@ -87,7 +92,7 @@ class SubtractNode : public TwoFloatMathNode
     public:
         SubtractNode();
     private:
-        virtual float calculate(float first, float second);
+        virtual Float calculate(Float first, Float second);
 };
 
 /**
@@ -98,7 +103,7 @@ class ModuloNode : public TwoFloatMathNode
     public:
         ModuloNode();
     private:
-        virtual float calculate(float first, float second);
+        virtual Float calculate(Float first, Float second);
 };
 
 } // end of namespace
