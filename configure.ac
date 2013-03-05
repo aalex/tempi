@@ -172,6 +172,7 @@ dnl fi
 AC_CHECK_HEADERS([portmidi.h porttime.h], have_portmidi_headers=true, have_portmidi_headers=false)
 if test "x${have_portmidi_headers}" = "xfalse" ; then
     AC_MSG_ERROR([missing portmidi headers, install libportmidi-dev])
+    dnl It seems it should fail but it doesn't
 fi
 dnl PORTMIDI: commented out since it doesn't work on GNU/Linux!
 dnl AC_CHECK_LIB([portmidi],[Pm_Initialize], have_portmidi=true, have_portmidi=false)
