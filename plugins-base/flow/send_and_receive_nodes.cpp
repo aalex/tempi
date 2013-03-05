@@ -23,6 +23,7 @@
 #include "tempi/graph.h"
 #include "tempi/log.h"
 #include "tempi/utils.h"
+#include "tempi/scheduler.h"
 
 namespace tempi {
 namespace plugins_base {
@@ -52,46 +53,65 @@ void SendNode::processMessage(const char *inlet, const Message &message)
     }
 }
 
+static void send_to_receives_in_graph(Graph *graph, const std::string &identifier, const Message &message)
+{
+    std::vector<std::string> nodes = graph->getNodeNames();
+
+    std::vector<std::string>::const_iterator iter;
+    for (iter = nodes.begin(); iter != nodes.end(); ++iter)
+    {
+        Node::ptr node = graph->getNode((*iter).c_str());
+        if (node->getTypeName() == ReceiveNode::NODE_TYPE_NAME)
+        {
+            if (Logger::isEnabledFor(INFO))
+            {
+                std::ostringstream os;
+                os << "Will cast node* to ReceiveNode*";
+                Logger::log(INFO, os);
+            }
+            ReceiveNode *receiver = (ReceiveNode*) node.get(); // FIXME
+            if (receiver->getAttributeValue(ReceiveNode::IDENTIFIER_ATTR).getString(0) == identifier)
+                receiver->receive(message);
+        }
+    } // for
+}
+
 void SendNode::send(const Message &message)
 {
-    if (this->getGraph() == 0)
+    Graph *graph = this->getGraph();
+    if (graph == 0)
     {
         std::ostringstream os;
         os << "SendNode." << __FUNCTION__ << ": " <<
         "this node must belong to a graph.";
         Logger::log(ERROR, os);
+        return;
     }
-    else
+
+    std::string identifier = this->getAttributeValue(IDENTIFIER_ATTR).getString(0);
+    bool is_global = this->getAttributeValue(IS_GLOBAL_ATTR).getBoolean(0);
+    if (is_global)
     {
-        bool is_global = this->getAttributeValue(IS_GLOBAL_ATTR).getBoolean(0);
-        if (is_global)
+        Scheduler *scheduler = graph->getScheduler();
+        if (scheduler == 0)
         {
             std::ostringstream os;
             os << "SendNode." << __FUNCTION__ << ": " <<
-            "global send/receive symbols are not yet supported.";
-            Logger::log(WARNING, os);
+            "this node's graph must belong to a scheduler.";
+            Logger::log(ERROR, os);
+            return;
         }
-
-        std::vector<std::string> nodes = this->getGraph()->getNodeNames();
-
+        std::vector<std::string> graphs = scheduler->listGraphs();
         std::vector<std::string>::const_iterator iter;
-        std::string identifier = this->getAttributeValue(IDENTIFIER_ATTR).getString(0);
-        for (iter = nodes.begin(); iter != nodes.end(); ++iter)
+        for (iter = graphs.begin(); iter != graphs.end(); ++iter)
         {
-            Node::ptr node = this->getGraph()->getNode((*iter).c_str());
-            if (node->getTypeName() == ReceiveNode::NODE_TYPE_NAME)
-            {
-                if (Logger::isEnabledFor(INFO))
-                {
-                    std::ostringstream os;
-                    os << "Will cast node* to ReceiveNode*";
-                    Logger::log(INFO, os);
-                }
-                ReceiveNode *receiver = (ReceiveNode*) node.get(); // FIXME
-                if (receiver->getAttributeValue(ReceiveNode::IDENTIFIER_ATTR).getString(0) == identifier)
-                    receiver->receive(message);
-            }
+            Graph::ptr graph = scheduler->getGraph((*iter).c_str());
+            send_to_receives_in_graph(graph.get(), identifier, message);
         } // for
+    }
+    else
+    {
+        send_to_receives_in_graph(graph, identifier, message);
     }
 }
 
