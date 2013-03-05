@@ -35,6 +35,7 @@
 #include "plugins-base/flow/dictnode.h"
 #include "plugins-base/flow/linenode.h"
 #include "plugins-base/flow/loadmessnode.h"
+#include "plugins-base/flow/logger_node.h"
 #include "plugins-base/flow/nop_node.h"
 #include "plugins-base/flow/packnode.h"
 #include "plugins-base/flow/prependnode.h"
@@ -46,6 +47,7 @@
 #include "plugins-base/flow/triggernode.h"
 #include "plugins-base/flow/typenode.h"
 #include "plugins-base/flow/unpacknode.h"
+#include "plugins-base/list/pick_indices.h"
 #include "plugins-base/mapper/mapperinputnode.h"
 #include "plugins-base/math/booleanoperatornode.h"
 #include "plugins-base/math/jsexpr.h"
@@ -126,8 +128,11 @@ void BaseLibrary::load(NodeFactory &factory, const char * /*prefix*/) const
     factory.registerTypeT<UnpackNode>(concatenate(prefix, "flow.unpack").c_str());
     factory.registerTypeT<LineNode>(concatenate(prefix, "flow.line").c_str());
     factory.registerTypeT<LoadMessNode>(concatenate(prefix, "flow.loadmess").c_str());
+    factory.registerTypeT<LoggerNode>(concatenate(prefix, "flow.logger").c_str());
     factory.registerTypeT<CastNode>(concatenate(prefix, "flow.cast").c_str());
     factory.registerTypeT<ChangeNode>(concatenate(prefix, "flow.change").c_str());
+
+    factory.registerTypeT<PickIndicesNode>(concatenate(prefix, "list.pick_indices").c_str());
 
 #ifdef HAVE_SPATOSC
     factory.registerTypeT<SpatoscNode>(concatenate(prefix, "osc.spatosc").c_str());

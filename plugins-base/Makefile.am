@@ -67,6 +67,7 @@ libtempi_@TEMPI_API_VERSION@_plugins_base_la_SOURCES = \
     flow/demuxnode.cpp \
     flow/linenode.cpp \
     flow/loadmessnode.cpp \
+    flow/logger_node.cpp \
     flow/nop_node.cpp \
     flow/packnode.cpp \
     flow/prependnode.cpp \
@@ -78,6 +79,7 @@ libtempi_@TEMPI_API_VERSION@_plugins_base_la_SOURCES = \
     flow/triggernode.cpp \
     flow/typenode.cpp \
     flow/unpacknode.cpp \
+    list/pick_indices.cpp \
     mapper/mapperinputnode.cpp \
     mapping/filter.cpp \
     mapping/slide.cpp \
@@ -143,6 +145,7 @@ EXTRA_DIST = \
     flow/dictnode.h \
     flow/linenode.h \
     flow/loadmessnode.h \
+    flow/logger_node.h \
     flow/nop_node.h \
     flow/packnode.h \
     flow/prependnode.h \
@@ -154,6 +157,7 @@ EXTRA_DIST = \
     flow/triggernode.h \
     flow/typenode.h \
     flow/unpacknode.h \
+    list/pick_indices.h \
     mapper/mapperdevice.h \
     mapper/mapperinputnode.h \
     mapping/average.h \
