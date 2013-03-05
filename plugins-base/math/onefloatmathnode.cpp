@@ -50,8 +50,8 @@ MapNode::MapNode() :
     OneFloatMathNode()
 {
     this->setShortDocumentation("Convert a float from a range to another.");
-    this->addAttribute(Attribute::ptr(new Attribute("input_range", Message("ff", 0.0f, 1.0f), "Input range to map from.")));
-    this->addAttribute(Attribute::ptr(new Attribute("output_range", Message("ff", 0.0f, 1.0f), "Output range to map to.")));
+    this->addAttribute(Attribute::ptr(new Attribute("input_range", Message("ff", 0.0, 1.0), "Input range to map from.")));
+    this->addAttribute(Attribute::ptr(new Attribute("output_range", Message("ff", 0.0, 1.0), "Output range to map to.")));
 }
 
 Float MapNode::calculate(Float operand)
