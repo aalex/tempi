@@ -47,6 +47,7 @@
 #include "plugins-base/flow/triggernode.h"
 #include "plugins-base/flow/typenode.h"
 #include "plugins-base/flow/unpacknode.h"
+#include "plugins-base/flow/send_and_receive_nodes.h"
 #include "plugins-base/list/pick_indices.h"
 #include "plugins-base/mapper/mapperinputnode.h"
 #include "plugins-base/math/booleanoperatornode.h"
@@ -133,6 +134,8 @@ void BaseLibrary::load(NodeFactory &factory, const char * /*prefix*/) const
     factory.registerTypeT<ChangeNode>(concatenate(prefix, "flow.change").c_str());
 
     factory.registerTypeT<PickIndicesNode>(concatenate(prefix, "list.pick_indices").c_str());
+    factory.registerTypeT<SendNode>(concatenate(prefix, "flow.send").c_str());
+    factory.registerTypeT<ReceiveNode>(ReceiveNode::NODE_TYPE_NAME); // We have to do this.
 
 #ifdef HAVE_SPATOSC
     factory.registerTypeT<SpatoscNode>(concatenate(prefix, "osc.spatosc").c_str());

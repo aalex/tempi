@@ -79,6 +79,7 @@ libtempi_@TEMPI_API_VERSION@_plugins_base_la_SOURCES = \
     flow/triggernode.cpp \
     flow/typenode.cpp \
     flow/unpacknode.cpp \
+    flow/send_and_receive_nodes.cpp \
     list/pick_indices.cpp \
     mapper/mapperinputnode.cpp \
     mapping/filter.cpp \
@@ -158,6 +159,7 @@ EXTRA_DIST = \
     flow/triggernode.h \
     flow/typenode.h \
     flow/unpacknode.h \
+    flow/send_and_receive_nodes.h \
     list/pick_indices.h \
     mapper/mapperdevice.h \
     mapper/mapperinputnode.h \
