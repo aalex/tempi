@@ -104,6 +104,10 @@ class Graph : public NamedObject
          * Checks if a given named Node is in this Graph.
          */
         bool hasNode(const char *name) const;
+        void pushMessageDepth()
+            throw (BadIndexException);
+        void popMessageDepth()
+            throw (BadIndexException);
         /**
          * Triggers whatever timed action need to be done in this Graph.
          * Also calls Node::init() for each Node if not called.
@@ -153,6 +157,7 @@ class Graph : public NamedObject
         //bool handleTempiMessage(const Message &message);
         void onInletDeleted(const Message &message);
         void onOutletDeleted(const Message &message);
+        int message_depth_counter_;
 };
 
 // not a good idea:

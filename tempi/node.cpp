@@ -20,6 +20,7 @@
 
 #include "tempi/node.h"
 #include "tempi/log.h"
+#include "tempi/graph.h"
 #include <boost/bind.hpp>
 #include <iostream>
 #include <sstream>
@@ -578,8 +579,23 @@ void Node::output(const char *outlet, const Message &message) const
             outlet << ", " << message << ")";
         Logger::log(DEBUG, os);
     }
-    Outlet::ptr outlet_ptr = getOutletSharedPtr(outlet);
-    outlet_ptr->trigger(message);
+
+    try
+    {
+        if (this->graph_ != 0)
+            this->graph_->pushMessageDepth();
+        Outlet::ptr outlet_ptr = getOutletSharedPtr(outlet);
+        outlet_ptr->trigger(message);
+        if (this->graph_ != 0)
+            this->graph_->popMessageDepth();
+    }
+    catch (const BadIndexException &e)
+    {
+        std::ostringstream os;
+        os << "Node." << __FUNCTION__ << "[" << this->getName() << "]" <<
+        ": Reached maximum recursion depth! " << e.what();
+        Logger::log(CRITICAL, os);
+    }
 }
 
 void Node::setTypeName(const char *typeName)

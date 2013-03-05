@@ -33,10 +33,12 @@ static std::vector<Graph::Connection>::iterator find_connection(std::vector<Grap
 Graph::Graph(NodeFactory::ptr factory) :
     factory_(factory)
 {
+    this->message_depth_counter_ = 0;
 }
 
 Graph::Graph()
 {
+    this->message_depth_counter_ = 0;
 }
 
 bool Graph::addNode(const char *type, const char *name)
@@ -550,6 +552,33 @@ void Graph::setScheduler(Scheduler *scheduler)
 Scheduler *Graph::getScheduler() const
 {
     return scheduler_;
+}
+
+void Graph::pushMessageDepth()
+    throw (BadIndexException)
+{
+    static const int MAX_MESSAGE_DEPTH = 1000;
+    if (this->message_depth_counter_ >= MAX_MESSAGE_DEPTH)
+    {
+        std::ostringstream os;
+        os << "Reached maximum message depth! Be careful when connecting a node's outlet into one of its inlets.";
+        throw BadIndexException(os.str().c_str());
+    }
+    else
+        this->message_depth_counter_ += 1;
+}
+
+void Graph::popMessageDepth()
+    throw (BadIndexException)
+{
+    if (this->message_depth_counter_ <= 0)
+    {
+        std::ostringstream os;
+        os << "Reached 0 message depth! Some programmer made a mistake.";
+        throw BadIndexException(os.str().c_str());
+    }
+    else
+        this->message_depth_counter_ -= 1;
 }
 
 } // end of namespace
