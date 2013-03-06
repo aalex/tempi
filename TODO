@@ -12,12 +12,9 @@ Refactoring
 
 Bug fixes
 ~~~~~~~~~
-* Change null type tag for N, not n.
 * FIXME: removeTrailingPathSep crashes if has a trailing slash...
-* Graph: prevent from stack overflows
 * Node: __attr__ inlet: Support "list" and "get" messages.
 * Node: onAttributeChanged is called sometime twice. If the attribute has not been changed, it should not be called again
-* OscReceiver: segfaults if port is busy
 * Packaging: fix path to libs
 * Scheduler: When we create a second Scheduler, the Loader refuses to load again base lib
 * Serializer: load() sets node attributes twice?
