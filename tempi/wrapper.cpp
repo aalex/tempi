@@ -635,9 +635,9 @@ bool Wrapper::sleep(double duration_ms)
     utils::sleep_ms(duration_ms);
 }
 
-bool Wrapper::waitUntilAllNodesAreInitiated(const std::string &graph)
+bool Wrapper::waitUntilNodesAreInitiated(const std::string &graph, const std::vector<std::string> &nodes)
 {
-    static const double SLEEP_MS = 15.0;
+    static const double SLEEP_MS = 5.0; // used to be 15.0
     // check for graph:
     {
         tempi::ScopedLock::ptr lock = scheduler_->acquireLock();
@@ -655,7 +655,6 @@ bool Wrapper::waitUntilAllNodesAreInitiated(const std::string &graph)
     {
         bool all_ready = true;
         // FIXME: listNodes acquires the lock so we should not acquire it here:
-        std::vector<std::string> nodes = this->listNodes(graph);
         // FIXME: getNode does not acquire the lock!!
         tempi::ScopedLock::ptr lock = scheduler_->acquireLock();
         std::vector<std::string>::const_iterator node;
@@ -666,30 +665,36 @@ bool Wrapper::waitUntilAllNodesAreInitiated(const std::string &graph)
             bool success = this->getNode(graph, *node, nodePtr);
             if (success)
             {
-                // alleyoop warning: 
-                // Conditional move depends on unitialised value(s)
-                // (nodePtr below)
-                if (! nodePtr->isInitiated())
+                if (nodePtr.get() != 0) // just to get rid the warning indicated below
                 {
-                    all_ready = false;
-                    if (Logger::isEnabledFor(DEBUG))
+                    // alleyoop warning: 
+                    // Conditional move depends on unitialised value(s)
+                    // (nodePtr below)
+                    if (! nodePtr->isInitiated())
                     {
-                        not_ready_nodes.push_back(*node);
+                        all_ready = false;
+                        if (Logger::isEnabledFor(DEBUG))
+                        {
+                            not_ready_nodes.push_back(*node);
+                        }
                     }
                 }
             }
-        }
+        } // for
 
         if (Logger::isEnabledFor(DEBUG))
         {
-            std::ostringstream os;
-            os << "Wrapper." << __FUNCTION__ <<
-                "(" << graph << ") Not ready: ";
-            for (node = not_ready_nodes.begin(); node != not_ready_nodes.end(); node++)
+            if (not_ready_nodes.size() != 0)
             {
-                os << *node << " ";
+                std::ostringstream os;
+                os << "Wrapper." << __FUNCTION__ <<
+                    "(" << graph << ") Not ready: ";
+                for (node = not_ready_nodes.begin(); node != not_ready_nodes.end(); node++)
+                {
+                    os << *node << " ";
+                }
+                Logger::log(DEBUG, os);
             }
-            Logger::log(DEBUG, os);
         }
         if (all_ready)
         {
@@ -702,10 +707,31 @@ bool Wrapper::waitUntilAllNodesAreInitiated(const std::string &graph)
             }
             break;
         }
-        this->sleep(SLEEP_MS);
+        else
+            this->sleep(SLEEP_MS);
     } // while
 
     return true;
+}
+
+bool Wrapper::waitUntilAllNodesAreInitiated(const std::string &graph)
+{
+    static const double SLEEP_MS = 5.0; // used to be 15.0
+    // check for graph:
+    {
+        tempi::ScopedLock::ptr lock = scheduler_->acquireLock();
+        if (! scheduler_->hasGraph(graph.c_str()))
+        {
+            std::ostringstream os;
+            os << "Wrapper." << __FUNCTION__ <<
+                ": no graph \"" << graph << "\"";
+            Logger::log(ERROR, os);
+            return false;
+        }
+    }
+
+    std::vector<std::string> nodes = this->listNodes(graph);
+    return this->waitUntilNodesAreInitiated(graph, nodes);
 }
 
 bool Wrapper::getNodeDocumentation(
