@@ -47,7 +47,7 @@ bool Graph::addNode(const char *type, const char *name)
     {
         std::ostringstream os;
         os << "Graph." << __FUNCTION__ << ": this NodeFactory is an Invalid pointer.";
-        Logger::log(ERROR, os.str().c_str());
+        Logger::log(ERROR, os);
         return false;
     }
     if (factory_->hasType(type))
@@ -57,7 +57,7 @@ bool Graph::addNode(const char *type, const char *name)
         {
             std::ostringstream os;
             os << "Graph." << __FUNCTION__ << ": There is already a node with ID " << name;
-            Logger::log(ERROR, os.str().c_str());
+            Logger::log(ERROR, os);
             return false;
         }
         Node::ptr node = factory_->create(type);
@@ -65,16 +65,17 @@ bool Graph::addNode(const char *type, const char *name)
         {
             std::ostringstream os;
             os << "Graph." << __FUNCTION__ << ": Invalid pointer to Node.";
-            Logger::log(ERROR, os.str().c_str());
+            Logger::log(ERROR, os);
             return false;
         }
         node->setName(name);
         node->setGraph(this);
         nodes_[name] = node;
+        if (Logger::isEnabledFor(DEBUG))
         {
             std::ostringstream os;
             os << "Graph." << __FUNCTION__ << "(\"" << type << "\", \"" << name << "\")";
-            Logger::log(DEBUG, os.str().c_str());
+            Logger::log(DEBUG, os);
         }
 
         try
@@ -91,7 +92,7 @@ bool Graph::addNode(const char *type, const char *name)
             std::ostringstream os;
             os << "Graph::" << __FUNCTION__ << ": ";
             os << e.what();
-            Logger::log(ERROR, os.str().c_str());
+            Logger::log(ERROR, os);
         }
         return true;
     }
