@@ -654,33 +654,38 @@ bool Wrapper::waitUntilNodesAreInitiated(const std::string &graph, const std::ve
     while (true)
     {
         bool all_ready = true;
-        // FIXME: listNodes acquires the lock so we should not acquire it here:
-        // FIXME: getNode does not acquire the lock!!
-        tempi::ScopedLock::ptr lock = scheduler_->acquireLock();
-        std::vector<std::string>::const_iterator node;
         std::vector<std::string> not_ready_nodes;
-        for (node = nodes.begin(); node != nodes.end(); node++)
-        {
-            tempi::Node::ptr nodePtr;
-            bool success = this->getNode(graph, *node, nodePtr);
-            if (success)
+        // The TreadedScheduler cannot acquire the lock in order to tick and then
+        // init the nodes if we own the lock!
+
+        { // scope for the lock
+            // FIXME: listNodes acquires the lock so we should not acquire it here:
+            // FIXME: getNode does not acquire the lock!!
+            tempi::ScopedLock::ptr lock = scheduler_->acquireLock();
+            std::vector<std::string>::const_iterator node;
+            for (node = nodes.begin(); node != nodes.end(); node++)
             {
-                if (nodePtr.get() != 0) // just to get rid the warning indicated below
+                tempi::Node::ptr nodePtr;
+                bool success = this->getNode(graph, *node, nodePtr);
+                if (success)
                 {
-                    // alleyoop warning: 
-                    // Conditional move depends on unitialised value(s)
-                    // (nodePtr below)
-                    if (! nodePtr->isInitiated())
+                    if (nodePtr.get() != 0) // just to get rid the warning indicated below
                     {
-                        all_ready = false;
-                        if (Logger::isEnabledFor(DEBUG))
+                        // alleyoop warning: 
+                        // Conditional move depends on unitialised value(s)
+                        // (nodePtr below)
+                        if (! nodePtr->isInitiated())
                         {
-                            not_ready_nodes.push_back(*node);
+                            all_ready = false;
+                            if (Logger::isEnabledFor(DEBUG))
+                            {
+                                not_ready_nodes.push_back(*node);
+                            }
                         }
                     }
                 }
-            }
-        } // for
+            } // for
+        } // scope for the lock
 
         if (Logger::isEnabledFor(DEBUG))
         {
@@ -689,6 +694,7 @@ bool Wrapper::waitUntilNodesAreInitiated(const std::string &graph, const std::ve
                 std::ostringstream os;
                 os << "Wrapper." << __FUNCTION__ <<
                     "(" << graph << ") Not ready: ";
+                std::vector<std::string>::const_iterator node;
                 for (node = not_ready_nodes.begin(); node != not_ready_nodes.end(); node++)
                 {
                     os << *node << " ";
