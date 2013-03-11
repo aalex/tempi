@@ -47,7 +47,7 @@ void TimerNode::processMessage(const char *inlet, const Message &message)
     {
         TimePosition now = this->timer_.elapsed();
         unsigned long long elapsed = timeposition::to_ms(now);
-        this->output(ELAPSED_OUTLET, Message("l", (long long) elapsed));
+        this->output(ELAPSED_OUTLET, Message("i", (long long) elapsed));
     }
     else if (utils::stringsMatch(inlet, RESET_INLET))
     {
