@@ -141,22 +141,28 @@ bool RouteNode::onNodeAttributeChanged(const char *name, const Message &value)
             }
         }
     }
-    // remote outlets that should no longer be there:
+    // remove outlets that should no longer be there:
     std::vector<std::string>::const_iterator iter;
+    std::vector<std::string> to_delete;
     for (iter = selectors_.begin(); iter != selectors_.end(); iter ++)
     {
-        if (! utils::find_in_vector<std::string>(new_outlets_list, (*iter)))
+        std::string outlet_name = (*iter);
+        if (! utils::find_in_vector<std::string>(new_outlets_list, outlet_name))
         {
             if (Logger::isEnabledFor(DEBUG))
             {
                 std::ostringstream os;
-                os << "[RouteNode]: remove outlet " << (*iter);
+                os << "[RouteNode]: remove outlet \"" << outlet_name << "\"";
                 Logger::log(DEBUG, os);
             }
-
-            selectors_.erase(std::find(selectors_.begin(), selectors_.end(), (*iter)));
-            this->removeOutlet((*iter).c_str());
+            to_delete.push_back(outlet_name);
+            this->removeOutlet(outlet_name.c_str());
         }
+    }
+
+    for (iter = to_delete.begin(); iter != to_delete.end(); iter++)
+    {
+        selectors_.erase(std::find(selectors_.begin(), selectors_.end(), (*iter)));
     }
     // add outlets that should be there:
     for (iter = new_outlets_list.begin(); iter != new_outlets_list.end(); iter ++)

@@ -40,7 +40,7 @@ OscRouteNode::OscRouteNode() :
     addAttribute(Attribute::ptr(new Attribute("paths", Message(), "List of string that first atom must match in order to be output via the corresponding outlet. Use only strings.", false)));
     if (Logger::isEnabledFor(DEBUG))
     {
-        Logger::log(DEBUG, "[osc.route] constructor: paths = ()");
+        Logger::log(DEBUG, "[OscRouteNode] constructor: paths = ()");
     }
     addInlet("incoming", "incoming messages");
 }
@@ -66,7 +66,7 @@ void OscRouteNode::processMessage(const char *inlet, const Message &message)
         if (Logger::isEnabledFor(DEBUG))
         {
             std::ostringstream os;
-            os << "[osc.route] processMessage: First atom is not a string: " << message;
+            os << "[OscRouteNode] processMessage: First atom is not a string: " << message;
             Logger::log(DEBUG, os);
         }
         return;
@@ -88,7 +88,7 @@ void OscRouteNode::processMessage(const char *inlet, const Message &message)
             if (Logger::isEnabledFor(DEBUG))
             {
                 std::ostringstream os;
-                os << "[osc.route] ";
+                os << "[OscRouteNode] ";
                 os << "Incoming path \"" << path << "\" begins with " << (*iter);
                 os << " so we strip it from " << (*iter) << " hence resulting message is " << ret;
                 Logger::log(DEBUG, os);
@@ -100,7 +100,7 @@ void OscRouteNode::processMessage(const char *inlet, const Message &message)
             if (Logger::isEnabledFor(DEBUG))
             {
                 std::ostringstream os;
-                os << "[osc.route] ";
+                os << "[OscRouteNode] ";
                 os << " We got a match so we output result: " << ret << " through outlet: " << (*iter);
                 Logger::log(DEBUG, os);
             }
@@ -112,7 +112,7 @@ void OscRouteNode::processMessage(const char *inlet, const Message &message)
             if (Logger::isEnabledFor(DEBUG))
             {
                 std::ostringstream os;
-                os << "[osc.route] processMessage: Could not find match for message:  " << message;
+                os << "[OscRouteNode] processMessage: Could not find match for message:  " << message;
                 Logger::log(DEBUG, os);
             }
         }
@@ -124,7 +124,7 @@ void OscRouteNode::printOutletsInfo() const
     if (Logger::isEnabledFor(DEBUG))
     {
         std::ostringstream os;
-        os << "[osc.route]: paths it stores:";
+        os << "[OscRouteNode]: paths it stores:";
         std::vector<std::string>::const_iterator iter;
         for (iter = paths_.begin(); iter != paths_.end(); ++iter)
             os << " " << (*iter);
@@ -133,7 +133,7 @@ void OscRouteNode::printOutletsInfo() const
     if (Logger::isEnabledFor(DEBUG))
     {
         std::ostringstream os;
-        os << "[osc.route]: actual outlets:";
+        os << "[OscRouteNode]: actual outlets:";
         std::vector<std::string> outlets = this->listOutlets();
         std::vector<std::string>::const_iterator iter;
         for (iter = outlets.begin(); iter != outlets.end(); ++iter)
@@ -149,7 +149,7 @@ bool OscRouteNode::onNodeAttributeChanged(const char *name, const Message &value
     if (Logger::isEnabledFor(DEBUG))
     {
         std::ostringstream os;
-        os << "[osc.route] " << __FUNCTION__ << ": name=\"" << name << "\" value=" << value;
+        os << "[OscRouteNode] " << __FUNCTION__ << ": name=\"" << name << "\" value=" << value;
         Logger::log(DEBUG, os);
     }
     this->printOutletsInfo();
@@ -167,7 +167,7 @@ bool OscRouteNode::onNodeAttributeChanged(const char *name, const Message &value
                 if (Logger::isEnabledFor(DEBUG))
                 {
                     std::ostringstream os;
-                    os << "[osc.route] " << __FUNCTION__ << ": Already have selector named " << s;
+                    os << "[OscRouteNode] " << __FUNCTION__ << ": Already have selector named " << s;
                     Logger::log(DEBUG, os);
                 }
                 new_outlets_list.push_back(s);
@@ -179,7 +179,7 @@ bool OscRouteNode::onNodeAttributeChanged(const char *name, const Message &value
                     if (Logger::isEnabledFor(DEBUG))
                     {
                         std::ostringstream os;
-                        os << "[osc.route] " << __FUNCTION__ << ": new_outlets_list.push_back(" << s << ")";
+                        os << "[OscRouteNode] " << __FUNCTION__ << ": new_outlets_list.push_back(" << s << ")";
                         Logger::log(DEBUG, os);
                     }
                     new_outlets_list.push_back(s);
@@ -187,13 +187,14 @@ bool OscRouteNode::onNodeAttributeChanged(const char *name, const Message &value
                 else
                 {
                     std::ostringstream os;
-                    os << "[osc.route] " << __FUNCTION__ << ": Invalid OSC path " << s;
+                    os << "[OscRouteNode] " << __FUNCTION__ << ": Invalid OSC path " << s;
                     Logger::log(ERROR, os);
                 }
             }
         }
     }
-    // remote outlets that should no longer be there:
+    // remove outlets that should no longer be there:
+    std::vector<std::string> to_delete;
     std::vector<std::string>::const_iterator iter;
     for (iter = paths_.begin(); iter != paths_.end(); iter ++)
     {
@@ -202,13 +203,16 @@ bool OscRouteNode::onNodeAttributeChanged(const char *name, const Message &value
             if (Logger::isEnabledFor(DEBUG))
             {
                 std::ostringstream os;
-                os << "[osc.route]: remove outlet " << (*iter) << std::endl;
+                os << "[OscRouteNode]: remove outlet \"" << (*iter) << "\"";
                 Logger::log(DEBUG, os);
             }
-
-            paths_.erase(std::find(paths_.begin(), paths_.end(), (*iter)));
-            removeOutlet((*iter).c_str());
+            to_delete.push_back((*iter));
+            this->removeOutlet((*iter).c_str());
         }
+    }
+    for (iter = to_delete.begin(); iter != to_delete.end(); iter++)
+    {
+        paths_.erase(std::find(paths_.begin(), paths_.end(), (*iter)));
     }
     // add outlets that should be there:
     for (iter = new_outlets_list.begin(); iter != new_outlets_list.end(); iter ++)
@@ -218,7 +222,7 @@ bool OscRouteNode::onNodeAttributeChanged(const char *name, const Message &value
             if (Logger::isEnabledFor(DEBUG))
             {
                 std::ostringstream os;
-                os << "[route]: add outlet " << (*iter) << std::endl;
+                os << "[OscRouteNode]: add outlet \"" << (*iter) << "\"";
                 Logger::log(DEBUG, os);
             }
 
