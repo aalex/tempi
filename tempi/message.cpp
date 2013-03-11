@@ -449,12 +449,12 @@ bool Message::operator==(const Message &other) const
 
 std::ostream &operator<<(std::ostream &os, const Message &message)
 {
-    os << "(";
+    os << "[";
     for (int i = 0; i < (int) message.getSize(); ++i)
     {
         AtomType type;
         message.getAtomType(i, type);
-        os << (char) type << ":";
+        // os << (char) type << ":";
         switch (type)
         {
             case BOOLEAN:
@@ -469,12 +469,22 @@ std::ostream &operator<<(std::ostream &os, const Message &message)
             case STRING:
                 os << "\"" << message.getString(i) << "\"";
                 break;
+            case POINTER:
+                {
+                    os << "*" << message.getPointer(i);
+                    break;
+                }
+            case NONE:
+                {
+                    os << "null";
+                    break;
+                }
             case BLOB:
                 {
                     // Used to print pointer address:
                     // const char * blob_value = message.getBlob(i)->getValue();
                     // os << &blob_value;
-                    os << message.getBlob(i)->getHex();
+                    os << "0x" << message.getBlob(i)->getHex();
                     break;
                 }
             defaut:
@@ -484,7 +494,7 @@ std::ostream &operator<<(std::ostream &os, const Message &message)
         if (i < (message.getSize() - 1))
             os << ", ";
     }
-    os << ")";
+    os << "]";
     return os;
 }
 
