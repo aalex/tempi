@@ -38,8 +38,10 @@ const char * const Node::ATTRIBUTES_SET_METHOD_SELECTOR = "set";
 const char * const Node::ATTRIBUTES_SET_OUTPUT_PREFIX = "set";
 const char * const Node::ATTRIBUTE_LOG = "__log__";
 const char * const Node::INLET_CREATED_SIGNAL = "__create_inlet__";
+// called BEFORE it is actually deleted
 const char * const Node::INLET_DELETED_SIGNAL = "__delete_inlet__";
 const char * const Node::OUTLET_CREATED_SIGNAL = "__create_outlet__";
+// called BEFORE it is actually deleted
 const char * const Node::OUTLET_DELETED_SIGNAL = "__delete_outlet__";
 const char * const Node::INLET_CALL = "__call__";
 const char * const Node::OUTLET_RETURN = "__return__";
@@ -628,9 +630,9 @@ bool Node::removeOutlet(const char *name)
     std::string nameStr(name);
     if (hasOutlet(name))
     {
-        outlets_.erase(outlets_.find(nameStr));
-        Message message("ss", this->getName().c_str(), name); // node, inlet
+        Message message("ss", this->getName().c_str(), name); // node, outlet
         getSignal(OUTLET_DELETED_SIGNAL)->trigger(message);
+        outlets_.erase(outlets_.find(nameStr));
         return true;
     }
     return false;
@@ -641,9 +643,9 @@ bool Node::removeInlet(const char *name)
     std::string nameStr(name);
     if (hasInlet(name))
     {
-        inlets_.erase(inlets_.find(nameStr));
         Message message("ss", this->getName().c_str(), name); // node, inlet
         getSignal(INLET_DELETED_SIGNAL)->trigger(message);
+        inlets_.erase(inlets_.find(nameStr));
         return true;
     }
     return false;

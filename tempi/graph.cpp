@@ -28,6 +28,28 @@
 namespace tempi
 {
 
+static std::string connectionVecToString(const std::vector<Graph::Connection> &vec)
+{
+    std::ostringstream os;
+    os << "[";
+    std::vector<Graph::Connection>::const_iterator iter;
+    for (iter = vec.begin(); iter != vec.end(); ++iter)
+    {
+        os << "\"";
+        os << (*iter).get<0>();
+        os << ":";
+        os << (*iter).get<1>();
+        os << "->";
+        os << (*iter).get<2>();
+        os << ":";
+        os << (*iter).get<3>();
+        os << "\"";
+        os << ", ";
+    }
+    os << "]";
+    return os.str();
+}
+
 static std::vector<Graph::Connection>::iterator find_connection(std::vector<Graph::Connection> &connections, const char *from, const char *outlet, const char *to, const char *inlet);
 
 Graph::Graph(NodeFactory::ptr factory) :
@@ -102,11 +124,12 @@ bool Graph::addNode(const char *type, const char *name)
         os << "Graph." << __FUNCTION__ << ": This NodeFactory doesn't have type " << type;
         //os << "Graph::" << __FUNCTION__ << ": Look:" << std::endl;
         //os << "Graph::" << __FUNCTION__ << ": " << *factory_.get();
-        Logger::log(ERROR, os.str().c_str());
+        Logger::log(ERROR, os);
         return false; // FIXME
     }
 }
 
+// called BEFORE the pad is actually deleted
 void Graph::onInletDeleted(const Message &message)
 {
     std::string node = message.getString(0);
@@ -115,11 +138,32 @@ void Graph::onInletDeleted(const Message &message)
     disconnectMany(connections);
 }
 
+// called BEFORE the pad is actually deleted
 void Graph::onOutletDeleted(const Message &message)
 {
+    if (Logger::isEnabledFor(INFO))
+    {
+        std::ostringstream os;
+        os << "Graph." << __FUNCTION__ << "(" << message << ")";
+        Logger::log(INFO, os);
+    }
     std::string node = message.getString(0);
     std::string outlet = message.getString(1);
+    if (Logger::isEnabledFor(INFO))
+    {
+        std::ostringstream os;
+        os << "Calling getAllConnectedFrom(" << node << ", " << outlet << ")";
+        Logger::log(INFO, os);
+    }
     ConnectionVec connections = getAllConnectedFrom(node.c_str(), outlet.c_str());
+    if (Logger::isEnabledFor(INFO))
+    {
+        std::ostringstream os;
+        os << "Calling disconnectMany(";
+        os << connectionVecToString(connections);
+        os << ")";
+        Logger::log(INFO, os);
+    }
     disconnectMany(connections);
 }
 
@@ -130,14 +174,14 @@ bool Graph::message(const char *node, const char *inlet, const Message &message)
     {
         std::ostringstream os;
         os << "Graph." << __FUNCTION__ << ": No such node: " << node;
-        Logger::log(ERROR, os.str().c_str());
+        Logger::log(ERROR, os);
         return false;
     }
     else if (inlet == 0)
     {
         std::ostringstream os;
         os << "Graph." << __FUNCTION__ << ": Null inlet string name ! ";
-        Logger::log(ERROR, os.str().c_str());
+        Logger::log(ERROR, os);
         return false;
     }
     if (Logger::isEnabledFor(DEBUG))
@@ -157,7 +201,7 @@ bool Graph::connect(const char *from, const char *outlet, const char *to, const 
     {
         std::ostringstream os;
         os << "Graph." << __FUNCTION__ << ": Cannot find node \"" << from << "\".";
-        Logger::log(ERROR, os.str().c_str());
+        Logger::log(ERROR, os);
         return false;
     }
     Node::ptr toNode = getNode(to);
@@ -165,7 +209,7 @@ bool Graph::connect(const char *from, const char *outlet, const char *to, const 
     {
         std::ostringstream os;
         os << "Graph." << __FUNCTION__ << ": Cannot find node \"" << to << "\".";
-        Logger::log(ERROR, os.str().c_str());
+        Logger::log(ERROR, os);
         return false;
     }
 
@@ -173,21 +217,21 @@ bool Graph::connect(const char *from, const char *outlet, const char *to, const 
     {
         std::ostringstream os;
         os << "Graph." << __FUNCTION__ << ": Null inlet/outlet!!";
-        Logger::log(ERROR, os.str().c_str());
+        Logger::log(ERROR, os);
         return false;
     }
     if (! fromNode->hasOutlet(outlet))
     {
         std::ostringstream os;
         os << "Graph." << __FUNCTION__ << ": Outlet " << outlet << " not found in " << from << ".";
-        Logger::log(ERROR, os.str().c_str());
+        Logger::log(ERROR, os);
         return false;
     }
     if (! toNode->hasInlet(inlet))
     {
         std::ostringstream os;
         os << "Graph." << __FUNCTION__ << ": Inlet " << inlet << " not found in " << to << ".";
-        Logger::log(ERROR, os.str().c_str());
+        Logger::log(ERROR, os);
         return false;
     }
     if (this->isConnected(from, outlet, to, inlet))
@@ -196,7 +240,7 @@ bool Graph::connect(const char *from, const char *outlet, const char *to, const 
         os << "Graph." << __FUNCTION__ << ": Already connected " <<
             from << ":" << outlet << "->" <<
             to << ":" << inlet;
-        Logger::log(ERROR, os.str().c_str());
+        Logger::log(ERROR, os);
         return false;
     }
     try
@@ -207,7 +251,7 @@ bool Graph::connect(const char *from, const char *outlet, const char *to, const 
     {
         std::ostringstream os;
         os << "Graph." << __FUNCTION__ << ": " << e.what();
-        Logger::log(ERROR, os.str().c_str());
+        Logger::log(ERROR, os);
         return false;
     }
     connections_.push_back(Connection(std::string(from), std::string(outlet), std::string(to), std::string(inlet)));
@@ -216,25 +260,32 @@ bool Graph::connect(const char *from, const char *outlet, const char *to, const 
         std::ostringstream os;
         os << "Graph." << __FUNCTION__ << "(" <<
             from << ":" << outlet << ", " << to << ":" << inlet << ")";
-        Logger::log(DEBUG, os.str().c_str());
+        Logger::log(DEBUG, os);
     }
     return true;
 }
 
 bool Graph::isConnected(const char *from, const char *outlet, const char *to, const char *inlet)
 {
+    if (Logger::isEnabledFor(DEBUG))
+    {
+        std::ostringstream os;
+        os << "Graph." << __FUNCTION__ << "(" <<
+            from << ":" << outlet << ", " << to << ":" << inlet << ")";
+        Logger::log(DEBUG, os);
+    }
     if (! hasNode(from))
     {
         std::ostringstream os;
         os << "Graph." << __FUNCTION__ << ": Cannot find node \"" << from << "\".";
-        Logger::log(ERROR, os.str().c_str());
+        Logger::log(ERROR, os);
         return false;
     }
     if (! hasNode(to))
     {
         std::ostringstream os;
         os << "Graph." << __FUNCTION__ << ": Cannot find node \"" << to << "\".";
-        Logger::log(ERROR, os.str().c_str());
+        Logger::log(ERROR, os);
         return false;
     }
     std::vector<Connection>::const_iterator iter;
@@ -260,7 +311,6 @@ bool Graph::disconnect(const char *from, const char *outlet, const char *to, con
         // no need to catch BadIndexException sinze already tested it
         Outlet::ptr source = fromNode->getOutletSharedPtr(outlet);
         Inlet *inletPtr = toNode->getInlet(inlet);
-
 
         bool success = inletPtr->disconnect(source);
 
@@ -365,6 +415,12 @@ std::vector<Graph::Connection> Graph::getAllConnectedTo(const char *name, const 
 
 std::vector<Graph::Connection> Graph::getAllConnectedFrom(const char *name, const char *outlet)
 {
+    if (Logger::isEnabledFor(DEBUG))
+    {
+        std::ostringstream os;
+        os << "Graph." << __FUNCTION__ << "(" << name << ", " << outlet << ")";
+        Logger::log(DEBUG, os);
+    }
     std::vector<Connection> ret;
     std::vector<Connection>::const_iterator iter;
     for (iter = connections_.begin(); iter != connections_.end(); ++iter)
@@ -373,8 +429,21 @@ std::vector<Graph::Connection> Graph::getAllConnectedFrom(const char *name, cons
             (*iter).get<1>() == outlet)
         {
             ret.push_back(*iter);
+            if (Logger::isEnabledFor(DEBUG))
+            {
+                std::ostringstream os;
+                os << "Graph." << __FUNCTION__ << "(" << name << ", " << outlet << ")";
+                os << " ret.push_back(";
+                os << (*iter).get<0>() << ",";
+                os << (*iter).get<1>() << ",";
+                os << (*iter).get<2>() << ",";
+                os << (*iter).get<3>();
+                os << ")";
+                Logger::log(DEBUG, os);
+            }
         }
     }
+    return ret;
 }
 
 std::vector<Graph::Connection> Graph::getAllConnectedTo(const char *name)
@@ -400,6 +469,18 @@ std::vector<Graph::Connection> Graph::getAllConnectedFrom(const char *name)
         if ((*iter).get<0>() == name)
         {
             ret.push_back(*iter);
+
+            if (Logger::isEnabledFor(DEBUG))
+            {
+                std::ostringstream os;
+                os << "Graph." << __FUNCTION__ << "(" << name << ")";
+                os << " : Found ";
+                os << (*iter).get<0>() << ",";
+                os << (*iter).get<1>() << ",";
+                os << (*iter).get<2>() << ",";
+                os << (*iter).get<3>();
+                Logger::log(DEBUG, os);
+            }
         }
     }
     return ret;
@@ -418,7 +499,7 @@ bool Graph::deleteNode(const char *name)
     {
         std::ostringstream os;
         os << "Graph." << __FUNCTION__ << ": Cannot find node " << name << ".";
-        Logger::log(ERROR, os.str().c_str());
+        Logger::log(ERROR, os);
         return false;
     }
     else
@@ -446,7 +527,7 @@ bool Graph::setNodeAttribute(const char *nodeName, const char *attributeName, co
     {
         std::ostringstream os;
         os << "Graph." << __FUNCTION__ << ": No such node: " << nodeName;
-        Logger::log(ERROR, os.str().c_str());
+        Logger::log(ERROR, os);
         return false;
     }
     try
@@ -461,7 +542,7 @@ bool Graph::setNodeAttribute(const char *nodeName, const char *attributeName, co
         os << "Graph." << __FUNCTION__ << "(" <<
             nodeName << ", " << attributeName << ", " << value
             << "): " << e.what();
-        Logger::log(ERROR, os.str().c_str());
+        Logger::log(ERROR, os);
         return false;
     }
     catch (const BadAtomTypeException &e)
@@ -471,7 +552,7 @@ bool Graph::setNodeAttribute(const char *nodeName, const char *attributeName, co
         os << "Graph." << __FUNCTION__ << "(" <<
             nodeName << ", " << attributeName << ", " << value
             << "): " << e.what();
-        Logger::log(ERROR, os.str().c_str());
+        Logger::log(ERROR, os);
         return false;
     }
 }
@@ -513,36 +594,59 @@ std::ostream &operator<<(std::ostream &os, const Graph &graph)
 
 void Graph::disconnectMany(ConnectionVec &connections)
 {
+    if (Logger::isEnabledFor(DEBUG))
+    {
+        std::ostringstream os;
+        os << "Graph." << __FUNCTION__ << "(";
+        os << "disconnectMany(";
+        os << connectionVecToString(connections);
+        os << ")";
+        Logger::log(DEBUG, os);
+    }
+
     ConnectionVec::const_iterator iter;
     for (iter = connections.begin(); iter != connections.end(); ++iter)
     {
         Connection conn = (*iter);
-        disconnect(conn.get<0>().c_str(), conn.get<1>().c_str(), conn.get<2>().c_str(), conn.get<3>().c_str());
+
+        if (Logger::isEnabledFor(DEBUG))
+        {
+            std::ostringstream os;
+            os << "Graph." << __FUNCTION__ << "(";
+            os << "disconnect(";
+            os << conn.get<0>() << ",";
+            os << conn.get<1>() << ",";
+            os << conn.get<2>() << ",";
+            os << conn.get<3>();
+            os << ")";
+            Logger::log(DEBUG, os);
+        }
+        this->disconnect(conn.get<0>().c_str(), conn.get<1>().c_str(), conn.get<2>().c_str(), conn.get<3>().c_str());
     }
 }
 
 void Graph::disconnectAllConnectedFrom(const char *name, const char *outlet)
 {
-    ConnectionVec connections = getAllConnectedFrom(name, outlet);
-    disconnectMany(connections);
+    ConnectionVec connections = this->getAllConnectedFrom(name, outlet);
+    this->disconnectMany(connections);
 }
 
 void Graph::disconnectAllConnectedFrom(const char *name)
 {
-    ConnectionVec connections = getAllConnectedFrom(name);
-    disconnectMany(connections);
+    ConnectionVec connections = this->getAllConnectedFrom(name);
+    this->disconnectMany(connections);
 }
 
 void Graph::disconnectAllConnectedTo(const char *name)
 {
-    ConnectionVec connections = getAllConnectedTo(name);
-    disconnectMany(connections);
+    ConnectionVec connections = this->getAllConnectedTo(name);
+    this->disconnectMany(connections);
 }
 
 void Graph::disconnectAllConnectedTo(const char *name, const char *inlet)
 {
-    ConnectionVec connections = getAllConnectedTo(name, inlet);
-    disconnectMany(connections);
+    ConnectionVec connections = this->getAllConnectedTo(name, inlet);
+    this->disconnectMany(connections);
 }
 
 void Graph::setScheduler(Scheduler *scheduler)
