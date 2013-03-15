@@ -336,6 +336,12 @@ bool tryAutoCast(const Message &source, Message &result, const std::string &expe
                         else
                             result.appendBoolean(true);
                         break;
+                    case FLOAT:
+                        if (source.getFloat(i) < 0.9 && source.getFloat(i) > -0.9)
+                            result.appendBoolean(false);
+                        else
+                            result.appendBoolean(true);
+                        break;
                     case BOOLEAN: result.appendBoolean(source.getBoolean(i)); break;
                     default: return false; break;
                 }
