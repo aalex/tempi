@@ -108,7 +108,7 @@ void MidiSenderNode::processMessage(const char *inlet, const Message &message)
         }
         if (event.size() == 3)
         {
-            bool ok = midi_output_->send_message_to_output (port_,event[0],event[1],event[2]);
+            bool ok = midi_output_->send_message_to_output(port_, event[0], event[1], event[2]);
             if (! ok)
             {
                 std::ostringstream os;
