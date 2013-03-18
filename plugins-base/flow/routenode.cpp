@@ -79,7 +79,7 @@ void RouteNode::processMessage(const char *inlet, const Message &message)
         }
         return;
     }
-    Message ret = message.cloneRange(selector_index, message.getSize() - selector_index);
+    Message ret = message.cloneRange(selector_index + 1, message.getSize() - (selector_index + 1));
 
     if (Logger::isEnabledFor(DEBUG))
     {
