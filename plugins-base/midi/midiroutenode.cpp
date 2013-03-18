@@ -41,10 +41,10 @@ MidiRouteNode::MidiRouteNode() :
 void MidiRouteNode::processMessage(const char *inlet, const Message &message)
 {
     using namespace midi_utilities;
-    if (! message.indexMatchesType(0, 'C'))
+    if (! message.indexMatchesType(0, 'i'))
     {
         std::ostringstream os;
-        os << "MidiRouteNode::" << __FUNCTION__ << ": First atom should be an unsigned char: " << message;
+        os << "MidiRouteNode::" << __FUNCTION__ << ": First atom should be an int: " << message;
         Logger::log(ERROR, os);
         return;
     }
@@ -63,7 +63,7 @@ void MidiRouteNode::processMessage(const char *inlet, const Message &message)
         case MIDINOTEON:
         case MIDINOTEOFF:
         {
-            if (! message.typesMatch("CCC"))
+            if (! message.typesMatch("iii"))
             {
                 std::ostringstream os;
                 os << "Note on/off messages should have 3 atoms:" << message;
@@ -82,7 +82,7 @@ void MidiRouteNode::processMessage(const char *inlet, const Message &message)
         }
         case MIDICONTROLCHANGE:
         {
-            if (! message.typesMatch("CCC"))
+            if (! message.typesMatch("iii"))
             {
                 std::ostringstream os;
                 os << "Control change messages should have 3 atoms:" << message;
@@ -109,7 +109,7 @@ void MidiRouteNode::processMessage(const char *inlet, const Message &message)
         }
         case MIDIPITCHBEND:
         {
-            if (! message.typesMatch("CCC"))
+            if (! message.typesMatch("iii"))
             {
                 std::ostringstream os;
                 os << "MidiRouteNode: Pitch bend messages should have 3 atoms: " << message;
