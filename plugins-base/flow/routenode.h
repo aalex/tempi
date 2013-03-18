@@ -41,6 +41,7 @@ class RouteNode : public Node
         RouteNode();
         static const char * const INPUT_INLET;
         static const char * const SELECTORS_ATTR;
+        static const char * const INDEX_ATTR;
     protected:
         virtual void processMessage(const char *inlet, const Message &message);
         virtual bool onNodeAttributeChanged(const char *name, const Message &value);

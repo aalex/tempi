@@ -29,11 +29,13 @@ namespace plugins_base {
 
 const char * const RouteNode::INPUT_INLET = "0";
 const char * const RouteNode::SELECTORS_ATTR = "selectors";
+const char * const RouteNode::INDEX_ATTR = "index";
 
 RouteNode::RouteNode() :
     Node()
 {
     addAttribute(Attribute::ptr(new Attribute(SELECTORS_ATTR, Message(), "List of string that first atom must match in order to be output via the corresponding outlet.", false)));
+    addAttribute(Attribute::ptr(new Attribute(INDEX_ATTR, Message("i", 0), "Index of the selector to consider in incoming messages. All the values before and including it are discarded.")));
     if (Logger::isEnabledFor(DEBUG))
     {
         Logger::log(DEBUG, "[RouteNode] constructor: selectors = ()");
@@ -44,7 +46,7 @@ RouteNode::RouteNode() :
 
 void RouteNode::processMessage(const char *inlet, const Message &message)
 {
-    static const unsigned int selector_index = 0;
+    unsigned int selector_index = (unsigned int) (this->getAttributeValue(INDEX_ATTR).getInt(0) % message.getSize());
     std::string selector;
 
     if (! utils::stringsMatch(inlet, INPUT_INLET))
