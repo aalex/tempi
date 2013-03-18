@@ -20,42 +20,66 @@
 
 #include <iostream>
 #include "plugins-base/flow/routenode.h"
+#include <boost/lexical_cast.hpp>
 #include "tempi/utils.h"
 #include "tempi/log.h"
 
 namespace tempi {
 namespace plugins_base {
 
+const char * const RouteNode::INPUT_INLET = "0";
+const char * const RouteNode::SELECTORS_ATTR = "selectors";
+
 RouteNode::RouteNode() :
     Node()
 {
-    addAttribute(Attribute::ptr(new Attribute("selectors", Message(), "List of string that first atom must match in order to be output via the corresponding outlet.", false)));
+    addAttribute(Attribute::ptr(new Attribute(SELECTORS_ATTR, Message(), "List of string that first atom must match in order to be output via the corresponding outlet.", false)));
     if (Logger::isEnabledFor(DEBUG))
     {
         Logger::log(DEBUG, "[RouteNode] constructor: selectors = ()");
     }
-    addInlet("0");
+    addInlet(INPUT_INLET);
     setShortDocumentation("The RouteNode routes messages to its different outlets according to the first string in each message.");
 }
 
 void RouteNode::processMessage(const char *inlet, const Message &message)
 {
-    if (! utils::stringsMatch(inlet, "0"))
+    static const unsigned int selector_index = 0;
+    std::string selector;
+
+    if (! utils::stringsMatch(inlet, INPUT_INLET))
         return;
-    if (message.getSize() == 0)
+    if (message.getSize() < selector_index)
+    {
+        std::ostringstream os;
+        os << "[RouteNode] processMessage: (node \"" << this->getName() << "\") Not enough atoms in message: " << message;
+        Logger::log(ERROR, os);
         return;
-    if (! message.indexMatchesType(0, 's'))
+    }
+
+    if (message.indexMatchesType(selector_index, 's'))
+    {
+        selector = message.getString(selector_index);
+    }
+    else if (message.indexMatchesType(selector_index, 'i'))
+    {
+        selector = boost::lexical_cast<std::string>(message.getInt(selector_index));
+    }
+    else if (message.indexMatchesType(selector_index, 'f'))
+    {
+        selector = boost::lexical_cast<std::string>(message.getFloat(selector_index));
+    }
+    else
     {
         if (Logger::isEnabledFor(WARNING))
         {
             std::ostringstream os;
-            os << "[RouteNode] processMessage: (node \"" << this->getName() << "\") First atom is not a string: " << message;
+            os << "[RouteNode] processMessage: (node \"" << this->getName() << "\") First atom is not the right type: " << message;
             Logger::log(WARNING, os);
         }
         return;
     }
-    std::string selector = message.getString(0);
-    Message ret = message.cloneRange(1, message.getSize() - 1);
+    Message ret = message.cloneRange(selector_index, message.getSize() - selector_index);
 
     if (Logger::isEnabledFor(DEBUG))
     {
@@ -70,7 +94,7 @@ void RouteNode::processMessage(const char *inlet, const Message &message)
         if (Logger::isEnabledFor(NOTICE))
         {
             std::ostringstream os;
-            os << "[RouteNode] processMessage: No selector named like first atom:  " << message;
+            os << "[RouteNode] processMessage: No selector named " << selector;
             Logger::log(NOTICE, os);
         }
     }
