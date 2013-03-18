@@ -101,7 +101,7 @@ static double round(double r, unsigned int places)
     }
     else
     {
-        double off = std::pow(10, places);
+        double off = std::pow(10, (double) places);
         return cint(r * off) / off;
     }
 }
