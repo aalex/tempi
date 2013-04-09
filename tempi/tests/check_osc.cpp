@@ -5,6 +5,7 @@
 #include "tempi/message.h"
 #include "tempi/oscsender.h"
 #include "tempi/oscreceiver.h"
+#include "tempi/log.h"
 
 using namespace tempi;
 
@@ -99,6 +100,8 @@ bool check_send_and_receive()
 
 int main(int argc, char *argv[])
 {
+    if (VERBOSE)
+        tempi::Logger::getInstance().setLevel(tempi::DEBUG);
     //if (! check_oscsender())
     //    return 1;
     //if (! check_oscreceiver())

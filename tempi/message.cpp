@@ -393,13 +393,28 @@ bool Message::operator!=(const Message &other) const
 
 static bool doublesMatch(double left, double right)
 {
-    return std::fabs(left - right) < std::numeric_limits<double>::epsilon();
+    // FIXME
+    //using std::fabs;
+    static const double epsilon = std::numeric_limits<double>::epsilon() + 0.0001;
+    //std::cout << "epsilon: " << epsilon << std::endl;
+    double a = left;
+    double b = right;
+    //double ulp = 2.0;
+    //return fabs(a - b) <= ( (fabs(a) < fabs(b) ? fabs(b) : fabs(a)) * epsilon);
+    return std::abs(left - right) < epsilon;
+    //return std::abs(a - b) <=  epsilon * std::max(std::abs(a), std::abs(b)) * ulp;
 }
 
 bool Message::operator==(const Message &other) const
 {
     if (getTypes() != other.getTypes())
     {
+        if (Logger::isEnabledFor(DEBUG))
+        {
+            std::ostringstream os;
+            os << "Message::operator==" << ": " << "Types don't match: " << other << " to " << (*this);
+            Logger::log(DEBUG, os);
+        }
         return false;
     }
     for (Index i = 1; i < getSize(); ++i)
@@ -410,33 +425,81 @@ bool Message::operator==(const Message &other) const
         {
             case BOOLEAN:
                 if (getBoolean(i) != other.getBoolean(i))
+                {
+                    if (Logger::isEnabledFor(DEBUG))
+                    {
+                        std::ostringstream os;
+                        os << "Message::operator==" << ": " << "boolean don't match: " << other << " to " << (*this);
+                        Logger::log(DEBUG, os);
+                    }
                     return false;
+                }
                 break;
             case NONE:
                 // always matches
                 break;
             case FLOAT:
                 if (! doublesMatch(getFloat(i), other.getFloat(i)))
+                {
+                    if (Logger::isEnabledFor(DEBUG))
+                    {
+                        std::ostringstream os;
+                        os << "Message::operator==" << ": " << "float don't match: " << other << " to " << (*this);
+                        Logger::log(DEBUG, os);
+                    }
                     return false;
+                }
                 break;
             case INT:
                 if (getInt(i) != other.getInt(i))
+                {
+                    if (Logger::isEnabledFor(DEBUG))
+                    {
+                        std::ostringstream os;
+                        os << "Message::operator==" << ": " << "int don't match: " << other << " to " << (*this);
+                        Logger::log(DEBUG, os);
+                    }
                     return false;
+                }
                 break;
             case STRING:
                 if (getString(i) != other.getString(i))
+                {
+                    if (Logger::isEnabledFor(DEBUG))
+                    {
+                        std::ostringstream os;
+                        os << "Message::operator==" << ": " << "string don't match: " << other << " to " << (*this);
+                        Logger::log(DEBUG, os);
+                    }
                     return false;
+                }
                 break;
             case POINTER:
                 if (getPointer(i) != other.getPointer(i))
+                {
+                    if (Logger::isEnabledFor(DEBUG))
+                    {
+                        std::ostringstream os;
+                        os << "Message::operator==" << ": " << "pointer don't match: " << other << " to " << (*this);
+                        Logger::log(DEBUG, os);
+                    }
                     return false;
+                }
                 break;
             case BLOB:
                 {
                     atom::BlobValue::ptr left = getBlob(i);
                     atom::BlobValue::ptr right = other.getBlob(i);
                     if (left != right)
+                    {
+                        if (Logger::isEnabledFor(DEBUG))
+                        {
+                            std::ostringstream os;
+                            os << "Message::operator==" << ": " << "blob don't match: " << other << " to " << (*this);
+                            Logger::log(DEBUG, os);
+                        }
                         return false;
+                    }
                     break;
                 }
             defaut:

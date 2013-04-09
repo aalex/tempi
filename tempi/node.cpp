@@ -50,6 +50,8 @@ const char * const Node::ATTRIBUTE_DATA = "__data__";
 
 Node::Node()
 {
+    this->graph_ = 0; // The Graph who owns this will set himself up later.
+
     load_banged_ = false;
     // XXX: Add Signals BEFORE adding inlets/outlets!
     addSignal(EntitySignal::ptr(new EntitySignal(OUTLET_DELETED_SIGNAL,
