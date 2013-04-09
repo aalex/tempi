@@ -632,13 +632,12 @@ bool Wrapper::getNode(const std::string &graph, const std::string &nodeName, Nod
 
 bool Wrapper::sleep(double duration_ms)
 {
-    boost::posix_time::milliseconds sleepTime(duration_ms);
-    boost::this_thread::sleep(sleepTime);
+    utils::sleep_ms(duration_ms);
 }
 
-bool Wrapper::waitUntilAllNodesAreInitiated(const std::string &graph)
+bool Wrapper::waitUntilNodesAreInitiated(const std::string &graph, const std::vector<std::string> &nodes)
 {
-    static const double SLEEP_MS = 15.0;
+    static const double SLEEP_MS = 5.0; // used to be 15.0
     // check for graph:
     {
         tempi::ScopedLock::ptr lock = scheduler_->acquireLock();
@@ -655,39 +654,53 @@ bool Wrapper::waitUntilAllNodesAreInitiated(const std::string &graph)
     while (true)
     {
         bool all_ready = true;
-        // FIXME: listNodes acquires the lock so we should not acquire it here:
-        std::vector<std::string> nodes = this->listNodes(graph);
-        // FIXME: getNode does not acquire the lock!!
-        tempi::ScopedLock::ptr lock = scheduler_->acquireLock();
-        std::vector<std::string>::const_iterator node;
         std::vector<std::string> not_ready_nodes;
-        for (node = nodes.begin(); node != nodes.end(); node++)
-        {
-            tempi::Node::ptr nodePtr;
-            bool success = this->getNode(graph, *node, nodePtr);
-            if (success)
+        // The TreadedScheduler cannot acquire the lock in order to tick and then
+        // init the nodes if we own the lock!
+
+        { // scope for the lock
+            // FIXME: listNodes acquires the lock so we should not acquire it here:
+            // FIXME: getNode does not acquire the lock!!
+            tempi::ScopedLock::ptr lock = scheduler_->acquireLock();
+            std::vector<std::string>::const_iterator node;
+            for (node = nodes.begin(); node != nodes.end(); node++)
             {
-                if (! nodePtr->isInitiated())
+                tempi::Node::ptr nodePtr;
+                bool success = this->getNode(graph, *node, nodePtr);
+                if (success)
                 {
-                    all_ready = false;
-                    if (Logger::isEnabledFor(DEBUG))
+                    if (nodePtr.get() != 0) // just to get rid the warning indicated below
                     {
-                        not_ready_nodes.push_back(*node);
+                        // alleyoop warning: 
+                        // Conditional move depends on unitialised value(s)
+                        // (nodePtr below)
+                        if (! nodePtr->isInitiated())
+                        {
+                            all_ready = false;
+                            if (Logger::isEnabledFor(DEBUG))
+                            {
+                                not_ready_nodes.push_back(*node);
+                            }
+                        }
                     }
                 }
-            }
-        }
+            } // for
+        } // scope for the lock
 
         if (Logger::isEnabledFor(DEBUG))
         {
-            std::ostringstream os;
-            os << "Wrapper." << __FUNCTION__ <<
-                "(" << graph << ") Not ready: ";
-            for (node = not_ready_nodes.begin(); node != not_ready_nodes.end(); node++)
+            if (not_ready_nodes.size() != 0)
             {
-                os << *node << " ";
+                std::ostringstream os;
+                os << "Wrapper." << __FUNCTION__ <<
+                    "(" << graph << ") Not ready: ";
+                std::vector<std::string>::const_iterator node;
+                for (node = not_ready_nodes.begin(); node != not_ready_nodes.end(); node++)
+                {
+                    os << *node << " ";
+                }
+                Logger::log(DEBUG, os);
             }
-            Logger::log(DEBUG, os);
         }
         if (all_ready)
         {
@@ -700,10 +713,31 @@ bool Wrapper::waitUntilAllNodesAreInitiated(const std::string &graph)
             }
             break;
         }
-        this->sleep(SLEEP_MS);
+        else
+            this->sleep(SLEEP_MS);
     } // while
 
     return true;
+}
+
+bool Wrapper::waitUntilAllNodesAreInitiated(const std::string &graph)
+{
+    static const double SLEEP_MS = 5.0; // used to be 15.0
+    // check for graph:
+    {
+        tempi::ScopedLock::ptr lock = scheduler_->acquireLock();
+        if (! scheduler_->hasGraph(graph.c_str()))
+        {
+            std::ostringstream os;
+            os << "Wrapper." << __FUNCTION__ <<
+                ": no graph \"" << graph << "\"";
+            Logger::log(ERROR, os);
+            return false;
+        }
+    }
+
+    std::vector<std::string> nodes = this->listNodes(graph);
+    return this->waitUntilNodesAreInitiated(graph, nodes);
 }
 
 bool Wrapper::getNodeDocumentation(

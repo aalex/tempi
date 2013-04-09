@@ -107,6 +107,8 @@ bool isValidAtomType(const char c);
 Message castMessage(const Message &message, const char *type)
     throw(BadAtomTypeException, BadIndexException);
 
+void sleep_ms(double duration_ms);
+
 bool tryAutoCast(const Message &source, Message &result, const std::string &expected_type_tags);
 } // end of namespace
 } // end of namespace

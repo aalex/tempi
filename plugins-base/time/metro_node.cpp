@@ -18,7 +18,7 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "plugins-base/flow/metro_node.h"
+#include "plugins-base/time/metro_node.h"
 #include "tempi/timeposition.h"
 #include "tempi/log.h"
 

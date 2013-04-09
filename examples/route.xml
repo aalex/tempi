@@ -13,10 +13,14 @@
     <node name="prepend_bar" class="base.flow.prepend">
       <attribute name="value"><s>bar</s></attribute>
     </node>
+    <node name="prepend_1" class="base.flow.prepend">
+      <attribute name="value"><i>1</i></attribute>
+    </node>
     <node name="route0" class="base.flow.route">
       <attribute name="selectors">
         <s>foo</s>
         <s>bar</s>
+        <s>1</s>
       </attribute>
     </node>
     <node name="print_foo" class="base.flow.print">
@@ -27,13 +31,20 @@
       <attribute name="prefix"><s>bar: </s></attribute>
       <attribute name="enabled"><b>1</b></attribute>
     </node>
+    <node name="print_1" class="base.flow.print">
+      <attribute name="prefix"><s>1: </s></attribute>
+      <attribute name="enabled"><b>1</b></attribute>
+    </node>
     <connection from="metro0" outlet="0" to="counter0" inlet="0"/>
     <connection from="counter0" outlet="0" to="prepend_foo" inlet="0"/>
     <connection from="counter0" outlet="0" to="prepend_bar" inlet="0"/>
+    <connection from="counter0" outlet="0" to="prepend_1" inlet="0"/>
     <connection from="prepend_foo" outlet="0" to="route0" inlet="0"/>
     <connection from="prepend_bar" outlet="0" to="route0" inlet="0"/>
+    <connection from="prepend_1" outlet="0" to="route0" inlet="0"/>
     <!-- <connection from="prepend_foo" outlet="0" to="print_foo" inlet="0"/> -->
     <connection from="route0" outlet="foo" to="print_foo" inlet="0"/>
     <connection from="route0" outlet="bar" to="print_bar" inlet="0"/>
+    <connection from="route0" outlet="1" to="print_1" inlet="0"/>
   </graph>
 </tempi>

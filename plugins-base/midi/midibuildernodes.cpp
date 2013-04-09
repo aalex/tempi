@@ -66,9 +66,9 @@ bool NoteBuilderNode::buildMidiEvent(const std::vector<int>& ints, Message &resu
             this->setAttributeValue(CHANNEL_ATTR, channel);
     }
     
-    result.appendUnsignedChar((unsigned char) this->getAttributeValue(CHANNEL_ATTR).getInt(0) - 1 + 0x90);
-    result.appendUnsignedChar((unsigned char) clip(note_, 0, 127));
-    result.appendUnsignedChar((unsigned char) clip(velocity_, 0, 127));
+    result.appendInt(this->getAttributeValue(CHANNEL_ATTR).getInt(0) - 1 + 0x90);
+    result.appendInt(clip(note_, 0, 127));
+    result.appendInt(clip(velocity_, 0, 127));
     return true;
 }
 
@@ -128,9 +128,9 @@ bool ControlBuilderNode::buildMidiEvent(const std::vector<int>& ints, Message &r
         Logger::log(DEBUG, os);
     }
 
-    result.appendUnsignedChar((unsigned char) this->getAttributeValue(CHANNEL_ATTR).getInt(0) - 1 + 0xB0);
-    result.appendUnsignedChar((unsigned char) this->getAttributeValue(CTL_ATTR).getInt(0));
-    result.appendUnsignedChar((unsigned char) clip(value_, 0, 127));
+    result.appendInt(this->getAttributeValue(CHANNEL_ATTR).getInt(0) - 1 + 0xB0);
+    result.appendInt(this->getAttributeValue(CTL_ATTR).getInt(0));
+    result.appendInt(clip(value_, 0, 127));
     return true;
 }
 
@@ -158,8 +158,8 @@ bool ProgramChangeBuilderNode::buildMidiEvent(const std::vector<int>& ints, Mess
             this->setAttributeValue(CHANNEL_ATTR, channel);
     }
 
-    result.appendUnsignedChar((unsigned char) this->getAttributeValue(CHANNEL_ATTR).getInt(0) - 1 + 0xC0);
-    result.appendUnsignedChar((unsigned char) clip(program_, 0, 127));
+    result.appendInt((unsigned char) this->getAttributeValue(CHANNEL_ATTR).getInt(0) - 1 + 0xC0);
+    result.appendInt((unsigned char) clip(program_, 0, 127));
     return true;
 }
 } // end of namespace

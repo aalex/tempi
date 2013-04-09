@@ -91,12 +91,14 @@ tempi/tempi-version.h
 tempi/tempi.pyste
 tempi/tests/check_average
 tempi/tests/check_base
+tempi/tests/check_dynamicpatching
 tempi/tests/check_fsm
 tempi/tests/check_graph
 tempi/tests/check_libraries
 tempi/tests/check_log
 tempi/tests/check_math
 tempi/tests/check_message
+tempi/tests/check_namevalidator
 tempi/tests/check_node
 tempi/tests/check_nodefactory
 tempi/tests/check_osc

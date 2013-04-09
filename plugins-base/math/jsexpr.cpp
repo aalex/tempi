@@ -99,17 +99,11 @@ bool messageToJavascript(const Message &message, std::string &result)
                 else
                     os << "false";
                 break;
-            case tempi::DOUBLE:
-                os << message.getDouble(i);
-                break;
             case tempi::FLOAT:
                 os << message.getFloat(i);
                 break;
             case tempi::INT:
                 os << message.getInt(i);
-                break;
-            case tempi::UNSIGNED_INT:
-                os << message.getUnsignedInt(i);
                 break;
             case tempi::STRING:
                 os << "\"" << message.getString(i) << "\"";
@@ -158,7 +152,7 @@ bool javaScriptToMessage(v8::Local<v8::Value> value, Message &result)
 
         v8::Array *array = v8::Array::Cast(*value);
         unsigned int length = array->Length();
-        std::cout << __FUNCTION__ << ": array length : " << length << std::endl;
+        //std::cout << __FUNCTION__ << ": array length : " << length << std::endl;
 
         for (unsigned int i = 0; i < array->Length(); i++)
         {
@@ -170,7 +164,7 @@ bool javaScriptToMessage(v8::Local<v8::Value> value, Message &result)
                 Logger::log(ERROR, os);
                 return false;
             }
-            std::cout << __FUNCTION__ << " element: " << *element << std::endl;
+            //std::cout << __FUNCTION__ << " element: " << *element << std::endl;
             if (element->IsNumber())
             {
                 double number = v8::NumberObject::Cast(*element)->NumberValue();

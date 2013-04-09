@@ -53,38 +53,44 @@ libtempi_@TEMPI_API_VERSION@_plugins_base_la_includedir = $(includedir)/tempi-$(
 ## PLEASE KEEP THEM IN ALPHABETICAL ORDER
 libtempi_@TEMPI_API_VERSION@_plugins_base_la_SOURCES = \
     3d/3dcomparenode.cpp \
-	abstraction/abstractionnode.cpp \
-	abstraction/inletnode.cpp \
-	abstraction/outletnode.cpp \
+    abstraction/abstractionnode.cpp \
+    abstraction/inletnode.cpp \
+    abstraction/outletnode.cpp \
     baselibrary.cpp \
+    convert/booltointnode.cpp \
     clutter/clutterstagenode.cpp \
-	edit/grapheditornode.cpp \
+    edit/grapheditornode.cpp \
     flow/anynode.cpp \
     flow/appsinknode.cpp \
+    flow/changenode.cpp \
     flow/counternode.cpp \
-    flow/delaynode.cpp \
+    flow/demuxnode.cpp \
     flow/linenode.cpp \
     flow/loadmessnode.cpp \
-    flow/metro_node.cpp \
+    flow/logger_node.cpp \
     flow/nop_node.cpp \
     flow/packnode.cpp \
     flow/prependnode.cpp \
     flow/print_node.cpp \
     flow/routenode.cpp \
+    flow/speedlimnode.cpp \
     flow/spigotnode.cpp \
     flow/splitnode.cpp \
-    flow/typenode.cpp \
     flow/triggernode.cpp \
+    flow/typenode.cpp \
     flow/unpacknode.cpp \
-	mapper/mapperinputnode.cpp \
+    flow/send_and_receive_nodes.cpp \
+    list/pick_indices.cpp \
+    mapper/mapperinputnode.cpp \
     mapping/filter.cpp \
     mapping/slide.cpp \
     mapping/slidefilter.cpp \
+    math/ae.cpp \
     math/booleanoperatornode.cpp \
     math/jsexpr.cpp \
-    math/luaexpr.cpp \
     math/lmathx.cpp \
-    math/ae.cpp \
+    math/luaexpr.cpp \
+    math/abstract_math_node.cpp \
     math/onefloatmathnode.cpp \
     math/twofloatmathnode.cpp \
     midi/abstractmidifilter.cpp \
@@ -105,78 +111,108 @@ libtempi_@TEMPI_API_VERSION@_plugins_base_la_SOURCES = \
     sampler/samplernode.cpp \
     sampler/samplerreadnode.cpp \
     sampler/samplerwritenode.cpp \
+    serial/blobtobytes.cpp \
+    serial/blobutils.cpp \
+    serial/bytestoblobnode.cpp \
     serial/serialdevice.cpp \
     serial/serialdevicenode.cpp \
+    serial/todmxusbpro.cpp \
     string/stringcharactersnode.cpp \
     string/stringjoinnode.cpp \
-    string/stringsplitnode.cpp
+    string/stringsplitnode.cpp \
+    time/clock_node.cpp \
+    time/timernode.cpp \
+    time/cron.cpp \
+    time/cron_node.cpp \
+    time/date_node.cpp \
+    time/delaynode.cpp \
+    time/metro_node.cpp
 
 EXTRA_DIST = \
     3d/3dcomparenode.h \
-	abstraction/abstractionnode.h \
-	abstraction/inletnode.h \
-	abstraction/outletnode.h \
+    abstraction/abstractionnode.h \
+    abstraction/inletnode.h \
+    abstraction/outletnode.h \
     baselibrary.h \
+    convert/booltointnode.h \
     clutter/clutterstagenode.h \
-	edit/grapheditornode.h \
+    edit/grapheditornode.h \
     flow/anynode.h \
     flow/appendnode.h \
     flow/appsinknode.h \
     flow/castnode.h \
+    flow/changenode.h \
     flow/counternode.h \
-    flow/delaynode.h \
+    flow/demuxnode.h \
     flow/dictnode.h \
     flow/linenode.h \
     flow/loadmessnode.h \
-    flow/metro_node.h \
+    flow/logger_node.h \
     flow/nop_node.h \
     flow/packnode.h \
     flow/prependnode.h \
     flow/print_node.h \
     flow/routenode.h \
+    flow/speedlimnode.h \
     flow/spigotnode.h \
     flow/splitnode.h \
-    flow/typenode.h \
     flow/triggernode.h \
+    flow/typenode.h \
     flow/unpacknode.h \
-	mapper/mapperdevice.h \
-	mapper/mapperinputnode.h \
+    flow/send_and_receive_nodes.h \
+    list/pick_indices.h \
+    mapper/mapperdevice.h \
+    mapper/mapperinputnode.h \
     mapping/average.h \
     mapping/filter.h \
     mapping/slide.h \
     mapping/slidefilter.h \
+    math/ae.h \
     math/booleanoperatornode.h \
     math/jsexpr.h \
-    math/luaexpr.h \
     math/lmathx.h \
-    math/ae.h \
+    math/luaexpr.h \
+    math/abstract_math_node.h \
     math/onefloatmathnode.h \
     math/twofloatmathnode.h \
-    music/musicnearestnode.h \
-    music/monodicnode.h \
-    os/shellnode.h \
-    midi/midireceivernode.h \
     midi/abstractmidifilter.h \
     midi/midibuildernodes.h \
     midi/mididevicelistermethod.h \
+    midi/midireceivernode.h \
     midi/midiroutenode.h \
     midi/midisendernode.h \
     midi/midiutilities.h \
+    music/monodicnode.h \
+    music/musicnearestnode.h \
+    os/shellnode.h \
     osc/oscprependnode.h \
     osc/oscreceivernode.h \
     osc/oscroutenode.h \
     osc/oscsendernode.h \
     random/drunkint.h \
-    random/randomintnode.h \
     random/randomdrunknode.h \
+    random/randomintnode.h \
     sampler/samplenode.h \
     sampler/samplernode.h \
     sampler/samplerreadnode.h \
     sampler/samplerwritenode.h \
+    serial/blobtobytes.h \
+    serial/blobutils.h \
+    serial/bytestoblobnode.h \
+    serial/serialdevice.h \
+    serial/serialdevicenode.h \
+    serial/todmxusbpro.h \
     spatosc/spatoscnode.h \
     string/stringcharactersnode.h \
     string/stringjoinnode.h \
-    string/stringsplitnode.h
+    string/stringsplitnode.h \
+    time/clock_node.h \
+    time/timernode.h \
+    time/cron.h \
+    time/cron_node.h \
+    time/date_node.h \
+    time/delaynode.h \
+    time/metro_node.h
 
 # TODO base/receivenode.cpp
 # TODO base/receivenode.h

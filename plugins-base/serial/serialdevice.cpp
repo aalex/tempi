@@ -11,6 +11,7 @@
 #include <unistd.h>
 #include <tempi/timer.h>
 #include <iostream>
+#include "tempi/config.h"
 #include "plugins-base/serial/serialdevice.h"
 #include "tempi/log.h"
 #include <boost/date_time/posix_time/posix_time.hpp>
@@ -18,7 +19,7 @@
 
 using namespace tempi;
 
-bool SerialDevice::writeBlob(const char* data, size_t length)
+bool SerialDevice::writeBlob(const atom::Byte* data, size_t length)
 {
     size_t written = write(fd_, data, length);
     if (written != length) 
@@ -33,12 +34,12 @@ void SerialDevice::sleep_ms(unsigned long long ms) const
     boost::this_thread::sleep(sleepTime);
 }
 
-bool SerialDevice::readUntil(char *result, size_t max_length, size_t &total_num_read, unsigned long long timeout_ms, char until_char, bool use_until_char)
+bool SerialDevice::readUntil(atom::Byte *result, size_t max_length, size_t &total_num_read, unsigned long long timeout_ms, char until_char, bool use_until_char)
 {
     bool success = true;
     tempi::Timer timer;
     unsigned long long elapsed;
-    char b[1];
+    atom::Byte b[1];
     size_t num_read = 0;
     while (true)
     {
@@ -81,6 +82,8 @@ bool SerialDevice::readUntil(char *result, size_t max_length, size_t &total_num_
     //    buf[num_read + 1] = 0;  // null terminate the string
 
     total_num_read = num_read;
+    if (total_num_read == 0)
+        return false;
     return success;
 }
 
@@ -111,6 +114,13 @@ bool SerialDevice::closeDevice()
         int result = close(fd_);
         if (result == 0)
         {
+            if (Logger::isEnabledFor(NOTICE))
+            {
+                std::ostringstream os;
+                os << "SerialDevice." << __FUNCTION__ << ": successfully closed serial device.";
+                tempi::Logger::log(NOTICE, os);
+                return false;
+            }
             return true;
         }
         else
@@ -169,12 +179,16 @@ bool SerialDevice::init_serialport(const char* serialport, int baud)
     fd_ = open(serialport, O_RDWR | O_NOCTTY | O_NDELAY);
     if (fd_ == -1)
     {
-        perror("init_serialport: Unable to open port ");
+        std::ostringstream os;
+        os << "SerialDevice." << __FUNCTION__ << ": Unable to open port ";
+        tempi::Logger::log(tempi::ERROR, os);
         return false;
     }
     if (tcgetattr(fd_, &toptions) < 0)
     {
-        perror("init_serialport: Couldn't get term attributes");
+        std::ostringstream os;
+        os << "SerialDevice." << __FUNCTION__ << ": Couldn't get term attributes";
+        tempi::Logger::log(tempi::ERROR, os);
         return false;
     }
     speed_t brate = baud; // let you override switch below if needed
@@ -192,6 +206,10 @@ bool SerialDevice::init_serialport(const char* serialport, int baud)
         case 38400:  brate = B38400;  break;
         case 57600:  brate = B57600;  break;
         case 115200: brate = B115200; break;
+        case 230400: brate = B230400; break;
+#ifndef HAVE_OSX
+        case 460800: brate = B460800; break;
+#endif // HAVE_OSX
     }
     cfsetispeed(&toptions, brate);
     cfsetospeed(&toptions, brate);
@@ -216,7 +234,9 @@ bool SerialDevice::init_serialport(const char* serialport, int baud)
     
     if (tcsetattr(fd_, TCSANOW, &toptions) < 0)
     {
-        perror("init_serialport: Couldn't set term attributes");
+        std::ostringstream os;
+        os << "SerialDevice." << __FUNCTION__ << ": Couldn't set term attributes";
+        tempi::Logger::log(tempi::ERROR, os);
         return false;
     }
     return true;

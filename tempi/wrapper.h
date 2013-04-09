@@ -179,6 +179,7 @@ class Wrapper
 
         bool sleep(double duration_ms);
         bool waitUntilAllNodesAreInitiated(const std::string &graph);
+        bool waitUntilNodesAreInitiated(const std::string &graph, const std::vector<std::string> &nodes);
 
         bool isConnected(const std::string &graph, const std::string &node_from, const std::string &outlet, const std::string &node_to, const std::string &inlet);
         /**

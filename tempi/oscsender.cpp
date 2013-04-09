@@ -20,6 +20,8 @@
 #include "tempi/oscsender.h"
 #include <sstream>
 #include <string>
+#include <cfloat> // FLT_MAX
+#include <climits> // INT_MAX
 
 namespace tempi {
 namespace osc {
@@ -72,21 +74,25 @@ bool OscSender::sendMessage(const Message &message)
                     lo_message_add_false(loMess);
                 break;
             }
-            case CHAR:
-                lo_message_add_char(loMess, message.getChar(i));
-                break;
-            case DOUBLE:
-                lo_message_add_double(loMess, message.getDouble(i));
-                break;
+            // we don't support char anymore
             case FLOAT:
-                lo_message_add_float(loMess, message.getFloat(i));
+            {
+                Float val = message.getFloat(i);
+                if (val > FLT_MAX)
+                    lo_message_add_double(loMess, (double) val);
+                else
+                    lo_message_add_float(loMess, (float) val);
                 break;
+            }
             case INT:
-                lo_message_add_int32(loMess, message.getInt(i));
+            {
+                Int val = message.getInt(i);
+                if (val > INT_MAX)
+                    lo_message_add_int64(loMess, (int64_t) val);
+                else
+                    lo_message_add_int32(loMess, (int32_t) val);
                 break;
-            case LONG:
-                lo_message_add_int64(loMess, (int64_t) message.getLong(i));
-                break;
+            }
             case STRING:
                 lo_message_add_string(loMess, message.getString(i).c_str());
                 break;

@@ -1,5 +1,4 @@
 SUBDIRS = \
-    tempi-graph-viewer \
     tempi-midi-looper \
     tempi-osc-forward \
     tempi-draw \

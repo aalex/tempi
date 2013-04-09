@@ -14,7 +14,7 @@
 # - increase tempi_interface_version to the next odd number
 m4_define([tempi_major_version], [0])
 m4_define([tempi_minor_version], [3])
-m4_define([tempi_micro_version], [0])
+m4_define([tempi_micro_version], [2])
 
 m4_define([tempi_release_status],
           [m4_if(m4_eval(tempi_micro_version % 2), [1], [git],
@@ -97,8 +97,10 @@ AM_CONDITIONAL([HAVE_DOXYGEN], [test -n "$DOXYGEN"])
 # Special cases, copied from SPIN
 case "$host" in *-darwin* | *-macos10*)
   #AC_LANG_DEFINES_PROVIDED # remove autogen.sh warnings on OSX
+  have_osx=true
   AM_CONDITIONAL([HAVE_OSX], true)
   AC_DEFINE(HAVE_OSX,[1],[Apple Mac OS X operating system detected])
+  AC_MSG_NOTICE([Apple Mac OS X operating system detected])
   LIBTOOL="glibtool"
   SRCDIR=`pwd`
   #LIBTOOL="libtool"
@@ -114,11 +116,14 @@ case "$host" in *-darwin* | *-macos10*)
   # OSX does not include /usr/local/lib/pkgconfig path, so we export it here
   # (for everyone, just in case)
   # TODO: also need to add the path for linux64
-  #PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH:$SRCDIR/pkgconfig/osx
-  #export PKG_CONFIG_PATH
+  PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH
+  export PKG_CONFIG_PATH
   ;;
 *)
   AM_CONDITIONAL([HAVE_OSX], false)
+  dnl : evil:
+  dnl AC_DEFINE(HAVE_OSX,[0],[Apple Mac OS X operating system not detected])
+  AC_MSG_NOTICE([You are not on Apple Mac OS X.])
   ;;
 esac
 
@@ -167,11 +172,13 @@ dnl fi
 AC_CHECK_HEADERS([portmidi.h porttime.h], have_portmidi_headers=true, have_portmidi_headers=false)
 if test "x${have_portmidi_headers}" = "xfalse" ; then
     AC_MSG_ERROR([missing portmidi headers, install libportmidi-dev])
+    dnl It seems it should fail but it doesn't
 fi
-AC_CHECK_LIB([portmidi],[Pm_Initialize], have_portmidi=true, have_portmidi=false)
-if test "x${have_portmidi}" = "xfalse" ; then
-    AC_MSG_ERROR([missing portmidi library, install libportmidi-dev])
-fi
+dnl PORTMIDI: commented out since it doesn't work on GNU/Linux!
+dnl AC_CHECK_LIB([portmidi],[Pm_Initialize], have_portmidi=true, have_portmidi=false)
+dnl if test "x${have_portmidi}" = "xfalse" ; then
+dnl     AC_MSG_ERROR([missing portmidi library, install libportmidi-dev])
+dnl fi
 
 dnl PORTTIME: commented out since it doesn't work on Mac OS X
 dnl since the mac port package is missing the binary for it.
@@ -181,13 +188,16 @@ dnl if test "x${have_porttime}" = "xfalse" ; then
 dnl     AC_MSG_ERROR([missing porttime library, install libportmidi-dev])
 dnl fi
 
-if test "x${HAVE_OSX}" = "x1" ; then
+if test "x${have_osx}" = "xtrue" ; then
   PORTMIDI_CFLAGS=""
+  PORTMIDI_LIBS=""
 else
   PORTMIDI_CFLAGS="-DPMALSA"
+  PORTMIDI_LIBS="-lasound"
 fi
 AC_SUBST([PORTMIDI_CFLAGS], "$PORTMIDI_CFLAGS")
-PORTMIDI_LIBS="-lportmidi -lm"
+#PORTMIDI_LIBS="-lportmidi -lm -lasound"
+PORTMIDI_LIBS="$PORTMIDI_LIBS -lportmidi -lm"
 dnl -lporttime -lpthread 
 AC_SUBST([PORTMIDI_LIBS], "$PORTMIDI_LIBS")
 
@@ -295,7 +305,7 @@ AC_MSG_NOTICE([BOOST_SIGNALS_LIBS:         ${BOOST_SIGNALS_LIBS}])
 AC_MSG_NOTICE([BOOST_SYSTEM_LIBS:          ${BOOST_SYSTEM_LIBS}])
 AC_MSG_NOTICE([BOOST_THREAD_LIBS:         ${BOOST_THREAD_LIBS}])
 
-CFLAGS+=" fPIC -Wall -g3 -O0" dnl -Wextra -Wfatal-errors -Werror "
+CFLAGS+=" -fPIC -Wall -g3 -O0" dnl -Wextra -Wfatal-errors -Werror "
 
 # GNU help2man creates man pages from --help output; in many cases, this
 # is sufficient, and obviates the need to maintain man pages separately.
@@ -319,7 +329,6 @@ AC_CONFIG_FILES([
         plugins-base/tests/Makefile
         python_module/Makefile
         src/Makefile
-        src/tempi-graph-viewer/Makefile
         src/tempi-midi-looper/Makefile
         src/tempi-osc-forward/Makefile
         src/tempi-draw/Makefile

@@ -19,28 +19,36 @@
  */
 
 #include "plugins-base/3d/3dcomparenode.h"
+#include "plugins-base/abstraction/abstractionnode.h"
+#include "plugins-base/abstraction/inletnode.h"
+#include "plugins-base/abstraction/outletnode.h"
 #include "plugins-base/baselibrary.h"
+#include "plugins-base/convert/booltointnode.h"
 #include "plugins-base/edit/grapheditornode.h"
 #include "plugins-base/flow/anynode.h"
 #include "plugins-base/flow/appendnode.h"
 #include "plugins-base/flow/appsinknode.h"
 #include "plugins-base/flow/castnode.h"
+#include "plugins-base/flow/changenode.h"
 #include "plugins-base/flow/counternode.h"
-#include "plugins-base/flow/delaynode.h"
+#include "plugins-base/flow/demuxnode.h"
 #include "plugins-base/flow/dictnode.h"
 #include "plugins-base/flow/linenode.h"
 #include "plugins-base/flow/loadmessnode.h"
-#include "plugins-base/flow/metro_node.h"
+#include "plugins-base/flow/logger_node.h"
 #include "plugins-base/flow/nop_node.h"
 #include "plugins-base/flow/packnode.h"
 #include "plugins-base/flow/prependnode.h"
 #include "plugins-base/flow/print_node.h"
 #include "plugins-base/flow/routenode.h"
+#include "plugins-base/flow/speedlimnode.h"
+#include "plugins-base/flow/spigotnode.h"
 #include "plugins-base/flow/splitnode.h"
 #include "plugins-base/flow/triggernode.h"
-#include "plugins-base/flow/spigotnode.h"
 #include "plugins-base/flow/typenode.h"
 #include "plugins-base/flow/unpacknode.h"
+#include "plugins-base/flow/send_and_receive_nodes.h"
+#include "plugins-base/list/pick_indices.h"
 #include "plugins-base/mapper/mapperinputnode.h"
 #include "plugins-base/math/booleanoperatornode.h"
 #include "plugins-base/math/jsexpr.h"
@@ -58,20 +66,26 @@
 #include "plugins-base/osc/oscreceivernode.h"
 #include "plugins-base/osc/oscroutenode.h"
 #include "plugins-base/osc/oscsendernode.h"
+#include "plugins-base/random/randomdrunknode.h"
+#include "plugins-base/random/randomintnode.h"
 #include "plugins-base/sampler/samplenode.h"
 #include "plugins-base/sampler/samplernode.h"
 #include "plugins-base/sampler/samplerreadnode.h"
 #include "plugins-base/sampler/samplerwritenode.h"
+#include "plugins-base/serial/blobtobytes.h"
+#include "plugins-base/serial/bytestoblobnode.h"
 #include "plugins-base/serial/serialdevicenode.h"
+#include "plugins-base/serial/todmxusbpro.h"
 #include "plugins-base/spatosc/spatoscnode.h"
 #include "plugins-base/string/stringcharactersnode.h"
 #include "plugins-base/string/stringjoinnode.h"
 #include "plugins-base/string/stringsplitnode.h"
-#include "plugins-base/random/randomdrunknode.h"
-#include "plugins-base/random/randomintnode.h"
-#include "plugins-base/abstraction/abstractionnode.h"
-#include "plugins-base/abstraction/outletnode.h"
-#include "plugins-base/abstraction/inletnode.h"
+#include "plugins-base/time/clock_node.h"
+#include "plugins-base/time/timernode.h"
+#include "plugins-base/time/cron_node.h"
+#include "plugins-base/time/date_node.h"
+#include "plugins-base/time/delaynode.h"
+#include "plugins-base/time/metro_node.h"
 #include "tempi/config.h"
 #include "tempi/nodefactory.h"
 #include "tempi/utils.h"
@@ -88,27 +102,40 @@ void BaseLibrary::load(NodeFactory &factory, const char * /*prefix*/) const
     using utils::concatenate;
 
     static const char * const prefix = "base.";
+    factory.registerTypeT<BoolToIntNode>(concatenate(prefix, "convert.booltoint").c_str());
     factory.registerTypeT<GraphEditorNode>(concatenate(prefix, "edit.grapheditor").c_str());
     factory.registerTypeT<PrintNode>(concatenate(prefix, "flow.print").c_str());
     factory.registerTypeT<AppendNode>(concatenate(prefix, "flow.append").c_str());
     factory.registerTypeT<NopNode>(concatenate(prefix, "flow.nop").c_str());
     factory.registerTypeT<PackNode>(concatenate(prefix, "flow.pack").c_str());
     factory.registerTypeT<MetroNode>(concatenate(prefix, "time.metro").c_str());
+    factory.registerTypeT<ClockNode>(concatenate(prefix, "time.clock").c_str());
+    factory.registerTypeT<DateNode>(concatenate(prefix, "time.date").c_str());
+    factory.registerTypeT<CronNode>(concatenate(prefix, "time.cron").c_str());
+    factory.registerTypeT<TimerNode>(concatenate(prefix, "time.timer").c_str());
     factory.registerTypeT<AnyNode>(concatenate(prefix, "flow.any").c_str());
     factory.registerTypeT<CounterNode>(concatenate(prefix, "flow.counter").c_str());
+    factory.registerTypeT<DemuxNode>(concatenate(prefix, "flow.demux").c_str());
     factory.registerTypeT<DelayNode>(concatenate(prefix, "time.delay").c_str());
     factory.registerTypeT<DictNode>(concatenate(prefix, "data.dict").c_str());
     //factory.registerTypeT<AppSinkNode>(concatenate("base.", "data.appsink").c_str());
     factory.registerTypeT<SpigotNode>(concatenate(prefix, "flow.spigot").c_str());
     factory.registerTypeT<PrependNode>(concatenate(prefix, "flow.prepend").c_str());
     factory.registerTypeT<RouteNode>(concatenate(prefix, "flow.route").c_str());
+    factory.registerTypeT<SpeedLimNode>(concatenate(prefix, "flow.speedlim").c_str());
     factory.registerTypeT<SplitNode>(concatenate(prefix, "flow.split").c_str());
     factory.registerTypeT<TriggerNode>(concatenate(prefix, "flow.trigger").c_str());
     factory.registerTypeT<TypeNode>(concatenate(prefix, "flow.type").c_str());
     factory.registerTypeT<UnpackNode>(concatenate(prefix, "flow.unpack").c_str());
     factory.registerTypeT<LineNode>(concatenate(prefix, "flow.line").c_str());
     factory.registerTypeT<LoadMessNode>(concatenate(prefix, "flow.loadmess").c_str());
+    factory.registerTypeT<LoggerNode>(concatenate(prefix, "flow.logger").c_str());
     factory.registerTypeT<CastNode>(concatenate(prefix, "flow.cast").c_str());
+    factory.registerTypeT<ChangeNode>(concatenate(prefix, "flow.change").c_str());
+
+    factory.registerTypeT<PickIndicesNode>(concatenate(prefix, "list.pick_indices").c_str());
+    factory.registerTypeT<SendNode>(concatenate(prefix, "flow.send").c_str());
+    factory.registerTypeT<ReceiveNode>(ReceiveNode::NODE_TYPE_NAME); // We have to do this.
 
 #ifdef HAVE_SPATOSC
     factory.registerTypeT<SpatoscNode>(concatenate(prefix, "osc.spatosc").c_str());
@@ -123,14 +150,20 @@ void BaseLibrary::load(NodeFactory &factory, const char * /*prefix*/) const
 #endif // HAVE_LUA
 
     factory.registerTypeT<AddNode>(concatenate(prefix, "math.+").c_str());
+    factory.registerTypeT<CosNode>(concatenate(prefix, "math.cos").c_str());
+    factory.registerTypeT<SinNode>(concatenate(prefix, "math.sin").c_str());
+    factory.registerTypeT<RoundNode>(concatenate(prefix, "math.round").c_str());
     factory.registerTypeT<DivNode>(concatenate(prefix, "math./").c_str());
     factory.registerTypeT<EqualsNotNode>(concatenate(prefix, "math.!=").c_str());
     factory.registerTypeT<IsEqualNode>(concatenate(prefix, "math.==").c_str());
     factory.registerTypeT<IsGreaterNode>(concatenate(prefix, "math.>").c_str());
+    factory.registerTypeT<IsGreaterOrEqualNode>(concatenate(prefix, "math.>=").c_str());
     factory.registerTypeT<IsLessNode>(concatenate(prefix, "math.<").c_str());
+    factory.registerTypeT<IsLessOrEqualNode>(concatenate(prefix, "math.<=").c_str());
     factory.registerTypeT<SubtractNode>(concatenate(prefix, "math.-").c_str());
     factory.registerTypeT<MapNode>(concatenate(prefix, "math.map").c_str());
     factory.registerTypeT<MultNode>(concatenate(prefix, "math.*").c_str());
+    factory.registerTypeT<ModuloNode>(concatenate(prefix, "math.%").c_str());
     factory.registerTypeT<DegToRadNode>(concatenate(prefix, "math.deg2rad").c_str());
 
 #ifdef HAVE_CLUTTER
@@ -183,6 +216,9 @@ void BaseLibrary::load(NodeFactory &factory, const char * /*prefix*/) const
 #endif // HAVE_LIBMAPPER
 
     factory.registerTypeT<SerialDeviceNode>(concatenate(prefix, "serial.device").c_str());
+    factory.registerTypeT<ToDmxUsbProNode>(concatenate(prefix, "serial.todmxusbpro").c_str());
+    factory.registerTypeT<BytesToBlobNode>(concatenate(prefix, "serial.bytestoblob").c_str());
+    factory.registerTypeT<BlobToBytesNode>(concatenate(prefix, "serial.blobtobytes").c_str());
 }
 
 } // end of namespace

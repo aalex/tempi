@@ -27,10 +27,23 @@
 
 #include "tempi/node.h"
 #include "plugins-base/serial/serialdevice.h"
+#include "tempi/concurrentqueue.h"
 #include <tr1/memory>
+#include <boost/thread.hpp>
 
 namespace tempi {
 namespace plugins_base {
+
+atom::BlobValue::ptr stringToBlob(const std::string &text);
+// Converts a message to FUDI-like string.
+// only supports int and string.
+// doesn't append a semi-colon
+std::string fudiToString(const Message &message);
+// Converts a FUDI-like string to a message.
+// only works with int and strings for now
+Message stringToFudi(const std::string &text);
+// Removes a trailing character from a string, if found.
+std::string stripTrailingCharacter(const std::string &text, char character = '\n');
 
 /**
  * Node that communicates with a serial device.
@@ -39,17 +52,30 @@ class SerialDeviceNode : public Node
 {
     public:
         SerialDeviceNode();
+        ~SerialDeviceNode();
         static const char * const DATA_INLET;
         static const char * const DATA_OUTLET;
         static const char * const IS_OPEN_ATTR;
         static const char * const BAUD_RATE_ATTR;
         static const char * const DEVICE_FILE_ATTR;
+        static const char * const FUDI_INLET;
+        static const char * const FUDI_OUTLET;
     protected:
         virtual void processMessage(const char *inlet, const Message &message);
         virtual void doTick();
         virtual bool onNodeAttributeChanged(const char *name, const Message &value);
     private:
         std::tr1::shared_ptr<SerialDevice> device_;
+        bool thread_should_be_running_;
+        ConcurrentQueue<Message> queue_;
+        boost::thread thread_;
+        // the thread's main
+        void run_thread();
+        // stop polling
+        void stop_thread();
+        // start polling
+        void start_thread();
+        void try_to_read();
 };
 
 } // end of namespace

@@ -19,6 +19,8 @@
  */
 #include "tempi/midi_scheduler.h"
 #include "tempi/log.h"
+#include "tempi/timer.h"
+#include "tempi/utils.h"
 #include <cstdlib>
 #include <iostream>
 
@@ -46,17 +48,34 @@ MidiScheduler::~MidiScheduler()
      */
     process_midi_exit_flag_ = false;
     portmidi_initialized_ = false;
+    Timer timer;
+    TimePosition timeout = timeposition::from_ms(15);
+
     /* busy wait for flag from timer thread that it is done */
     while (! process_midi_exit_flag_)
     {
-        Logger::log(DEBUG, "Waiting for portmidi to exit...");
-        // TODO: sleep
+        if (Logger::isEnabledFor(DEBUG))
+        {
+            Logger::log(DEBUG, "Waiting for portmidi to exit...");
+        }
+        if (timer.elapsed() > timeout)
+        {
+            Logger::log(WARNING, "Gave up waiting for portmidi to exit.");
+            break;
+        }
+        utils::sleep_ms(5);
     }
     /* at this point, midi thread is inactive and we need to shut down
      * the midi input and output
      */
+    if (Logger::isEnabledFor(DEBUG))
+        Logger::log(DEBUG, "Call Pt_Stop():");
     Pt_Stop(); /* stop the timer */
+    if (Logger::isEnabledFor(DEBUG))
+        Logger::log(DEBUG, "Call Pm_Terminate():");
     Pm_Terminate();
+    if (Logger::isEnabledFor(DEBUG))
+        Logger::log(DEBUG, "Done with ~MidiScheduler");
 }
 
 PmStream * MidiScheduler::add_input_stream(int id)

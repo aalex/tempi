@@ -78,10 +78,10 @@ OscReceiver::OscReceiver(unsigned int port) :
     running_(false),
     debug_(false)
 {
-    if (port_ != 0)
+    if (this->port_ != 0)
     {
-        if (portNumberIsOK())
-            start();
+        if (this->portNumberIsOK())
+            this->start();
     }
 }
 
@@ -114,14 +114,21 @@ bool OscReceiver::start()
     {
         std::ostringstream os;
         os << "OscReceive.start(): calling lo_server_new(" << port_ << ", " << onError << ")";
-        Logger::log(INFO, os.str().c_str());
+        Logger::log(INFO, os);
     }
     server_ = lo_server_new(boost::lexical_cast<std::string>(port_).c_str(), onError);
+    if (! server_)
+    {
+        std::ostringstream os;
+        os << "OscReceive.start(): aborting OSC receiver.";
+        Logger::log(WARNING, os);
+        return false;
+    }
     if (Logger::isEnabledFor(INFO))
     {
         std::ostringstream os;
         os << "OscReceive.start(): calling lo_server_add_method(" << server_ << ", NULL, NULL, " << generic_handler << ", this)";
-        Logger::log(INFO, os.str().c_str());
+        Logger::log(INFO, os);
     }
     /* add method that will match any path and args */
     lo_server_add_method(server_, NULL, NULL, generic_handler, this);
@@ -131,7 +138,9 @@ bool OscReceiver::start()
 
 void OscReceiver::onError(int num, const char *msg, const char *path)
 {
-    std::cout << "liblo server error " << num << " in path " << path << ":"<< msg << std::endl;
+    std::ostringstream os;
+    os << "OscReceiver: liblo server error #" << num << " " << path << " "<< msg;
+    Logger::log(ERROR, os);
 }
 
 OscReceiver::~OscReceiver()
@@ -174,10 +183,17 @@ int OscReceiver::generic_handler(const char *path, const char *types, lo_arg **a
                 message.appendString(static_cast<const char *>(&argv[i]->s));
                 break;
             case 'c':
-                message.appendChar(argv[i]->c);
+                if (Logger::isEnabledFor(NOTICE))
+                {
+                    std::ostringstream os;
+                    os << "OscReceiver::" << __FUNCTION__ << ": ";
+                    os << "Tempi does not support char values, so we cast the incoming char to int.";
+                    Logger::log(NOTICE, os);
+                }
+                message.appendInt((Int) argv[i]->c);
                 break;
             case 'd':
-                message.appendChar(argv[i]->d);
+                message.appendFloat(argv[i]->d);
                 break;
             case 'T':
                 message.appendBoolean(true);
@@ -186,8 +202,12 @@ int OscReceiver::generic_handler(const char *path, const char *types, lo_arg **a
                 message.appendBoolean(false);
                 break;
             default:
-                std::cerr << "OscReceiver::" << __FUNCTION__ << ": cannot handle lo arg type " << types[i] << std::endl;
-                break;
+                {
+                    std::ostringstream os;
+                    os << "OscReceiver::" << __FUNCTION__ << ": cannot handle lo arg type " << types[i] << std::endl;
+                    Logger::log(ERROR, os);
+                    break;
+                }
         }
     }
     // TODO: time OSC messages so that timing be exact.
@@ -206,7 +226,9 @@ std::vector<Message> OscReceiver::poll()
     }
     else
     {
-        std::cerr << "OscReceiver::" << __FUNCTION__ << ": Not running" << std::endl;
+        std::ostringstream os;
+        os << "OscReceiver::" << __FUNCTION__ << ": Not running" << std::endl;
+        Logger::log(ERROR, os);
         std::vector<Message> ret;
         return ret;
     }

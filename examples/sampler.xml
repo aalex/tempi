@@ -42,7 +42,7 @@
       <attribute name="value"><s>set</s><s>writing</s><b>false</b></attribute>
     </node>
     <node name="stop_write_delay" class="base.time.delay">
-      <attribute name="delay"><l>5010</l></attribute>
+      <attribute name="delay"><i>5010</i></attribute>
     </node>
     <connection from="stop_write" outlet="0" to="stop_write_delay" inlet="0"/>
     <connection from="stop_write_delay" outlet="0" to="write0" inlet="__attr__"/>
@@ -53,7 +53,7 @@
       <attribute name="value"><s>set</s><s>enabled</s><b>false</b></attribute>
     </node>
     <node name="stop_print_delay" class="base.time.delay">
-      <attribute name="delay"><l>5010</l></attribute>
+      <attribute name="delay"><i>5010</i></attribute>
     </node>
     <connection from="stop_print" outlet="0" to="stop_print_delay" inlet="0"/>
     <connection from="stop_print_delay" outlet="0" to="print_write" inlet="__attr__"/>

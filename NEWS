@@ -1,7 +1,49 @@
 Tempi release notes
 ===================
 
-Tempi 0.3.0
+Tempi 0.3.2 (2013-04-09)
+-------------------------
+This release is a developer snapshot in the experimental 0.3 series.
+
+New features:
+
+* Add base.flow.change
+* Add base.flow.demux
+* Add base.flow.logger
+* Add base.flow.send and base.flow.receive
+* Add base.flow.speedlim
+* Add base.list.pick_indices
+* Add base.math.%
+* Add base.math.>= and base.math.<=
+* Add base.math.cos 
+* Add base.math.round
+* Add base.math.sin
+* Add base.serial.bytestoblob
+* Add base.serial.todmxusbpro
+* Add base.time.clock
+* Add base.time.cron
+* Add base.time.date
+* Add base.time.timer
+* Allow the use of the operator == to compare blobs
+* Base.flow.counter: add a modulo attribute
+* Do not save __data__ and __position__ to XML if default
+* Fix useless v8 include without check
+* Math operators: work with lists as well.
+* Move delay and metro to time directory
+* Remove types u, d, l, !, c and C. Add type n.
+* base.serial.device: poll in a thread
+
+Bugs fixed:
+
+* Use "-fPIC" flag, not "fPIC"
+* Make sure we do not reach max recursion limit and crash
+* Fix unsigned bytes in blobs
+* Fix the check for Atom on Mac OS X
+* Fix segfault when OSC receiving port is busy
+* Fix float matching in message==
+
+
+Tempi 0.3.0 (2013-01-28)
 -------------------------
 This release is a developer snapshot in the experimental 0.3 series.
 

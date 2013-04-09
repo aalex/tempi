@@ -2,10 +2,10 @@
 <tempi version="0.1.9">
   <graph>
     <node name="loadmess0" class="base.flow.loadmess">
-      <attribute name="value"><s>get</s><s>count</s></attribute>
+      <attribute name="value"><s>get</s><s>initial_count</s></attribute>
     </node>
     <node name="loadmess1" class="base.flow.loadmess">
-      <attribute name="value"><s>set</s><s>count</s><i>10</i></attribute>
+      <attribute name="value"><s>set</s><s>initial_count</s><i>10</i></attribute>
     </node>
     <node name="loadmess2" class="base.flow.loadmess">
       <attribute name="value"><s>list</s></attribute>

@@ -71,6 +71,7 @@ class Midi
         bool is_open(int id);
 
     private:
+        // FIXME: this causes segfaults when we open / close many MIDI devices in a row.
         static MidiScheduler *sched_;
         static int streams;
         //keeping track of device openned by the current instance

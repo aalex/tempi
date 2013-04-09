@@ -76,12 +76,18 @@ static bool check_properties()
     {}
 
     Message set_message = Message("ssifs", Node::ATTRIBUTES_SET_METHOD_SELECTOR, "hello", 3, 9.124351f, "qweqweqweqw");
+    // reset to false:
     n.triggered_ = false;
-    n.getInlet(Node::ATTRIBUTES_INLET)->trigger(set_message);
+    // Send set message:
+    // FIXME:The following doesn't work!
+    //n.getInlet(Node::ATTRIBUTES_INLET)->trigger(set_message);
+    // FIXME:The following doesn't work!
+    n.message(Node::ATTRIBUTES_INLET, set_message);
     if (VERBOSE)
     {
-        std::cout << n.triggered_ << std::endl;
-        std::cout << n.getAttributeValue("hello") << std::endl;
+        std::ostringstream os;
+        os << "Did trigger attr: " << (n.triggered_ ? "true" : "false");
+        os << ". Value: " << n.getAttributeValue("hello") << std::endl;
     }
     if (! n.triggered_)
     {

@@ -9,9 +9,7 @@
       <xs:element name="f" type="xs:float" minOccurs="0"/>
       <xs:element name="b" type="xs:string" minOccurs="0"/>
       <xs:element name="s" type="xs:string" minOccurs="0"/>
-      <xs:element name="C" type="xs:string" minOccurs="0"/>
-      <xs:element name="c" type="xs:string" minOccurs="0"/>
-      <xs:element name="p" type="xs:string" minOccurs="0"/>
+      <xs:element name="n" type="xs:string" minOccurs="0"/>
     </xs:sequence>
     <xs:attribute type="xs:string" name="name" use="required"/>
   </xs:complexType>

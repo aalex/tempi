@@ -19,32 +19,33 @@
  */
 
 #include "plugins-base/math/twofloatmathnode.h"
+#include "tempi/log.h"
 #include <iostream>
+#include <cmath>
 
 namespace tempi { 
 namespace plugins_base {
 
-TwoFloatMathNode::TwoFloatMathNode() :
-    Node()
-{
-    addInlet("0", "Incoming left float operand. (hot)", "", "f");
-    addInlet("1", "Incoming right float operand. (cold)", "", "f");
-    addOutlet("0", "Resulting float.");
+const char * const TwoFloatMathNode::RIGHT_OPERAND_INLET = "1";
+const char * const TwoFloatMathNode::RIGHT_OPERAND_ATTR = "operand";
 
-    Message operand = Message("f", 0.0f);
-    addAttribute(Attribute::ptr(new Attribute("operand", operand, "Right operand to apply calculation with incoming floats.")));
+TwoFloatMathNode::TwoFloatMathNode() :
+    AbstractMathNode()
+{
+    addInlet(RIGHT_OPERAND_INLET, "Incoming right float operand. (cold)", "", "f");
+
+    addAttribute(Attribute::ptr(new Attribute(RIGHT_OPERAND_ATTR, Message("f", 0.0), "Right operand to apply calculation with incoming floats.")));
 }
 
-void TwoFloatMathNode::processMessage(const char *inlet, const Message &message)
+Float TwoFloatMathNode::calculate(Float operand)
 {
-    if (utils::stringsMatch(inlet, "0"))
-    {
-        float left_operand = message.getFloat(0);
-        float right_operand = getAttribute("operand")->getValue().getFloat(0);
-        Message result("f", this->calculate(left_operand, right_operand));
-        this->output("0", result);
-    }
-    else if (utils::stringsMatch(inlet, "1"))
+    Float right_operand = getAttribute("operand")->getValue().getFloat(0);
+    return this->calculate(operand, right_operand);
+}
+
+void TwoFloatMathNode::processUnhandledMessage(const char *inlet, const Message &message)
+{
+    if (utils::stringsMatch(inlet, RIGHT_OPERAND_ATTR))
     {
         this->setAttributeValue("operand", message);
     }
@@ -56,7 +57,7 @@ AddNode::AddNode() :
     setShortDocumentation("Outputs the addition of two floats together.");
 }
 
-float AddNode::calculate(float first, float second)
+Float AddNode::calculate(Float first, Float second)
 {
     return first + second;
 }
@@ -67,12 +68,14 @@ DivNode::DivNode() :
     setShortDocumentation("Outputs the division of one float by another.");
 }
 
-float DivNode::calculate(float first, float second)
+Float DivNode::calculate(Float first, Float second)
 {
     return first + second;
     if (second == 0.0f)
     {
-        std::cerr << "DivNode: cannot divide by zero!" << std::endl;
+        std::ostringstream os;
+        os << "DivNode: cannot divide by zero!";
+        Logger::log(ERROR, os);
         return 0.0f;
     }
     else
@@ -85,7 +88,7 @@ MultNode::MultNode() :
     setShortDocumentation("Outputs the multiplication of an incoming float and another float.");
 }
 
-float MultNode::calculate(float first, float second)
+Float MultNode::calculate(Float first, Float second)
 {
     return first * second;
 }
@@ -96,9 +99,30 @@ SubtractNode::SubtractNode() :
     setShortDocumentation("Outputs the subtraction of an incoming float and another float.");
 }
 
-float SubtractNode::calculate(float first, float second)
+Float SubtractNode::calculate(Float first, Float second)
 {
     return first - second;
+}
+
+ModuloNode::ModuloNode() :
+    TwoFloatMathNode()
+{
+    this->setShortDocumentation("Outputs the remainder of a division of an incoming number by another number.");
+    this->setLongDocumentation("Do not use zero as a denominator.");
+}
+
+Float ModuloNode::calculate(Float first, Float second)
+{
+    Float operand = second;
+    if (operand == 0.0f)
+    {
+        std::ostringstream os;
+        os << "ModuloNode::" << __FUNCTION__ << ": Second operand cannot be zero, but it is " <<
+            second;
+        Logger::log(WARNING, os);
+        operand = 1.0f;
+    }
+    return std::fmod(first, operand);
 }
 
 } // end of namespace

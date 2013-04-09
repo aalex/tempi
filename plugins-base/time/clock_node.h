@@ -18,31 +18,41 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <iostream>
-#include "plugins-base/flow/receivenode.h"
+/**
+ * The ClockNode class.
+ */
+
+#ifndef __TEMPI_TIME_CLOCK_NODE_H__
+#define __TEMPI_TIME_CLOCK_NODE_H__
+
+#include "tempi/node.h"
 
 namespace tempi {
 namespace plugins_base {
 
-ReceiveNode::ReceiveNode() :
-    Node()
+/**
+ * Get the current time.
+ */
+class ClockNode : public Node
 {
-    Message receiveSymbol;
-    receiveSymbol.appendString("");
-    addAttribute(Attribute::ptr(new Attribute("symbol", receiveSymbol, "Receive symbol")));
-}
+    public:
+        // date
+        static const char * const HOURS_OUTLET;
+        static const char * const MINUTES_OUTLET;
+        static const char * const SECONDS_OUTLET;
+        //static const char * const MILLISECONDS_OUTLET;
+        // options
+        static const char * const USE_UTC_NOT_LOCAL_ATTR;
+        // controls
+        static const char * const TRIGGER_INLET;
 
-void ReceiveNode::processMessage(const char *inlet, const Message &message)
-{
-    // if (inlet == 0)
-    //    output(message);
-}
-
-std::string ReceiverNode::getReceiveSymbol() const
-{
-    return getAttributeValue("symbol").getString(0);
-}
+        ClockNode();
+    protected:
+        virtual void processMessage(const char *inlet, const Message &message);
+};
 
 } // end of namespace
 } // end of namespace
+
+#endif // ifndef
 

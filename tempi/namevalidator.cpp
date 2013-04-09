@@ -19,6 +19,7 @@
  */
 
 #include "tempi/namevalidator.h"
+#include <iostream>
 
 namespace tempi {
 

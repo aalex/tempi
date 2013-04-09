@@ -1,132 +1,216 @@
 To do in Tempi
 ==============
 
-To do for 0.2
--------------
-* rename NodeSignal to EntitySignal
-* Counter: rename count attr to initial_count and make count not-an-attr
-* [flow.map]
-* [3d.speed]
-* [3d.orientation]
-* [3d.smooth]
-* [midi.eventtype]
-* [flow.select] 
-* Should all attributes and pad names use underscores?
-* Delete unused node types: [base.appsink]
-* Rename:
-  * sampler.sampler -> sampler.simple
-* libmapper nodes: libmapper.{in,out}put device="tempi", name="default", type=f
-* 3d.angle: should not depend on spatosc
-* validate names with echo example | grep -P -e "^([A-Za-z0-9\.\-_])+$"
-* Scheduler: support OSC messages in the form /graph0/node0/__attr__ s:foo i:2 f:3.14159
-* Node: add this->send("path", ...) and this->addReceiver("path")
-* package python module with autotools
-* implement message.appendMessage()
-* [3d.line]
-* Scheduler: contain Tables
-* Inlet/Outlet must be a child of Pad. give pads some signals
-* Abstraction: share the same scheduler. (use a NameGenerator to manage their names)
-* Abstraction: provide unique id, via a [abs.uuid]
-* Abstraction: support an arguments attribute. Read it from the abstraction via [abs.argument]
-* Abstraction: deg2rad should be one in /usr/share/tempi/math.deg2rad.xml
-* Abstraction: provide [abs.doc] and doc for inlets/outlets
-* Scheduler should provide a map of config options. (messages) Default path for externals should be in /etc/tempi
-* send / receive! (provide "global" receive symbols as signals) /send <symbol> ...
-* on closed/killed signal (message sent)
-* abstractions: support a list of paths to be looked for files.
-* abstractions: reuse same scheduler for abstractions than their parent so that everything is "global"
-* FIXME: When we create a second Scheduler, the Loader refuses to load again base lib
-* FIXME: OscReceiver segfaults if port is busy
-* FIXME: Serializer::load sets node attributes twice?
-* FIXME: fix path to libs
-* FIXME: removeTrailingPathSep crashes if has a trailing slash...
-* FIXME: onAttributeChanged is called sometime twice. If the attribute has not been changed, it should not be called again
-* tempi-launch should fail with error in case some node type could not be created
-* __attr__ inlet: Support "list" and "get" messages.
-* tempi-looper: multitrack GUI configured with an XML Graph
-* Rename Filter to AbstractFilterNode.
-* AbstractFilterNode.filter should return a const&
-* Fix segfault in, or disable, [clutter.stage]
-* [flow.receive]
-* [flow.send]
-* [time.timer]
-* [flow.smooth]
-* ? rename connection to connect in XML schema
-* Scheduler: contain BehaviourTrees
-* FIXME: split utils.h so that compilation gets faster
-* FIXME: clutter.stage segfaults
-
 To do for 0.4
 -------------
-* FIXME: prevent from stack overflows
-* Get done with the behaviour tree library - separate? Inspired from libbehaviour and others
-* Add homogenous list type for attributes/messages/atoms
-* Add symbol data type. (map of strings "globally" accessible and passed around as an index.
-* loadBang: Find a better name. Node::loadBang only once? When to Graph::loadBang?
-* Atom types: replace switch/case by a hierarchy of classes
-* Allow range for int attributes?
-* abstractions and tempi-launch: watch for changes in files with GFileMonitor
-* create a validator for XML schemas
-* make documentation strings common to all objects of a same type to save memory use
-* allow pads to have types
+Refactoring
+~~~~~~~~~~~
+* rename NodeSignal to EntitySignal
+* Scheduler: contain Tables
+* Serializer: consider renaming connection to connect in XML schema
+* utils.h: split this file so that compilation gets faster
+
+Bug fixes
+~~~~~~~~~
+* FIXME: removeTrailingPathSep crashes if has a trailing slash...
+* Node: __attr__ inlet: Support "list" and "get" messages.
+* Node: onAttributeChanged is called sometime twice. If the attribute has not been changed, it should not be called again
+* Packaging: fix path to libs
+* Scheduler: When we create a second Scheduler, the Loader refuses to load again base lib
+* Serializer: load() sets node attributes twice?
+* XML file abs.xml is broken (cannot find pads)
+* XML file libmapper.xml doesn't work
+* XML file line.xml doesn;'t work
+* XML file midi-forward.xml: prompt to type ENTER??
+* XML file midi-send.xml et midi-receive.xml marchent pas (ENTER??)
+* XML file stage.xml doesn't work
+* [base.3d.angle]: should not depend on spatosc
+* [base.clutter.stage]: Fix segfault in, or disable, [clutter.stage]
+* [base.flow.pack] should make sure its number attr is positive
+* [base.mapping.filter]: Should filter by type.
+* [base.mapping.slide]: AbstractFilterNode.filter should return a const&
+* [base.mapping.slide]: Rename Filter to AbstractFilterNode.
+* tempi-launch should fail with error in case some node type could not be created
+
+Features
+~~~~~~~~
+* Abstractions: deg2rad should be one in /usr/share/tempi/math.deg2rad.xml
+* Abstractions: provide [abs.doc] and doc for inlets/outlets
+* Abstractions: provide unique id, via a [abs.uuid]
+* Abstractions: reuse same scheduler for abstractions than their parent so that everything is "global"
+* Abstractions: share the same scheduler. (use a NameGenerator to manage their names)
+* Abstractions: support a list of paths to be looked for files.
+* Abstractions: support an arguments attribute. Read it from the abstraction via [abs.argument]
+* Attribute: Should all attributes and pad names use underscores?
+* Message: Matrix atom type.
+* Message: implement message.appendMessage()
+* NamedObject: validate names with echo example | grep -P -e "^([A-Za-z0-9\.\-_])+$"
+* Node: add this->send("path", ...) and this->addReceiver("path")
+* Node: send / receive! (provide "global" receive symbols as signals) /send <symbol> ...
+* Python: package python module with autotools
+* Scheduler: contain BehaviourTrees
+* Scheduler: on closed/killed signal (message sent)
+* Scheduler: should provide a map of config options. (messages) Default path for externals should be in /etc/tempi
+* Scheduler: support OSC messages in the form /graph0/node0/__attr__ s:foo i:2 f:3.14159
+* tempi-looper: multitrack GUI configured with an XML Graph
+* [base.flow.route]: Allow to auto-create outlets according received messages.
+
+Node types
+~~~~~~~~~~
+* Delete unused node types: [base.appsink]
+* Nodejs: there is no way to send empty messages from javascript
+* [base.3d.distance
+* [base.3d.line]
+* [base.3d.orientation]
+* [base.3d.smooth]
+* [base.3d.speed]
+* [base.atom::rawpointer
+* [base.atom::sharedpointer
+* [base.base.typematches]
+* [base.behave.boids]
+* [base.behave.chaotic] attractors
+* [base.behave.neuralnet]
+* [base.clutter.stage]
+* [base.data.globalvalue] : Non-local shared value.
+* [base.file.textfile]
+* [base.flow.counter] should be in math
+* [base.flow.cycle : Sends data cycling through its outlets.
+* [base.flow.demux
+* [base.flow.detect_edge : Detects rising of falling edges in a stream of numbers.
+* [base.flow.fifo : Last-in first-out message queue.
+* [base.flow.float : Stores a float.
+* [base.flow.int : Stores an integer.
+* [base.flow.lifo : First-in first-out message queue.
+* [base.flow.message_eater : Outputs only every n message out of a stream of messages.
+* [base.flow.mux
+* [base.flow.once : Lets only the first message go through.
+* [base.flow.receive]
+* [base.flow.recent : When queried, outputs only the most recent message in a stream.
+* [base.flow.repeat : Repeats a message a given number of times.
+* [base.flow.route]: Should support numbers as well as strings, as selectors
+* [base.flow.routetype : Routes incomings values by their type.
+* [base.flow.select] 
+* [base.flow.send]
+* [base.flow.smooth]
+* [base.flow.speedlim : Limits the speed of messages in a stream.
+* [base.flow.string : Stores a string.
+* [base.flow.trigger]: Should support int, float and null.
+* [base.flow.until]: Output a series of null messages.
+* [base.freadln : Reads lines from files.
+* [base.freenect.pointscloud]
+* [base.fwriteln : Write lines to files.
+* [base.input.hid]
+* [base.input.keyboard]
+* [base.input.mouse]
+* [base.list.accum : 
+* [base.list.average : Computes the average of a list of numbers.
+* [base.list.delete : Deletes a value from a list at a given index.
+* [base.list.drip : Unfolds messages messages in sequences of their values.
+* [base.list.equal : Compares two lists element by element.
+* [base.list.find : Outputs the index of a given value in incoming lists.
+* [base.list.insert : Inserts a list before a given position in a list.
+* [base.list.length : Outputs the length of the incoming messages it receives.
+* [base.list.mean : Computes the mean of a list of numbers.
+* [base.list.median : Computes the median of a list of numbers.
+* [base.list.minmax
+* [base.list.readindex : Outputs the value at a given index in incoming lists.
+* [base.list.reverse : Reverse the order of values in messages.
+* [base.list.sort : Sorts list of numbers.
+* [base.list.sum : Outputs the sum of the numbers in a list.
+* [base.mapping.*] should be provided a typetag argument. (and support types fdi)
+* [base.mapping.curve]
+* [base.math.abs : Computes the absolute value of a number.
+* [base.math.abs]
+* [base.math.cartopol
+* [base.math.clip]
+* [base.math.dbtopow]
+* [base.math.dbtorms]
+* [base.math.deg2rad
+* [base.math.exp]
+* [base.math.ftom]
+* [base.math.log]
+* [base.math.mtof]
+* [base.math.poltocar
+* [base.math.powtodb]
+* [base.math.prime : Prime number generator.
+* [base.math.rad2deg
+* [base.math.rmstodb]
+* [base.math.rsqrt]
+* [base.math.sqrt]
+* [base.math.wrap]
 * [base.metro]: fix unit tests
-* Support lists of messages?
-* (WONTFIX) list/configure MIDI ports by their ALSA ID, not an index
-* Bugfix: Message.*(...): avoid segfault if length does not match
-* Bugfix: Message.*(...): avoid segfault if types do not match
-* Handle objects renaming
-* Regions have mapping modifiers. (range, clip, etc.)
-* Regions have follow actions. (nothing, stop, play again, previous, next, first, last, any, other)
-* Enclose signals as private data member. Provide accessors to it, or allow to add callbacks to it.
-* Improve FilterNode to explode arrays and make sure they are doubles, not floats.
-* Feature: allow to configure externals with an XML config file. (system-wide, then user-specific)
-* Application: Write a basic trajectories editor, for 3D coordinates with 3D and 2D views. (like Hole-edit)
-* Application: Write a basic node editor.
-* tempi::MATRIX
-* tempi::LIST
-* [mapping.*] should be provided a typetag argument. (and support types fdi)
-* [mapping.curve]
-* [base.typematches]
-* [script.python]
-* [math.clip]
-* [math.rsqrt]
-* [math.sqrt]
-* [math.wrap]
-* midilooper: multitrack sequencer with GUI
-* [midi.closenote]
-* [midi.route.control]
-* [midi.route.controls]
-* [midi.route.note]
-* [midi.route.notes]
-* [osc.pop]
-* [table.read]
-* [table.write]
-* [table.table]
+* [base.midi.closenote]
+* [base.midi.eventtype]
+* [base.midi.route.control]
+* [base.midi.route.controls]
+* [base.midi.route.note]
+* [base.midi.route.notes]
+* [base.os.cwd : Gets the current working directory.
+* [base.os.glob : Finds all the path names matching a given pattern like in the UNIX shell.
+* [base.os.join_path : Joins one or more paths.
+* [base.os.ls : Lists files in a directory.
+* [base.os.path_isdir :  Checks if a path points to a directory that exists.
+* [base.os.path_isfile : Checks if a path points to a file that exists.
+* [base.os.split_path : Splits a file paths into its components.
+* [base.os.tempfile : Generates a name for a temporary file.
+* [base.osc.pop]
+* [base.pd.patch]
+* [base.pd.receive]
+* [base.pd.send]
+* [base.random.urn : Generate random numbers without repetition.
+* [base.regex
+* [base.rtp.rtpreceive]
+* [base.rtp.rtpsend]
+* [base.script.python]
+* [base.separate plugins-base in another git repo
+* [base.serial.*]: Detect Arduino / DMX
+* [base.serial.toopendmx]
+* [base.string.matches] (regex)
+* [base.string.tonumber : Converts strings to numbers.
+* [base.switcher.node] (tempi-plugins-gpl)
+* [base.table.read]
+* [base.table.table]
+* [base.table.write]
+* [base.time.later : Delays messages of a given duration.
+* [base.time.timer]
+* [gpl.spin.receive]
+* [gpl.spin.send]
+* libmapper nodes: libmapper.{in,out}put device="tempi", name="default", type=f
 
 To do for 0.6
 -------------
-* [file.textfile]
-* [freenect.pointscloud]
-* [math.abs]
-* [math.dbtopow]
-* [math.dbtorms]
-* [math.exp]
-* [math.ftom]
-* [math.log]
-* [math.mtof]
-* [math.powtodb]
-* [math.rmstodb]
-* [pd.receive]
-* [pd.send]
-* [base.regex]
-* [rtp.rtpreceive]
-* [rtp.rtpsend]
-* [spin.receive]
-* [spin.send]
+* (WONTFIX) list/configure MIDI ports by their ALSA ID, not an index
+* Add homogenous list type for attributes/messages/atoms
+* Add symbol data type. (map of strings "globally" accessible and passed around as an index.
+* Allow range for int attributes?
+* Application: Write a basic node editor.
+* Application: Write a basic trajectories editor, for 3D coordinates with 3D and 2D views. (like Hole-edit)
+* Atom types: replace switch/case by a hierarchy of classes
+* Bugfix: Message.*(...): avoid segfault if length does not match
+* Bugfix: Message.*(...): avoid segfault if types do not match
+* Enclose signals as private data member. Provide accessors to it, or allow to add callbacks to it.
+* Feature: allow to configure externals with an XML config file. (system-wide, then user-specific)
+* Get done with the behaviour tree library - separate? Inspired from libbehaviour and others
+* Handle objects renaming
+* Improve FilterNode to explode arrays and make sure they are doubles, not floats.
+* Regions have follow actions. (nothing, stop, play again, previous, next, first, last, any, other)
+* Regions have mapping modifiers. (range, clip, etc.)
+* Support lists of messages?
+* abstractions and tempi-launch: watch for changes in files with GFileMonitor
+* allow pads to have types
+* create a validator for XML schemas
+* loadBang: Find a better name. Node::loadBang only once? When to Graph::loadBang?
+* make documentation strings common to all objects of a same type to save memory use
+* midilooper: multitrack sequencer with GUI
+* tempi::LIST
+* tempi::MATRIX
+
+To do for 0.8
+-------------
 * Support loading extensions and finding files from a list of paths
 * Implement Node::error, which triggers a signal that the Graph catches.
 * Feature: Many OSC sender/receiver with the same host+port should share the same OSC sender. Use a map of tuple<ip,port> to shared_ptr<OscSender>.
 * Bugfix: Prevent from recursion by throwing a RecursionException upon output triggered twice.
-* Create a timeline Clutter actor.
-* Create a graph editor Clutter actor.
+* Create a timeline javascript widget.
+* Create a graph editor javascript widget.
 

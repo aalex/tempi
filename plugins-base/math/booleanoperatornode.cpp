@@ -20,41 +20,62 @@
 
 #include "plugins-base/math/booleanoperatornode.h"
 #include "tempi/utils.h"
+#include "tempi/log.h"
 
 namespace tempi { 
 namespace plugins_base {
 
+const char * const BooleanMathNode::HOT_NUMBER_INLET = "0";
+const char * const BooleanMathNode::COLD_NUMBER_INLET = "1";
+const char * const BooleanMathNode::BOOL_OUTLET = "0";
+const char * const BooleanMathNode::OPERAND_ATTR = "operand";
+
 BooleanMathNode::BooleanMathNode() :
     Node()
 {
-    addInlet("0", "Incoming left float operand. (hot)");
-    addInlet("1", "Incoming right float operand. (cold)");
-    addOutlet("0", "Resulting float.");
+    this->addInlet(HOT_NUMBER_INLET, "Incoming left float operand. (hot)", "Expects a float of a list of floats.");
+    this->addInlet(COLD_NUMBER_INLET, "Incoming right float operand. (cold)", "Expects a single float.", "f");
+    this->addOutlet(BOOL_OUTLET, "Resulting boolean.");
 
-    Message operand = Message("f", 0.0f);
-    addAttribute(Attribute::ptr(new Attribute("operand", operand, "Right operand to compare incoming float values with.")));
+    this->addAttribute(Attribute::ptr(new Attribute(OPERAND_ATTR, Message("f", 0.0f), "Right operand to compare incoming float values with.")));
 }
 
 void BooleanMathNode::processMessage(const char *inlet, const Message &message)
 {
-    if (utils::stringsMatch(inlet, "1"))
+    if (utils::stringsMatch(inlet, COLD_NUMBER_INLET))
     {
-        if (message.typesMatch("f"))
-            this->setAttributeValue("operand", message);
-        else
-            std::cerr << "BooleanMathNode::" << __FUNCTION__ << "(): Bad type for message " << message << std::endl;
+        this->setAttributeValue("operand", message);
     }
-    else if (message.typesMatch("f"))
+    else if (utils::stringsMatch(inlet, HOT_NUMBER_INLET))
     {
-        float left_operand = message.getFloat(0);
-        float right_operand = getAttribute("operand")->
-            getValue().getFloat(0);
-        Message result("b", this->compare(left_operand, right_operand));
-        this->output("0", result);
+        Message result;
+        for (Index i = 0; i < message.getSize(); i++)
+        {
+            AtomType atom_type;
+            message.getAtomType(i, atom_type);
+            Float left_operand;
+            bool ok = true;
+            if (atom_type == FLOAT)
+                left_operand = message.getFloat(i);
+            else if (atom_type == INT)
+                left_operand = (Float) message.getInt(i);
+            else
+                ok = false;
+            if (ok)
+            {
+                Float right_operand = getAttribute("operand")->getValue().getFloat(0);
+                result.appendBoolean(this->compare(left_operand, right_operand));
+            }
+            else
+            {
+                std::ostringstream os;
+                os << "BooleanMathNode." << __FUNCTION__ << ": " <<
+                "Bad value type " << atom_type << " at index " << i;
+                Logger::log(ERROR, os);
+            }
+        } // for
+        this->output(BOOL_OUTLET, result);
     }
-    else
-        std::cerr << "BooleanMathNode::" << __FUNCTION__ <<
-            "(): Bad type for message " << message << std::endl;
 }
 
 EqualsNotNode::EqualsNotNode() :
@@ -63,7 +84,7 @@ EqualsNotNode::EqualsNotNode() :
     setShortDocumentation("Outputs true if two float are not equal.");
 }
 
-bool EqualsNotNode::compare(float left_operand, float right_operand)
+bool EqualsNotNode::compare(Float left_operand, Float right_operand)
 {
     return left_operand != right_operand;
 }
@@ -74,9 +95,20 @@ IsGreaterNode::IsGreaterNode() :
     setShortDocumentation("Outputs true if the incoming float is greather than the right operand.");
 }
 
-bool IsGreaterNode::compare(float left_operand, float right_operand)
+bool IsGreaterNode::compare(Float left_operand, Float right_operand)
 {
     return left_operand > right_operand;
+}
+
+IsGreaterOrEqualNode::IsGreaterOrEqualNode() :
+    BooleanMathNode()
+{
+    setShortDocumentation("Outputs true if the incoming float is greather or equal than the right operand.");
+}
+
+bool IsGreaterOrEqualNode::compare(Float left_operand, Float right_operand)
+{
+    return left_operand >= right_operand;
 }
 
 IsEqualNode::IsEqualNode() :
@@ -85,7 +117,7 @@ IsEqualNode::IsEqualNode() :
     setShortDocumentation("Outputs true if the incoming float is equal to the right operand.");
 }
 
-bool IsEqualNode::compare(float left_operand, float right_operand)
+bool IsEqualNode::compare(Float left_operand, Float right_operand)
 {
     return left_operand == right_operand;
 }
@@ -96,9 +128,20 @@ IsLessNode::IsLessNode() :
     setShortDocumentation("Outputs true if the incoming float is smaller than the right operand.");
 }
 
-bool IsLessNode::compare(float left_operand, float right_operand)
+bool IsLessNode::compare(Float left_operand, Float right_operand)
 {
     return left_operand < right_operand;
+}
+
+IsLessOrEqualNode::IsLessOrEqualNode() :
+    BooleanMathNode()
+{
+    setShortDocumentation("Outputs true if the incoming float is smaller or equal than the right operand.");
+}
+
+bool IsLessOrEqualNode::compare(Float left_operand, Float right_operand)
+{
+    return left_operand <= right_operand;
 }
 
 } // end of namespace

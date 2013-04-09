@@ -20,6 +20,7 @@
 
 #include "tempi/node.h"
 #include "tempi/log.h"
+#include "tempi/graph.h"
 #include <boost/bind.hpp>
 #include <iostream>
 #include <sstream>
@@ -37,8 +38,10 @@ const char * const Node::ATTRIBUTES_SET_METHOD_SELECTOR = "set";
 const char * const Node::ATTRIBUTES_SET_OUTPUT_PREFIX = "set";
 const char * const Node::ATTRIBUTE_LOG = "__log__";
 const char * const Node::INLET_CREATED_SIGNAL = "__create_inlet__";
+// called BEFORE it is actually deleted
 const char * const Node::INLET_DELETED_SIGNAL = "__delete_inlet__";
 const char * const Node::OUTLET_CREATED_SIGNAL = "__create_outlet__";
+// called BEFORE it is actually deleted
 const char * const Node::OUTLET_DELETED_SIGNAL = "__delete_outlet__";
 const char * const Node::INLET_CALL = "__call__";
 const char * const Node::OUTLET_RETURN = "__return__";
@@ -47,6 +50,8 @@ const char * const Node::ATTRIBUTE_DATA = "__data__";
 
 Node::Node()
 {
+    this->graph_ = 0; // The Graph who owns this will set himself up later.
+
     load_banged_ = false;
     // XXX: Add Signals BEFORE adding inlets/outlets!
     addSignal(EntitySignal::ptr(new EntitySignal(OUTLET_DELETED_SIGNAL,
@@ -135,7 +140,7 @@ bool Node::onAttributeChanged(const char *name, const Message &value)
         Message mess = value;
         mess.prependString(name);
         mess.prependString(ATTRIBUTES_SET_OUTPUT_PREFIX);
-        output(ATTRIBUTES_OUTLET, mess);
+        this->output(ATTRIBUTES_OUTLET, mess);
     }
     return ok;
 }
@@ -196,7 +201,7 @@ void Node::onInletTriggered(Pad *inlet, const Message &message)
                         std::string attr_name = message.getString(1);
                         if (this->getAttribute(attr_name.c_str())->getMutable())
                         {
-                            setAttributeValue(attr_name.c_str(), attribute);
+                            this->setAttributeValue(attr_name.c_str(), attribute);
                             return;
                         }
                         else
@@ -288,7 +293,7 @@ void Node::onInletTriggered(Pad *inlet, const Message &message)
                 if (called_ok)
                 {
                     return_value.prependString(method_name.c_str());
-                    output(OUTLET_RETURN, return_value);
+                    this->output(OUTLET_RETURN, return_value);
                 }
                 else
                 {
@@ -571,8 +576,30 @@ bool Node::message(const char *inlet, const Message &message)
 void Node::output(const char *outlet, const Message &message) const
     throw(BadIndexException)
 {
-    Outlet::ptr outlet_ptr = getOutletSharedPtr(outlet);
-    outlet_ptr->trigger(message);
+    if (Logger::isEnabledFor(DEBUG))
+    {
+        std::ostringstream os;
+        os << "Node." << __FUNCTION__ << "[" << this->getName() << "](" <<
+            outlet << ", " << message << ")";
+        Logger::log(DEBUG, os);
+    }
+
+    try
+    {
+        if (this->graph_ != 0)
+            this->graph_->pushMessageDepth();
+        Outlet::ptr outlet_ptr = getOutletSharedPtr(outlet);
+        outlet_ptr->trigger(message);
+        if (this->graph_ != 0)
+            this->graph_->popMessageDepth();
+    }
+    catch (const BadIndexException &e)
+    {
+        std::ostringstream os;
+        os << "Node." << __FUNCTION__ << "[" << this->getName() << "]" <<
+        ": Reached maximum recursion depth! " << e.what();
+        Logger::log(CRITICAL, os);
+    }
 }
 
 void Node::setTypeName(const char *typeName)
@@ -605,9 +632,9 @@ bool Node::removeOutlet(const char *name)
     std::string nameStr(name);
     if (hasOutlet(name))
     {
-        outlets_.erase(outlets_.find(nameStr));
-        Message message("ss", this->getName().c_str(), name); // node, inlet
+        Message message("ss", this->getName().c_str(), name); // node, outlet
         getSignal(OUTLET_DELETED_SIGNAL)->trigger(message);
+        outlets_.erase(outlets_.find(nameStr));
         return true;
     }
     return false;
@@ -618,9 +645,9 @@ bool Node::removeInlet(const char *name)
     std::string nameStr(name);
     if (hasInlet(name))
     {
-        inlets_.erase(inlets_.find(nameStr));
         Message message("ss", this->getName().c_str(), name); // node, inlet
         getSignal(INLET_DELETED_SIGNAL)->trigger(message);
+        inlets_.erase(inlets_.find(nameStr));
         return true;
     }
     return false;

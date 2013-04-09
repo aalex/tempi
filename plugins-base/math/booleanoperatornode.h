@@ -33,10 +33,14 @@ class BooleanMathNode : public Node
 {
     public:
         BooleanMathNode();
+        static const char * const HOT_NUMBER_INLET;
+        static const char * const COLD_NUMBER_INLET;
+        static const char * const BOOL_OUTLET;
+        static const char * const OPERAND_ATTR;
     protected:
         virtual void processMessage(const char *inlet, const Message &message);
     private:
-        virtual bool compare(float first, float second) = 0;
+        virtual bool compare(Float first, Float second) = 0;
 };
 
 /**
@@ -47,7 +51,7 @@ class EqualsNotNode : public BooleanMathNode
     public:
         EqualsNotNode();
     private:
-        virtual bool compare(float first, float second);
+        virtual bool compare(Float first, Float second);
 };
 
 /**
@@ -58,7 +62,18 @@ class IsGreaterNode : public BooleanMathNode
     public:
         IsGreaterNode();
     private:
-        virtual bool compare(float first, float second);
+        virtual bool compare(Float first, Float second);
+};
+
+/**
+ * The IsGreaterOrEqualNode checks if one float is greater or equal than another. 
+ */
+class IsGreaterOrEqualNode : public BooleanMathNode
+{
+    public:
+        IsGreaterOrEqualNode();
+    private:
+        virtual bool compare(Float first, Float second);
 };
 
 /**
@@ -69,7 +84,7 @@ class IsEqualNode : public BooleanMathNode
     public:
         IsEqualNode();
     private:
-        virtual bool compare(float first, float second);
+        virtual bool compare(Float first, Float second);
 };
 
 /**
@@ -80,9 +95,19 @@ class IsLessNode : public BooleanMathNode
     public:
         IsLessNode();
     private:
-        virtual bool compare(float first, float second);
+        virtual bool compare(Float first, Float second);
 };
 
+/**
+ * The IsLessNode checks if one float is lesser or equal than another. 
+ */
+class IsLessOrEqualNode : public BooleanMathNode
+{
+    public:
+        IsLessOrEqualNode();
+    private:
+        virtual bool compare(Float first, Float second);
+};
 
 } // end of namespace
 } // end of namespace

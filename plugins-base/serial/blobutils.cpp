@@ -18,33 +18,20 @@
  * along with Tempi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * @file
- * The Node class.
- */
-#ifndef __TEMPI_BASE_RECEIVENODE_H__
-#define __TEMPI_BASE_RECEIVENODE_H__
-
-#include "tempi/node.h"
+#include "plugins-base/serial/blobutils.h"
 
 namespace tempi {
 namespace plugins_base {
+namespace blobutils {
 
-/**
- * The ReceiveNode receives messages.
- */
-class ReceiveNode : public Node
+atom::BlobValue::ptr createEmptyBlob()
 {
-    public:
-        ReceiveNode();
-    protected:
-        virtual void processMessage(const char *inlet, const Message &message);
-    private:
-        std::string getReceiveSymbol() const;
-};
+    atom::Byte empty = 0;
+    atom::Value::ptr value = atom::BlobValue::create(&empty, 0);
+    return atom::BlobValue::convert(value);
+}
 
 } // end of namespace
 } // end of namespace
-
-#endif // ifndef
+} // end of namespace
 
